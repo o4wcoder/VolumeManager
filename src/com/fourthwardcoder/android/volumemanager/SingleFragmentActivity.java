@@ -5,6 +5,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
+/**
+ * SingleFragmentActivity
+ * 
+ * Setup an Activity to hold just one Fragment
+ * 
+ * @author Chris Hare
+ * 3/13/15
+ */
 public abstract class SingleFragmentActivity extends FragmentActivity {
 	
 	/*******************************************************/

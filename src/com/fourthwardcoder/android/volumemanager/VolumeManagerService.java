@@ -14,6 +14,17 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+
+/**
+ * VolumeManagerService
+ * 
+ * Service that will fire off the start and end alarms for the volume 
+ * control. Each control has a start time and and end time.
+ * 
+ * @author Chris Hare
+ * 3/13/15
+ *
+ */
 public class VolumeManagerService extends IntentService implements Constants{
 
 	/*********************************************************************/
@@ -22,7 +33,7 @@ public class VolumeManagerService extends IntentService implements Constants{
 	private static final int POLL_INTERVAL = 1000 * 5; //15 seconds
 	private static final String TAG = "VolumeManagerService";
 
-
+	
 	public VolumeManagerService() {
 		super(TAG);
 		// TODO Auto-generated constructor stub
@@ -91,6 +102,14 @@ public class VolumeManagerService extends IntentService implements Constants{
 	/*********************************************************************/
 	/*                          Public Methods                           */
 	/*********************************************************************/
+	/**
+	 * Used to setup an alarm at a specific time. The two start/end 
+	 * alarms will call this PendingIntent to modify the volume as
+	 * indicated
+	 * 
+	 * @param context the context of calling fragment
+	 * @param isOn flag to turn the alarm on/off
+	 */
 	public static void setServiceAlarm(Context context, boolean isOn) {
 
 		//Construct pending intent that will start PollService
@@ -136,10 +155,16 @@ public class VolumeManagerService extends IntentService implements Constants{
 
 		//Store if alarm is on or off so StartupReceiver can use it to turn
 		//it on at bootup
-		//PreferenceManager.getDefaultSharedPreferences(context)
-		//	.edit().putBoolean(PollService.PREF_IS_ALARM_ON, isOn).commit();
+		PreferenceManager.getDefaultSharedPreferences(context)
+			.edit().putBoolean(PREF_IS_ALARM_ON, isOn).commit();
 	}
 
+	/**
+	 * Get an instance of a calendar from a specific hour and minute
+	 * @param hour the hour of the day
+	 * @param min the minute of the day
+	 * @return
+	 */
 	private static Calendar getCalendar(int hour, int min) {
 
 		Calendar calendar = Calendar.getInstance();
@@ -149,7 +174,12 @@ public class VolumeManagerService extends IntentService implements Constants{
 
 		return calendar;
 	}
-	//See if the alarm in on or not
+	
+	/**
+	 * Check if the alarm is on or not
+	 * @param context the context of the calling fragment
+	 * @return
+	 */
 	public static boolean isServiceAlarmOn(Context context) {
 		Intent i = new Intent(context, VolumeManagerService.class);
 
@@ -160,8 +190,6 @@ public class VolumeManagerService extends IntentService implements Constants{
 
 		//Null pending intent means that the alarm is not set
 		return pi != null;
-
-
 	}
 
 }

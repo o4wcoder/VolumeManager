@@ -6,6 +6,15 @@ import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
 
+/**
+ * VolumeManagerActivity
+ * 
+ * Activity for setting up a volume control
+ * 
+ * @author Chris Hare
+ * 3/13/2015
+ *
+ */
 public class VolumeManagerActivity extends SingleFragmentActivity {
 
 	@Override

@@ -7,6 +7,8 @@
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="21" />
+    
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:allowBackup="true"
@@ -26,6 +28,12 @@
             android:name="com.fourthwardcoder.android.volumemanager.VolumeManagerService"
             android:exported="false">     
         </service>
+        <receiver 
+            android:name="com.fourthwardcoder.android.volumemanager.StartupReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

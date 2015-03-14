@@ -1,6 +1,5 @@
 package com.fourthwardcoder.android.volumemanager;
 
-
 import java.util.Calendar;
 import java.util.Date;
 
@@ -30,6 +29,16 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Switch;
 import android.widget.TextView;
 
+/**
+ * VolumeManagerFragment
+ * 
+ * Main fragment of the VolumeManagerActivity. Contains all the components to 
+ * set start and end alarms of the specific alarm control.
+ * 
+ * @author Chris Hare
+ * 3/13/2015
+ *
+ */
 public class VolumeManagerFragment extends Fragment implements Constants{
 	
 	/************************************************************************/
@@ -57,6 +66,7 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 	int startVolumeType,endVolumeType;
 	int startRingVolume,endRingVolume;
 	TextView startRingVolumeTextView, endRingVolumeTextView;
+	
 	/*******************************************************/
 	/*                  Override Methods                   */
 	/*******************************************************/
@@ -83,6 +93,7 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 		        
 		Log.d(TAG,"on create switch enabled? " + isControlEnabled);
 	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, 
 			Bundle savedInstanceState){
@@ -305,8 +316,15 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 	/*******************************************************************/
 	/*                        Private Methods                          */
 	/*******************************************************************/
+	
+	/**
+	 * Modify the fomat of the time of the alarms. Changes hour from 
+	 * military time to standard. Also make sure the minute is two digits.
+	 * 
+	 * @param date Stores the time of the alarm
+	 * @param textView The Textview to set the time
+	 */
 	private void updateTime(Date date, TextView textView) {
-		
 		
 		String am_or_pm = (date.getHours() < 12) ? "AM" : "PM";
 		
@@ -326,6 +344,7 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 		
 		String strMin = String.valueOf(min);
 		
+		//Make sure minute is 2 digits
 		if(min < 10)
 			strMin = "0" + strMin;
 		
@@ -333,6 +352,12 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 		textView.setText(time);
 	}
 	
+	
+	/**
+	 * Sets each components visibility in the fragment. This is set
+	 * by the on/off toggle switch
+	 * @param set setting of toggle switch
+	 */
 	private void setWidgetVisibility(boolean set) {
 		
 		//Start Controls
@@ -349,12 +374,22 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 		setControlButton.setEnabled(set);
 	}
 	
+	
+	/**
+	 * Set the visibility of the RadioGroups. This is set by the on/off toggle switch
+	 * @param radioGroup RadioGroup to set the visibility on
+	 * @param set setting of the toggle switch
+	 */
 	private void setRadioGroupVisibility(RadioGroup radioGroup, boolean set) {
 		
+		//Set visibility on each RadioButton in the Group
 		for(int i = 0; i <radioGroup.getChildCount(); i++)
 			((RadioButton)radioGroup.getChildAt(i)).setEnabled(set);
 	}
 	
+	/**
+	 * Save all settings of the alarms to SharedPreferences 
+	 */
 	private void saveSettings() {
 		
 		Log.d(TAG,"Saving enabled " +isControlEnabled);
@@ -374,12 +409,21 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 		
 	}
 	
+	/**
+	 * Set the text on ring volume level
+	 * @param textView TextView to set the ring volume level
+	 * @param pos position of the seekbar
+	 */
 	private void setRingVolumeText(TextView textView, int pos) {
 		
 		textView.setText("(" + pos + "/7)");
-		
 	}
 	
+	/**
+	 * Set the ring volume seek bar at a specific position
+	 * @param alarmType which alarm (start or end) to set
+	 * @param pos seekbar position
+	 */
 	private void setSeekBarPosition(int alarmType, int pos) {
 
 		if(alarmType == ID_START_ALARM) {
@@ -393,7 +437,5 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 			endRingVolume = pos;
 			setRingVolumeText(endRingVolumeTextView,pos);
 		}
-
 	}
-	
 }

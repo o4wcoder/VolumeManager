@@ -16,6 +16,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TimePicker;
 
+/**
+ * TimePickerFragment
+ * 
+ * DialogFragment that contains a TimePicker user to select the time to fire
+ * the volume control alarms
+ * 
+ * @author Chris Hare
+ * 3/13/15
+ *
+ */
 public class TimePickerFragment extends DialogFragment implements Constants {
 	
 	/********************************************************************/
@@ -113,7 +123,11 @@ public class TimePickerFragment extends DialogFragment implements Constants {
 	/***************************************************************/
 	/*                   Private Methods                           */
 	/***************************************************************/
-	
+	/**
+	 * Sends the result of the dialog back to calling fragment
+	 * 
+	 * @param resultCode code of result of dialog. In this case "OK"
+	 */
 	private void sendResult(int resultCode) {
 		if(getTargetFragment() == null)
 			return;
@@ -122,7 +136,7 @@ public class TimePickerFragment extends DialogFragment implements Constants {
 		Intent i = new Intent();
 		i.putExtra(EXTRA_TIME,mTime);
 		
-		//Send result to Crime Fragment
+		//Send result to VolumeManager Fragment
 		//Request code to tell the target who is returning hte result
 		//result code to determine what action to take
 		//An intent that can have extra data
