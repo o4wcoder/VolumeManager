@@ -51,7 +51,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/editText1"
+                android:id="@+id/profileTimeTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"

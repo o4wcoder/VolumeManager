@@ -14,4 +14,9 @@
     <string name="end_time_dialog">Volume control end time:</string>
     <string name="set_control_button">Set Volume Control</string>
     <string name="toast_text">Volume Control Set</string>
+    <string name="no_profiles">No Profiles</string>
+    <string name="new_profile">New Profile</string>
+    <string name="title_hint">Enter a title for the profile.</string>
+    <string name="profile_header">Profiles</string>
+    <string name="delete_profile">Delete Profile</string>
 </resources>

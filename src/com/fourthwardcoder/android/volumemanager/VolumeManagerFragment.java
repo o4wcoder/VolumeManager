@@ -2,6 +2,7 @@ package com.fourthwardcoder.android.volumemanager;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -52,17 +53,22 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 	public static final int REQUEST_START_TIME = 0;
 	public static final int REQUEST_END_TIME = 1;
 	
+	//Extras
+	public static final String EXTRA_PROFILE_ID = "com.fourthwardcoder.android.volumemanager.profile_id";
+	
 	/************************************************************************/
 	/*                          Local Data                                  */
 	/************************************************************************/
+	Profile profile;
 	Switch volumeSwitch;
-	TextView startTimeTextView, endTimeTextView;
+	TextView titleTextView, startTimeTextView, endTimeTextView;
 	Button startTimeButton, endTimeButton, setControlButton;
 	Date startDate,endDate;
 	RadioGroup startVolumeRadioGroup;
 	RadioGroup endVolumeRadioGroup;
 	SeekBar startRingSeekBar, endRingSeekBar;
 	boolean isControlEnabled = true;
+	String profileTitle;
 	int startVolumeType,endVolumeType;
 	int startRingVolume,endRingVolume;
 	TextView startRingVolumeTextView, endRingVolumeTextView;
@@ -76,22 +82,20 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 	
 		Log.d(TAG,"onCreate");
 		
-		startDate = new Date();
-		endDate = new Date();
-
-		//Get any stored settings
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-				isControlEnabled = prefs.getBoolean(PREF_CONTROL_ENABLED,true);
-				startDate.setHours(prefs.getInt(PREF_START_HOUR, 11));
-				startDate.setMinutes(prefs.getInt(PREF_START_MIN, 0));
-			    endDate.setHours(prefs.getInt(PREF_END_HOUR, 8));
-			    endDate.setMinutes(prefs.getInt(PREF_END_MIN, 0));
-			    startVolumeType = prefs.getInt(PREF_START_VOLUME_TYPE, VOLUME_OFF);
-		        endVolumeType = prefs.getInt(PREF_END_VOLUME_TYPE,VOLUME_VIBRATE);
-		        startRingVolume = prefs.getInt(PREF_START_RING_VOLUME, 1);
-		        endRingVolume = prefs.getInt(PREF_END_RING_VOLUME, 1);
-		        
-		Log.d(TAG,"on create switch enabled? " + isControlEnabled);
+		//Get Fragment arguments and pull out ID of crime
+		Intent intent = getActivity().getIntent();
+		UUID profileId = (UUID)intent.getSerializableExtra(EXTRA_PROFILE_ID);
+		//UUID profileId = (UUID)getArguments().getSerializable(EXTRA_PROFILE_ID);
+		//Fetch the Profile from the ProfileManager ArrayList
+		profile = ProfileManager.get(getActivity()).getProfile(profileId);
+		isControlEnabled = profile.isEnabled();
+		profileTitle = profile.getTitle();
+		startDate = profile.getStartDate();
+	    endDate = profile.getEndDate();
+	    startVolumeType = profile.getStartVolumeType();
+        endVolumeType = profile.getEndVolumeType();
+        startRingVolume = profile.getStartRingVolume();
+        endRingVolume = profile.getEndRingVolume();
 	}
 	
 	@Override
@@ -105,6 +109,9 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 	    /*
 	     * Setup TextViews                        
 	     */
+		titleTextView = (TextView)view.findViewById(R.id.titleTextView);
+		titleTextView.setText(profileTitle);
+		
 	    startTimeTextView = (TextView)view.findViewById(R.id.startTimeTextView);
         //Set up Ring Volume TextView
 	    startRingVolumeTextView = (TextView)view.findViewById(R.id.startRingVolumeTextView);
@@ -151,10 +158,12 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 			@Override
 			public void onClick(View v) {
 				saveSettings(); 
-	            VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), true);
+	            //VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), true);
 				Toast toast = Toast.makeText(getActivity().getApplicationContext(),
 						R.string.toast_text, Toast.LENGTH_SHORT);
 				toast.show();
+				
+				getActivity().finish();
 			}
 	    });
 	    
@@ -181,7 +190,6 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 					startVolumeType = VOLUME_RING;
 				}
 			    
-				saveSettings();
 			}
 	    	
 	    });
@@ -203,8 +211,6 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 				else {
 					endVolumeType = VOLUME_RING;
 				}
-			    
-				saveSettings();
 			}
 	    });
 	    
@@ -262,7 +268,7 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				//Turn components on/off and save settings
 				isControlEnabled = isChecked;
-				setWidgetVisibility(isControlEnabled);
+				setWidgetVisibility(isChecked);
 				
 				
 				//Shut down volume control alarm and save settings. Don't want to save settings unless the "Set"
@@ -279,12 +285,12 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 	     */
 	    //Set default or saved radio button setting
 	    ((RadioButton)startVolumeRadioGroup.getChildAt(startVolumeType)).setChecked(true);
-	    //Set default or saved radio buttonn setting
+	    //Set default or saved radio button setting
 	    ((RadioButton)endVolumeRadioGroup.getChildAt(endVolumeType)).setChecked(true);
 	    //Setup up wigits with saved settings
 	    volumeSwitch.setChecked(isControlEnabled);
-	    updateTime(startDate,startTimeTextView);
-	    updateTime(endDate,endTimeTextView);
+	    startTimeTextView.setText(ProfileListFragment.formatTime(startDate));
+	    endTimeTextView.setText(ProfileListFragment.formatTime(endDate));
 	    //Set Seekbar default
 	    setSeekBarPosition(ID_START_ALARM,startRingVolume);
 	    setSeekBarPosition(ID_END_ALARM,endRingVolume);
@@ -303,54 +309,21 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 		
 		if(requestCode == REQUEST_START_TIME) {
 			startDate = (Date)data.getSerializableExtra(TimePickerFragment.EXTRA_TIME);
-	        updateTime(startDate, startTimeTextView);
+			startTimeTextView.setText(ProfileListFragment.formatTime(startDate));
 		}
 		else if(requestCode == REQUEST_END_TIME) {
 			endDate = (Date)data.getSerializableExtra(TimePickerFragment.EXTRA_TIME);
-			updateTime(endDate,endTimeTextView);
+			endTimeTextView.setText(ProfileListFragment.formatTime(endDate));
 		}
 		
-		saveSettings();
+		//saveSettings();
 	}
 	
 	/*******************************************************************/
 	/*                        Private Methods                          */
 	/*******************************************************************/
 	
-	/**
-	 * Modify the fomat of the time of the alarms. Changes hour from 
-	 * military time to standard. Also make sure the minute is two digits.
-	 * 
-	 * @param date Stores the time of the alarm
-	 * @param textView The Textview to set the time
-	 */
-	private void updateTime(Date date, TextView textView) {
-		
-		String am_or_pm = (date.getHours() < 12) ? "AM" : "PM";
-		
-		Log.d(TAG,"In update time with hour " + date.getHours());
-		
-		//Create a Calendar to get the time
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
-		
-		int hour = calendar.get(Calendar.HOUR);
-		int min = calendar.get(Calendar.MINUTE);
-		
-		String strHour = String.valueOf(hour);
-		
-		if(hour == 0)
-			strHour = "12";
-		
-		String strMin = String.valueOf(min);
-		
-		//Make sure minute is 2 digits
-		if(min < 10)
-			strMin = "0" + strMin;
-		
-		String time = strHour + ":" + strMin + " " + am_or_pm;
-		textView.setText(time);
-	}
+	
 	
 	
 	/**
@@ -392,8 +365,9 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 	 */
 	private void saveSettings() {
 		
-		Log.d(TAG,"Saving enabled " +isControlEnabled);
+		Log.d(TAG,"Saving enabled " + isControlEnabled);
 		//Save Settings to PreferenceManager		
+		/*
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
 		SharedPreferences.Editor prefsEditor = prefs.edit();
 		prefsEditor.putBoolean(PREF_CONTROL_ENABLED,isControlEnabled);
@@ -406,6 +380,19 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 	    prefsEditor.putInt(PREF_START_RING_VOLUME, startRingVolume);
 	    prefsEditor.putInt(PREF_END_RING_VOLUME, endRingVolume);
 		prefsEditor.commit();
+		*/
+		
+		//Profile p = new Profile();
+		profile.setTitle(titleTextView.getText().toString());
+		profile.setEnabled(isControlEnabled);
+		profile.setStartDate(startDate);
+		profile.setEndDate(endDate);
+		profile.setStartVolumeType(startVolumeType);
+		profile.setEndVolumeType(endVolumeType);
+		profile.setStartRingVolume(startRingVolume);
+		profile.setEndRingVolume(endRingVolume);
+		
+		ProfileManager.get(getActivity()).saveProfiles();
 		
 	}
 	
