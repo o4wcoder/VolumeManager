@@ -52,9 +52,7 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 	//Constant for request code to Time Picker
 	public static final int REQUEST_START_TIME = 0;
 	public static final int REQUEST_END_TIME = 1;
-	
-	//Extras
-	public static final String EXTRA_PROFILE_ID = "com.fourthwardcoder.android.volumemanager.profile_id";
+
 	
 	/************************************************************************/
 	/*                          Local Data                                  */
@@ -85,6 +83,8 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 		//Get Fragment arguments and pull out ID of crime
 		Intent intent = getActivity().getIntent();
 		UUID profileId = (UUID)intent.getSerializableExtra(EXTRA_PROFILE_ID);
+		
+        
 		//UUID profileId = (UUID)getArguments().getSerializable(EXTRA_PROFILE_ID);
 		//Fetch the Profile from the ProfileManager ArrayList
 		profile = ProfileManager.get(getActivity()).getProfile(profileId);
@@ -158,7 +158,7 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 			@Override
 			public void onClick(View v) {
 				saveSettings(); 
-	            //VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), true);
+	            VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), profile, true);
 				Toast toast = Toast.makeText(getActivity().getApplicationContext(),
 						R.string.toast_text, Toast.LENGTH_SHORT);
 				toast.show();
@@ -275,7 +275,7 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 				//button was pushed
 				if(!isChecked) {
 					saveSettings();
-				   VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), false);
+				   VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), profile,false);
 				}
 			}
 		});

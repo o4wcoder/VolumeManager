@@ -229,6 +229,8 @@ public class ProfileListFragment extends Fragment {
                 newProfile();
 		    	//Return true, no further processing is necessary
 		    	return true;
+		    case R.id.menu_item_new_location_profile:
+		    	return true;
 		    default:
 		    	return super.onOptionsItemSelected(item);
 		}
@@ -270,7 +272,7 @@ public class ProfileListFragment extends Fragment {
 		
 		String am_or_pm = (date.getHours() < 12) ? "AM" : "PM";
 		
-		Log.d(TAG,"In update time with hour " + date.getHours());
+		//Log.d(TAG,"In update time with hour " + date.getHours());
 		
 		//Create a Calendar to get the time
 		Calendar calendar = Calendar.getInstance();
@@ -361,7 +363,7 @@ public class ProfileListFragment extends Fragment {
             }
 			else {
 				holder = (ViewHolder)convertView.getTag();
-				Log.e(TAG,"In getView(!null) with profile " +holder.titleTextView.getText() + " position: " + position);
+				//Log.e(TAG,"In getView(!null) with profile " +holder.titleTextView.getText() + " position: " + position);
 			}
             
         	holder.titleTextView = (TextView)convertView.findViewById(R.id.profileTitleTextView);

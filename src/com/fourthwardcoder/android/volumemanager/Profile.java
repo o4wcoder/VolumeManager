@@ -1,5 +1,6 @@
 package com.fourthwardcoder.android.volumemanager;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -12,6 +13,7 @@ public class Profile implements Constants{
 	/*                    Constants                      */
 	/*****************************************************/
 	private static final String JSON_ID = "id";
+	private static final String JSON_ALARM_ID = "alarmId";
 	private static final String JSON_TITLE = "title";
 	private static final String JSON_ENABLED = "enabled";
 	private static final String JSON_START_DATE = "startDate";
@@ -30,6 +32,7 @@ public class Profile implements Constants{
 	private Date startDate, endDate;
 	private int startVolumeType, endVolumeType;
 	private int startRingVolume, endRingVolume;
+	private int alarmId;
 	
 	/****************************************************/
 	/*                 Constructors                    */
@@ -45,6 +48,8 @@ public class Profile implements Constants{
 		endVolumeType = VOLUME_VIBRATE;
 		startRingVolume = 1;
 		endRingVolume = 1;
+		
+		calculateAlarmId();
 	}
 
 	public Profile(JSONObject json) throws JSONException {
@@ -61,6 +66,8 @@ public class Profile implements Constants{
 		endVolumeType = json.getInt(JSON_END_VOLUME_TYPE);
 		startRingVolume = json.getInt(JSON_START_RING_VOLUME);
 		endRingVolume = json.getInt(JSON_END_RING_VOLUME);
+		
+		calculateAlarmId();
 	}
 	/*****************************************************/
 	/*                 Override Methods                  */
@@ -70,6 +77,19 @@ public class Profile implements Constants{
 		return title;
 	}
 	
+	/*****************************************************/
+	/*                   Private Methods                 */
+	/*****************************************************/
+	private void calculateAlarmId() {
+		
+		String str=""+id;        
+        int uid=str.hashCode();
+        String filterStr=""+uid;
+        str=filterStr.replaceAll("-", "");
+        alarmId = Integer.parseInt(str);
+		
+	}
+	/*****************************************************/
 	/*****************************************************/
 	/*                   Public Methods                  */
 	/*****************************************************/
@@ -88,10 +108,20 @@ public class Profile implements Constants{
 		json.put(JSON_END_RING_VOLUME, endRingVolume);
 		return json;
 	}
+	
 	public UUID getId() {
 		return id;
 	}
 
+	public int getStartAlarmId() {
+		
+		return alarmId;
+	}
+	
+	public int getEndAlarmId() {
+		
+		return alarmId + 1;
+	}
 	public String getTitle() {
 		return title;
 	}

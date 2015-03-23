@@ -33,5 +33,6 @@ public interface Constants {
 	
 	//Extras
 	public static final String EXTRA_START_ALARM = "com.fourthwardcoder.android.volumemanager.startalarm";
+	public static final String EXTRA_PROFILE_ID = "com.fourthwardcoder.android.volumemanager.profile_id";
 
 }

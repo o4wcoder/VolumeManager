@@ -1,6 +1,8 @@
 package com.fourthwardcoder.android.volumemanager;
 
 import java.util.Calendar;
+import java.util.Date;
+import java.util.UUID;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
@@ -33,6 +35,10 @@ public class VolumeManagerService extends IntentService implements Constants{
 	private static final int POLL_INTERVAL = 1000 * 5; //15 seconds
 	private static final String TAG = "VolumeManagerService";
 
+	/*********************************************************************/
+	/*                          Local Data                               */
+	/*********************************************************************/
+
 	
 	public VolumeManagerService() {
 		super(TAG);
@@ -44,8 +50,18 @@ public class VolumeManagerService extends IntentService implements Constants{
 		int ringType = VOLUME_OFF;
 		int ringVolume = 1;
 
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
+		//SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		UUID profileId = (UUID)intent.getSerializableExtra(EXTRA_PROFILE_ID);
+        Profile profile = ProfileManager.get(getApplicationContext()).getProfile(profileId);
+		
+        if(profile == null)
+        	Log.d(TAG,"in onHandleIntel with null profile");
+        else
+           Log.d(TAG,"in onHandleIntent with profile " + profile.getTitle());
+        
+        /*
+		
 		//See if this is a start or end alarm intent
 		boolean isStartAlarm = intent.getBooleanExtra(EXTRA_START_ALARM, true);
 		if(isStartAlarm) {
@@ -74,6 +90,7 @@ public class VolumeManagerService extends IntentService implements Constants{
 		}
 		
 		showNotification(isStartAlarm, ringType);
+		*/
 	}
 
 	private void showNotification(boolean isStartAlarm, int ringType) {
@@ -110,21 +127,25 @@ public class VolumeManagerService extends IntentService implements Constants{
 	 * @param context the context of calling fragment
 	 * @param isOn flag to turn the alarm on/off
 	 */
-	public static void setServiceAlarm(Context context, boolean isOn) {
+	public static void setServiceAlarm(Context context, Profile profile, boolean isOn) {
 
 		//Construct pending intent that will start PollService
 		Log.d(TAG,"Setting Service (start/end) Alarm");
 		//Create start alarm intent
+	
+		
 		Intent startIntent = new Intent(context, VolumeManagerService.class);
 		startIntent.putExtra(EXTRA_START_ALARM,true);
+        startIntent.putExtra(EXTRA_PROFILE_ID, profile.getId());
 
-		PendingIntent startPi = PendingIntent.getService(context, ID_START_ALARM, startIntent, 0);
+		PendingIntent startPi = PendingIntent.getService(context, profile.getStartAlarmId(), startIntent, 0);
 
 		//Create end alarm intent
 		Intent endIntent = new Intent(context, VolumeManagerService.class);
 		endIntent.putExtra(EXTRA_START_ALARM,false);
+		endIntent.putExtra(EXTRA_PROFILE_ID, profile.getId());
 
-		PendingIntent endPi = PendingIntent.getService(context, ID_END_ALARM, endIntent, 0);
+		PendingIntent endPi = PendingIntent.getService(context, profile.getEndAlarmId(), endIntent, 0);
 
 
 		//Set up alarm
@@ -132,14 +153,12 @@ public class VolumeManagerService extends IntentService implements Constants{
 
 		if(isOn) {
 
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
 			//Get start time
-			Calendar startCalendar = getCalendar(prefs.getInt(PREF_START_HOUR, 23), prefs.getInt(PREF_START_MIN, 0));
+			Calendar startCalendar = getCalendar(profile.getStartDate());
 			//Start the alarm. Fire the Pending Intent "pi" when the alarm goes off
 			alarmManager.setRepeating(AlarmManager.RTC, startCalendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, startPi);
 			//Get End Time
-			Calendar endCalendar = getCalendar(prefs.getInt(PREF_END_HOUR, 8), prefs.getInt(PREF_END_MIN, 0));
+			Calendar endCalendar = getCalendar(profile.getEndDate());
 			//Start the alarm. Fire the Pending Intent "pi" when the alarm goes off
 			alarmManager.setRepeating(AlarmManager.RTC, endCalendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, endPi);
 
@@ -165,12 +184,12 @@ public class VolumeManagerService extends IntentService implements Constants{
 	 * @param min the minute of the day
 	 * @return
 	 */
-	private static Calendar getCalendar(int hour, int min) {
+	private static Calendar getCalendar(Date date) {
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(System.currentTimeMillis());
-		calendar.set(Calendar.HOUR_OF_DAY, hour);
-		calendar.set(Calendar.MINUTE, min);
+		calendar.set(Calendar.HOUR_OF_DAY, date.getHours());
+		calendar.set(Calendar.MINUTE, date.getMinutes());
 
 		return calendar;
 	}

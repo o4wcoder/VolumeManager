@@ -19,4 +19,5 @@
     <string name="title_hint">Enter a title for the profile.</string>
     <string name="profile_header">Profiles</string>
     <string name="delete_profile">Delete Profile</string>
+    <string name="new_location">New Location</string>
 </resources>

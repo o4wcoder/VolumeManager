@@ -30,7 +30,7 @@ public class StartupReceiver extends BroadcastReceiver implements Constants {
 		//Turn on alarms if Volume Control is enabled
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		boolean isOn = prefs.getBoolean(PREF_IS_ALARM_ON, false);
-		VolumeManagerService.setServiceAlarm(context, isOn);
+		//VolumeManagerService.setServiceAlarm(context, isOn);
 
 	}
 

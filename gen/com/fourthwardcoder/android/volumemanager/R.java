@@ -1623,8 +1623,11 @@ containing a value of this type.
         public static final int abc_textfield_search_activated_mtrl_alpha=0x7f020030;
         public static final int abc_textfield_search_default_mtrl_alpha=0x7f020031;
         public static final int abc_textfield_search_material=0x7f020032;
-        public static final int ic_action_volume_on=0x7f020033;
-        public static final int ic_launcher=0x7f020034;
+        public static final int ic_action_add_alarm=0x7f020033;
+        public static final int ic_action_place=0x7f020034;
+        public static final int ic_action_time=0x7f020035;
+        public static final int ic_action_volume_on=0x7f020036;
+        public static final int ic_launcher=0x7f020037;
     }
     public static final class id {
         public static final int TextView02=0x7f050054;
@@ -1675,7 +1678,8 @@ containing a value of this type.
         public static final int image=0x7f050023;
         public static final int listMode=0x7f050002;
         public static final int list_item=0x7f050025;
-        public static final int menu_item_delete_profile=0x7f05005f;
+        public static final int menu_item_delete_profile=0x7f050060;
+        public static final int menu_item_new_location_profile=0x7f05005f;
         public static final int menu_item_new_profile=0x7f05005e;
         public static final int middle=0x7f050013;
         public static final int never=0x7f05000b;
@@ -1850,6 +1854,7 @@ containing a value of this type.
         public static final int end_time_dialog=0x7f0a001a;
         public static final int end_volume_settings=0x7f0a0018;
         public static final int hello_world=0x7f0a0011;
+        public static final int new_location=0x7f0a0022;
         public static final int new_profile=0x7f0a001e;
         public static final int no_profiles=0x7f0a001d;
         public static final int off=0x7f0a0014;
