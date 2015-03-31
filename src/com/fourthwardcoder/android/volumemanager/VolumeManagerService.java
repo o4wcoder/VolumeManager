@@ -38,7 +38,7 @@ public class VolumeManagerService extends IntentService implements Constants{
 	/*********************************************************************/
 	/*                          Local Data                               */
 	/*********************************************************************/
-
+    Profile profile;
 	
 	public VolumeManagerService() {
 		super(TAG);
@@ -51,68 +51,69 @@ public class VolumeManagerService extends IntentService implements Constants{
 		int ringVolume = 1;
 
 		//SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		
-		UUID profileId = (UUID)intent.getSerializableExtra(EXTRA_PROFILE_ID);
-        Profile profile = ProfileManager.get(getApplicationContext()).getProfile(profileId);
-		
-        if(profile == null)
-        	Log.d(TAG,"in onHandleIntel with null profile");
-        else
-           Log.d(TAG,"in onHandleIntent with profile " + profile.getTitle());
-        
-        /*
-		
-		//See if this is a start or end alarm intent
-		boolean isStartAlarm = intent.getBooleanExtra(EXTRA_START_ALARM, true);
-		if(isStartAlarm) {
-			ringType = prefs.getInt(PREF_START_VOLUME_TYPE, VOLUME_OFF);
-			ringVolume = prefs.getInt(PREF_START_RING_VOLUME, 1);
-		}
-		else {
-			ringType = prefs.getInt(PREF_END_VOLUME_TYPE, VOLUME_OFF);
-			ringVolume = prefs.getInt(PREF_END_RING_VOLUME, 1);
-		}
-		Log.d(TAG, "Inside onHandleIntent with start alarm with ring type " + ringType);
-		
-		//Get access to system audio manager
-		AudioManager audioManager = (AudioManager) this.getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
 
-		Log.e(TAG,"In onHandle Intent with alarm type " + isStartAlarm);
-		if(ringType == VOLUME_OFF)
-			audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-		else if(ringType == VOLUME_VIBRATE)
-			audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-		else {
-			audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-			Log.d(TAG,"MAX volume " +audioManager.getStreamMaxVolume(AudioManager.STREAM_RING));
-			if(ringVolume > 0 && ringVolume <= audioManager.getStreamMaxVolume(AudioManager.STREAM_RING))
-			   audioManager.setStreamVolume(AudioManager.STREAM_RING, ringVolume, AudioManager.FLAG_PLAY_SOUND);
+		UUID profileId = (UUID)intent.getSerializableExtra(EXTRA_PROFILE_ID);
+		profile = ProfileManager.get(getApplicationContext()).getProfile(profileId);
+
+		if(profile != null) {
+
+			//See if this is a start or end alarm intent
+			boolean isStartAlarm = intent.getBooleanExtra(EXTRA_START_ALARM, true);
+			if(isStartAlarm) {
+				ringType = profile.getStartVolumeType();
+				ringVolume = profile.getStartRingVolume();
+			}
+			else {
+				ringType = profile.getEndVolumeType();
+				ringVolume = profile.getEndRingVolume();
+			}
+			Log.d(TAG, "Inside onHandleIntent with start alarm with ring type " + ringType);
+
+			//Get access to system audio manager
+			AudioManager audioManager = (AudioManager) this.getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+
+			Log.e(TAG,"In onHandle Intent with alarm type " + isStartAlarm);
+			if(ringType == VOLUME_OFF)
+				audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+			else if(ringType == VOLUME_VIBRATE)
+				audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+			else {
+				audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+				Log.d(TAG,"MAX volume " +audioManager.getStreamMaxVolume(AudioManager.STREAM_RING));
+				if(ringVolume > 0 && ringVolume <= audioManager.getStreamMaxVolume(AudioManager.STREAM_RING))
+					audioManager.setStreamVolume(AudioManager.STREAM_RING, ringVolume, AudioManager.FLAG_PLAY_SOUND);
+			}
+
+			showNotification(isStartAlarm, ringType);
+
 		}
-		
-		showNotification(isStartAlarm, ringType);
-		*/
+		else
+			Log.d(TAG,"In onHandleIntent with null profile!!");
+
 	}
 
 	private void showNotification(boolean isStartAlarm, int ringType) {
 		
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(System.currentTimeMillis());
-		String strTime = "Time: " +calendar.getTime().getHours() + ":" + calendar.getTime().getMinutes();
+		
+		String strTime = ProfileListFragment.formatTime(calendar.getTime());
 		String strTitle;
 		int id;
 		if(isStartAlarm) {
-			strTitle = "Start Alarm";
+			strTitle = "Start Alarm: " + profile.getTitle();
 			id = 1;
 		}
 		else {
-			strTitle = "End Alarm";
+			strTitle = "End Alarm: " + profile.getTitle();
 			id = 2;
 		}
 	    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-	    .setSmallIcon(android.R.drawable.ic_dialog_info)
+	    .setSmallIcon(R.drawable.ic_action_volume_on_light)
 	    .setContentTitle(strTitle)
 	    .setContentText(strTime);
 	    
+	   
 	    NotificationManager mNotifyMgr = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 	    mNotifyMgr.notify(id,mBuilder.build());
 	}

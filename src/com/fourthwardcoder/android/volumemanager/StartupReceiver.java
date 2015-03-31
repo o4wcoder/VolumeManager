@@ -1,5 +1,7 @@
 package com.fourthwardcoder.android.volumemanager;
 
+import java.util.ArrayList;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -22,16 +24,20 @@ public class StartupReceiver extends BroadcastReceiver implements Constants {
 	/*                    Constants                          */
 	/*********************************************************/
 	private final static String TAG = "StartupReceiver";
-	
+
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Log.d(TAG,"Receiver broadcast intent: " + intent.getAction());
-		
-		//Turn on alarms if Volume Control is enabled
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		boolean isOn = prefs.getBoolean(PREF_IS_ALARM_ON, false);
-		//VolumeManagerService.setServiceAlarm(context, isOn);
 
+		//Get list of profiles
+		ArrayList<Profile> profileList = ProfileManager.get(context).getProfiles();
+
+		for(int i = 0; i < profileList.size(); i++){
+
+			//Got through each profile and turn on the volume alarms for the ones that are enabled
+			if(profileList.get(i).isEnabled())
+				VolumeManagerService.setServiceAlarm(context, profileList.get(i), true);
+		}
 	}
 
 }

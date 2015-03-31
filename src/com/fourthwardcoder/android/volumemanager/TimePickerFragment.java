@@ -7,6 +7,7 @@ import java.util.Date;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -71,7 +72,7 @@ public class TimePickerFragment extends DialogFragment implements Constants {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(mTime);
 		
-		int hour = calendar.get(Calendar.HOUR);
+		int hour = calendar.get(Calendar.HOUR_OF_DAY);
 		int min = calendar.get(Calendar.MINUTE);
 		
 		View v = getActivity().getLayoutInflater()
@@ -86,7 +87,7 @@ public class TimePickerFragment extends DialogFragment implements Constants {
 			@Override
 			public void onTimeChanged(TimePicker view, int hour, int min) {
 				
-				Log.d(TAG,"Got Hour " + hour);
+				//Log.d(TAG,"Got Hour " + hour);
 				//retrieving the original date from the mTime value with a calendar
 				Calendar calendar = Calendar.getInstance();
 				calendar.setTime(mTime);
@@ -96,7 +97,7 @@ public class TimePickerFragment extends DialogFragment implements Constants {
 				//Translating hourOfDay & minute into a Date object using a calendar, date keeps
 				//the same
 				mTime = calendar.getTime();
-				Log.d(TAG,"Hour in data object " + mTime.getHours());
+				//Log.d(TAG,"Hour in data object " + mTime.getHours());
 			
 			
 				//Update arguments to preserve selected value on rotation
@@ -142,4 +143,5 @@ public class TimePickerFragment extends DialogFragment implements Constants {
 		//An intent that can have extra data
 		getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, i);
 	}
+
 }

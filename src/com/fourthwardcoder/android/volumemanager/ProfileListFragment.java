@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
@@ -27,6 +28,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -68,10 +70,24 @@ public class ProfileListFragment extends Fragment {
 
 		View view = inflater.inflate(R.layout.fragment_profile_list, container, false);
 
-		listview = (ListView)view.findViewById(R.id.profileListView);
+		Button newProfileButton = (Button)view.findViewById(R.id.emptyButtonAddProfile);
+		newProfileButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				newProfile();
+				
+			}
+			
+		});
+		
+
+		
+		listview = (ListView)view.findViewById(android.R.id.list);
 
 		profileAdapter = new ProfileListAdapter(profileList,listview);
 		listview.setAdapter(profileAdapter);
+		listview.setEmptyView(view.findViewById(android.R.id.empty));
 
 		listview.setOnItemClickListener(new OnItemClickListener(){
 
@@ -115,10 +131,13 @@ public class ProfileListFragment extends Fragment {
 					case R.id.menu_item_delete_profile:
 						
 						ProfileManager profileManager = ProfileManager.get(getActivity());
-
+ 
+						Log.d(TAG,"in onActionItemClicked with adapter count "+ profileAdapter.getCount());
 						//Delete selected crimes
 						for(int i = profileAdapter.getCount() - 1; i >= 0; i--) {
 							if(listview.isItemChecked(i)) {
+								//Kill alarms for volume control
+								VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), profileAdapter.getItem(i),false);
 								profileManager.deleteProfile(profileAdapter.getItem(i));
 							}
 						}
@@ -158,12 +177,15 @@ public class ProfileListFragment extends Fragment {
 				public void onItemCheckedStateChanged(android.view.ActionMode mode,
 						int position, long id, boolean checked) {
 					// TODO Auto-generated method stub
+					Log.d(TAG,"Selected list item at position " + position);
 
 				}
 
 
 			});
 		}
+		
+		
 
 		return view;
 	}
@@ -204,6 +226,7 @@ public class ProfileListFragment extends Fragment {
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		
+		Log.d(TAG,"in onContextItemSelected");
 		//Get menu item in context menu. ListView is a subclass of AdapterView
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
 		int position = info.position;
@@ -214,6 +237,8 @@ public class ProfileListFragment extends Fragment {
 		   case R.id.menu_item_delete_profile:
 			   ProfileManager.get(getActivity()).deleteProfile(profile);
 			   profileAdapter.notifyDataSetChanged();
+			   //Kill alarms for volume control
+			   VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), profile,false);
 			   return true;
 		}
 		
@@ -340,6 +365,7 @@ public class ProfileListFragment extends Fragment {
 		//Override getView to return a view inflated from the custom
 		//layout and inflated with Profile Data
 		
+		
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -347,14 +373,15 @@ public class ProfileListFragment extends Fragment {
             int rowType = getItemViewType(position);
             
             //Log.e(TAG,"VP: " + listView.getFirstVisiblePosition() +": " + getItem(listView.getFirstVisiblePosition()).getHour() + " hp: " + headerPosition);
-        
+       
+            
 			//If we weren't given a view, inflate one
             if (convertView == null) {
             	holder = new ViewHolder();
-
+ 
             	if(rowType == NORMAL_PROFILE) {
             		convertView = getActivity().getLayoutInflater().inflate(R.layout.profile_list_item,null);
-            	           		            	    
+            	           		        	    
             	}
             	else {
                    //Set up moving car/bike list row

@@ -27,7 +27,7 @@
            android:text="@string/no_profiles" />
         
         <Button 
-            android:id="@+id/emptyButtonAddCrime"
+            android:id="@+id/emptyButtonAddProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/new_profile"/>
