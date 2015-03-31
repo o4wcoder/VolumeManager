@@ -9,4 +9,12 @@
         android:icon="@drawable/ic_action_place"
         android:title="@string/new_profile"
         android:showAsAction="ifRoom|withText" />
+    
+    <item android:id="@+id/menu_item_settings"
+        android:title="@string/settings_menu"
+        android:showAsAction="never" />
+    
+    <item android:id="@+id/about_item_settings"
+        android:title="@string/about_menu"
+        android:showAsAction="never" />
 </menu>

@@ -1634,6 +1634,7 @@ containing a value of this type.
     }
     public static final class id {
         public static final int TextView02=0x7f050053;
+        public static final int about_item_settings=0x7f050060;
         public static final int action_bar=0x7f050031;
         public static final int action_bar_activity_content=0x7f050018;
         public static final int action_bar_container=0x7f050030;
@@ -1681,9 +1682,10 @@ containing a value of this type.
         public static final int image=0x7f050023;
         public static final int listMode=0x7f050002;
         public static final int list_item=0x7f050025;
-        public static final int menu_item_delete_profile=0x7f05005f;
+        public static final int menu_item_delete_profile=0x7f050061;
         public static final int menu_item_new_location_profile=0x7f05005e;
         public static final int menu_item_new_profile=0x7f05005d;
+        public static final int menu_item_settings=0x7f05005f;
         public static final int middle=0x7f050013;
         public static final int never=0x7f05000b;
         public static final int none=0x7f050004;
@@ -1850,6 +1852,7 @@ containing a value of this type.
         /**  Content description for the Toolbar icon used to collapse an expanded action mode. [CHAR LIMIT=NONE] 
          */
         public static final int abc_toolbar_collapse_description=0x7f0a0004;
+        public static final int about_menu=0x7f0a0024;
         public static final int app_name=0x7f0a0010;
         public static final int delete_profile=0x7f0a0021;
         public static final int end_time=0x7f0a0013;
@@ -1863,6 +1866,7 @@ containing a value of this type.
         public static final int profile_header=0x7f0a0020;
         public static final int ring=0x7f0a0016;
         public static final int set_control_button=0x7f0a001b;
+        public static final int settings_menu=0x7f0a0023;
         public static final int start_time=0x7f0a0012;
         public static final int start_time_dialog=0x7f0a0019;
         public static final int start_volume_settings=0x7f0a0017;

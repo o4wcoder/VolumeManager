@@ -209,7 +209,7 @@ public class ProfileListFragment extends Fragment {
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
+		//super.onCreateOptionsMenu(menu, inflater);
 		
 		//Pass the resource ID of the menu and populate the Menu 
 		//instance with the items defined in the xml file

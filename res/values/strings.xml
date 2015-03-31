@@ -20,4 +20,6 @@
     <string name="profile_header">Profiles</string>
     <string name="delete_profile">Delete Profile</string>
     <string name="new_location">New Location</string>
+    <string name="settings_menu">Settings</string>
+    <string name="about_menu">About</string>
 </resources>
