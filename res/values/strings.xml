@@ -22,4 +22,6 @@
     <string name="new_location">New Location</string>
     <string name="settings_menu">Settings</string>
     <string name="about_menu">About</string>
+    <string name="notification_text">Enable Notifcations to be sent every time there is a volume control change by a profile</string>
+    <string name="notification_header">Notifications</string>
 </resources>

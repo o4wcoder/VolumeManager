@@ -11,7 +11,7 @@
         android:padding="16dp" >
 
         <Switch
-            android:id="@+id/volumeSwitch"
+            android:id="@+id/volumeNotifySwitch"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"

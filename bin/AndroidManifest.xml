@@ -20,6 +20,10 @@
             android:label="@string/app_name" >
         </activity>
         <activity
+            android:name="com.fourthwardcoder.android.volumemanager.SettingsActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
             android:name="com.fourthwardcoder.android.volumemanager.ProfileListActivity"
             android:label="@string/app_name" >
             <intent-filter>

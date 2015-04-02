@@ -84,7 +84,10 @@ public class VolumeManagerService extends IntentService implements Constants{
 					audioManager.setStreamVolume(AudioManager.STREAM_RING, ringVolume, AudioManager.FLAG_PLAY_SOUND);
 			}
 
-			showNotification(isStartAlarm, ringType);
+			//Send notification if they are turned on
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+			if(prefs.getBoolean(PREF_VOLUME_NOTIFY_ENABLED, false))
+			   showNotification(isStartAlarm, ringType);
 
 		}
 		else
@@ -175,8 +178,8 @@ public class VolumeManagerService extends IntentService implements Constants{
 
 		//Store if alarm is on or off so StartupReceiver can use it to turn
 		//it on at bootup
-		PreferenceManager.getDefaultSharedPreferences(context)
-			.edit().putBoolean(PREF_IS_ALARM_ON, isOn).commit();
+	//	PreferenceManager.getDefaultSharedPreferences(context)
+		//	.edit().putBoolean(PREF_IS_ALARM_ON, isOn).commit();
 	}
 
 	/**

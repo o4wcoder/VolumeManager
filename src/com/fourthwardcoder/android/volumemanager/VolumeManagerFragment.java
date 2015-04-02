@@ -263,7 +263,7 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 	    /*
 	     * Set up volume Switch
 	     */
-	    volumeSwitch = (Switch)view.findViewById(R.id.volumeSwitch);
+	    volumeSwitch = (Switch)view.findViewById(R.id.volumeNotifySwitch);
 	    volumeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				//Turn components on/off and save settings

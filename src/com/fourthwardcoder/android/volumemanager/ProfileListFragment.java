@@ -240,6 +240,7 @@ public class ProfileListFragment extends Fragment {
 			   //Kill alarms for volume control
 			   VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), profile,false);
 			   return true;
+		  
 		}
 		
 		return super.onContextItemSelected(item);
@@ -256,6 +257,11 @@ public class ProfileListFragment extends Fragment {
 		    	return true;
 		    case R.id.menu_item_new_location_profile:
 		    	return true;
+		    	
+			case R.id.menu_item_settings:
+				   Intent i = new Intent(getActivity(),SettingsActivity.class);
+				   startActivity(i);
+				   return true;
 		    default:
 		    	return super.onOptionsItemSelected(item);
 		}

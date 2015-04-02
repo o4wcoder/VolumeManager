@@ -11,6 +11,7 @@ package com.fourthwardcoder.android.volumemanager;
 public interface Constants {
 	
 	//Shared Preferences
+	/*
 	public static final String PREF_CONTROL_ENABLED = "controlEnabled";
 	public static final String PREF_START_HOUR = "startHour";
 	public static final String PREF_START_MIN = "startMin";
@@ -21,6 +22,9 @@ public interface Constants {
 	public static final String PREF_START_RING_VOLUME = "startRingVolume";
 	public static final String PREF_END_RING_VOLUME = "endRingVolume";
 	public static final String PREF_IS_ALARM_ON = "isAlarmOn";
+	*/
+	public static final String PREF_VOLUME_NOTIFY_ENABLED = "volumeNotifyEnabled";
+	public static final String PREF_LOCATION_NOTIFY_ENABLED = "locationNotifyEnabled";
 	
 	//Volume Constants
 	public static final int VOLUME_OFF = 0;
