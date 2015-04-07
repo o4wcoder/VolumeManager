@@ -27,5 +27,16 @@
         <item name="android:background">#0FA1D3</item>
 
     </style>
+    
+    <style name="DayButton">
+       <item name="android:layout_width">0dp</item>
+       <item name="android:layout_height">match_parent</item>
+       <item name="android:layout_weight">1</item>    
+       <item name="android:textColor">#0FA1D3</item>
+       <item name="android:textSize">20sp</item>
+       <item name="android:minHeight">38dp</item>
+       <item name="android:minWidth">38dp</item>
+
+    </style>
 
 </resources>

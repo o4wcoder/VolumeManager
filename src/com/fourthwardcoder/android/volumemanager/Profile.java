@@ -2,6 +2,7 @@ package com.fourthwardcoder.android.volumemanager;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.UUID;
 
 import org.json.JSONException;
@@ -33,6 +34,7 @@ public class Profile implements Constants{
 	private int startVolumeType, endVolumeType;
 	private int startRingVolume, endRingVolume;
 	private int alarmId;
+	private HashMap<String,Boolean> daysOfWeek = new HashMap<String,Boolean>();
 	
 	/****************************************************/
 	/*                 Constructors                    */
@@ -50,6 +52,8 @@ public class Profile implements Constants{
 		endRingVolume = 1;
 		
 		calculateAlarmId();
+		initDaysOfWeek();
+		
 	}
 
 	public Profile(JSONObject json) throws JSONException {
@@ -80,6 +84,11 @@ public class Profile implements Constants{
 	/*****************************************************/
 	/*                   Private Methods                 */
 	/*****************************************************/
+	private void initDaysOfWeek() {
+		
+		//daysOfWeek.put(MONDAY,true);
+		//daysOfWeek.put(key, value)
+	}
 	private void calculateAlarmId() {
 		
 		String str=""+id;        

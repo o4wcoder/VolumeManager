@@ -38,5 +38,15 @@ public interface Constants {
 	//Extras
 	public static final String EXTRA_START_ALARM = "com.fourthwardcoder.android.volumemanager.startalarm";
 	public static final String EXTRA_PROFILE_ID = "com.fourthwardcoder.android.volumemanager.profile_id";
+	
+	public static final String MONDAY = "Monday";
+	public static final String TUESDAY = "Tuesday";
+	public static final String WEDNESDAY = "Wednesday";
+	public static final String THURSDAY = "THURSDAY";
+	public static final String FRIDAY = "Friday";
+	public static final String SATURDAY = "Saturday";
+	public static final String SUNDAY = "Sunday";
+	
+	public static final String daysButtonNames[] ={"S","M","T","W","T","F","S"};
 
 }

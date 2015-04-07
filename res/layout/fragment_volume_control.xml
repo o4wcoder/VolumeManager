@@ -34,6 +34,76 @@
             
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:orientation="horizontal" >
+
+            <TableRow
+                android:id="@+id/daysTableRow"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <Button
+                    android:id="@+id/Button06"
+                    style="@style/DayButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="38dp"
+                    android:minWidth="38dp" />
+
+                <Button
+                    android:id="@+id/Button05"
+                    style="@style/DayButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="38dp"
+                    android:minWidth="38dp" />
+
+                <Button
+                    android:id="@+id/Button04"
+                    style="@style/DayButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="38dp"
+                    android:minWidth="38dp" />
+
+                <Button
+                    android:id="@+id/Button03"
+                    style="@style/DayButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="38dp"
+                    android:minWidth="38dp" />
+
+                <Button
+                    android:id="@+id/Button02"
+                    style="@style/DayButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="38dp"
+                    android:minWidth="38dp" />
+
+                <Button
+                    android:id="@+id/Button01"
+                    style="@style/DayButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="38dp"
+                    android:minWidth="38dp" />
+
+                <Button
+                    android:id="@+id/button1"
+                    style="@style/DayButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="38dp"
+                    android:minWidth="38dp" />
+
+                </TableRow>
+            
+        </LinearLayout>
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

@@ -1633,8 +1633,14 @@ containing a value of this type.
         public static final int ic_launcher=0x7f020039;
     }
     public static final class id {
-        public static final int TextView02=0x7f050056;
-        public static final int about_item_settings=0x7f050063;
+        public static final int Button01=0x7f050050;
+        public static final int Button02=0x7f05004f;
+        public static final int Button03=0x7f05004e;
+        public static final int Button04=0x7f05004d;
+        public static final int Button05=0x7f05004c;
+        public static final int Button06=0x7f05004b;
+        public static final int TextView02=0x7f05005e;
+        public static final int about_item_settings=0x7f05006b;
         public static final int action_bar=0x7f050031;
         public static final int action_bar_activity_content=0x7f050018;
         public static final int action_bar_container=0x7f050030;
@@ -1652,8 +1658,10 @@ containing a value of this type.
         public static final int activity_chooser_view_content=0x7f050021;
         public static final int always=0x7f05000d;
         public static final int beginning=0x7f050012;
+        public static final int button1=0x7f050051;
         public static final int checkbox=0x7f050029;
         public static final int collapseActionView=0x7f05000f;
+        public static final int daysTableRow=0x7f05004a;
         public static final int decor_content_parent=0x7f05002f;
         public static final int default_activity_button=0x7f050024;
         public static final int dialog=0x7f050010;
@@ -1664,14 +1672,14 @@ containing a value of this type.
         public static final int emptyButtonAddProfile=0x7f050043;
         public static final int emptyTextView=0x7f050042;
         public static final int end=0x7f050014;
-        public static final int endOffRadio=0x7f050058;
-        public static final int endRingRadio=0x7f05005a;
-        public static final int endRingSeekBar=0x7f05005d;
-        public static final int endRingVolumeTextView=0x7f05005b;
-        public static final int endTimeButton=0x7f050055;
-        public static final int endTimeTextView=0x7f050054;
-        public static final int endVibrateRadio=0x7f050059;
-        public static final int endVolumeRadioGroup=0x7f050057;
+        public static final int endOffRadio=0x7f050060;
+        public static final int endRingRadio=0x7f050062;
+        public static final int endRingSeekBar=0x7f050065;
+        public static final int endRingVolumeTextView=0x7f050063;
+        public static final int endTimeButton=0x7f05005d;
+        public static final int endTimeTextView=0x7f05005c;
+        public static final int endVibrateRadio=0x7f050061;
+        public static final int endVolumeRadioGroup=0x7f05005f;
         public static final int expand_activities_button=0x7f050022;
         public static final int expanded_menu=0x7f050028;
         public static final int fragmentContainer=0x7f050040;
@@ -1683,10 +1691,10 @@ containing a value of this type.
         public static final int listMode=0x7f050002;
         public static final int list_item=0x7f050025;
         public static final int locationNotifySwitch=0x7f050048;
-        public static final int menu_item_delete_profile=0x7f050064;
-        public static final int menu_item_new_location_profile=0x7f050061;
-        public static final int menu_item_new_profile=0x7f050060;
-        public static final int menu_item_settings=0x7f050062;
+        public static final int menu_item_delete_profile=0x7f05006c;
+        public static final int menu_item_new_location_profile=0x7f050069;
+        public static final int menu_item_new_profile=0x7f050068;
+        public static final int menu_item_settings=0x7f05006a;
         public static final int middle=0x7f050013;
         public static final int never=0x7f05000b;
         public static final int none=0x7f050004;
@@ -1694,8 +1702,8 @@ containing a value of this type.
         public static final int notificationText=0x7f050046;
         public static final int notifyHeaderTextView=0x7f050045;
         public static final int profileHeaderTextView=0x7f050044;
-        public static final int profileTimeTextView=0x7f05004c;
-        public static final int profileTitleTextView=0x7f05005f;
+        public static final int profileTimeTextView=0x7f050054;
+        public static final int profileTitleTextView=0x7f050067;
         public static final int progress_circular=0x7f05001c;
         public static final int progress_horizontal=0x7f05001d;
         public static final int radio=0x7f05002b;
@@ -1709,29 +1717,29 @@ containing a value of this type.
         public static final int search_plate=0x7f050039;
         public static final int search_src_text=0x7f05003a;
         public static final int search_voice_btn=0x7f05003e;
-        public static final int setControlButton=0x7f05005e;
+        public static final int setControlButton=0x7f050066;
         public static final int shortcut=0x7f05002a;
         public static final int showCustom=0x7f050009;
         public static final int showHome=0x7f050006;
         public static final int showTitle=0x7f050008;
         public static final int split_action_bar=0x7f050019;
-        public static final int startOffRadio=0x7f05004e;
-        public static final int startRingRadio=0x7f050050;
-        public static final int startRingSeekBar=0x7f050053;
-        public static final int startRingVolumeTextView=0x7f050051;
-        public static final int startTimeButton=0x7f05004b;
-        public static final int startTimeTextView=0x7f05004a;
-        public static final int startVibrateRadio=0x7f05004f;
-        public static final int startVolumeRadioGroup=0x7f05004d;
+        public static final int startOffRadio=0x7f050056;
+        public static final int startRingRadio=0x7f050058;
+        public static final int startRingSeekBar=0x7f05005b;
+        public static final int startRingVolumeTextView=0x7f050059;
+        public static final int startTimeButton=0x7f050053;
+        public static final int startTimeTextView=0x7f050052;
+        public static final int startVibrateRadio=0x7f050057;
+        public static final int startVolumeRadioGroup=0x7f050055;
         public static final int submit_area=0x7f05003c;
         public static final int tabMode=0x7f050003;
         public static final int title=0x7f050027;
         public static final int titleTextView=0x7f050049;
         public static final int up=0x7f050016;
         public static final int useLogo=0x7f050005;
-        public static final int volumeEndImageView=0x7f05005c;
+        public static final int volumeEndImageView=0x7f050064;
         public static final int volumeNotifySwitch=0x7f050047;
-        public static final int volumeStartImageView=0x7f050052;
+        public static final int volumeStartImageView=0x7f05005a;
         public static final int withText=0x7f05000e;
         public static final int wrap_content=0x7f050000;
     }
@@ -2057,6 +2065,7 @@ containing a value of this type.
         /**  the theme applied to the application or activity 
          */
         public static final int CustomActionBarTheme=0x7f0b00ed;
+        public static final int DayButton=0x7f0b00ef;
         public static final int Platform_AppCompat=0x7f0b00c9;
         public static final int Platform_AppCompat_Dialog=0x7f0b00cb;
         public static final int Platform_AppCompat_Light=0x7f0b00ca;

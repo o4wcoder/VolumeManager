@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TableRow;
 import android.widget.Toast;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.SeekBar;
@@ -123,6 +124,21 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 	    /*
 	     * Setup Buttons                     
 	     */
+		View.OnClickListener dayButtonListener = new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+                 Log.d(TAG,"Button tag: " + v.getTag());
+				
+			}
+		};
+		TableRow daysRow = (TableRow)view.findViewById(R.id.daysTableRow);
+		for(int i = 0; i < daysRow.getChildCount(); i ++) {
+			Button button = (Button)daysRow.getChildAt(i);
+	        button.setText(Constants.daysButtonNames[i]);
+	        button.setOnClickListener(dayButtonListener);
+	        button.setTag(new Integer(i));
+		}
 	    //Setup start time of volume control
 	    startTimeButton = (Button)view.findViewById(R.id.startTimeButton);
 	    startTimeButton.setOnClickListener(new OnClickListener() {
