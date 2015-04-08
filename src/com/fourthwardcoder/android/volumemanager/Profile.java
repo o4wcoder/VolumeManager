@@ -5,14 +5,18 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.util.Log;
 
 public class Profile implements Constants{
 	
 	/*****************************************************/
 	/*                    Constants                      */
 	/*****************************************************/
+	private final static String TAG = "Profile";
 	private static final String JSON_ID = "id";
 	private static final String JSON_ALARM_ID = "alarmId";
 	private static final String JSON_TITLE = "title";
@@ -23,6 +27,9 @@ public class Profile implements Constants{
 	private static final String JSON_END_VOLUME_TYPE = "endVolumeType";
 	private static final String JSON_START_RING_VOLUME = "startRingVolume";
 	private static final String JSON_END_RING_VOLUME = "endRingVolume";
+	private static final String JSON_DAYS_OF_THE_WEEK = "daysOfTheWeek";
+	
+	private static final int DAYS_OF_THE_WEEK = 7;
 	
 	/*****************************************************/
 	/*                  Local Data                       */
@@ -34,8 +41,8 @@ public class Profile implements Constants{
 	private int startVolumeType, endVolumeType;
 	private int startRingVolume, endRingVolume;
 	private int alarmId;
-	private HashMap<String,Boolean> daysOfWeek = new HashMap<String,Boolean>();
-	
+	private boolean daysOfTheWeek[] = new boolean[DAYS_OF_THE_WEEK];
+
 	/****************************************************/
 	/*                 Constructors                    */
 	/****************************************************/
@@ -59,6 +66,7 @@ public class Profile implements Constants{
 	public Profile(JSONObject json) throws JSONException {
 		id = UUID.fromString(json.getString(JSON_ID));
 	
+		Log.d(TAG,"Inside Profile Constructor");
 		if(json.has(JSON_TITLE)) {
 			title = json.getString(JSON_TITLE);
 		}
@@ -71,6 +79,11 @@ public class Profile implements Constants{
 		startRingVolume = json.getInt(JSON_START_RING_VOLUME);
 		endRingVolume = json.getInt(JSON_END_RING_VOLUME);
 		
+		JSONArray daysArray = json.getJSONArray(JSON_DAYS_OF_THE_WEEK);
+		
+		for(int i = 0; i < DAYS_OF_THE_WEEK; i++)
+			daysOfTheWeek[i] = (boolean) daysArray.get(i);
+	
 		calculateAlarmId();
 	}
 	/*****************************************************/
@@ -86,8 +99,8 @@ public class Profile implements Constants{
 	/*****************************************************/
 	private void initDaysOfWeek() {
 		
-		//daysOfWeek.put(MONDAY,true);
-		//daysOfWeek.put(key, value)
+		for(int i = 0; i < 7; i++)
+			daysOfTheWeek[i] = true;
 	}
 	private void calculateAlarmId() {
 		
@@ -98,7 +111,6 @@ public class Profile implements Constants{
         alarmId = Integer.parseInt(str);
 		
 	}
-	/*****************************************************/
 	/*****************************************************/
 	/*                   Public Methods                  */
 	/*****************************************************/
@@ -115,7 +127,23 @@ public class Profile implements Constants{
 		json.put(JSON_END_VOLUME_TYPE, endVolumeType);
 		json.put(JSON_START_RING_VOLUME, startRingVolume);
 		json.put(JSON_END_RING_VOLUME, endRingVolume);
+		
+		JSONArray jArray = new JSONArray();
+		for(int i = 0; i < DAYS_OF_THE_WEEK; i++)
+			jArray.put(daysOfTheWeek[i]);
+		
+		json.put(JSON_DAYS_OF_THE_WEEK, jArray);
+		
+		Log.d(TAG,"Put json object: " + json.toString());
 		return json;
+	}
+	
+	public boolean[] getDaysOfTheWeek() {
+		return daysOfTheWeek;
+	}
+
+	public void setDaysOfTheWeek(boolean[] daysOfTheWeek) {
+		this.daysOfTheWeek = daysOfTheWeek;
 	}
 	
 	public UUID getId() {
@@ -199,5 +227,19 @@ public class Profile implements Constants{
 		
 		return ProfileListFragment.formatTime(startDate) + " - " + ProfileListFragment.formatTime(endDate);
 	}
+	
+	public String getDaysOfWeekString() {
 
+		String strDays = "";
+		for(int i=0; i< DAYS_OF_THE_WEEK; i++) {
+	        
+			if(daysOfTheWeek[i]) {
+				strDays += daysButtonNames[i];
+				if(i != DAYS_OF_THE_WEEK - 1)
+					strDays += ",";
+			}
+		}
+		
+		return strDays;
+	}
 }

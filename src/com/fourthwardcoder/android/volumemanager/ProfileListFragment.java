@@ -336,6 +336,7 @@ public class ProfileListFragment extends Fragment {
 
 		public TextView titleTextView;
 		public TextView timeTextView;
+		public TextView daysTextView;
 	}
 	
 	private class ProfileListAdapter extends ArrayAdapter<Profile> {
@@ -404,6 +405,9 @@ public class ProfileListFragment extends Fragment {
             holder.timeTextView = (TextView)convertView.findViewById(R.id.profileTimeTextView);
             
             holder.timeTextView.setText(getItem(position).getFullTimeForListItem());
+            
+            holder.daysTextView = (TextView)convertView.findViewById(R.id.profileDaysTextView);
+            holder.daysTextView.setText(getItem(position).getDaysOfWeekString());
             	
             return convertView;
 		}

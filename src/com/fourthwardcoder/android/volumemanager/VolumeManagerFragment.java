@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -71,6 +72,7 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 	int startVolumeType,endVolumeType;
 	int startRingVolume,endRingVolume;
 	TextView startRingVolumeTextView, endRingVolumeTextView;
+	boolean daysOfTheWeek[];
 	
 	/*******************************************************/
 	/*                  Override Methods                   */
@@ -97,6 +99,7 @@ public class VolumeManagerFragment extends Fragment implements Constants{
         endVolumeType = profile.getEndVolumeType();
         startRingVolume = profile.getStartRingVolume();
         endRingVolume = profile.getEndRingVolume();
+        daysOfTheWeek = profile.getDaysOfTheWeek();
 	}
 	
 	@Override
@@ -129,15 +132,42 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 			@Override
 			public void onClick(View v) {
                  Log.d(TAG,"Button tag: " + v.getTag());
-				
+                 TextView textView = (TextView)v;
+                 boolean setting = daysOfTheWeek[(int)v.getTag()];
+                 
+                 if(setting) {
+                	 //Turn Day off
+                	 daysOfTheWeek[(int)v.getTag()] = false;
+                	 textView.setTextColor(Color.parseColor("#808080"));
+                 }
+                 else {
+                	 //Turn Day on
+                	 daysOfTheWeek[(int)v.getTag()] = true;
+                	 textView.setTextColor(Color.parseColor("#0FA1D3"));
+                 }
+                 
+                 
 			}
 		};
+		
 		TableRow daysRow = (TableRow)view.findViewById(R.id.daysTableRow);
 		for(int i = 0; i < daysRow.getChildCount(); i ++) {
 			Button button = (Button)daysRow.getChildAt(i);
 	        button.setText(Constants.daysButtonNames[i]);
 	        button.setOnClickListener(dayButtonListener);
 	        button.setTag(new Integer(i));
+	        
+	        boolean setting = daysOfTheWeek[i];
+	        if(setting) {
+	        	//Turn Day on
+	        	button.setTextColor(Color.parseColor("#0FA1D3"));
+	        }
+	        else {
+	        	//Turn Day off
+	        	button.setTextColor(Color.parseColor("#808080"));
+	        }
+	        	
+	        
 		}
 	    //Setup start time of volume control
 	    startTimeButton = (Button)view.findViewById(R.id.startTimeButton);
@@ -382,23 +412,7 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 	private void saveSettings() {
 		
 		Log.d(TAG,"Saving enabled " + isControlEnabled);
-		//Save Settings to PreferenceManager		
-		/*
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-		SharedPreferences.Editor prefsEditor = prefs.edit();
-		prefsEditor.putBoolean(PREF_CONTROL_ENABLED,isControlEnabled);
-		prefsEditor.putInt(PREF_START_HOUR, startDate.getHours());
-		prefsEditor.putInt(PREF_START_MIN, startDate.getMinutes());
-		prefsEditor.putInt(PREF_END_HOUR, endDate.getHours());
-		prefsEditor.putInt(PREF_END_MIN, endDate.getMinutes());
-		prefsEditor.putInt(PREF_START_VOLUME_TYPE, startVolumeType);
-		prefsEditor.putInt(PREF_END_VOLUME_TYPE, endVolumeType);
-	    prefsEditor.putInt(PREF_START_RING_VOLUME, startRingVolume);
-	    prefsEditor.putInt(PREF_END_RING_VOLUME, endRingVolume);
-		prefsEditor.commit();
-		*/
-		
-		//Profile p = new Profile();
+
 		profile.setTitle(titleTextView.getText().toString());
 		profile.setEnabled(isControlEnabled);
 		profile.setStartDate(startDate);
@@ -407,6 +421,7 @@ public class VolumeManagerFragment extends Fragment implements Constants{
 		profile.setEndVolumeType(endVolumeType);
 		profile.setStartRingVolume(startRingVolume);
 		profile.setEndRingVolume(endRingVolume);
+		profile.setDaysOfTheWeek(daysOfTheWeek);
 		
 		ProfileManager.get(getActivity()).saveProfiles();
 		
