@@ -524,6 +524,7 @@ int string start_volume_settings 0x7f0a0017
 int string title_hint 0x7f0a001f
 int string toast_text 0x7f0a001c
 int string vibrate 0x7f0a0015
+int style AlarmButton 0x7f0b00f0
 int style AppBaseTheme 0x7f0b00eb
 int style AppTheme 0x7f0b00ec
 int style Base_TextAppearance_AppCompat 0x7f0b0098
@@ -654,6 +655,7 @@ int style RtlOverlay_Widget_AppCompat_Search_DropDown_Icon2 0x7f0b00b2
 int style RtlOverlay_Widget_AppCompat_Search_DropDown_Query 0x7f0b00b0
 int style RtlOverlay_Widget_AppCompat_Search_DropDown_Text 0x7f0b00b3
 int style RtlOverlay_Widget_AppCompat_SearchView_MagIcon 0x7f0b00ae
+int style SetButton 0x7f0b00f1
 int style TextAppearance_AppCompat 0x7f0b0038
 int style TextAppearance_AppCompat_Body1 0x7f0b0043
 int style TextAppearance_AppCompat_Body2 0x7f0b0042

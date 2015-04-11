@@ -38,8 +38,8 @@ public class VolumeManagerService extends IntentService implements Constants{
 	/*********************************************************************/
 	/*                          Local Data                               */
 	/*********************************************************************/
-    Profile profile;
-	
+	Profile profile;
+
 	public VolumeManagerService() {
 		super(TAG);
 		// TODO Auto-generated constructor stub
@@ -57,38 +57,40 @@ public class VolumeManagerService extends IntentService implements Constants{
 
 		if(profile != null) {
 
-			//See if this is a start or end alarm intent
-			boolean isStartAlarm = intent.getBooleanExtra(EXTRA_START_ALARM, true);
-			if(isStartAlarm) {
-				ringType = profile.getStartVolumeType();
-				ringVolume = profile.getStartRingVolume();
+			if(isAlarmSetForToday(profile)) {
+				//See if this is a start or end alarm intent
+				boolean isStartAlarm = intent.getBooleanExtra(EXTRA_START_ALARM, true);
+				if(isStartAlarm) {
+					ringType = profile.getStartVolumeType();
+					ringVolume = profile.getStartRingVolume();
+				}
+				else {
+					ringType = profile.getEndVolumeType();
+					ringVolume = profile.getEndRingVolume();
+				}
+				Log.d(TAG, "Inside onHandleIntent with start alarm with ring type " + ringType);
+
+				//Get access to system audio manager
+				AudioManager audioManager = (AudioManager) this.getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+
+				Log.e(TAG,"In onHandle Intent with alarm type " + isStartAlarm);
+				if(ringType == VOLUME_OFF)
+					audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+				else if(ringType == VOLUME_VIBRATE)
+					audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+				else {
+					audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+					Log.d(TAG,"MAX volume " +audioManager.getStreamMaxVolume(AudioManager.STREAM_RING));
+					if(ringVolume > 0 && ringVolume <= audioManager.getStreamMaxVolume(AudioManager.STREAM_RING))
+						audioManager.setStreamVolume(AudioManager.STREAM_RING, ringVolume, AudioManager.FLAG_PLAY_SOUND);
+				}
+
+				//Send notification if they are turned on
+				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+				if(prefs.getBoolean(PREF_VOLUME_NOTIFY_ENABLED, false))
+					showNotification(isStartAlarm, ringType);
+
 			}
-			else {
-				ringType = profile.getEndVolumeType();
-				ringVolume = profile.getEndRingVolume();
-			}
-			Log.d(TAG, "Inside onHandleIntent with start alarm with ring type " + ringType);
-
-			//Get access to system audio manager
-			AudioManager audioManager = (AudioManager) this.getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-
-			Log.e(TAG,"In onHandle Intent with alarm type " + isStartAlarm);
-			if(ringType == VOLUME_OFF)
-				audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-			else if(ringType == VOLUME_VIBRATE)
-				audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-			else {
-				audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-				Log.d(TAG,"MAX volume " +audioManager.getStreamMaxVolume(AudioManager.STREAM_RING));
-				if(ringVolume > 0 && ringVolume <= audioManager.getStreamMaxVolume(AudioManager.STREAM_RING))
-					audioManager.setStreamVolume(AudioManager.STREAM_RING, ringVolume, AudioManager.FLAG_PLAY_SOUND);
-			}
-
-			//Send notification if they are turned on
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-			if(prefs.getBoolean(PREF_VOLUME_NOTIFY_ENABLED, false))
-			   showNotification(isStartAlarm, ringType);
-
 		}
 		else
 			Log.d(TAG,"In onHandleIntent with null profile!!");
@@ -96,10 +98,10 @@ public class VolumeManagerService extends IntentService implements Constants{
 	}
 
 	private void showNotification(boolean isStartAlarm, int ringType) {
-		
+
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(System.currentTimeMillis());
-		
+
 		String strTime = ProfileListFragment.formatTime(calendar.getTime());
 		String strTitle;
 		int id;
@@ -111,14 +113,34 @@ public class VolumeManagerService extends IntentService implements Constants{
 			strTitle = "End Alarm: " + profile.getTitle();
 			id = 2;
 		}
-	    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-	    .setSmallIcon(R.drawable.ic_action_volume_on_light)
-	    .setContentTitle(strTitle)
-	    .setContentText(strTime);
-	    
-	   
-	    NotificationManager mNotifyMgr = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-	    mNotifyMgr.notify(id,mBuilder.build());
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+		.setSmallIcon(R.drawable.ic_action_volume_on_light)
+		.setContentTitle(strTitle)
+		.setContentText(strTime);
+
+
+		NotificationManager mNotifyMgr = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+		mNotifyMgr.notify(id,mBuilder.build());
+	}
+
+	/**
+	 * 
+	 * @param profile
+	 * @return
+	 */
+	private boolean isAlarmSetForToday(Profile profile) {
+
+		Calendar calendar = Calendar.getInstance();
+		int day = calendar.get(Calendar.DAY_OF_WEEK);
+
+		boolean dayArray[] = profile.getDaysOfTheWeek();
+
+		if(dayArray[day-1])
+			return true;
+		else
+			return false;
+
+
 	}
 	/*********************************************************************/
 	/*                          Public Methods                           */
@@ -136,11 +158,11 @@ public class VolumeManagerService extends IntentService implements Constants{
 		//Construct pending intent that will start PollService
 		Log.d(TAG,"Setting Service (start/end) Alarm");
 		//Create start alarm intent
-	
-		
+
+
 		Intent startIntent = new Intent(context, VolumeManagerService.class);
 		startIntent.putExtra(EXTRA_START_ALARM,true);
-        startIntent.putExtra(EXTRA_PROFILE_ID, profile.getId());
+		startIntent.putExtra(EXTRA_PROFILE_ID, profile.getId());
 
 		PendingIntent startPi = PendingIntent.getService(context, profile.getStartAlarmId(), startIntent, 0);
 
@@ -178,7 +200,7 @@ public class VolumeManagerService extends IntentService implements Constants{
 
 		//Store if alarm is on or off so StartupReceiver can use it to turn
 		//it on at bootup
-	//	PreferenceManager.getDefaultSharedPreferences(context)
+		//	PreferenceManager.getDefaultSharedPreferences(context)
 		//	.edit().putBoolean(PREF_IS_ALARM_ON, isOn).commit();
 	}
 
@@ -197,7 +219,7 @@ public class VolumeManagerService extends IntentService implements Constants{
 
 		return calendar;
 	}
-	
+
 	/**
 	 * Check if the alarm is on or not
 	 * @param context the context of the calling fragment

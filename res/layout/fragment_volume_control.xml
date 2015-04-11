@@ -131,10 +131,12 @@
 
             <Button
                 android:id="@+id/startTimeButton"
+                style="@style/AlarmButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/start_time" />
+
         </LinearLayout>
 
         <TextView
@@ -244,10 +246,12 @@
 
             <Button
                 android:id="@+id/endTimeButton"
+                style="@style/AlarmButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/end_time" />
+
         </LinearLayout>
 
         <TextView
@@ -332,6 +336,7 @@
 
     <Button
         android:id="@+id/setControlButton"
+        style="@style/SetButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/set_control_button" />

@@ -1890,6 +1890,7 @@ containing a value of this type.
         public static final int vibrate=0x7f0a0015;
     }
     public static final class style {
+        public static final int AlarmButton=0x7f0b00f0;
         /** 
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
@@ -2083,6 +2084,7 @@ containing a value of this type.
         public static final int RtlOverlay_Widget_AppCompat_Search_DropDown_Query=0x7f0b00b0;
         public static final int RtlOverlay_Widget_AppCompat_Search_DropDown_Text=0x7f0b00b3;
         public static final int RtlOverlay_Widget_AppCompat_SearchView_MagIcon=0x7f0b00ae;
+        public static final int SetButton=0x7f0b00f1;
         /**  Text styles 
          */
         public static final int TextAppearance_AppCompat=0x7f0b0038;
