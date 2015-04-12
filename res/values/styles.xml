@@ -24,7 +24,7 @@
     
      <!-- ActionBar styles -->
         <style name="CustomActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">#0FA1D3</item>
+        <item name="android:background">@color/actionBarColor</item>
 
     </style>
     
@@ -36,18 +36,19 @@
        <item name="android:textSize">20sp</item>
        <item name="android:minHeight">38dp</item>
        <item name="android:minWidth">38dp</item>
+       <item name="android:background">@color/buttonColor</item>
        
 
     </style>
 
     <style name="AlarmButton">
-       <item name="android:background">#079DD0</item>
+       <item name="android:background">@color/buttonColor</item>
        <item name="android:textColor">#ffffff</item>
        <item name="android:layout_marginRight">4dp</item>
     </style>
     
-        <style name="SetButton">
-       <item name="android:background">#079DD0</item>
+    <style name="SetButton">
+       <item name="android:background">@color/buttonColor</item>
        <item name="android:textColor">#ffffff</item>
        <item name="android:layout_margin">2dp</item>
     </style>

@@ -6,11 +6,16 @@ import java.util.Date;
 import java.util.List;
 
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -22,6 +27,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView.AdapterContextMenuInfo;
@@ -31,6 +38,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
 
 public class ProfileListFragment extends Fragment {
 	
@@ -48,6 +56,9 @@ public class ProfileListFragment extends Fragment {
 	/***************************************************/
 	/*                Override Methods                 */
 	/***************************************************/
+	
+
+	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -60,16 +71,20 @@ public class ProfileListFragment extends Fragment {
 		setRetainInstance(true);
 		
 		profileList = ProfileManager.get(getActivity()).getProfiles();
-		
+
+        ProfileListFragment.setStatusBarColor(getActivity());
+	        
 	
 		
 	}
-	
+	@SuppressLint("NewApi")
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.fragment_profile_list, container, false);
 
+
+		
 		Button newProfileButton = (Button)view.findViewById(R.id.emptyButtonAddProfile);
 		newProfileButton.setOnClickListener(new OnClickListener() {
 
@@ -101,11 +116,11 @@ public class ProfileListFragment extends Fragment {
 				Log.d(TAG,"Got profile " + p.getTitle());
 
 				//Start CrimePagerActivity with this Crime
-				Intent i = new Intent(getActivity(),VolumeManagerActivity.class); 
+				Intent i = new Intent(getActivity(),ProfileActivity.class); 
 
 				//Tell Volume Manager Fragment which Profile to display by making
 				//giving id as Intent extra
-				i.putExtra(VolumeManagerFragment.EXTRA_PROFILE_ID,p.getId());
+				i.putExtra(ProfileFragment.EXTRA_PROFILE_ID,p.getId());
 				startActivity(i);
 
 			}
@@ -250,20 +265,27 @@ public class ProfileListFragment extends Fragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		//Get menu option by it's ID
 		switch(item.getItemId()) {
-		    //New Crime menu item
-		    case R.id.menu_item_new_profile:
-                newProfile();
-		    	//Return true, no further processing is necessary
-		    	return true;
-		    case R.id.menu_item_new_location_profile:
-		    	return true;
-		    	
-			case R.id.menu_item_settings:
-				   Intent i = new Intent(getActivity(),SettingsActivity.class);
-				   startActivity(i);
-				   return true;
-		    default:
-		    	return super.onOptionsItemSelected(item);
+		//New Crime menu item
+		case R.id.menu_item_new_profile:
+			newProfile();
+			//Return true, no further processing is necessary
+			return true;
+		case R.id.menu_item_new_location_profile:
+			Intent locationIntent = new Intent(getActivity(),LocationActivity.class);
+			startActivity(locationIntent);
+			return true;    	
+		case R.id.menu_item_settings:
+			Intent settingsIntent = new Intent(getActivity(),SettingsActivity.class);
+			startActivity(settingsIntent);
+			return true;
+		case R.id.menu_item_about:
+			FragmentManager fm = getActivity().getSupportFragmentManager();
+			AboutFragment dialog = AboutFragment.newInstance();
+			//Make ProfileListFragment the target fragment of the TimePickerFragment instance
+			//dialog.setTargetFragment(VolumeManagerFragment.this, REQUEST_START_TIME);
+			dialog.show(fm, "about");
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 	}
 	
@@ -280,10 +302,10 @@ public class ProfileListFragment extends Fragment {
     	/*
     	 * !!!! TODO Hook up to Pager Activity when created
     	 */
-    	Intent i = new Intent(getActivity(),VolumeManagerActivity.class);
+    	Intent i = new Intent(getActivity(),ProfileActivity.class);
     	
     	//Send the profile ID in the intent to CrimePagerActivity
-    	i.putExtra(VolumeManagerFragment.EXTRA_PROFILE_ID, profile.getId());
+    	i.putExtra(ProfileFragment.EXTRA_PROFILE_ID, profile.getId());
     	
     	//Start CrimePagerActivity
     	startActivityForResult(i,0);
@@ -292,7 +314,19 @@ public class ProfileListFragment extends Fragment {
 	
 	/*******************************************************************/
 	/*                        Public Methods                           */
-	/*******************************************************************/
+	/**
+	 * @return *****************************************************************/
+	@SuppressLint("NewApi")
+	public static void setStatusBarColor(Activity activity) {
+		
+	    if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
+			Window window = activity.getWindow();
+			window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+			window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+			window.setStatusBarColor(activity.getResources().getColor(R.color.statusBarColor));
+	
+	    }
+	}
 	/**
 	 * Modify the format of the time of the alarms. Changes hour from 
 	 * military time to standard. Also make sure the minute is two digits.

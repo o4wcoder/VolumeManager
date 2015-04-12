@@ -1376,21 +1376,22 @@ containing a value of this type.
         public static final int abc_config_showMenuShortcutsWhenKeyboardPresent=0x7f060003;
     }
     public static final class color {
-        public static final int abc_background_cache_hint_selector_material_dark=0x7f070032;
-        public static final int abc_background_cache_hint_selector_material_light=0x7f070033;
+        public static final int abc_background_cache_hint_selector_material_dark=0x7f070036;
+        public static final int abc_background_cache_hint_selector_material_light=0x7f070037;
         public static final int abc_input_method_navigation_guard=0x7f070003;
-        public static final int abc_primary_text_disable_only_material_dark=0x7f070034;
-        public static final int abc_primary_text_disable_only_material_light=0x7f070035;
-        public static final int abc_primary_text_material_dark=0x7f070036;
-        public static final int abc_primary_text_material_light=0x7f070037;
-        public static final int abc_search_url_text=0x7f070038;
+        public static final int abc_primary_text_disable_only_material_dark=0x7f070038;
+        public static final int abc_primary_text_disable_only_material_light=0x7f070039;
+        public static final int abc_primary_text_material_dark=0x7f07003a;
+        public static final int abc_primary_text_material_light=0x7f07003b;
+        public static final int abc_search_url_text=0x7f07003c;
         public static final int abc_search_url_text_normal=0x7f070000;
         public static final int abc_search_url_text_pressed=0x7f070002;
         public static final int abc_search_url_text_selected=0x7f070001;
-        public static final int abc_secondary_text_material_dark=0x7f070039;
-        public static final int abc_secondary_text_material_light=0x7f07003a;
+        public static final int abc_secondary_text_material_dark=0x7f07003d;
+        public static final int abc_secondary_text_material_light=0x7f07003e;
         public static final int accent_material_dark=0x7f07000f;
         public static final int accent_material_light=0x7f07000e;
+        public static final int actionBarColor=0x7f070033;
         public static final int background_floating_material_dark=0x7f070006;
         public static final int background_floating_material_light=0x7f070007;
         public static final int background_material_dark=0x7f070004;
@@ -1405,6 +1406,7 @@ containing a value of this type.
         public static final int bright_foreground_inverse_material_light=0x7f070019;
         public static final int bright_foreground_material_dark=0x7f070014;
         public static final int bright_foreground_material_light=0x7f070015;
+        public static final int buttonColor=0x7f070034;
         public static final int button_material_dark=0x7f070010;
         public static final int button_material_light=0x7f070011;
         public static final int dim_foreground_disabled_material_dark=0x7f07001c;
@@ -1445,8 +1447,10 @@ containing a value of this type.
         public static final int secondary_text_default_material_light=0x7f070025;
         public static final int secondary_text_disabled_material_dark=0x7f07002b;
         public static final int secondary_text_disabled_material_light=0x7f070029;
+        public static final int statusBarColor=0x7f070032;
         public static final int switch_thumb_normal_material_dark=0x7f070012;
         public static final int switch_thumb_normal_material_light=0x7f070013;
+        public static final int textColor=0x7f070035;
     }
     public static final class dimen {
         /**  Default height of an action bar. 
@@ -1640,7 +1644,6 @@ containing a value of this type.
         public static final int Button05=0x7f05004c;
         public static final int Button06=0x7f05004b;
         public static final int TextView02=0x7f05005e;
-        public static final int about_item_settings=0x7f05006c;
         public static final int action_bar=0x7f050031;
         public static final int action_bar_activity_content=0x7f050018;
         public static final int action_bar_container=0x7f050030;
@@ -1691,6 +1694,7 @@ containing a value of this type.
         public static final int listMode=0x7f050002;
         public static final int list_item=0x7f050025;
         public static final int locationNotifySwitch=0x7f050048;
+        public static final int menu_item_about=0x7f05006c;
         public static final int menu_item_delete_profile=0x7f05006d;
         public static final int menu_item_new_location_profile=0x7f05006a;
         public static final int menu_item_new_profile=0x7f050069;
@@ -1798,11 +1802,12 @@ containing a value of this type.
         public static final int activity_volume_manager=0x7f030019;
         public static final int dialog_time=0x7f03001a;
         public static final int fragment_empty_list=0x7f03001b;
-        public static final int fragment_profile_list=0x7f03001c;
-        public static final int fragment_settings=0x7f03001d;
-        public static final int fragment_volume_control=0x7f03001e;
-        public static final int profile_list_item=0x7f03001f;
-        public static final int support_simple_spinner_dropdown_item=0x7f030020;
+        public static final int fragment_location=0x7f03001c;
+        public static final int fragment_profile_list=0x7f03001d;
+        public static final int fragment_settings=0x7f03001e;
+        public static final int fragment_volume_control=0x7f03001f;
+        public static final int profile_list_item=0x7f030020;
+        public static final int support_simple_spinner_dropdown_item=0x7f030021;
     }
     public static final class menu {
         public static final int action_bar_menu=0x7f0c0000;
@@ -1865,23 +1870,25 @@ containing a value of this type.
         /**  Content description for the Toolbar icon used to collapse an expanded action mode. [CHAR LIMIT=NONE] 
          */
         public static final int abc_toolbar_collapse_description=0x7f0a0004;
-        public static final int about_menu=0x7f0a0024;
+        public static final int about_menu=0x7f0a0025;
         public static final int app_name=0x7f0a0010;
         public static final int delete_profile=0x7f0a0021;
         public static final int end_time=0x7f0a0013;
         public static final int end_time_dialog=0x7f0a001a;
         public static final int end_volume_settings=0x7f0a0018;
         public static final int hello_world=0x7f0a0011;
-        public static final int new_location=0x7f0a0022;
+        public static final int location_settings=0x7f0a0028;
+        public static final int new_location=0x7f0a0023;
         public static final int new_profile=0x7f0a001e;
         public static final int no_profiles=0x7f0a001d;
-        public static final int notification_header=0x7f0a0026;
-        public static final int notification_text=0x7f0a0025;
+        public static final int notification_header=0x7f0a0027;
+        public static final int notification_text=0x7f0a0026;
         public static final int off=0x7f0a0014;
         public static final int profile_header=0x7f0a0020;
+        public static final int profile_settings=0x7f0a0022;
         public static final int ring=0x7f0a0016;
         public static final int set_control_button=0x7f0a001b;
-        public static final int settings_menu=0x7f0a0023;
+        public static final int settings_menu=0x7f0a0024;
         public static final int start_time=0x7f0a0012;
         public static final int start_time_dialog=0x7f0a0019;
         public static final int start_volume_settings=0x7f0a0017;
