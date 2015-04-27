@@ -47,6 +47,7 @@ public class ProfileListFragment extends Fragment {
 	/***************************************************/
 	private static final String TAG = "ProfileListFragment";
 	
+	
 	/***************************************************/
 	/*                 Local Data                      */
 	/***************************************************/
@@ -271,7 +272,7 @@ public class ProfileListFragment extends Fragment {
 			//Return true, no further processing is necessary
 			return true;
 		case R.id.menu_item_new_location_profile:
-			Intent locationIntent = new Intent(getActivity(),LocationActivity.class);
+			Intent locationIntent = new Intent(getActivity(),LocationMapActivity.class);
 			startActivity(locationIntent);
 			return true;    	
 		case R.id.menu_item_settings:

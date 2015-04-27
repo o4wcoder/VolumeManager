@@ -28,6 +28,7 @@ public class Profile implements Constants{
 	private static final String JSON_START_RING_VOLUME = "startRingVolume";
 	private static final String JSON_END_RING_VOLUME = "endRingVolume";
 	private static final String JSON_DAYS_OF_THE_WEEK = "daysOfTheWeek";
+	private static final String JSON_IN_ALARM = "inAlarm";
 	
 	private static final int DAYS_OF_THE_WEEK = 7;
 	
@@ -42,6 +43,7 @@ public class Profile implements Constants{
 	private int startRingVolume, endRingVolume;
 	private int alarmId;
 	private boolean daysOfTheWeek[] = new boolean[DAYS_OF_THE_WEEK];
+	private boolean inAlarm;
 
 	/****************************************************/
 	/*                 Constructors                    */
@@ -57,6 +59,7 @@ public class Profile implements Constants{
 		endVolumeType = VOLUME_VIBRATE;
 		startRingVolume = 1;
 		endRingVolume = 1;
+		inAlarm = false;
 		
 		calculateAlarmId();
 		initDaysOfWeek();
@@ -81,11 +84,16 @@ public class Profile implements Constants{
 		
 		JSONArray daysArray = json.getJSONArray(JSON_DAYS_OF_THE_WEEK);
 		
+		inAlarm = json.getBoolean(JSON_IN_ALARM);
+		
 		for(int i = 0; i < DAYS_OF_THE_WEEK; i++)
 			daysOfTheWeek[i] = (boolean) daysArray.get(i);
 	
 		calculateAlarmId();
 	}
+
+	
+
 	/*****************************************************/
 	/*                 Override Methods                  */
 	/*****************************************************/
@@ -127,6 +135,7 @@ public class Profile implements Constants{
 		json.put(JSON_END_VOLUME_TYPE, endVolumeType);
 		json.put(JSON_START_RING_VOLUME, startRingVolume);
 		json.put(JSON_END_RING_VOLUME, endRingVolume);
+		json.put(JSON_IN_ALARM, inAlarm);
 		
 		JSONArray jArray = new JSONArray();
 		for(int i = 0; i < DAYS_OF_THE_WEEK; i++)
@@ -241,5 +250,13 @@ public class Profile implements Constants{
 		}
 		
 		return strDays;
+	}
+	
+	public boolean isInAlarm() {
+		return inAlarm;
+	}
+
+	public void setInAlarm(boolean inAlarm) {
+		this.inAlarm = inAlarm;
 	}
 }

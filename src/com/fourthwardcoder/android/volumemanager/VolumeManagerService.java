@@ -50,6 +50,7 @@ public class VolumeManagerService extends IntentService implements Constants{
 		int ringType = VOLUME_OFF;
 		int ringVolume = 1;
 
+		
 		//SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		UUID profileId = (UUID)intent.getSerializableExtra(EXTRA_PROFILE_ID);
@@ -57,17 +58,34 @@ public class VolumeManagerService extends IntentService implements Constants{
 
 		if(profile != null) {
 
-			if(isAlarmSetForToday(profile)) {
+			//Only fire off volume change if it is set to start for that day, or is
+			//currently in the alarm period and waiting for it to end. It period may end on the next day
+			if(isAlarmSetForToday(profile) || (profile.isInAlarm() == true)) {
 				//See if this is a start or end alarm intent
 				boolean isStartAlarm = intent.getBooleanExtra(EXTRA_START_ALARM, true);
+				
+				//Special case when alarm has just been put in, we don't want the end alarm to just go off after 
+				//the alarm period has passed. So if we are at the end alarm and the profile is not in the 
+				//alarm period (Meaning the start alarm has not fired), then just return and do nothing.
+				if(!isStartAlarm && (profile.isInAlarm() == false)) {
+					return;
+			    }
+				
 				if(isStartAlarm) {
 					ringType = profile.getStartVolumeType();
 					ringVolume = profile.getStartRingVolume();
+					//Set flag saying that start alarm has been set and currently in alarm period
+					profile.setInAlarm(true);
 				}
 				else {
 					ringType = profile.getEndVolumeType();
 					ringVolume = profile.getEndRingVolume();
+					//Alarm period has ended, turn off flag
+					profile.setInAlarm(false);
 				}
+				
+				//Save profile updates to to alarm flag
+				ProfileManager.get(getApplicationContext()).saveProfiles();
 				Log.d(TAG, "Inside onHandleIntent with start alarm with ring type " + ringType);
 
 				//Get access to system audio manager

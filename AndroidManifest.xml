@@ -8,6 +8,25 @@
         android:minSdkVersion="14"
         android:targetSdkVersion="21" />
 
+    <permission
+        android:name="com.bignerdranch.android.runtracker.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.bignerdranch.android.runtracker.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <uses-feature
+        android:name="android.hardward.location.gps"
+        android:required="true" />
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
@@ -23,7 +42,7 @@
                 android:value="com.fourthwardcoder.android.volumemanager.ProfileListActivity" />
         </activity>
         <activity
-            android:name="com.fourthwardcoder.android.volumemanager.LocationActivity"
+            android:name="com.fourthwardcoder.android.volumemanager.LocationMapActivity"
             android:label="@string/location_settings" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -56,6 +75,12 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+                <meta-data 
+            android:name="com.google.android.gms.version" 
+            android:value="@integer/google_play_services_version" />
+                <meta-data 
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyD3MBzcKWqj4loPAMzcoNk7-U5FteVHXP0"/>
     </application>
 
 </manifest>
