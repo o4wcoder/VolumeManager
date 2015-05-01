@@ -26,4 +26,6 @@
     <string name="notification_text">Enable Notifcations to be sent every time there is a volume control change by a profile</string>
     <string name="notification_header">Notifications</string>
     <string name="location_settings">Location Settings</string>
+    <string name="basic_tab">Basic</string>
+    <string name="location_tab">Location</string>
 </resources>

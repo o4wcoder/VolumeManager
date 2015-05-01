@@ -28,6 +28,7 @@ public class LocationMapFragment extends SupportMapFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		
 		//retain the instance on rotation
 		setRetainInstance(true);
 		
@@ -36,6 +37,7 @@ public class LocationMapFragment extends SupportMapFragment {
 		
 		//Change status bar color
 		ProfileListFragment.setStatusBarColor(getActivity());
+		
 		
 	}
 	*/

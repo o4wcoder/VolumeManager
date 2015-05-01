@@ -14,9 +14,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.ListFragment;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.ListFragment;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -280,11 +280,13 @@ public class ProfileListFragment extends Fragment {
 			startActivity(settingsIntent);
 			return true;
 		case R.id.menu_item_about:
-			FragmentManager fm = getActivity().getSupportFragmentManager();
+			FragmentManager fm = getActivity().getFragmentManager();
 			AboutFragment dialog = AboutFragment.newInstance();
 			//Make ProfileListFragment the target fragment of the TimePickerFragment instance
 			//dialog.setTargetFragment(VolumeManagerFragment.this, REQUEST_START_TIME);
 			dialog.show(fm, "about");
+			
+			
 		default:
 			return super.onOptionsItemSelected(item);
 		}

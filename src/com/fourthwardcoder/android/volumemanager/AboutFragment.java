@@ -1,6 +1,6 @@
 package com.fourthwardcoder.android.volumemanager;
 
-import android.support.v4.app.DialogFragment;
+import android.app.DialogFragment;
 
 public class AboutFragment extends DialogFragment {
 
