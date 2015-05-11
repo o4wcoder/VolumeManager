@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/mapAddressTextView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:alpha="@string/primary_text_alpha_dark"
+        android:background="@color/white"
+        android:padding="8dp"
+        android:text="Address"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/mapCityTextView"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:alpha="@string/secondary_text_alpha_dark"
+        android:background="@color/white"
+        android:padding="8dp"
+        android:text="City" />
+
+</LinearLayout>
+<!--
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true" >
+
+            <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/mapAddressTextView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:alpha="@string/primary_text_alpha_dark"
+            android:background="@color/white"
+            android:padding="8dp"
+            android:text="Address"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/mapCityTextView"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:alpha="@string/secondary_text_alpha_dark"
+            android:background="@color/white"
+            android:padding="8dp"
+            android:text="City" />
+
+    </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
+-->

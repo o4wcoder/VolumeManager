@@ -17,6 +17,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:alpha="@string/primary_text_alpha_dark"
             android:padding="2dp"
             android:textSize="24sp" />
 
@@ -30,6 +31,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="2"
+                android:alpha="@string/secondary_text_alpha_dark"
                 android:padding="2dp" />
 
             <TextView
@@ -37,6 +39,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="2"
+                android:alpha="@string/secondary_text_alpha_dark"
                 android:padding="2dp" />
 
         </LinearLayout>

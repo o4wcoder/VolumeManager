@@ -23,6 +23,20 @@ public interface Constants {
 	public static final String PREF_END_RING_VOLUME = "endRingVolume";
 	public static final String PREF_IS_ALARM_ON = "isAlarmOn";
 	*/
+	
+	public static final String JSON_ID = "id";
+	public static final String JSON_ALARM_ID = "alarmId";
+	public static final String JSON_TITLE = "title";
+	public static final String JSON_ENABLED = "enabled";
+	public static final String JSON_START_DATE = "startDate";
+	public static final String JSON_END_DATE = "endDate";
+	public static final String JSON_START_VOLUME_TYPE = "startVolumeType";
+	public static final String JSON_END_VOLUME_TYPE = "endVolumeType";
+	public static final String JSON_START_RING_VOLUME = "startRingVolume";
+	public static final String JSON_END_RING_VOLUME = "endRingVolume";
+	public static final String JSON_DAYS_OF_THE_WEEK = "daysOfTheWeek";
+	public static final String JSON_IN_ALARM = "inAlarm";
+	
 	public static final String PREF_VOLUME_NOTIFY_ENABLED = "volumeNotifyEnabled";
 	public static final String PREF_LOCATION_NOTIFY_ENABLED = "locationNotifyEnabled";
 	
@@ -47,6 +61,17 @@ public interface Constants {
 	public static final String SATURDAY = "Saturday";
 	public static final String SUNDAY = "Sunday";
 	
+	public static final float PRIMARY_TEXT_DARK = (float) .87;
+	public static final float SECONDARY_TEXT_DARK = (float) .54;
+	
 	public static final String daysButtonNames[] ={"S","M","T","W","T","F","S"};
+	
+	public static enum TabName {
+		BASIC,
+		LOCATION
+	}
+	
+	public static final String TAB_ID = "tabId";
+	
 
 }

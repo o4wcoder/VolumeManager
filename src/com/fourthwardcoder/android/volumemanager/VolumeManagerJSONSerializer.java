@@ -23,31 +23,34 @@ public class VolumeManagerJSONSerializer {
 	/*                   Constants                        */
 	/******************************************************/
 	private static final String TAG = "VolumeManagerJSONSerializer";
+	private static final String PROFILE_FILENAME = "profiles.json";
+	private static final String LOCATION_FILENAME = "locations.json";
 	/******************************************************/
 	/*                   Local Data                       */
 	/******************************************************/
 	private Context mContext;
-	private String mFilename;
+	//private String mFilename;
 	
 	/******************************************************/
 	/*                 Constructors                       */
 	/******************************************************/
-	public VolumeManagerJSONSerializer(Context c, String f) {
+	public VolumeManagerJSONSerializer(Context c) {
 		mContext = c;
-		mFilename = f;
+		//mFilename = f;
 	}
 	
 	/******************************************************/
 	/*                Public Methods                      */
 	/******************************************************/
-	public ArrayList<Profile> loadProfiles() throws IOException, JSONException {
-		ArrayList<Profile> profiles = new ArrayList<Profile>();
+	public ArrayList<BasicProfile> loadProfiles() throws IOException, JSONException {
+		ArrayList<BasicProfile> profiles = new ArrayList<BasicProfile>();
 		
 		BufferedReader reader = null;
 		
+		
 		try {
 			//Open and read the file into a StringBuilder
-			InputStream in = mContext.openFileInput(mFilename);
+			InputStream in = mContext.openFileInput(PROFILE_FILENAME);
 			reader = new BufferedReader(new InputStreamReader(in));
 			StringBuilder jsonString = new StringBuilder();
 			
@@ -60,7 +63,7 @@ public class VolumeManagerJSONSerializer {
 			JSONArray array = (JSONArray) new JSONTokener(jsonString.toString()).nextValue();
 			//Build the array of profiles from JSONObjects
 			for(int i = 0; i< array.length(); i++) {
-				profiles.add(new Profile(array.getJSONObject(i)));
+				profiles.add(new BasicProfile(array.getJSONObject(i)));
 			}
 		} catch (FileNotFoundException e) {
 			//Ignore this on; it happens when starting fresh
@@ -71,11 +74,42 @@ public class VolumeManagerJSONSerializer {
 		return profiles;
 	}
 	
-	public void saveProfiles(ArrayList<Profile> profiles) throws JSONException, IOException {
+	public ArrayList<LocationProfile> loadLocationProfiles() throws IOException, JSONException {
+		ArrayList<LocationProfile> profiles = new ArrayList<LocationProfile>();
+		
+		BufferedReader reader = null;
+		
+		try {
+			//Open and read the file into a StringBuilder
+			InputStream in = mContext.openFileInput(LOCATION_FILENAME);
+			reader = new BufferedReader(new InputStreamReader(in));
+			StringBuilder jsonString = new StringBuilder();
+			
+			String line = null;
+			while((line = reader.readLine()) != null) {
+				//Line breaks are omitted and irrelevant
+				jsonString.append(line);	
+			}
+			//Parse the JSON using JSONTokener
+			JSONArray array = (JSONArray) new JSONTokener(jsonString.toString()).nextValue();
+			//Build the array of profiles from JSONObjects
+			for(int i = 0; i< array.length(); i++) {
+				profiles.add(new LocationProfile(array.getJSONObject(i)));
+			}
+		} catch (FileNotFoundException e) {
+			//Ignore this on; it happens when starting fresh
+		} finally {
+			if(reader != null)
+				reader.close();
+		}
+		return profiles;
+	}
+	
+	public void saveProfiles(ArrayList<BasicProfile> profiles) throws JSONException, IOException {
 		
 		//Build and array in JSON
 		JSONArray array = new JSONArray();
-		for(Profile p : profiles) {
+		for(BasicProfile p : profiles) {
 			
 		    //Log.d(TAG,"JSon Data");
 		    //Log.d(TAG,p.toJSON().toString());
@@ -84,7 +118,31 @@ public class VolumeManagerJSONSerializer {
 		//Write the file to disk
 		Writer writer = null;
 		try {
-			OutputStream out = mContext.openFileOutput(mFilename, Context.MODE_PRIVATE);
+			OutputStream out = mContext.openFileOutput(PROFILE_FILENAME, Context.MODE_PRIVATE);
+			writer = new OutputStreamWriter(out);
+			writer.write(array.toString());
+	
+			
+		} finally {
+			if(writer != null)
+				writer.close();
+		}
+	}
+	
+	public void saveLocationProfiles(ArrayList<LocationProfile> profiles) throws JSONException, IOException {
+		
+		//Build and array in JSON
+		JSONArray array = new JSONArray();
+		for(LocationProfile p : profiles) {
+			
+		    //Log.d(TAG,"JSon Data");
+		    //Log.d(TAG,p.toJSON().toString());
+			array.put(p.toJSON());
+		}
+		//Write the file to disk
+		Writer writer = null;
+		try {
+			OutputStream out = mContext.openFileOutput(LOCATION_FILENAME, Context.MODE_PRIVATE);
 			writer = new OutputStreamWriter(out);
 			writer.write(array.toString());
 	

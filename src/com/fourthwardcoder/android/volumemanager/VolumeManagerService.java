@@ -38,7 +38,7 @@ public class VolumeManagerService extends IntentService implements Constants{
 	/*********************************************************************/
 	/*                          Local Data                               */
 	/*********************************************************************/
-	Profile profile;
+	BasicProfile profile;
 
 	public VolumeManagerService() {
 		super(TAG);
@@ -136,7 +136,18 @@ public class VolumeManagerService extends IntentService implements Constants{
 		.setContentTitle(strTitle)
 		.setContentText(strTime);
 
-
+        Intent i = new Intent(this,ProfileActivity.class);
+        i.putExtra(EXTRA_PROFILE_ID,profile.getId());
+        
+	    PendingIntent resultPendingIntent =
+	    	    PendingIntent.getActivity(
+	    	    this,
+	    	    0,
+	    	    i,
+	    	    PendingIntent.FLAG_UPDATE_CURRENT
+	    	);
+	    mBuilder.setContentIntent(resultPendingIntent);
+	    
 		NotificationManager mNotifyMgr = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 		mNotifyMgr.notify(id,mBuilder.build());
 	}
@@ -146,7 +157,7 @@ public class VolumeManagerService extends IntentService implements Constants{
 	 * @param profile
 	 * @return
 	 */
-	private boolean isAlarmSetForToday(Profile profile) {
+	private boolean isAlarmSetForToday(BasicProfile profile) {
 
 		Calendar calendar = Calendar.getInstance();
 		int day = calendar.get(Calendar.DAY_OF_WEEK);
@@ -171,7 +182,7 @@ public class VolumeManagerService extends IntentService implements Constants{
 	 * @param context the context of calling fragment
 	 * @param isOn flag to turn the alarm on/off
 	 */
-	public static void setServiceAlarm(Context context, Profile profile, boolean isOn) {
+	public static void setServiceAlarm(Context context, BasicProfile profile, boolean isOn) {
 
 		//Construct pending intent that will start PollService
 		Log.d(TAG,"Setting Service (start/end) Alarm");

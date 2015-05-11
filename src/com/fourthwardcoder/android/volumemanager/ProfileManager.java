@@ -9,14 +9,16 @@ import android.util.Log;
 /* Class: PorfileManager.java                                     */
 /*                                                                */
 /* Singleton Class to store one instance of ArrayList of Profiles */
-/******************************************************************/
+/**************************************************************/
 public class ProfileManager {
 	
 	/***************************************************/
 	/*                  Local Data                     */
 	/***************************************************/
 	//Store array of profiles
-	private ArrayList<Profile> profileList;
+	private ArrayList<BasicProfile> profileList;
+	//Store array of location profiles
+	private ArrayList<LocationProfile> locationProfileList;
 	//s prefix for static variable
 	private static ProfileManager sProfileManager;
 	
@@ -27,7 +29,7 @@ public class ProfileManager {
 	private Context mAppContext;
 	
 	private static final String TAG = "ProfileManager";
-	private static final String FILENAME = "profiles.json";
+
 	
 	/***************************************************/
 	/*                  Constructors                   */
@@ -35,14 +37,23 @@ public class ProfileManager {
 	private ProfileManager(Context appContext) {
 		mAppContext = appContext;
 		
-		mSerializer = new VolumeManagerJSONSerializer(mAppContext,FILENAME);
+		mSerializer = new VolumeManagerJSONSerializer(mAppContext);
 		
-		//Load Crimes from JSON file
+		//Load Profiles from JSON file
 		try {
-			profileList = this.mSerializer.loadProfiles();
+			profileList =   this.mSerializer.loadProfiles();
 		} catch (Exception e) {
-			//No Crimes stored. Create empty list
-			profileList = new ArrayList<Profile>();
+			//No Profiles stored. Create empty list
+			profileList =  new ArrayList<BasicProfile>();
+			Log.e(TAG,"Error loading profiles: ", e);
+		}
+		
+		//Load Location Profiles from JSON file
+		try {
+			locationProfileList =   this.mSerializer.loadLocationProfiles();
+		} catch (Exception e) {
+			//No Profiles stored. Create empty list
+			locationProfileList =  new ArrayList<LocationProfile>();
 			Log.e(TAG,"Error loading profiles: ", e);
 		}
 
@@ -62,21 +73,46 @@ public class ProfileManager {
 			return false;
 		}
 	}
-	public void addProfile(Profile p) {
+	
+	public boolean saveLocationProfiles() {
+		try {
+			mSerializer.saveLocationProfiles(locationProfileList);
+			Log.d(TAG,"profiles saved to file");
+			return true;
+		} catch (Exception e) {
+			Log.e(TAG,"Error saving profiles: ",e);
+			return false;
+		}
+	}
+	
+	public void addProfile(BasicProfile p) {
 		profileList.add(p);
 	}
 	
-	public void deleteProfile(Profile p) {
+	public void addLocationProfile(LocationProfile p) {
+		locationProfileList.add(p);
+	}
+	
+	public void deleteProfile(BasicProfile p) {
 		Log.d(TAG,"Delte profile " + p.getTitle());
 		profileList.remove(p);
 	}
 	
-	public ArrayList<Profile> getProfiles() {
+	public void deleteLocationProfile(LocationProfile p) {
+		Log.d(TAG,"Delte profile " + p.getTitle());
+		locationProfileList.remove(p);
+	}
+	
+	public ArrayList<BasicProfile> getProfiles() {
 		return profileList;
 	}
 	
-	public Profile getProfile(UUID id) {
-		for (Profile c : profileList) {
+	public ArrayList<LocationProfile> getLocationProfiles() {
+		return locationProfileList;
+	}
+	
+	public BasicProfile getProfile(UUID id) {
+		for (BasicProfile c : profileList) {
 			if(c.getId().equals(id))
 				return c;
 		}
@@ -84,6 +120,14 @@ public class ProfileManager {
 		return null;
 	}
 
+	public LocationProfile getLocationProfile(UUID id) {
+		for (LocationProfile c : locationProfileList) {
+			if(c.getId().equals(id))
+				return c;
+		}
+		
+		return null;
+	}
 	public static ProfileManager get(Context c) {
 		if(sProfileManager == null) {
 			//To ensure that the singleton has a long-term Context to work with,

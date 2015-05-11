@@ -5,4 +5,5 @@
     <color name="actionBarColor">#3f51b5</color>
     <color name="buttonColor">#7986cb</color>
     <color name="textColor">#7986cb</color>
+    <color name="white">#ffffff</color>
 </resources>

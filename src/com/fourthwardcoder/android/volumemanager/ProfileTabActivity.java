@@ -12,14 +12,14 @@ import android.app.FragmentTransaction;
 import android.app.ActionBar.Tab;
 import android.os.Bundle;
 
-public class ProfileTabActivity extends Activity{
+public class ProfileTabActivity extends Activity implements Constants{
 	
 	/*********************************************************************/
 	/*                         Local Data                                */
 	/*********************************************************************/
 	ArrayList<Fragment> fragList = new ArrayList<Fragment>();
 	Fragment fragment = null;
-	ProfileListFragment tabFragment = null;
+    Fragment tabFragment = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,16 +43,25 @@ public class ProfileTabActivity extends Activity{
 					fragList.get(tab.getPosition());
 
 				if(fragment == null) {
-					tabFragment = new ProfileListFragment();
+					
+					if(TabName.values()[tab.getPosition()] == TabName.BASIC)
+					   tabFragment = new ProfileListFragment();
+					else
+						tabFragment = new LocationProfileListFragment();
+					
 					Bundle data = new Bundle();
-					data.putInt("idx", tab.getPosition());
+					data.putInt(TAB_ID, tab.getPosition());
 					tabFragment.setArguments(data);
 					fragList.add(tabFragment);
 
 				}
-				else
-					tabFragment  = (ProfileListFragment)fragment;
-
+				else {
+					
+					if(TabName.values()[tab.getPosition()] == TabName.BASIC)
+					   tabFragment  = (ProfileListFragment)fragment;
+					else
+					   tabFragment  = (LocationProfileListFragment)fragment;
+				}
 				ft.replace(R.id.fragment_container, tabFragment);
 				
 			}

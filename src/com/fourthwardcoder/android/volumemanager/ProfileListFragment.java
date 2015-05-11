@@ -40,7 +40,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
-public class ProfileListFragment extends Fragment {
+public class ProfileListFragment extends Fragment implements Constants{
 	
 	/***************************************************/
 	/*                  Constants                      */
@@ -51,9 +51,10 @@ public class ProfileListFragment extends Fragment {
 	/***************************************************/
 	/*                 Local Data                      */
 	/***************************************************/
-	private ArrayList<Profile> profileList;
+	private ArrayList<BasicProfile> profileList;
 	ProfileListAdapter profileAdapter;
 	ListView listview;
+	TabName tab;
 	/***************************************************/
 	/*                Override Methods                 */
 	/***************************************************/
@@ -70,11 +71,12 @@ public class ProfileListFragment extends Fragment {
 		
 		//retain the instance on rotation
 		setRetainInstance(true);
-		
+				   
 		profileList = ProfileManager.get(getActivity()).getProfiles();
 
         ProfileListFragment.setStatusBarColor(getActivity());
-	        
+        
+       
 	
 		
 	}
@@ -113,7 +115,7 @@ public class ProfileListFragment extends Fragment {
 				// TODO Auto-generated method stub
 				// TODO Auto-generated method stub
 
-				Profile p = (Profile)profileAdapter.getItem(position);
+				BasicProfile p = (BasicProfile)profileAdapter.getItem(position);
 				Log.d(TAG,"Got profile " + p.getTitle());
 
 				//Start CrimePagerActivity with this Crime
@@ -247,7 +249,7 @@ public class ProfileListFragment extends Fragment {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
 		int position = info.position;
 		
-		Profile profile = profileAdapter.getItem(position);
+		BasicProfile profile = profileAdapter.getItem(position);
 		
 		switch (item.getItemId()) {
 		   case R.id.menu_item_delete_profile:
@@ -298,7 +300,7 @@ public class ProfileListFragment extends Fragment {
 	private void newProfile()
 	{
     	//Add profile to the static List Array of Crimes
-    	Profile profile = new Profile();
+    	BasicProfile profile = new BasicProfile();
     	ProfileManager.get(getActivity()).addProfile(profile);
     	
     	//Create intent to start up CrimePagerActivity after selecting "New Crime" menu
@@ -376,15 +378,15 @@ public class ProfileListFragment extends Fragment {
 		public TextView daysTextView;
 	}
 	
-	private class ProfileListAdapter extends ArrayAdapter<Profile> {
+	private class ProfileListAdapter extends ArrayAdapter<BasicProfile> {
 
 		private ListView listview;
-		private ArrayList<Profile> profiles;
+		private ArrayList<BasicProfile> profiles;
 		
 		private static final int NORMAL_PROFILE = 0;
 		private static final int MOVING_PROFILE = 1;
 		
-		public ProfileListAdapter(ArrayList<Profile> profiles, ListView listview) {
+		public ProfileListAdapter(ArrayList<BasicProfile> profiles, ListView listview) {
 			super(getActivity(), 0, profiles);
 			// TODO Auto-generated constructor stub
 			
@@ -439,13 +441,15 @@ public class ProfileListFragment extends Fragment {
             
         	holder.titleTextView = (TextView)convertView.findViewById(R.id.profileTitleTextView);
             holder.titleTextView.setText(getItem(position).getTitle());
+            //holder.titleTextView.setAlpha(PRIMARY_TEXT_DARK);
+            
             holder.timeTextView = (TextView)convertView.findViewById(R.id.profileTimeTextView);
-            
             holder.timeTextView.setText(getItem(position).getFullTimeForListItem());
-            
+            //holder.timeTextView.setAlpha(SECONDARY_TEXT_DARK);
             holder.daysTextView = (TextView)convertView.findViewById(R.id.profileDaysTextView);
             holder.daysTextView.setText(getItem(position).getDaysOfWeekString());
-            	
+            //holder.daysTextView.setAlpha(SECONDARY_TEXT_DARK);
+              	
             return convertView;
 		}
 		

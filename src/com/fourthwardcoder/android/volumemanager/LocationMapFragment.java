@@ -2,24 +2,35 @@ package com.fourthwardcoder.android.volumemanager;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
+import android.database.Cursor;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class LocationMapFragment extends SupportMapFragment {
+public class LocationMapFragment extends SupportMapFragment implements LoaderCallbacks<Cursor>, OnMapReadyCallback{
 	
-
+    /***************************************************/
+	/*                 Constants                       */
+	/***************************************************/
+	private static final String TAG = "LocationMapFragment";
+	
 	/***************************************************/
 	/*                Local Data                       */
 	/***************************************************/
-	GoogleMap googleMap;
+	GoogleMap map;
+	
 	/***************************************************/
 	/*                Override Methods                 */
 	/***************************************************/
@@ -65,14 +76,58 @@ public class LocationMapFragment extends SupportMapFragment {
 				getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 			}
 		}
-		
+		 
+		/*
 		//Get a reference to the GoogleMap
-		googleMap = getMap();
+		map = getMap();
 		//Show the user's location
-		googleMap.setMyLocationEnabled(true);
+		map.setMyLocationEnabled(true);
+		map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+		Location location = map.getMyLocation();
 		
+		if(location != null) {
+			
+			Log.e(TAG,"Location: " + location.toString());
+		}
+		else
+			Log.e(TAG,"Location is nul!!!!");
+		*/
+		getMapAsync(this);
 		
 		return view;
+	}
+	
+	@Override
+	public void onMapReady(final GoogleMap map) {
+	    this.map = map;
+	    map.setMyLocationEnabled(true);
+	    
+	    Log.e(TAG,"Google Map is ready");
+		map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+		Location location = map.getMyLocation();
+		
+		if(location != null) {
+			
+			Log.e(TAG,"Location: " + location.toString());
+		}
+		else
+			Log.e(TAG,"Location is nul!!!!");
+	    
+	    
+	}
+	private void setMarker() {
+		
+		//static final LatLng TutorialsPoint = new LatLng(21 , 57);
+		
+		 /*
+		 googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+         Marker TP = googleMap.addMarker(new MarkerOptions().
+         position(TutorialsPoint).title("TutorialsPoint"));
+
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+      */
 	}
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -86,6 +141,21 @@ public class LocationMapFragment extends SupportMapFragment {
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+	@Override
+	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public void onLoadFinished(Loader<Cursor> arg0, Cursor arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void onLoaderReset(Loader<Cursor> arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
