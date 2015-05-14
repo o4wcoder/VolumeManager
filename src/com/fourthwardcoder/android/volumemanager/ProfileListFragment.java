@@ -119,11 +119,11 @@ public class ProfileListFragment extends Fragment implements Constants{
 				Log.d(TAG,"Got profile " + p.getTitle());
 
 				//Start CrimePagerActivity with this Crime
-				Intent i = new Intent(getActivity(),ProfileActivity.class); 
+				Intent i = new Intent(getActivity(),EditProfileActivity.class); 
 
 				//Tell Volume Manager Fragment which Profile to display by making
 				//giving id as Intent extra
-				i.putExtra(ProfileFragment.EXTRA_PROFILE_ID,p.getId());
+				i.putExtra(EditProfileFragment.EXTRA_PROFILE_ID,p.getId());
 				startActivity(i);
 
 			}
@@ -307,10 +307,10 @@ public class ProfileListFragment extends Fragment implements Constants{
     	/*
     	 * !!!! TODO Hook up to Pager Activity when created
     	 */
-    	Intent i = new Intent(getActivity(),ProfileActivity.class);
+    	Intent i = new Intent(getActivity(),EditProfileActivity.class);
     	
     	//Send the profile ID in the intent to CrimePagerActivity
-    	i.putExtra(ProfileFragment.EXTRA_PROFILE_ID, profile.getId());
+    	i.putExtra(EditProfileFragment.EXTRA_PROFILE_ID, profile.getId());
     	
     	//Start CrimePagerActivity
     	startActivityForResult(i,0);

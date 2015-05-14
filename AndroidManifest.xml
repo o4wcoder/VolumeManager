@@ -36,25 +36,33 @@
         android:label="@string/app_name"
         android:theme="@style/CustomActionBarTheme" >
         <activity
-            android:name="com.fourthwardcoder.android.volumemanager.ProfileActivity"
+            android:name="com.fourthwardcoder.android.volumemanager.EditProfileActivity"
             android:label="@string/profile_settings" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.fourthwardcoder.android.volumemanager.ProfileListActivity" />
+                android:value="com.fourthwardcoder.android.volumemanager.ProfileTabActivity" />
+            
         </activity>
         <activity
             android:name="com.fourthwardcoder.android.volumemanager.LocationMapActivity"
             android:label="@string/location_settings" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.fourthwardcoder.android.volumemanager.ProfileListActivity" />
+                android:value="com.fourthwardcoder.android.volumemanager.ProfileTabActivity" />
+        </activity>
+        <activity
+            android:name="com.fourthwardcoder.android.volumemanager.EditLocationProfileActivity"
+            android:label="@string/location_settings" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.fourthwardcoder.android.volumemanager.LocationMapActivity" />
         </activity>
         <activity
             android:name="com.fourthwardcoder.android.volumemanager.SettingsActivity"
             android:label="@string/settings_menu" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.fourthwardcoder.android.volumemanager.ProfileListActivity" />
+                android:value="com.fourthwardcoder.android.volumemanager.ProfileTabActivity" />
         </activity>
         <activity
             android:name="com.fourthwardcoder.android.volumemanager.ProfileTabActivity"

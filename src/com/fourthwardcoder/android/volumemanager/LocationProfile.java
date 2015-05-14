@@ -4,6 +4,8 @@ import java.util.UUID;
 
 import org.json.JSONObject;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import android.location.Address;
 import android.location.Location;
 
@@ -12,7 +14,7 @@ public class LocationProfile extends Profile {
 	/*******************************************************/
 	/*                     Local Data                      */
 	/*******************************************************/
-	private Location location;
+	private LatLng latLng;
 	private Address address;
 	
 	/*******************************************************/
@@ -35,11 +37,11 @@ public class LocationProfile extends Profile {
 		return null;
 	}
 	
-	public Location getLocation() {
-		return location;
+	public LatLng getLatLng() {
+		return latLng;
 	}
-	public void setLocation(Location location) {
-		this.location = location;
+	public void setLocation(LatLng latLng) {
+		this.latLng = latLng;
 	}
 	public Address getAddress() {
 		return address;

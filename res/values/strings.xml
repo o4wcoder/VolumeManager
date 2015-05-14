@@ -23,8 +23,6 @@
     <string name="location_profile_header">Location Profiles</string>
     <string name="delete_profile">Delete Profile</string>
     <string name="profile_settings">Profile Settings</string>
-    <string name="settings_menu">Settings</string>
-    <string name="about_menu">About</string>
     <string name="notification_text">Enable Notifcations to be sent every time there is a volume control change by a profile</string>
     <string name="notification_header">Notifications</string>
     <string name="location_settings">Location Settings</string>
@@ -32,4 +30,8 @@
     <string name="location_tab">Location</string>
     <string name="primary_text_alpha_dark">.87</string>
     <string name="secondary_text_alpha_dark">.54</string>
+    <!-- Menu Items -->
+    <string name="settings_menu">Settings</string>
+    <string name="about_menu">About</string>
+    <string name="save_menu">Save</string>
 </resources>

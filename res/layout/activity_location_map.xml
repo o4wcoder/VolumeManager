@@ -11,6 +11,12 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
+    <LinearLayout
+        android:id="@+id/locationDetailsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+    
     <TextView
         android:id="@+id/mapAddressTextView"
         android:layout_width="match_parent"
@@ -29,6 +35,7 @@
         android:background="@color/white"
         android:padding="8dp"
         android:text="City" />
+    </LinearLayout>
 
 </LinearLayout>
 <!--
