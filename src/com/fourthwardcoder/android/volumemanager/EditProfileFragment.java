@@ -115,7 +115,7 @@ public class EditProfileFragment extends Fragment implements Constants{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, 
 			Bundle savedInstanceState){
 				
-		View view = inflater.inflate(R.layout.fragment_volume_control, container, false);
+		View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
 		//Enable app icon to work as button and display caret
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {

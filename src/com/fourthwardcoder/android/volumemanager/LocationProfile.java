@@ -16,7 +16,7 @@ public class LocationProfile extends Profile {
 	/*******************************************************/
 	private LatLng latLng;
 	private Address address;
-	
+
 	/*******************************************************/
 	/*                     Constructors                    */
 	/*******************************************************/

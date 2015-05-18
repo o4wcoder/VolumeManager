@@ -107,7 +107,6 @@ LocationListener{
 		});
 
 
-
 	}
 
 	@Override

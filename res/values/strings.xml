@@ -13,6 +13,8 @@
     <string name="start_time_dialog">Volume control start time:</string>
     <string name="end_time_dialog">Volume control end time:</string>
     <string name="set_control_button">Set Volume Control</string>
+    <string name="enter_location_volume">Enter Location Volume</string>
+    <string name="exit_location_volume">Exit Location Volume</string>
     <string name="toast_text">Volume Control Set</string>
     <string name="no_profiles">No Profiles</string>
     <string name="no_locations">No Locations</string>
@@ -30,6 +32,7 @@
     <string name="location_tab">Location</string>
     <string name="primary_text_alpha_dark">.87</string>
     <string name="secondary_text_alpha_dark">.54</string>
+    <string name="previous_volume_setting">Use Previous Volume Setting</string>
     <!-- Menu Items -->
     <string name="settings_menu">Settings</string>
     <string name="about_menu">About</string>

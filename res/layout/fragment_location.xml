@@ -2,7 +2,215 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:background="#e6e6e6"
+    android:orientation="vertical"
+    android:padding="8dp" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:background="#ffffff"
+        android:orientation="vertical" >
+
+        <EditText
+            android:id="@+id/titleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/title_hint"
+            android:maxLength="20" >
+
+            <requestFocus />
+        </EditText>
+    </LinearLayout>
     
+    <ImageView
+      android:id="@+id/snapshot_holder"
+      android:layout_width="match_parent"
+      android:layout_weight="1"
+      android:layout_height="0dp"/>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="2dp"
+        android:background="#ffffff"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/profileTimeTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:padding="4dp"
+            android:text="@string/enter_location_volume"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal" >
+
+            <RadioGroup
+                android:id="@+id/startVolumeRadioGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/startOffRadio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/off" />
+
+                <RadioButton
+                    android:id="@+id/startVibrateRadio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/vibrate" />
+
+                <RadioButton
+                    android:id="@+id/startRingRadio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ring" />
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/startRingVolumeTextView"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="8dp"
+                android:text="(3/7)"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/volumeStartImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_action_volume_on" />
+
+            <SeekBar
+                android:id="@+id/startRingSeekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:max="7" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="2dp"
+        android:background="#ffffff"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/TextView02"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:padding="4dp"
+            android:text="@string/exit_location_volume"
+            android:textSize="16sp" />
+
+        <CheckBox
+            android:id="@+id/checkBox1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/previous_volume_setting" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal" >
+
+            <RadioGroup
+                android:id="@+id/endVolumeRadioGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/endOffRadio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/off" />
+
+                <RadioButton
+                    android:id="@+id/endVibrateRadio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/vibrate" />
+
+                <RadioButton
+                    android:id="@+id/endRingRadio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ring" />
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/endRingVolumeTextView"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="8dp"
+                android:text="(3/7)"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/volumeEndImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_action_volume_on" />
+
+            <SeekBar
+                android:id="@+id/endRingSeekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:max="7" />
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>
