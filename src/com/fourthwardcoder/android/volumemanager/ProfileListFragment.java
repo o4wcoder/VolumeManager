@@ -231,7 +231,7 @@ public class ProfileListFragment extends Fragment implements Constants{
 		
 		//Pass the resource ID of the menu and populate the Menu 
 		//instance with the items defined in the xml file
-		inflater.inflate(R.menu.action_bar_menu, menu);
+		inflater.inflate(R.menu.action_bar_list_menu, menu);
 		
 	}
 	
@@ -272,11 +272,7 @@ public class ProfileListFragment extends Fragment implements Constants{
 		case R.id.menu_item_new_profile:
 			newProfile();
 			//Return true, no further processing is necessary
-			return true;
-		case R.id.menu_item_new_location_profile:
-			Intent locationIntent = new Intent(getActivity(),LocationMapActivity.class);
-			startActivity(locationIntent);
-			return true;    	
+			return true; 	
 		case R.id.menu_item_settings:
 			Intent settingsIntent = new Intent(getActivity(),SettingsActivity.class);
 			startActivity(settingsIntent);

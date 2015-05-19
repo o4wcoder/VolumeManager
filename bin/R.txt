@@ -525,10 +525,9 @@ int id mapAddressTextView 0x7f080057
 int id mapCityTextView 0x7f080058
 int id match_parent 0x7f08000e
 int id menu_item_about 0x7f080086
-int id menu_item_delete_profile 0x7f080089
-int id menu_item_new_location_profile 0x7f080088
-int id menu_item_new_profile 0x7f080087
-int id menu_item_save_location_profile 0x7f080084
+int id menu_item_delete_profile 0x7f080088
+int id menu_item_new_profile 0x7f080084
+int id menu_item_save_location_profile 0x7f080087
 int id menu_item_settings 0x7f080085
 int id middle 0x7f080027
 int id monochrome 0x7f080016
@@ -625,8 +624,8 @@ int layout fragment_profile_list 0x7f030021
 int layout fragment_settings 0x7f030022
 int layout profile_list_item 0x7f030023
 int layout support_simple_spinner_dropdown_item 0x7f030024
-int menu action_bar_location_menu 0x7f0d0000
-int menu action_bar_menu 0x7f0d0001
+int menu action_bar_list_menu 0x7f0d0000
+int menu action_bar_location_menu 0x7f0d0001
 int menu context_menu 0x7f0d0002
 int raw gtm_analytics 0x7f050000
 int string abc_action_bar_home_description 0x7f070024

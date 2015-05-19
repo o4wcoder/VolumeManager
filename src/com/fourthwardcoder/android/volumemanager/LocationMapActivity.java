@@ -2,6 +2,7 @@ package com.fourthwardcoder.android.volumemanager;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -40,8 +41,7 @@ import android.widget.TextView;
 
 public class LocationMapActivity extends FragmentActivity
 implements OnMapReadyCallback, OnMapLongClickListener, GoogleApiClient.ConnectionCallbacks,
-GoogleApiClient.OnConnectionFailedListener,
-LocationListener{
+GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants{
 
 	/******************************************************************/
 	/*                         Constants                              */
@@ -58,6 +58,7 @@ LocationListener{
 	private TextView addressTextView;
 	private TextView cityTextView;
 	private Marker currentMarker;
+	private LocationProfile profile;
 	
 	//Current Locations data
 	private LatLng latLng;
@@ -70,6 +71,14 @@ LocationListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_location_map);
 
+		//pull out ID of profile
+		Intent intent = getIntent();
+		UUID profileId = (UUID)intent.getSerializableExtra(EXTRA_PROFILE_ID);
+		Log.d(TAG,"Profile id: " + profileId);
+        
+		//Fetch the Profile from the ProfileManager ArrayList
+		profile = ProfileManager.get(this).getLocationProfile(profileId);
+		
 		MapFragment mapFragment = (MapFragment) getFragmentManager()
 				.findFragmentById(R.id.map);
 		mapFragment.getMapAsync(this);
@@ -100,8 +109,9 @@ LocationListener{
 				// TODO Auto-generated method stub
 				Intent i = new Intent(LocationMapActivity.this,EditLocationProfileActivity.class);
 				//i.putExtra(EditProfileFragment.EXTRA_PROFILE_ID,p.getId());
+			   
 				startActivity(i);
-				
+			     	
 			}
 			
 		});

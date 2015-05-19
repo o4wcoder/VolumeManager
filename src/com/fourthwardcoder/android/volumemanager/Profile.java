@@ -10,6 +10,8 @@ public class Profile implements Constants{
 	private UUID id;
 	private String title;
 	private boolean enabled;
+	private int startVolumeType, endVolumeType;
+	private int startRingVolume, endRingVolume;
 	
 	//public Profile(JSONObject json) throws JSONException {
 	//}
@@ -43,6 +45,30 @@ public class Profile implements Constants{
 	}
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+	public int getStartVolumeType() {
+		return startVolumeType;
+	}
+	public void setStartVolumeType(int startVolumeType) {
+		this.startVolumeType = startVolumeType;
+	}
+	public int getEndVolumeType() {
+		return endVolumeType;
+	}
+	public void setEndVolumeType(int endVolumeType) {
+		this.endVolumeType = endVolumeType;
+	}
+	public int getStartRingVolume() {
+		return startRingVolume;
+	}
+	public void setStartRingVolume(int startRingVolume) {
+		this.startRingVolume = startRingVolume;
+	}
+	public int getEndRingVolume() {
+		return endRingVolume;
+	}
+	public void setEndRingVolume(int endRingVolume) {
+		this.endRingVolume = endRingVolume;
 	}
 	
 	

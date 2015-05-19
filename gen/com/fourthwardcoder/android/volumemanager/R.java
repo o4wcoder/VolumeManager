@@ -2160,10 +2160,9 @@ containing a value of this type.
         public static final int mapCityTextView=0x7f080058;
         public static final int match_parent=0x7f08000e;
         public static final int menu_item_about=0x7f080086;
-        public static final int menu_item_delete_profile=0x7f080089;
-        public static final int menu_item_new_location_profile=0x7f080088;
-        public static final int menu_item_new_profile=0x7f080087;
-        public static final int menu_item_save_location_profile=0x7f080084;
+        public static final int menu_item_delete_profile=0x7f080088;
+        public static final int menu_item_new_profile=0x7f080084;
+        public static final int menu_item_save_location_profile=0x7f080087;
         public static final int menu_item_settings=0x7f080085;
         public static final int middle=0x7f080027;
         public static final int monochrome=0x7f080016;
@@ -2288,8 +2287,8 @@ containing a value of this type.
         public static final int support_simple_spinner_dropdown_item=0x7f030024;
     }
     public static final class menu {
-        public static final int action_bar_location_menu=0x7f0d0000;
-        public static final int action_bar_menu=0x7f0d0001;
+        public static final int action_bar_list_menu=0x7f0d0000;
+        public static final int action_bar_location_menu=0x7f0d0001;
         public static final int context_menu=0x7f0d0002;
     }
     public static final class raw {

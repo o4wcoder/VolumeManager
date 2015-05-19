@@ -91,7 +91,7 @@ public class EditProfileFragment extends Fragment implements Constants{
 		//Change status bar color
 		ProfileListFragment.setStatusBarColor(getActivity());
 		
-		//Get Fragment arguments and pull out ID of crime
+		//Get Fragment arguments and pull out ID of profile
 		Intent intent = getActivity().getIntent();
 		UUID profileId = (UUID)intent.getSerializableExtra(EXTRA_PROFILE_ID);
 		
