@@ -16,9 +16,8 @@ public class ProfileManager {
 	/*                  Local Data                     */
 	/***************************************************/
 	//Store array of profiles
-	private ArrayList<BasicProfile> profileList;
-	//Store array of location profiles
-	private ArrayList<LocationProfile> locationProfileList;
+	private ArrayList<Profile> profileList;
+
 	//s prefix for static variable
 	private static ProfileManager sProfileManager;
 	
@@ -44,10 +43,11 @@ public class ProfileManager {
 			profileList =   this.mSerializer.loadProfiles();
 		} catch (Exception e) {
 			//No Profiles stored. Create empty list
-			profileList =  new ArrayList<BasicProfile>();
+			profileList =  new ArrayList<Profile>();
 			Log.e(TAG,"Error loading profiles: ", e);
 		}
 		
+		/*
 		//Load Location Profiles from JSON file
 		try {
 			locationProfileList =   this.mSerializer.loadLocationProfiles();
@@ -56,7 +56,7 @@ public class ProfileManager {
 			locationProfileList =  new ArrayList<LocationProfile>();
 			Log.e(TAG,"Error loading profiles: ", e);
 		}
-
+*/
 	}
 	
 	/**************************************************/
@@ -74,6 +74,7 @@ public class ProfileManager {
 		}
 	}
 	
+	/*
 	public boolean saveLocationProfiles() {
 		try {
 			mSerializer.saveLocationProfiles(locationProfileList);
@@ -84,35 +85,38 @@ public class ProfileManager {
 			return false;
 		}
 	}
-	
-	public void addProfile(BasicProfile p) {
+	*/
+	public void addProfile(Profile p) {
 		profileList.add(p);
 	}
 	
+	/*
 	public void addLocationProfile(LocationProfile p) {
 		locationProfileList.add(p);
 	}
-	
-	public void deleteProfile(BasicProfile p) {
+	*/
+	public void deleteProfile(Profile p) {
 		Log.d(TAG,"Delte profile " + p.getTitle());
 		profileList.remove(p);
 	}
 	
+	/*
 	public void deleteLocationProfile(LocationProfile p) {
 		Log.d(TAG,"Delte profile " + p.getTitle());
 		locationProfileList.remove(p);
 	}
-	
-	public ArrayList<BasicProfile> getProfiles() {
+	*/
+	public ArrayList<Profile> getProfiles() {
 		return profileList;
 	}
 	
+	/*
 	public ArrayList<LocationProfile> getLocationProfiles() {
 		return locationProfileList;
 	}
-	
-	public BasicProfile getProfile(UUID id) {
-		for (BasicProfile c : profileList) {
+	*/
+	public Profile getProfile(UUID id) {
+		for (Profile c : profileList) {
 			if(c.getId().equals(id))
 				return c;
 		}
@@ -120,6 +124,7 @@ public class ProfileManager {
 		return null;
 	}
 
+	/*
 	public LocationProfile getLocationProfile(UUID id) {
 		for (LocationProfile c : locationProfileList) {
 			if(c.getId().equals(id))
@@ -128,6 +133,7 @@ public class ProfileManager {
 		
 		return null;
 	}
+	*/
 	public static ProfileManager get(Context c) {
 		if(sProfileManager == null) {
 			//To ensure that the singleton has a long-term Context to work with,

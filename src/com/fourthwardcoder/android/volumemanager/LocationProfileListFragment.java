@@ -51,7 +51,7 @@ public class LocationProfileListFragment extends Fragment implements Constants{
 	/***************************************************/
 	/*                 Local Data                      */
 	/***************************************************/
-	private ArrayList<LocationProfile> profileList;
+	private ArrayList<Profile> profileList;
 	ProfileListAdapter profileAdapter;
 	ListView listview;
 	TabName tab;
@@ -72,7 +72,7 @@ public class LocationProfileListFragment extends Fragment implements Constants{
 		//retain the instance on rotation
 		setRetainInstance(true);
 				   
-		profileList = ProfileManager.get(getActivity()).getLocationProfiles();
+		profileList = ProfileManager.get(getActivity()).getProfiles();
 
         LocationProfileListFragment.setStatusBarColor(getActivity());
         
@@ -102,8 +102,17 @@ public class LocationProfileListFragment extends Fragment implements Constants{
 
 		
 		listview = (ListView)view.findViewById(android.R.id.list);
+		
+		ArrayList<Profile> modList = new ArrayList<Profile>();
 
-		profileAdapter = new ProfileListAdapter(profileList,listview);
+		for(int i = 0; i< profileList.size();i++) {
+		      Profile p = profileList.get(i);
+		      if(p.getLocationData() != null)
+		    	  modList.add(p);
+		}
+		
+		
+		profileAdapter = new ProfileListAdapter(modList,listview);
 		listview.setAdapter(profileAdapter);
 		listview.setEmptyView(view.findViewById(android.R.id.empty));
 
@@ -115,7 +124,7 @@ public class LocationProfileListFragment extends Fragment implements Constants{
 				// TODO Auto-generated method stub
 				// TODO Auto-generated method stub
 
-				LocationProfile p = (LocationProfile)profileAdapter.getItem(position);
+				Profile p = (Profile)profileAdapter.getItem(position);
 				Log.d(TAG,"Got profile " + p.getTitle());
 
 				//Start CrimePagerActivity with this Crime
@@ -249,11 +258,11 @@ public class LocationProfileListFragment extends Fragment implements Constants{
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
 		int position = info.position;
 		
-		LocationProfile profile = profileAdapter.getItem(position);
+		Profile profile = profileAdapter.getItem(position);
 		
 		switch (item.getItemId()) {
 		   case R.id.menu_item_delete_profile:
-			   ProfileManager.get(getActivity()).deleteLocationProfile(profile);
+			   ProfileManager.get(getActivity()).deleteProfile(profile);
 			   profileAdapter.notifyDataSetChanged();
 			   //Kill alarms for volume control
 			   //VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), profile,false);
@@ -296,8 +305,8 @@ public class LocationProfileListFragment extends Fragment implements Constants{
 	private void newProfile()
 	{
     	//Add profile to the static List Array of Crimes
-    	LocationProfile profile = new LocationProfile();
-    	ProfileManager.get(getActivity()).addLocationProfile(profile);
+    	Profile profile = new Profile();
+    	ProfileManager.get(getActivity()).addProfile(profile);
     	
     	//Create intent to start up CrimePagerActivity after selecting "New Crime" menu
     	/*
@@ -374,15 +383,15 @@ public class LocationProfileListFragment extends Fragment implements Constants{
 		public TextView daysTextView;
 	}
 	
-	private class ProfileListAdapter extends ArrayAdapter<LocationProfile> {
+	private class ProfileListAdapter extends ArrayAdapter<Profile> {
 
 		private ListView listview;
-		private ArrayList<LocationProfile> profiles;
+		private ArrayList<Profile> profiles;
 		
 		private static final int NORMAL_PROFILE = 0;
 		private static final int MOVING_PROFILE = 1;
 		
-		public ProfileListAdapter(ArrayList<LocationProfile> profiles, ListView listview) {
+		public ProfileListAdapter(ArrayList<Profile> profiles, ListView listview) {
 			super(getActivity(), 0, profiles);
 			// TODO Auto-generated constructor stub
 			
@@ -416,13 +425,15 @@ public class LocationProfileListFragment extends Fragment implements Constants{
             
             //Log.e(TAG,"VP: " + listView.getFirstVisiblePosition() +": " + getItem(listView.getFirstVisiblePosition()).getHour() + " hp: " + headerPosition);
        
-            
+        
 			//If we weren't given a view, inflate one
             if (convertView == null) {
             	holder = new ViewHolder();
- 
+
+            	
+         
             	if(rowType == NORMAL_PROFILE) {
-            		convertView = getActivity().getLayoutInflater().inflate(R.layout.profile_list_item,null);
+            		convertView = getActivity().getLayoutInflater().inflate(R.layout.location_profile_list_item,null);
             	           		        	    
             	}
             	else {
@@ -437,13 +448,13 @@ public class LocationProfileListFragment extends Fragment implements Constants{
             
         	holder.titleTextView = (TextView)convertView.findViewById(R.id.profileTitleTextView);
             holder.titleTextView.setText(getItem(position).getTitle());
-            holder.timeTextView = (TextView)convertView.findViewById(R.id.profileTimeTextView);
+            holder.timeTextView = (TextView)convertView.findViewById(R.id.profileAddressTextView);
             
            // holder.timeTextView.setText(getItem(position).getFullTimeForListItem());
             
             holder.daysTextView = (TextView)convertView.findViewById(R.id.profileDaysTextView);
             //holder.daysTextView.setText(getItem(position).getDaysOfWeekString());
-            	
+            
             return convertView;
 		}
 		

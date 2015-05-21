@@ -36,6 +36,7 @@ public interface Constants {
 	public static final String JSON_END_RING_VOLUME = "endRingVolume";
 	public static final String JSON_DAYS_OF_THE_WEEK = "daysOfTheWeek";
 	public static final String JSON_IN_ALARM = "inAlarm";
+	public static final String JSON_LOCATION_DATA = "locationData";
 	
 	public static final String PREF_VOLUME_NOTIFY_ENABLED = "volumeNotifyEnabled";
 	public static final String PREF_LOCATION_NOTIFY_ENABLED = "locationNotifyEnabled";
@@ -52,6 +53,7 @@ public interface Constants {
 	//Extras
 	public static final String EXTRA_START_ALARM = "com.fourthwardcoder.android.volumemanager.startalarm";
 	public static final String EXTRA_PROFILE_ID = "com.fourthwardcoder.android.volumemanager.profile_id";
+	public static final String EXTRA_LOCATION_PROFILE = "com.fourthwardcoder.android.volumemanager.location_profile";
 	
 	public static final String MONDAY = "Monday";
 	public static final String TUESDAY = "Tuesday";

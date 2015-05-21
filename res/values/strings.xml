@@ -13,28 +13,36 @@
     <string name="start_time_dialog">Volume control start time:</string>
     <string name="end_time_dialog">Volume control end time:</string>
     <string name="set_control_button">Set Volume Control</string>
-    <string name="enter_location_volume">Enter Location Volume</string>
-    <string name="exit_location_volume">Exit Location Volume</string>
     <string name="toast_text">Volume Control Set</string>
     <string name="no_profiles">No Profiles</string>
-    <string name="no_locations">No Locations</string>
     <string name="new_profile">New Profile</string>
-    <string name="new_location">New Location</string>
     <string name="title_hint">Enter a title for the profile.</string>
     <string name="profile_header">Profiles</string>
-    <string name="location_profile_header">Location Profiles</string>
     <string name="delete_profile">Delete Profile</string>
     <string name="profile_settings">Profile Settings</string>
     <string name="notification_text">Enable Notifcations to be sent every time there is a volume control change by a profile</string>
     <string name="notification_header">Notifications</string>
-    <string name="location_settings">Location Settings</string>
     <string name="basic_tab">Basic</string>
     <string name="location_tab">Location</string>
     <string name="primary_text_alpha_dark">.87</string>
     <string name="secondary_text_alpha_dark">.54</string>
+    <string name="hint_disabled_text_alpha_dark">.26</string>
     <string name="previous_volume_setting">Use Previous Volume Setting</string>
     <!-- Menu Items -->
     <string name="settings_menu">Settings</string>
     <string name="about_menu">About</string>
     <string name="save_menu">Save</string>
+    <!-- Basic Profile -->
+
+
+    <!-- Location Profile -->
+    <string name="enter_location_volume">Enter Location Volume</string>
+    <string name="exit_location_volume">Exit Location Volume</string>
+    <string name="no_locations">No Locations</string>
+    <string name="new_location">New Location</string>
+    <string name="location_profile_header">Location Profiles</string>
+    <string name="location_settings">Location Settings</string>
+    <string name="location_title_hint">Enter a title for the location.</string>
+    <string name="click_help_text">click here to modify volume settings</string>
+
 </resources>

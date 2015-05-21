@@ -64,7 +64,7 @@ public class EditProfileFragment extends Fragment implements Constants{
 	/************************************************************************/
 	/*                          Local Data                                  */
 	/************************************************************************/
-	BasicProfile profile;
+	Profile profile;
 	Switch volumeSwitch;
 	TextView titleTextView, startTimeTextView, endTimeTextView;
 	Button startTimeButton, endTimeButton, setControlButton;

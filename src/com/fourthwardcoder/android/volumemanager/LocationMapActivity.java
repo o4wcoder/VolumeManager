@@ -58,10 +58,11 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants{
 	private TextView addressTextView;
 	private TextView cityTextView;
 	private Marker currentMarker;
-	private LocationProfile profile;
+	private Profile profile;
 	
 	//Current Locations data
-	private LatLng latLng;
+	//private LatLng latLng;
+	private LocationData currentLocationData;
 
 	/******************************************************************/
 	/*                  Activity Override Methods                     */
@@ -77,7 +78,10 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants{
 		Log.d(TAG,"Profile id: " + profileId);
         
 		//Fetch the Profile from the ProfileManager ArrayList
-		profile = ProfileManager.get(this).getLocationProfile(profileId);
+		profile = ProfileManager.get(this).getProfile(profileId);
+		
+		currentLocationData = profile.getLocationData();
+		
 		
 		MapFragment mapFragment = (MapFragment) getFragmentManager()
 				.findFragmentById(R.id.map);
@@ -108,8 +112,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants{
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent i = new Intent(LocationMapActivity.this,EditLocationProfileActivity.class);
-				//i.putExtra(EditProfileFragment.EXTRA_PROFILE_ID,p.getId());
-			   
+				i.putExtra(EditProfileFragment.EXTRA_PROFILE_ID,profile.getId());
 				startActivity(i);
 			     	
 			}
@@ -183,7 +186,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants{
 	@Override
 	public void onMapLongClick(LatLng latLng) {
 		//Store current LatLng
-		this.latLng = latLng;
+		currentLocationData.setLatLng(latLng);
 				
         addMarker();
 		setStreetAddress();
@@ -226,10 +229,16 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants{
 		
 		if(currentMarker != null)
 			currentMarker.remove();
+		Log.e(TAG,"Inside add Marker with title " +profile.getTitle());
+		String markerTitle;
 		
+		//if(profile.getTitle() == "")
+		//	markerTitle = "New Location";
+	//	else
+			markerTitle = profile.getTitle();
 		MarkerOptions options = new MarkerOptions()
-		.position(latLng)
-		.title("New Location");
+		.position(currentLocationData.getLatLng())
+		.title(markerTitle);
 		currentMarker = map.addMarker(options);
 	}
 	private void handleNewLocation() {
@@ -251,8 +260,8 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants{
 		if(Geocoder.isPresent()) {
 			Geocoder gcd = new Geocoder(getBaseContext());
 
-			List<Address> addresses = gcd.getFromLocation(latLng.latitude,
-					latLng.longitude,1);
+			List<Address> addresses = gcd.getFromLocation(currentLocationData.getLatLng().latitude,
+					currentLocationData.getLatLng().longitude,1);
 			
 			if(addresses.size() > 0)
 				currentAddress = addresses.get(0);
@@ -283,7 +292,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants{
 			//LatLng myLocation = new LatLng(location.getLatitude(),
 				//	location.getLongitude());
 			Log.d(TAG,"Zooming to current location");
-			map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,
+			map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocationData.getLatLng(),
 					16));
 		//}
 		//else
@@ -297,7 +306,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants{
 	@Override
 	public void onLocationChanged(Location location) {
 		
-		this.latLng = new LatLng(location.getLatitude(),location.getLongitude());
+		currentLocationData.setLatLng(new LatLng(location.getLatitude(),location.getLongitude()));
 		handleNewLocation();
 
 	}
@@ -320,7 +329,11 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants{
 		}
 		else {
 			//Store current latLng
-			this.latLng = new LatLng(location.getLatitude(),location.getLongitude());
+			LatLng initLatLng = new LatLng(location.getLatitude(),location.getLongitude());
+			
+			//New location, create it.
+			if(currentLocationData == null)
+				currentLocationData = new LocationData(initLatLng);
 			handleNewLocation();
 		}
 
