@@ -25,18 +25,7 @@ public interface Constants {
 	*/
 	
 	public static final String JSON_ID = "id";
-	public static final String JSON_ALARM_ID = "alarmId";
-	public static final String JSON_TITLE = "title";
-	public static final String JSON_ENABLED = "enabled";
-	public static final String JSON_START_DATE = "startDate";
-	public static final String JSON_END_DATE = "endDate";
-	public static final String JSON_START_VOLUME_TYPE = "startVolumeType";
-	public static final String JSON_END_VOLUME_TYPE = "endVolumeType";
-	public static final String JSON_START_RING_VOLUME = "startRingVolume";
-	public static final String JSON_END_RING_VOLUME = "endRingVolume";
-	public static final String JSON_DAYS_OF_THE_WEEK = "daysOfTheWeek";
-	public static final String JSON_IN_ALARM = "inAlarm";
-	public static final String JSON_LOCATION_DATA = "locationData";
+
 	
 	public static final String PREF_VOLUME_NOTIFY_ENABLED = "volumeNotifyEnabled";
 	public static final String PREF_LOCATION_NOTIFY_ENABLED = "locationNotifyEnabled";

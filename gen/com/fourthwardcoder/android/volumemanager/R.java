@@ -2116,6 +2116,7 @@ containing a value of this type.
         public static final int buy_with_google=0x7f080010;
         public static final int checkBox1=0x7f080069;
         public static final int checkbox=0x7f08003d;
+        public static final int cityTextView=0x7f080084;
         public static final int classic=0x7f080014;
         public static final int collapseActionView=0x7f080023;
         public static final int daysTableRow=0x7f080073;
@@ -2160,11 +2161,11 @@ containing a value of this type.
         public static final int mapAddressTextView=0x7f080057;
         public static final int mapCityTextView=0x7f080058;
         public static final int match_parent=0x7f08000e;
-        public static final int menu_item_about=0x7f080087;
-        public static final int menu_item_delete_profile=0x7f080089;
-        public static final int menu_item_new_profile=0x7f080085;
-        public static final int menu_item_save_location_profile=0x7f080088;
-        public static final int menu_item_settings=0x7f080086;
+        public static final int menu_item_about=0x7f080088;
+        public static final int menu_item_delete_profile=0x7f08008a;
+        public static final int menu_item_new_profile=0x7f080086;
+        public static final int menu_item_save_location_profile=0x7f080089;
+        public static final int menu_item_settings=0x7f080087;
         public static final int middle=0x7f080027;
         public static final int monochrome=0x7f080016;
         public static final int never=0x7f08001f;
@@ -2174,7 +2175,7 @@ containing a value of this type.
         public static final int notifyHeaderTextView=0x7f080080;
         public static final int production=0x7f080009;
         public static final int profileAddressTextView=0x7f080060;
-        public static final int profileDaysTextView=0x7f080084;
+        public static final int profileDaysTextView=0x7f080085;
         public static final int profileHeaderTextView=0x7f080071;
         public static final int profileTitleTextView=0x7f080083;
         public static final int progress_circular=0x7f080030;

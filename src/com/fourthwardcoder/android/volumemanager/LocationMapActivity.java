@@ -139,6 +139,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants{
 	    switch (item.getItemId()) {
 	        case R.id.menu_item_save_location_profile:
 	            saveLocation();
+	            finish();
 	            return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
@@ -277,6 +278,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants{
 			address = getStreetAddress();
 			addressTextView.setText(address.getAddressLine(0));
 			Log.e(TAG,"address: " + address.toString());
+			currentLocationData.setAddress(address);
 			String strCity = address.getLocality() + ", " + address.getAdminArea();
 			cityTextView.setText(strCity);
 		} catch (IOException e) {
@@ -300,6 +302,11 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants{
 	}
 
 	private void saveLocation() {
+		
+		Log.e(TAG,"In save location with currentLocation " + currentLocationData.toString());
+		profile.setLocationData(currentLocationData);
+		
+		ProfileManager.get(this).saveProfiles();
 		
 	}
 	
@@ -332,8 +339,10 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants{
 			LatLng initLatLng = new LatLng(location.getLatitude(),location.getLongitude());
 			
 			//New location, create it.
-			if(currentLocationData == null)
+			if(currentLocationData == null) {
+			    Log.e(TAG,"Current Location is null, create new onew with Latlng " + initLatLng.toString());	
 				currentLocationData = new LocationData(initLatLng);
+			}
 			handleNewLocation();
 		}
 

@@ -481,6 +481,7 @@ int id buy_now 0x7f080011
 int id buy_with_google 0x7f080010
 int id checkBox1 0x7f080069
 int id checkbox 0x7f08003d
+int id cityTextView 0x7f080084
 int id classic 0x7f080014
 int id collapseActionView 0x7f080023
 int id daysTableRow 0x7f080073
@@ -525,11 +526,11 @@ int id map 0x7f080055
 int id mapAddressTextView 0x7f080057
 int id mapCityTextView 0x7f080058
 int id match_parent 0x7f08000e
-int id menu_item_about 0x7f080087
-int id menu_item_delete_profile 0x7f080089
-int id menu_item_new_profile 0x7f080085
-int id menu_item_save_location_profile 0x7f080088
-int id menu_item_settings 0x7f080086
+int id menu_item_about 0x7f080088
+int id menu_item_delete_profile 0x7f08008a
+int id menu_item_new_profile 0x7f080086
+int id menu_item_save_location_profile 0x7f080089
+int id menu_item_settings 0x7f080087
 int id middle 0x7f080027
 int id monochrome 0x7f080016
 int id never 0x7f08001f
@@ -539,7 +540,7 @@ int id notificationText 0x7f080081
 int id notifyHeaderTextView 0x7f080080
 int id production 0x7f080009
 int id profileAddressTextView 0x7f080060
-int id profileDaysTextView 0x7f080084
+int id profileDaysTextView 0x7f080085
 int id profileHeaderTextView 0x7f080071
 int id profileTitleTextView 0x7f080083
 int id progress_circular 0x7f080030

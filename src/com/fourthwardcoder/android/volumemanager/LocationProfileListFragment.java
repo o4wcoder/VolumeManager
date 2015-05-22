@@ -379,8 +379,11 @@ public class LocationProfileListFragment extends Fragment implements Constants{
 	private static class ViewHolder {
 
 		public TextView titleTextView;
-		public TextView timeTextView;
-		public TextView daysTextView;
+		//public TextView timeTextView;
+		//public TextView daysTextView;
+		public TextView addressTextView;
+		public TextView cityTextView;
+		public TextView radiusTextView;
 	}
 	
 	private class ProfileListAdapter extends ArrayAdapter<Profile> {
@@ -448,11 +451,11 @@ public class LocationProfileListFragment extends Fragment implements Constants{
             
         	holder.titleTextView = (TextView)convertView.findViewById(R.id.profileTitleTextView);
             holder.titleTextView.setText(getItem(position).getTitle());
-            holder.timeTextView = (TextView)convertView.findViewById(R.id.profileAddressTextView);
-            
+            holder.cityTextView = (TextView)convertView.findViewById(R.id.cityTextView);
+            holder.cityTextView.setText(getItem(position).getLocationData().getCity());
            // holder.timeTextView.setText(getItem(position).getFullTimeForListItem());
             
-            holder.daysTextView = (TextView)convertView.findViewById(R.id.profileDaysTextView);
+            //holder.daysTextView = (TextView)convertView.findViewById(R.id.profileDaysTextView);
             //holder.daysTextView.setText(getItem(position).getDaysOfWeekString());
             
             return convertView;

@@ -18,6 +18,18 @@ public class Profile implements Constants{
 	/*****************************************************/
 	private final static String TAG = "Profile";
 
+	private static final String JSON_ALARM_ID = "alarmId";
+	private static final String JSON_TITLE = "title";
+	private static final String JSON_ENABLED = "enabled";
+	private static final String JSON_START_DATE = "startDate";
+	private static final String JSON_END_DATE = "endDate";
+	private static final String JSON_START_VOLUME_TYPE = "startVolumeType";
+	private static final String JSON_END_VOLUME_TYPE = "endVolumeType";
+	private static final String JSON_START_RING_VOLUME = "startRingVolume";
+	private static final String JSON_END_RING_VOLUME = "endRingVolume";
+	private static final String JSON_DAYS_OF_THE_WEEK = "daysOfTheWeek";
+	private static final String JSON_IN_ALARM = "inAlarm";
+	private static final String JSON_LOCATION_DATA = "locationData";
 	
 	private static final int DAYS_OF_THE_WEEK = 7;
 	
@@ -127,7 +139,9 @@ public class Profile implements Constants{
 		json.put(JSON_START_RING_VOLUME, startRingVolume);
 		json.put(JSON_END_RING_VOLUME, endRingVolume);
 		json.put(JSON_IN_ALARM, inAlarm);
-		json.put(JSON_LOCATION_DATA, locationData);
+		
+		if(locationData != null)
+		   json.put(JSON_LOCATION_DATA, locationData.toJSON());
 		
 		JSONArray jArray = new JSONArray();
 		for(int i = 0; i < DAYS_OF_THE_WEEK; i++)

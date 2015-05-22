@@ -15,10 +15,19 @@ import android.util.Log;
 public class LocationData {
 
 	/*******************************************************/
+	/*                     Constants                       */
+	/*******************************************************/
+	private static final String JSON_LATITUDE = "latitude";
+	private static final String JSON_LONGITUDE = "longitude";
+    private static final String JSON_ADDRESS = "address";
+	private static final String JSON_CITY = "city";
+	private static final String JSON_RADIUS = "radius";
+	/*******************************************************/
 	/*                     Local Data                      */
 	/*******************************************************/
 	private LatLng latLng;
 	private Address address;
+	private String city;
 	private int fenceRadius;
 
 	/*******************************************************/
@@ -60,9 +69,14 @@ public class LocationData {
 	/*******************************************************/
 	/*                    Public Methods                   */
 	/*******************************************************/
-	public Object toJSON() {
-		// TODO Auto-generated method stub
-		return null;
+	public JSONObject toJSON() throws JSONException {
+	
+		JSONObject json = new JSONObject();
+		json.put(JSON_ADDRESS, address.getAddressLine(0));
+		json.put(JSON_CITY, city);
+		
+		
+		return json;
 	}
 	
 	public LatLng getLatLng() {
@@ -76,6 +90,7 @@ public class LocationData {
 	}
 	public void setAddress(Address address) {
 		this.address = address;
+		this.city = address.getLocality() + ", " + address.getAdminArea();
 	}
 
 	public int getFenceRadius() {
@@ -89,5 +104,9 @@ public class LocationData {
 	public void setLatLng(LatLng latLng) {
 		this.latLng = latLng;
 	}
+	public String getCity() {
+		return city;
+	}
+
 	
 }
