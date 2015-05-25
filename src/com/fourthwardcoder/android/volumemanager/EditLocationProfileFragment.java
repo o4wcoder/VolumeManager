@@ -2,6 +2,8 @@ package com.fourthwardcoder.android.volumemanager;
 
 import java.util.UUID;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -28,10 +30,10 @@ public class EditLocationProfileFragment extends Fragment {
 	/*******************************************************/
 	/*                   Local Data                        */
 	/*******************************************************/
-	Profile profile;
+	LocationProfile profile;
 	TextView titleTextView;
 	String profileTitle;
-	LocationData locationData;
+	LatLng currentLocation;
 	
 	/*******************************************************/
 	/*                  Override Methods                   */
@@ -43,11 +45,11 @@ public class EditLocationProfileFragment extends Fragment {
 		setHasOptionsMenu(true);
 		
 		UUID profileId = (UUID) getActivity().getIntent().getSerializableExtra(Constants.EXTRA_PROFILE_ID);
-		profile = ProfileManager.get(getActivity()).getProfile(profileId);
+		profile = ProfileManager.get(getActivity()).getLocationProfile(profileId);
 		Log.e(TAG,"I've been passed profile with id " + profile.getId());
 		
 		profileTitle = profile.getTitle();
-	    locationData = profile.getLocationData();	
+	    currentLocation = profile.getLocation();	
 	}
 	
 	@Override

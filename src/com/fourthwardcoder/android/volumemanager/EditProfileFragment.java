@@ -64,7 +64,7 @@ public class EditProfileFragment extends Fragment implements Constants{
 	/************************************************************************/
 	/*                          Local Data                                  */
 	/************************************************************************/
-	Profile profile;
+	BasicProfile profile;
 	Switch volumeSwitch;
 	TextView titleTextView, startTimeTextView, endTimeTextView;
 	Button startTimeButton, endTimeButton, setControlButton;
@@ -89,7 +89,7 @@ public class EditProfileFragment extends Fragment implements Constants{
 		setHasOptionsMenu(true);
 		
 		//Change status bar color
-		ProfileListFragment.setStatusBarColor(getActivity());
+		Util.setStatusBarColor(getActivity());
 		
 		//Get Fragment arguments and pull out ID of profile
 		Intent intent = getActivity().getIntent();
@@ -349,8 +349,8 @@ public class EditProfileFragment extends Fragment implements Constants{
 	    ((RadioButton)endVolumeRadioGroup.getChildAt(endVolumeType)).setChecked(true);
 	    //Setup up wigits with saved settings
 	    volumeSwitch.setChecked(isControlEnabled);
-	    startTimeTextView.setText(ProfileListFragment.formatTime(startDate));
-	    endTimeTextView.setText(ProfileListFragment.formatTime(endDate));
+	    startTimeTextView.setText(Util.formatTime(startDate));
+	    endTimeTextView.setText(Util.formatTime(endDate));
 	    //Set Seekbar default
 	    setSeekBarPosition(ID_START_ALARM,startRingVolume);
 	    setSeekBarPosition(ID_END_ALARM,endRingVolume);
@@ -369,11 +369,11 @@ public class EditProfileFragment extends Fragment implements Constants{
 		
 		if(requestCode == REQUEST_START_TIME) {
 			startDate = (Date)data.getSerializableExtra(TimePickerFragment.EXTRA_TIME);
-			startTimeTextView.setText(ProfileListFragment.formatTime(startDate));
+			startTimeTextView.setText(Util.formatTime(startDate));
 		}
 		else if(requestCode == REQUEST_END_TIME) {
 			endDate = (Date)data.getSerializableExtra(TimePickerFragment.EXTRA_TIME);
-			endTimeTextView.setText(ProfileListFragment.formatTime(endDate));
+			endTimeTextView.setText(Util.formatTime(endDate));
 		}
 		
 		//saveSettings();

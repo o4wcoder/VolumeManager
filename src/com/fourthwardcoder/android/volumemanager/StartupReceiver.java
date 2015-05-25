@@ -30,7 +30,7 @@ public class StartupReceiver extends BroadcastReceiver implements Constants {
 		Log.d(TAG,"Receiver broadcast intent: " + intent.getAction());
 
 		//Get list of profiles
-		ArrayList<Profile> profileList = ProfileManager.get(context).getProfiles();
+		ArrayList<BasicProfile> profileList = ProfileManager.get(context).getProfiles();
 
 		for(int i = 0; i < profileList.size(); i++){
 

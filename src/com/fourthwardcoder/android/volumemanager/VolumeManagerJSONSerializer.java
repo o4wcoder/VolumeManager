@@ -24,7 +24,7 @@ public class VolumeManagerJSONSerializer {
 	/******************************************************/
 	private static final String TAG = "VolumeManagerJSONSerializer";
 	private static final String PROFILE_FILENAME = "profiles.json";
-	//private static final String LOCATION_FILENAME = "locations.json";
+	private static final String LOCATION_FILENAME = "locations.json";
 	/******************************************************/
 	/*                   Local Data                       */
 	/******************************************************/
@@ -42,8 +42,8 @@ public class VolumeManagerJSONSerializer {
 	/******************************************************/
 	/*                Public Methods                      */
 	/******************************************************/
-	public ArrayList<Profile> loadProfiles() throws IOException, JSONException {
-		ArrayList<Profile> profiles = new ArrayList<Profile>();
+	public ArrayList<BasicProfile> loadProfiles() throws IOException, JSONException {
+		ArrayList<BasicProfile> profiles = new ArrayList<BasicProfile>();
 		
 		BufferedReader reader = null;
 		
@@ -63,7 +63,7 @@ public class VolumeManagerJSONSerializer {
 			JSONArray array = (JSONArray) new JSONTokener(jsonString.toString()).nextValue();
 			//Build the array of profiles from JSONObjects
 			for(int i = 0; i< array.length(); i++) {
-				profiles.add(new Profile(array.getJSONObject(i)));
+				profiles.add(new BasicProfile(array.getJSONObject(i)));
 			}
 		} catch (FileNotFoundException e) {
 			//Ignore this on; it happens when starting fresh
@@ -74,7 +74,7 @@ public class VolumeManagerJSONSerializer {
 		return profiles;
 	}
 	
-	/*
+	
 	public ArrayList<LocationProfile> loadLocationProfiles() throws IOException, JSONException {
 		ArrayList<LocationProfile> profiles = new ArrayList<LocationProfile>();
 		
@@ -105,12 +105,12 @@ public class VolumeManagerJSONSerializer {
 		}
 		return profiles;
 	}
-	*/
-	public void saveProfiles(ArrayList<Profile> profiles) throws JSONException, IOException {
+
+	public void saveProfiles(ArrayList<BasicProfile> profiles) throws JSONException, IOException {
 		
 		//Build and array in JSON
 		JSONArray array = new JSONArray();
-		for(Profile p : profiles) {
+		for(BasicProfile p : profiles) {
 			
 		    //Log.d(TAG,"JSon Data");
 		    //Log.d(TAG,p.toJSON().toString());
@@ -129,7 +129,7 @@ public class VolumeManagerJSONSerializer {
 				writer.close();
 		}
 	}
-	/*
+	
 	public void saveLocationProfiles(ArrayList<LocationProfile> profiles) throws JSONException, IOException {
 		
 		//Build and array in JSON
@@ -137,7 +137,7 @@ public class VolumeManagerJSONSerializer {
 		for(LocationProfile p : profiles) {
 			
 		    //Log.d(TAG,"JSon Data");
-		    //Log.d(TAG,p.toJSON().toString());
+		    Log.d(TAG,p.toJSON().toString());
 			array.put(p.toJSON());
 		}
 		//Write the file to disk
@@ -153,5 +153,5 @@ public class VolumeManagerJSONSerializer {
 				writer.close();
 		}
 	}
-    */
+    
 }

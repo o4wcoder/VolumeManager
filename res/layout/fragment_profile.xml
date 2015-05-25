@@ -131,7 +131,6 @@
 
             <Button
                 android:id="@+id/startTimeButton"
-                style="@style/AlarmButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -140,7 +139,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/profileAddressTextView"
+            android:id="@+id/addressTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
@@ -207,7 +206,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_action_volume_on" />
+                android:src="@drawable/ic_action_volume_on_pink" />
 
             <SeekBar
                 android:id="@+id/startRingSeekBar"
@@ -246,7 +245,6 @@
 
             <Button
                 android:id="@+id/endTimeButton"
-                style="@style/AlarmButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -322,7 +320,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_action_volume_on" />
+                android:src="@drawable/ic_action_volume_on_pink" />
 
             <SeekBar
                 android:id="@+id/endRingSeekBar"
@@ -336,7 +334,6 @@
 
     <Button
         android:id="@+id/setControlButton"
-        style="@style/SetButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/set_control_button" />

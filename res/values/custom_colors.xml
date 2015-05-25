@@ -6,4 +6,5 @@
     <color name="buttonColor">#7986cb</color>
     <color name="textColor">#7986cb</color>
     <color name="white">#ffffff</color>
+    <color name="accent_color">#536dfe</color>
 </resources>

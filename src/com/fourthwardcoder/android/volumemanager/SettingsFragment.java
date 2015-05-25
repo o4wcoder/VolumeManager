@@ -32,7 +32,7 @@ public class SettingsFragment extends Fragment implements Constants{
 		setHasOptionsMenu(true);
 		
 		//Change status bar color
-		ProfileListFragment.setStatusBarColor(getActivity());
+		Util.setStatusBarColor(getActivity());
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
 		prefsEditor = prefs.edit();

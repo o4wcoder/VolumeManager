@@ -18,31 +18,36 @@ public class BasicProfile extends Profile implements Constants{
 	/*****************************************************/
 	private final static String TAG = "Profile";
 
+	private static final String JSON_ALARM_ID = "alarmId";
+
+	private static final String JSON_START_DATE = "startDate";
+	private static final String JSON_END_DATE = "endDate";
+	private static final String JSON_DAYS_OF_THE_WEEK = "daysOfTheWeek";
+	private static final String JSON_IN_ALARM = "inAlarm";
+
 	
 	private static final int DAYS_OF_THE_WEEK = 7;
 	
 	/*****************************************************/
 	/*                  Local Data                       */
 	/*****************************************************/
+
 	private Date startDate, endDate;
 	private int alarmId;
 	private boolean daysOfTheWeek[] = new boolean[DAYS_OF_THE_WEEK];
 	private boolean inAlarm;
+	
 
 	/****************************************************/
 	/*                 Constructors                    */
 	/****************************************************/
 	public BasicProfile() {
-		super.setId(UUID.randomUUID());
+		//super.setId(UUID.randomUUID());
 		
 		//Setup defaults
-		super.setEnabled(true);
+		//super.setEnabled(true);
 		startDate = new Date();
 		endDate = new Date();
-		super.setStartVolumeType(VOLUME_OFF);
-		super.setEndVolumeType(VOLUME_VIBRATE);
-		super.setStartRingVolume(1);
-		super.setEndRingVolume (1);
 		inAlarm = false;
 		
 		calculateAlarmId();
@@ -65,7 +70,8 @@ public class BasicProfile extends Profile implements Constants{
 		super.setEndVolumeType(json.getInt(JSON_END_VOLUME_TYPE));
 		super.setStartRingVolume(json.getInt(JSON_START_RING_VOLUME));
 		super.setEndRingVolume(json.getInt(JSON_END_RING_VOLUME));
-		
+		//locationData = new LocationData(json.getObject(JSON_LOCATION_DATA));
+
 		JSONArray daysArray = json.getJSONArray(JSON_DAYS_OF_THE_WEEK);
 		
 		inAlarm = json.getBoolean(JSON_IN_ALARM);
@@ -76,15 +82,10 @@ public class BasicProfile extends Profile implements Constants{
 		calculateAlarmId();
 	}
 
-	
 
 	/*****************************************************/
 	/*                 Override Methods                  */
 	/*****************************************************/
-	@Override
-	public String toString() {
-		return super.getTitle();
-	}
 	
 	/*****************************************************/
 	/*                   Private Methods                 */
@@ -96,7 +97,7 @@ public class BasicProfile extends Profile implements Constants{
 	}
 	private void calculateAlarmId() {
 		
-		String str=""+super.getId();        
+		String str=""+ super.getId();        
         int uid=str.hashCode();
         String filterStr=""+uid;
         str=filterStr.replaceAll("-", "");
@@ -121,16 +122,19 @@ public class BasicProfile extends Profile implements Constants{
 		json.put(JSON_END_RING_VOLUME, super.getEndRingVolume());
 		json.put(JSON_IN_ALARM, inAlarm);
 		
+
+		
 		JSONArray jArray = new JSONArray();
 		for(int i = 0; i < DAYS_OF_THE_WEEK; i++)
 			jArray.put(daysOfTheWeek[i]);
 		
 		json.put(JSON_DAYS_OF_THE_WEEK, jArray);
 		
-		Log.d(TAG,"Put json object: " + json.toString());
+		//Log.d(TAG,"Put json object: " + json.toString());
 		return json;
 	}
 	
+
 	public boolean[] getDaysOfTheWeek() {
 		return daysOfTheWeek;
 	}
@@ -167,7 +171,7 @@ public class BasicProfile extends Profile implements Constants{
 
 	public String getFullTimeForListItem() {
 		
-		return ProfileListFragment.formatTime(startDate) + " - " + ProfileListFragment.formatTime(endDate);
+		return Util.formatTime(startDate) + " - " + Util.formatTime(endDate);
 	}
 	
 	public String getDaysOfWeekString() {
@@ -192,4 +196,5 @@ public class BasicProfile extends Profile implements Constants{
 	public void setInAlarm(boolean inAlarm) {
 		this.inAlarm = inAlarm;
 	}
+	
 }

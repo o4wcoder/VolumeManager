@@ -3,6 +3,14 @@ package com.fourthwardcoder.android.volumemanager;
 
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.location.LocationServices;
 
 
 import android.app.ActionBar;
@@ -11,8 +19,14 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ActionBar.Tab;
 import android.os.Bundle;
+import android.util.Log;
 
-public class ProfileTabActivity extends Activity implements Constants{
+public class ProfileTabActivity extends Activity implements Constants {
+	
+	/*********************************************************************/
+	/*                          Constants                                */
+	/*********************************************************************/
+	private static final String TAG="ProfileTabActivity";
 	
 	/*********************************************************************/
 	/*                         Local Data                                */
@@ -20,13 +34,15 @@ public class ProfileTabActivity extends Activity implements Constants{
 	ArrayList<Fragment> fragList = new ArrayList<Fragment>();
 	Fragment fragment = null;
     Fragment tabFragment = null;
+    
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		
 		//Change status bar color
-	    ProfileListFragment.setStatusBarColor(this);
+	    Util.setStatusBarColor(this);
 		
 	    setContentView(R.layout.activity_tab);
 		
@@ -85,6 +101,18 @@ public class ProfileTabActivity extends Activity implements Constants{
 		
 		actionBar.addTab(actionBar.newTab().setText(R.string.basic_tab).setTabListener(tabListener));
 		actionBar.addTab(actionBar.newTab().setText(R.string.location_tab).setTabListener(tabListener));
+		
+
+	
+		
+
+	}
+	
+	@Override
+	public void onRestoreInstanceState(Bundle savedInstanceState) {
+	    // Always call the superclass so it can restore the view hierarchy
+	    super.onRestoreInstanceState(savedInstanceState);
+
 	}
 
 }

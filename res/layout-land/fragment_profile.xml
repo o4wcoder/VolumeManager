@@ -140,7 +140,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/profileAddressTextView"
+                android:id="@+id/addressTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"

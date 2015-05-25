@@ -36,6 +36,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -51,7 +52,7 @@ public class ProfileListFragment extends Fragment implements Constants{
 	/***************************************************/
 	/*                 Local Data                      */
 	/***************************************************/
-	private ArrayList<Profile> profileList;
+	private ArrayList<BasicProfile> profileList;
 	ProfileListAdapter profileAdapter;
 	ListView listview;
 	TabName tab;
@@ -64,7 +65,7 @@ public class ProfileListFragment extends Fragment implements Constants{
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		Log.e(TAG,"Oncreate");
 		//Tell the Fragment Manager that ProfileListFragment needs
 		//to receive options menu callbacks
 		setHasOptionsMenu(true);
@@ -74,11 +75,8 @@ public class ProfileListFragment extends Fragment implements Constants{
 				   
 		profileList = ProfileManager.get(getActivity()).getProfiles();
 
-        ProfileListFragment.setStatusBarColor(getActivity());
+        Util.setStatusBarColor(getActivity());
         
-       
-	
-		
 	}
 	@SuppressLint("NewApi")
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -101,17 +99,11 @@ public class ProfileListFragment extends Fragment implements Constants{
 		
 
 		
-		listview = (ListView)view.findViewById(android.R.id.list);
+        Log.e(TAG,"onCreateView with prifile list size " + profileList.size());
 		
-		ArrayList<Profile> modList = new ArrayList<Profile>();
+		listview = (ListView)view.findViewById(android.R.id.list);
 
-		for(int i = 0; i< profileList.size();i++) {
-		      Profile p = profileList.get(i);
-		      if(p.getLocationData() == null)
-		    	  modList.add(p);
-		}
-
-		profileAdapter = new ProfileListAdapter(modList,listview);
+		profileAdapter = new ProfileListAdapter(profileList,listview);
 		listview.setAdapter(profileAdapter);
 		listview.setEmptyView(view.findViewById(android.R.id.empty));
 
@@ -123,7 +115,7 @@ public class ProfileListFragment extends Fragment implements Constants{
 				// TODO Auto-generated method stub
 				// TODO Auto-generated method stub
 
-				Profile p = (Profile)profileAdapter.getItem(position);
+				BasicProfile p = (BasicProfile)profileAdapter.getItem(position);
 				Log.d(TAG,"Got profile " + p.getTitle());
 
 				//Start CrimePagerActivity with this Crime
@@ -211,7 +203,7 @@ public class ProfileListFragment extends Fragment implements Constants{
 			});
 		}
 		
-		
+
 
 		return view;
 	}
@@ -226,6 +218,7 @@ public class ProfileListFragment extends Fragment implements Constants{
 		//if(profileAdapter != null)
 		//{
 			Log.d(TAG,"Notify adapter that data has changed");
+			
 			//getListAdapter()
 		  profileAdapter.notifyDataSetChanged();
 		//}
@@ -257,7 +250,7 @@ public class ProfileListFragment extends Fragment implements Constants{
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
 		int position = info.position;
 		
-		Profile profile = profileAdapter.getItem(position);
+		BasicProfile profile = profileAdapter.getItem(position);
 		
 		switch (item.getItemId()) {
 		   case R.id.menu_item_delete_profile:
@@ -304,7 +297,7 @@ public class ProfileListFragment extends Fragment implements Constants{
 	private void newProfile()
 	{
     	//Add profile to the static List Array of Crimes
-    	Profile profile = new Profile();
+    	BasicProfile profile = new BasicProfile();
     	ProfileManager.get(getActivity()).addProfile(profile);
     	
     	//Create intent to start up CrimePagerActivity after selecting "New Crime" menu
@@ -324,52 +317,9 @@ public class ProfileListFragment extends Fragment implements Constants{
 	/*******************************************************************/
 	/*                        Public Methods                           */
 	/**
-	 * @return *****************************************************************/
-	@SuppressLint("NewApi")
-	public static void setStatusBarColor(Activity activity) {
-		
-	    if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
-			Window window = activity.getWindow();
-			window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-			window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-			window.setStatusBarColor(activity.getResources().getColor(R.color.statusBarColor));
-	
-	    }
-	}
-	/**
-	 * Modify the format of the time of the alarms. Changes hour from 
-	 * military time to standard. Also make sure the minute is two digits.
-	 * 
-	 * @param date Stores the time of the alarm
-	 */
-	public static String formatTime(Date date) {
-		
-		String am_or_pm = (date.getHours() < 12) ? "AM" : "PM";
-		
-		//Log.d(TAG,"In update time with hour " + date.getHours());
-		
-		//Create a Calendar to get the time
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
-		
-		int hour = calendar.get(Calendar.HOUR);
-		int min = calendar.get(Calendar.MINUTE);
-		
-		String strHour = String.valueOf(hour);
-		
-		if(hour == 0)
-			strHour = "12";
-		
-		String strMin = String.valueOf(min);
-		
-		//Make sure minute is 2 digits
-		if(min < 10)
-			strMin = "0" + strMin;
-		
-		String time = strHour + ":" + strMin + " " + am_or_pm;
-		
-		return time;
-	}
+	 ******************************************************************/
+
+
 	/************************************************************/
 	/*                      Inner Classes                       */
 	/************************************************************/
@@ -382,19 +332,18 @@ public class ProfileListFragment extends Fragment implements Constants{
 		public TextView daysTextView;
 	}
 	
-	private class ProfileListAdapter extends ArrayAdapter<Profile> {
+	private class ProfileListAdapter extends ArrayAdapter<BasicProfile> {
 
-		private ListView listview;
-		private ArrayList<Profile> profiles;
+		//private ListView listview;
+		private ArrayList<BasicProfile> profiles;
+				
+
 		
-		private static final int NORMAL_PROFILE = 0;
-		private static final int MOVING_PROFILE = 1;
-		
-		public ProfileListAdapter(ArrayList<Profile> profiles, ListView listview) {
+		public ProfileListAdapter(ArrayList<BasicProfile> profiles, ListView listview) {
 			super(getActivity(), 0, profiles);
 			// TODO Auto-generated constructor stub
 			
-			this.listview = listview;
+			//this.listview = listview;
 			this.profiles = profiles;
 		}
 		
@@ -402,8 +351,11 @@ public class ProfileListFragment extends Fragment implements Constants{
 		//Determines the type of layout to display in the row
 		@Override
 		public int getItemViewType(int position) {
-            
-			return NORMAL_PROFILE;
+
+			if(getItem(position).isEnabled() == true)
+				return NORMAL_PROFILE;
+			else
+				return DISABLED_PROFILE;
 
 		}
 		//Override method needed from multiple layouts in listview
@@ -421,6 +373,7 @@ public class ProfileListFragment extends Fragment implements Constants{
 
 			ViewHolder holder = null;
             int rowType = getItemViewType(position);
+      
             
             //Log.e(TAG,"VP: " + listView.getFirstVisiblePosition() +": " + getItem(listView.getFirstVisiblePosition()).getHour() + " hp: " + headerPosition);
        
@@ -434,7 +387,8 @@ public class ProfileListFragment extends Fragment implements Constants{
             	           		        	    
             	}
             	else {
-                   //Set up moving car/bike list row
+                   //Set up disabled profile
+            		convertView = getActivity().getLayoutInflater().inflate(R.layout.profile_list_item_off,null);
             	}
             	convertView.setTag(holder);
             }
@@ -443,11 +397,44 @@ public class ProfileListFragment extends Fragment implements Constants{
 				//Log.e(TAG,"In getView(!null) with profile " +holder.titleTextView.getText() + " position: " + position);
 			}
             
+    		//Set up click listner on volume image button to turn profile on/off
+    		ImageView volumeImage = (ImageView)convertView.findViewById(R.id.volumeStartImageView);
+    		
+    		volumeImage.setOnClickListener(new OnClickListener() {
+
+    			@Override
+    			public void onClick(View v) {
+    				//get the position from the view's tag
+    				
+    				Integer listPosition = (Integer)v.getTag();
+    				Log.e(TAG,"Click image at position " + v.getTag().toString());
+    				
+    				//Toggle Porfile's enabled state
+    				if(getItem(listPosition).isEnabled()) {
+    					
+    				    //Turn off alarms for this profile
+    					getItem(listPosition).setEnabled(false);
+    					VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), getItem(listPosition),false);
+    				}
+    				else {
+    					//Turn on alarms for this profile
+    					getItem(listPosition).setEnabled(true);
+    					VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), getItem(listPosition), true);
+    				}
+    				//refresh listview
+    				profileAdapter.notifyDataSetChanged();
+    				
+    			}
+    			
+    		});
+    		
+    		volumeImage.setTag(new Integer(position));
+    		
         	holder.titleTextView = (TextView)convertView.findViewById(R.id.profileTitleTextView);
             holder.titleTextView.setText(getItem(position).getTitle());
             //holder.titleTextView.setAlpha(PRIMARY_TEXT_DARK);
             
-            holder.timeTextView = (TextView)convertView.findViewById(R.id.profileAddressTextView);
+            holder.timeTextView = (TextView)convertView.findViewById(R.id.timeTextView);
             holder.timeTextView.setText(getItem(position).getFullTimeForListItem());
             //holder.timeTextView.setAlpha(SECONDARY_TEXT_DARK);
             holder.daysTextView = (TextView)convertView.findViewById(R.id.profileDaysTextView);

@@ -25,6 +25,12 @@ public interface Constants {
 	*/
 	
 	public static final String JSON_ID = "id";
+	public static final String JSON_TITLE = "title";
+	public static final String JSON_ENABLED = "enabled";
+	public static final String JSON_START_VOLUME_TYPE = "startVolumeType";
+	public static final String JSON_END_VOLUME_TYPE = "endVolumeType";
+	public static final String JSON_START_RING_VOLUME = "startRingVolume";
+	public static final String JSON_END_RING_VOLUME = "endRingVolume";
 
 	
 	public static final String PREF_VOLUME_NOTIFY_ENABLED = "volumeNotifyEnabled";
@@ -63,6 +69,12 @@ public interface Constants {
 	}
 	
 	public static final String TAB_ID = "tabId";
+	
+	public static final int NORMAL_PROFILE = 0;
+	public static final int DISABLED_PROFILE = 1;
+	
+	public static final float GEOFENCE_RADIUS_DEFAULT = 100;
+	
 	
 
 }

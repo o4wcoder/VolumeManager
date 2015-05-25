@@ -44,5 +44,20 @@
     <string name="location_settings">Location Settings</string>
     <string name="location_title_hint">Enter a title for the location.</string>
     <string name="click_help_text">click here to modify volume settings</string>
+    <string name="geofence_added">Goefence added for </string>
+    
+        <!-- Error strings -->
+    <string name="not_connected">GoogleApiClient no yet connected. Try again.</string>
+    <string name="geofence_not_available">Geofence service is not available now</string>
+    <string name="geofence_too_many_geofences">Your app has registered too many geofences</string>
+    <string name="geofence_too_many_pending_intents">
+        You have provided too many PendingIntents
+    </string>
+    <string name="unknown_geofence_error">
+        Unknown error: the Geofence service is not available now
+    </string>
+    <string name="geofence_transition_invalid_type">
+        Geofence transition error: invalid transition type %1$d
+    </string>
 
 </resources>
