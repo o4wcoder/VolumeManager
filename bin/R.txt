@@ -701,6 +701,8 @@ int string geofence_added 0x7f070059
 int string geofence_not_available 0x7f07005b
 int string geofence_too_many_geofences 0x7f07005c
 int string geofence_too_many_pending_intents 0x7f07005d
+int string geofence_transition_entered 0x7f070060
+int string geofence_transition_exited 0x7f070061
 int string geofence_transition_invalid_type 0x7f07005f
 int string hello_world 0x7f070034
 int string hint_disabled_text_alpha_dark 0x7f07004c
@@ -733,6 +735,7 @@ int string store_picture_title 0x7f070000
 int string title_hint 0x7f070042
 int string toast_text 0x7f07003f
 int string unknown_geofence_error 0x7f07005e
+int string unknown_geofence_transition 0x7f070062
 int string vibrate 0x7f070038
 int string wallet_buy_button_place_holder 0x7f070022
 int style AlarmButton 0x7f0600f5

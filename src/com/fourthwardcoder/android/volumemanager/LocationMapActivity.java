@@ -502,7 +502,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		if(status.isSuccess()) {
 			Log.i(TAG,"Success creating intents for geofences");
 			
-			String msgStr = getString(R.string.geofence_added) + " " + currentAddress;
+			String msgStr = getString(R.string.geofence_added) + " " + currentAddress.getAddressLine(0);
 			
             Toast.makeText(
                     this,
@@ -514,7 +514,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		}
 		else {
 			// Get the status code for the error and log it using a user-friendly message.
-            String errorMessage = getErrorString(this,
+            String errorMessage = Util.getGeofenceErrorString(this,
                     status.getStatusCode());
             Log.e(TAG, errorMessage);
 			
@@ -522,22 +522,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		
 	}
 	
-    /** 
-     * Returns the error string for a geofencing error code. 
-     */ 
-    public static String getErrorString(Context context, int errorCode) {
-        Resources mResources = context.getResources();
-        switch (errorCode) {
-            case GeofenceStatusCodes.GEOFENCE_NOT_AVAILABLE: 
-                return mResources.getString(R.string.geofence_not_available);
-            case GeofenceStatusCodes.GEOFENCE_TOO_MANY_GEOFENCES: 
-                return mResources.getString(R.string.geofence_too_many_geofences);
-            case GeofenceStatusCodes.GEOFENCE_TOO_MANY_PENDING_INTENTS: 
-                return mResources.getString(R.string.geofence_too_many_pending_intents);
-            default: 
-                return mResources.getString(R.string.unknown_geofence_error);
-        } 
-    } 
+
 	
 	
 

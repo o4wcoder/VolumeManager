@@ -79,6 +79,10 @@
             android:exported="false" >
         </service>
 
+        <service
+            android:name="com.fourthwardcoder.android.volumemanager.GeofenceService"
+            android:exported="false" >
+        </service>
         <receiver android:name="com.fourthwardcoder.android.volumemanager.StartupReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

@@ -2482,6 +2482,8 @@ containing a value of this type.
         public static final int geofence_not_available=0x7f07005b;
         public static final int geofence_too_many_geofences=0x7f07005c;
         public static final int geofence_too_many_pending_intents=0x7f07005d;
+        public static final int geofence_transition_entered=0x7f070060;
+        public static final int geofence_transition_exited=0x7f070061;
         public static final int geofence_transition_invalid_type=0x7f07005f;
         public static final int hello_world=0x7f070034;
         public static final int hint_disabled_text_alpha_dark=0x7f07004c;
@@ -2493,7 +2495,7 @@ containing a value of this type.
         public static final int new_profile=0x7f070041;
         public static final int no_locations=0x7f070053;
         public static final int no_profiles=0x7f070040;
-        /**  Error strings 
+        /**  Geofence strings 
          */
         public static final int not_connected=0x7f07005a;
         public static final int notification_header=0x7f070047;
@@ -2518,6 +2520,7 @@ containing a value of this type.
         public static final int title_hint=0x7f070042;
         public static final int toast_text=0x7f07003f;
         public static final int unknown_geofence_error=0x7f07005e;
+        public static final int unknown_geofence_transition=0x7f070062;
         public static final int vibrate=0x7f070038;
         /**  Text on a placeholder buy button when Google Play services is not
          available or up-to-date 
