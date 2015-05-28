@@ -106,7 +106,7 @@ public class VolumeManagerService extends IntentService implements Constants{
 				//Send notification if they are turned on
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 				if(prefs.getBoolean(PREF_VOLUME_NOTIFY_ENABLED, false))
-					showNotification(isStartAlarm, ringType);
+					showNotification(isStartAlarm);
 
 			}
 		}
@@ -115,7 +115,7 @@ public class VolumeManagerService extends IntentService implements Constants{
 
 	}
 
-	private void showNotification(boolean isStartAlarm, int ringType) {
+	private void showNotification(boolean isStartAlarm) {
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(System.currentTimeMillis());
@@ -137,6 +137,7 @@ public class VolumeManagerService extends IntentService implements Constants{
 		.setContentText(strTime);
 
         Intent i = new Intent(this,EditProfileActivity.class);
+       
         i.putExtra(EXTRA_PROFILE_ID,profile.getId());
         
 	    PendingIntent resultPendingIntent =
