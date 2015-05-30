@@ -52,6 +52,6 @@
         android:layout_gravity="right"
         android:layout_weight="0"
         android:padding="16dp"
-        android:src="@drawable/ic_action_volume_on_pink" />
+        android:src="@drawable/ic_action_volume_on_text" />
 
 </LinearLayout>

@@ -73,7 +73,8 @@ public interface Constants {
 	public static final int NORMAL_PROFILE = 0;
 	public static final int DISABLED_PROFILE = 1;
 	
-	public static final float GEOFENCE_RADIUS_DEFAULT = 100;
+	public static final float GEOFENCE_RADIUS_DEFAULT = 50;
+	public static final float GEOFENCE_RADIUS_INC = 10;
 	
 	
 

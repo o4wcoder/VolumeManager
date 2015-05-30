@@ -239,12 +239,12 @@ public class EditProfileFragment extends Fragment implements Constants{
 			       
 				if(checkedId == R.id.startOffRadio) {
 					startVolumeType = VOLUME_OFF;
-					setSeekBarPosition(ID_START_ALARM,0);
+					Util.setSeekBarPosition(startRingSeekBar,startRingVolume,startRingVolumeTextView,0);
 					
 				}
 				else if(checkedId == R.id.startVibrateRadio) {
 					startVolumeType = VOLUME_VIBRATE;
-					setSeekBarPosition(ID_START_ALARM,0);
+					Util.setSeekBarPosition(startRingSeekBar,startRingVolume,startRingVolumeTextView,0);
 				}
 				else {
 					startVolumeType = VOLUME_RING;
@@ -261,12 +261,12 @@ public class EditProfileFragment extends Fragment implements Constants{
 			       
 				if(checkedId == R.id.endOffRadio) {
 					endVolumeType = VOLUME_OFF;
-					setSeekBarPosition(ID_END_ALARM,0);
+					Util.setSeekBarPosition(endRingSeekBar,endRingVolume,endRingVolumeTextView,0);
 
 				}
 				else if(checkedId == R.id.endVibrateRadio) {
 					endVolumeType = VOLUME_VIBRATE;
-					setSeekBarPosition(ID_END_ALARM,0);
+					Util.setSeekBarPosition(endRingSeekBar,endRingVolume,endRingVolumeTextView,0);
 				}
 				else {
 					endVolumeType = VOLUME_RING;
@@ -291,7 +291,7 @@ public class EditProfileFragment extends Fragment implements Constants{
 				else 
 					((RadioButton)startVolumeRadioGroup.getChildAt(VOLUME_RING)).setChecked(true);
 				
-				setRingVolumeText(startRingVolumeTextView,progress);
+				Util.setRingVolumeText(startRingVolumeTextView,progress);
 				startRingVolume = progress;
 			}
 			@Override
@@ -311,7 +311,7 @@ public class EditProfileFragment extends Fragment implements Constants{
 				else 
 					((RadioButton)endVolumeRadioGroup.getChildAt(VOLUME_RING)).setChecked(true);
 				
-				setRingVolumeText(endRingVolumeTextView,progress);
+				Util.setRingVolumeText(endRingVolumeTextView,progress);
 				endRingVolume = progress;	
 			}
 			@Override
@@ -352,8 +352,8 @@ public class EditProfileFragment extends Fragment implements Constants{
 	    startTimeTextView.setText(Util.formatTime(startDate));
 	    endTimeTextView.setText(Util.formatTime(endDate));
 	    //Set Seekbar default
-	    setSeekBarPosition(ID_START_ALARM,startRingVolume);
-	    setSeekBarPosition(ID_END_ALARM,endRingVolume);
+	    Util.setSeekBarPosition(startRingSeekBar,startRingVolume,startRingVolumeTextView,startRingVolume);
+	    Util.setSeekBarPosition(endRingSeekBar,endRingVolume,endRingVolumeTextView,endRingVolume);
 	    setWidgetVisibility(isControlEnabled);
 	    
 		return view;
@@ -409,29 +409,19 @@ public class EditProfileFragment extends Fragment implements Constants{
 		//Start Controls
 		startTimeButton.setEnabled(set);
 		startTimeTextView.setEnabled(set);
-		setRadioGroupVisibility(startVolumeRadioGroup,set);
+		Util.setRadioGroupVisibility(startVolumeRadioGroup,set);
 		startRingSeekBar.setEnabled(set);
 		//End Controls
 		endTimeButton.setEnabled(set);
 		endTimeTextView.setEnabled(set);
-		setRadioGroupVisibility(endVolumeRadioGroup,set);
+		Util.setRadioGroupVisibility(endVolumeRadioGroup,set);
 		endRingSeekBar.setEnabled(set);
 		
 		setControlButton.setEnabled(set);
 	}
 	
 	
-	/**
-	 * Set the visibility of the RadioGroups. This is set by the on/off toggle switch
-	 * @param radioGroup RadioGroup to set the visibility on
-	 * @param set setting of the toggle switch
-	 */
-	private void setRadioGroupVisibility(RadioGroup radioGroup, boolean set) {
-		
-		//Set visibility on each RadioButton in the Group
-		for(int i = 0; i <radioGroup.getChildCount(); i++)
-			((RadioButton)radioGroup.getChildAt(i)).setEnabled(set);
-	}
+
 	
 	/**
 	 * Save all settings of the alarms to SharedPreferences 
@@ -454,33 +444,7 @@ public class EditProfileFragment extends Fragment implements Constants{
 		
 	}
 	
-	/**
-	 * Set the text on ring volume level
-	 * @param textView TextView to set the ring volume level
-	 * @param pos position of the seekbar
-	 */
-	private void setRingVolumeText(TextView textView, int pos) {
-		
-		textView.setText("(" + pos + "/7)");
-	}
-	
-	/**
-	 * Set the ring volume seek bar at a specific position
-	 * @param alarmType which alarm (start or end) to set
-	 * @param pos seekbar position
-	 */
-	private void setSeekBarPosition(int alarmType, int pos) {
 
-		if(alarmType == ID_START_ALARM) {
-			startRingSeekBar.setProgress(pos);
-			startRingVolume = pos;
-			setRingVolumeText(startRingVolumeTextView,pos);
-			
-		}
-		else {
-			endRingSeekBar.setProgress(pos);
-			endRingVolume = pos;
-			setRingVolumeText(endRingVolumeTextView,pos);
-		}
-	}
+	
+
 }

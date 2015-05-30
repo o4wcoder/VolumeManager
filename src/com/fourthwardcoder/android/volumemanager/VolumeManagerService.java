@@ -88,20 +88,8 @@ public class VolumeManagerService extends IntentService implements Constants{
 				ProfileManager.get(getApplicationContext()).saveProfiles();
 				Log.d(TAG, "Inside onHandleIntent with start alarm with ring type " + ringType);
 
-				//Get access to system audio manager
-				AudioManager audioManager = (AudioManager) this.getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-
-				Log.e(TAG,"In onHandle Intent with alarm type " + isStartAlarm);
-				if(ringType == VOLUME_OFF)
-					audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-				else if(ringType == VOLUME_VIBRATE)
-					audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-				else {
-					audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-					Log.d(TAG,"MAX volume " +audioManager.getStreamMaxVolume(AudioManager.STREAM_RING));
-					if(ringVolume > 0 && ringVolume <= audioManager.getStreamMaxVolume(AudioManager.STREAM_RING))
-						audioManager.setStreamVolume(AudioManager.STREAM_RING, ringVolume, AudioManager.FLAG_PLAY_SOUND);
-				}
+				//Get access to system audio manager and set volume
+				Util.setAudioManager(getApplicationContext(), ringType, ringVolume);
 
 				//Send notification if they are turned on
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());

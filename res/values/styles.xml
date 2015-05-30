@@ -45,11 +45,14 @@
        <item name="android:background">@color/buttonColor</item>
        <item name="android:textColor">#ffffff</item>
        <item name="android:layout_marginRight">4dp</item>
+       
+    </style><style name="RadiusButton">
+        <item name="android:background">@color/radiusButtonColor</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">38sp</item>
+        <item name="android:minHeight">35dp</item>
+        <item name="android:minWidth">35dp</item>
+        <item name="android:layout_margin">2dp</item>
     </style>
-    
-    <style name="SetButton">
-       <item name="android:background">@color/buttonColor</item>
-       <item name="android:textColor">#ffffff</item>
-       <item name="android:layout_margin">2dp</item>
-    </style>
+
 </resources>

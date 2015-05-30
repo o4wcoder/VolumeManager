@@ -13,6 +13,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -31,7 +33,8 @@ public class GeofenceService extends IntentService implements Constants {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		// TODO Auto-generated method stub
+		int ringType = VOLUME_OFF;
+		int ringVolume = 1;
 
 		Log.e(TAG,"Inside GeofenceService onHandleIntent!!");
 
@@ -70,7 +73,28 @@ public class GeofenceService extends IntentService implements Constants {
 
 			for(int i = 0; i < transitionProfileList.size(); i++) {
 				Log.i(TAG, transitionProfileList.get(i).getTitle());
-				showNotification(geofenceTransition,transitionProfileList.get(i));
+
+				LocationProfile profile = transitionProfileList.get(i);
+				Log.i(TAG,"In geofence " + profile.getTitle());
+
+				if(profile != null) {
+					if(geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
+						ringType = profile.getStartVolumeType();
+						ringVolume = profile.getStartRingVolume();
+					}
+					else {
+						ringType = profile.getEndVolumeType();
+						ringVolume = profile.getEndRingVolume();	
+					}
+
+					Util.setAudioManager(getApplicationContext(), ringType, ringVolume);
+
+					//Send notification if they are turned on
+					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+					if(prefs.getBoolean(PREF_LOCATION_NOTIFY_ENABLED, false))
+						showNotification(geofenceTransition,profile);
+
+				}
 			}
 		} else { 
 			// Log the error. 

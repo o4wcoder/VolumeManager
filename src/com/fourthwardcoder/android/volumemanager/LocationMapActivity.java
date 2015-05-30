@@ -23,30 +23,41 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import android.app.FragmentManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import  com.google.android.gms.location.LocationListener;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 public class LocationMapActivity extends FragmentActivity
@@ -57,7 +68,9 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 	/*                         Constants                              */
 	/******************************************************************/
 	private final static String TAG = "LocationMapActivity";
-
+	
+	private final static int GEOFENCE_FILL_COLOR = 0x40c62828; //Red, %25 transparent
+	private final static int GEOFENCE_STROKE_COLOR = 0x80c62828; //Red, %25 transparent
 	/******************************************************************/
 	/*                         Local Data                             */
 	/******************************************************************/
@@ -68,6 +81,8 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 	private TextView addressTextView;
 	private TextView cityTextView;
 	private Marker currentMarker;
+	private Circle currentCircle;
+	TextView radiusTextView;
 
 	//Geofence data
 	private ArrayList<Geofence> geofenceList;
@@ -78,6 +93,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 	private LatLng currentLocation;
 	private Address currentAddress;
     private String currentCity;
+    private float currentRadius;
 	
 	//private LocationData currentLocationData;
 
@@ -101,6 +117,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		
 		
 		currentLocation = currentProfile.getLocation();
+		currentRadius = currentProfile.getFenceRadius();
 		
 		
 		MapFragment mapFragment = (MapFragment) getFragmentManager()
@@ -149,6 +166,71 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 			
 		});
 		
+		radiusTextView = (TextView)findViewById(R.id.radiusTextView);
+		radiusTextView.setText(String.valueOf(currentProfile.getFenceRadius()));
+		
+
+		radiusTextView.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+			   currentRadius = Float.valueOf(s.toString());
+			   drawGeofenceCircle();
+				
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+
+		Button increaseRadiusButton = (Button)findViewById(R.id.increaseRadiusButton);
+		
+        increaseRadiusButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				//increase the geofence size
+				currentRadius += Constants.GEOFENCE_RADIUS_INC;
+				radiusTextView.setText(String.valueOf(currentRadius));
+				drawGeofenceCircle();
+				
+				
+			}
+        	
+        });
+        
+		Button decreaseRadiusButton = (Button)findViewById(R.id.decreaseRadiusButton);
+		
+		decreaseRadiusButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				
+				//decrease the geofence size
+				currentRadius -= Constants.GEOFENCE_RADIUS_INC;
+				radiusTextView.setText(String.valueOf(currentRadius));
+				drawGeofenceCircle();
+			}
+			
+		});
+		
+		
+		
+		
+		
+		
 		
 
 
@@ -171,8 +253,17 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 	    switch (item.getItemId()) {
 	        case R.id.menu_item_save_location_profile:
 	            saveLocation();
-	            
 	            return true;
+			case R.id.menu_item_settings:
+				Intent settingsIntent = new Intent(this,SettingsActivity.class);
+				startActivity(settingsIntent);
+				return true;
+			case R.id.menu_item_about:
+				FragmentManager fm = this.getFragmentManager();
+				AboutFragment dialog = AboutFragment.newInstance();
+				//Make ProfileListFragment the target fragment of the TimePickerFragment instance
+				//dialog.setTargetFragment(VolumeManagerFragment.this, REQUEST_START_TIME);
+				dialog.show(fm, "about");
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
@@ -327,6 +418,23 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
             //logSecurityException(securityException);
         }
     }
+    
+    public void removeGeofence() {
+    	
+    	 try {
+             // Remove geofences.
+             LocationServices.GeofencingApi.removeGeofences(
+                     mGoogleApiClient,
+                     // This is the same pending intent that was used in addGeofences().
+                     getGeofencePendingIntent()
+             ).setResultCallback(this); // Result processed in onResult().
+         } catch (SecurityException securityException) {
+             // Catch exception generated if the app does not use ACCESS_FINE_LOCATION permission.
+             //logSecurityException(securityException);
+         }
+    }
+    
+
 	/*
 	
     /******************************************************************/
@@ -373,6 +481,23 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		.position(currentLocation)
 		.title(markerTitle);
 		currentMarker = map.addMarker(options);
+		
+		drawGeofenceCircle();
+	}
+	
+	private void drawGeofenceCircle() {
+		
+		 if(currentCircle != null)
+			 currentCircle.remove();
+		 
+		 currentCircle = map.addCircle(new CircleOptions()
+	     .center(currentLocation)
+	     .radius(currentRadius)
+	     .strokeColor(GEOFENCE_STROKE_COLOR)
+	     .strokeWidth(5)
+	     .fillColor(GEOFENCE_FILL_COLOR));
+		 
+		
 	}
 	private void handleNewLocation() {
 
@@ -441,6 +566,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		currentProfile.setLocation(currentLocation);
 		currentProfile.setAddress(currentAddress.getAddressLine(0));
 		currentProfile.setCity(currentCity);
+		currentProfile.setFenceRadius(currentRadius);
 		
 		ProfileManager.get(this).saveLocationProfiles();
 		

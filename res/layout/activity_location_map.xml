@@ -12,39 +12,92 @@
         android:layout_weight="1" />
 
     <LinearLayout
-        android:id="@+id/locationDetailsLayout"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
-    
-    <TextView
-        android:id="@+id/mapAddressTextView"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:alpha="@string/primary_text_alpha_dark"
-        android:background="@color/white"
-        android:padding="8dp"
-        android:text="Address"
-        android:textSize="20sp" />
+        android:orientation="horizontal" >
 
-    <TextView
-        android:id="@+id/mapCityTextView"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:alpha="@string/secondary_text_alpha_dark"
-        android:background="@color/white"
-        android:padding="8dp"
-        android:text="City" />
+        <LinearLayout
+            android:id="@+id/locationDetailsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/hintTextView"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:alpha="@string/hint_disabled_text_alpha_dark"
-        android:background="@color/white"
-        android:gravity="center"
-        android:padding="2dp"
-        android:text="@string/click_help_text" />
+            <TextView
+                android:id="@+id/mapAddressTextView"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:alpha="@string/primary_text_alpha_dark"
+                android:background="@color/white"
+                android:padding="8dp"
+                android:text="Address"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/mapCityTextView"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:alpha="@string/secondary_text_alpha_dark"
+                android:background="@color/white"
+                android:padding="8dp"
+                android:text="City" />
+
+            <TextView
+                android:id="@+id/hintTextView"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:alpha="@string/hint_disabled_text_alpha_dark"
+                android:background="@color/white"
+                android:gravity="center"
+                android:padding="2dp"
+                android:text="@string/click_help_text" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="100dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/radiusHeaderTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:alpha="@string/secondary_text_alpha_dark"
+                android:gravity="center"
+                android:text="@string/radius_text" />
+
+            <EditText
+                android:id="@+id/radiusTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="number" >
+
+                <requestFocus />
+            </EditText>
+
+            <Button
+                android:id="@+id/increaseRadiusButton"
+                style="@style/RadiusButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:text="+" />
+
+            <Button
+                android:id="@+id/decreaseRadiusButton"
+                style="@style/RadiusButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:text="-" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

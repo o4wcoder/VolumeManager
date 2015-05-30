@@ -9,11 +9,17 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.media.AudioManager;
 import android.os.Build;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
-public class Util {
+public class Util implements Constants{
 	
 	/**
 	 * Modify the format of the time of the alarms. Changes hour from 
@@ -50,6 +56,41 @@ public class Util {
 		return time;
 	}
 	
+	/**
+	 * Set the text on ring volume level
+	 * @param textView TextView to set the ring volume level
+	 * @param pos position of the seekbar
+	 */
+	public static void setRingVolumeText(TextView textView, int pos) {
+		
+		textView.setText("(" + pos + "/7)");
+	}
+	
+	/**
+	 * Set the visibility of the RadioGroups. This is set by the on/off toggle switch
+	 * @param radioGroup RadioGroup to set the visibility on
+	 * @param set setting of the toggle switch
+	 */
+	public static void setRadioGroupVisibility(RadioGroup radioGroup, boolean set) {
+		
+		//Set visibility on each RadioButton in the Group
+		for(int i = 0; i <radioGroup.getChildCount(); i++)
+			((RadioButton)radioGroup.getChildAt(i)).setEnabled(set);
+	}
+	
+	/**
+	 * Set the ring volume seek bar at a specific position
+	 * @param alarmType which alarm (start or end) to set
+	 * @param pos seekbar position
+	 */
+	public static void setSeekBarPosition(SeekBar seekBar, int ringVolume, TextView textView, int pos) {
+
+		seekBar.setProgress(pos);
+		ringVolume = pos;
+		setRingVolumeText(textView,pos);
+
+	}
+	
 	@SuppressLint("NewApi")
 	public static void setStatusBarColor(Activity activity) {
 		
@@ -78,5 +119,21 @@ public class Util {
                 return mResources.getString(R.string.unknown_geofence_error);
         } 
     } 
+    
+    public static void setAudioManager(Context context, int ringType, int ringVolume) {
+    	
+		AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+
+		if(ringType == VOLUME_OFF)
+			audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+		else if(ringType == VOLUME_VIBRATE)
+			audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+		else {
+			audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+
+			if(ringVolume > 0 && ringVolume <= audioManager.getStreamMaxVolume(AudioManager.STREAM_RING))
+				audioManager.setStreamVolume(AudioManager.STREAM_RING, ringVolume, AudioManager.FLAG_PLAY_SOUND);
+		}
+    }
 
 }
