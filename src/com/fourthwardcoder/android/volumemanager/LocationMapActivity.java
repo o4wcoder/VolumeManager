@@ -41,6 +41,7 @@ import android.location.Location;
 import  com.google.android.gms.location.LocationListener;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NavUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -249,24 +250,29 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    // Handle presses on the action bar items
-	    switch (item.getItemId()) {
-	        case R.id.menu_item_save_location_profile:
-	            saveLocation();
-	            return true;
-			case R.id.menu_item_settings:
-				Intent settingsIntent = new Intent(this,SettingsActivity.class);
-				startActivity(settingsIntent);
-				return true;
-			case R.id.menu_item_about:
-				FragmentManager fm = this.getFragmentManager();
-				AboutFragment dialog = AboutFragment.newInstance();
-				//Make ProfileListFragment the target fragment of the TimePickerFragment instance
-				//dialog.setTargetFragment(VolumeManagerFragment.this, REQUEST_START_TIME);
-				dialog.show(fm, "about");
-	        default:
-	            return super.onOptionsItemSelected(item);
-	    }
+		// Handle presses on the action bar items
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			if(NavUtils.getParentActivityName(this) != null) {
+				NavUtils.navigateUpFromSameTask(this);
+			}
+			return true;
+		case R.id.menu_item_save_location_profile:
+			saveLocation();
+			return true;
+		case R.id.menu_item_settings:
+			Intent settingsIntent = new Intent(this,SettingsActivity.class);
+			startActivity(settingsIntent);
+			return true;
+		case R.id.menu_item_about:
+			FragmentManager fm = this.getFragmentManager();
+			AboutFragment dialog = AboutFragment.newInstance();
+			//Make ProfileListFragment the target fragment of the TimePickerFragment instance
+			//dialog.setTargetFragment(VolumeManagerFragment.this, REQUEST_START_TIME);
+			dialog.show(fm, "about");
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	@Override

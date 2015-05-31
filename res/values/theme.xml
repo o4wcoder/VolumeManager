@@ -10,8 +10,8 @@
 
     <!-- ActionBar styles -->
     <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/actionBarColor</item>
-        <item name="android:backgroundStacked">@color/actionBarColor</item>
+        <item name="android:background">@color/indigoPrimary500</item>
+        <item name="android:backgroundStacked">@color/indigoPrimary500</item>
     </style>
 
     <!-- ActionBar tabs styles -->

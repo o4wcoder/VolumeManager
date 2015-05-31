@@ -181,10 +181,13 @@ public class BasicProfile extends Profile implements Constants{
 	        
 			if(daysOfTheWeek[i]) {
 				strDays += daysButtonNames[i];
-				if(i != DAYS_OF_THE_WEEK - 1)
-					strDays += ",";
+			    strDays += ",";
 			}
 		}
+		
+		//remove last comma from string
+		if(strDays.length() > 0)
+		   strDays = strDays.substring(0, strDays.length() - 1);
 		
 		return strDays;
 	}

@@ -18,6 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:alpha="@string/primary_text_alpha_dark"
+            android:textColor="@color/indigoPrimary500"
             android:padding="2dp"
             android:textSize="24sp" />
 

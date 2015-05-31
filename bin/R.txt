@@ -232,7 +232,6 @@ int color abc_secondary_text_material_light 0x7f09005a
 int color accent_color 0x7f09004f
 int color accent_material_dark 0x7f090026
 int color accent_material_light 0x7f090025
-int color actionBarColor 0x7f09004a
 int color background_floating_material_dark 0x7f09001d
 int color background_floating_material_light 0x7f09001e
 int color background_material_dark 0x7f09001b
@@ -268,6 +267,8 @@ int color highlighted_text_material_dark 0x7f090037
 int color highlighted_text_material_light 0x7f090038
 int color hint_foreground_material_dark 0x7f090035
 int color hint_foreground_material_light 0x7f090036
+int color indigoPrimary500 0x7f09004a
+int color indigoPrimaryDark700 0x7f090049
 int color lightBlueColor 0x7f090048
 int color link_text_material_dark 0x7f090039
 int color link_text_material_light 0x7f09003a
@@ -291,7 +292,6 @@ int color secondary_text_default_material_dark 0x7f09003e
 int color secondary_text_default_material_light 0x7f09003c
 int color secondary_text_disabled_material_dark 0x7f090042
 int color secondary_text_disabled_material_light 0x7f090040
-int color statusBarColor 0x7f090049
 int color switch_thumb_normal_material_dark 0x7f090029
 int color switch_thumb_normal_material_light 0x7f09002a
 int color textColor 0x7f09004d

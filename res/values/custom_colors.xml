@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="lightBlueColor">#E2F4FB</color>
-    <color name="statusBarColor">#303f9f</color>
-    <color name="actionBarColor">#3f51b5</color>
+    <color name="indigoPrimaryDark700">#303f9f</color>
+    <color name="indigoPrimary500">#3f51b5</color>
     <color name="buttonColor">#536dfe</color>
     <color name="radiusButtonColor">#9fa8da</color>
     <color name="textColor">#7986cb</color>

@@ -72,12 +72,12 @@ public class GeofenceService extends IntentService implements Constants {
 			//Log.i(TAG, geofenceTransitionDetails);
 
 			for(int i = 0; i < transitionProfileList.size(); i++) {
-				Log.i(TAG, transitionProfileList.get(i).getTitle());
 
 				LocationProfile profile = transitionProfileList.get(i);
-				Log.i(TAG,"In geofence " + profile.getTitle());
+
 
 				if(profile != null) {
+					Log.i(TAG,"In geofence " + profile.getTitle());
 					if(geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
 						ringType = profile.getStartVolumeType();
 						ringVolume = profile.getStartRingVolume();

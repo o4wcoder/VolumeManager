@@ -1763,7 +1763,6 @@ containing a value of this type.
         public static final int accent_color=0x7f09004f;
         public static final int accent_material_dark=0x7f090026;
         public static final int accent_material_light=0x7f090025;
-        public static final int actionBarColor=0x7f09004a;
         public static final int background_floating_material_dark=0x7f09001d;
         public static final int background_floating_material_light=0x7f09001e;
         public static final int background_material_dark=0x7f09001b;
@@ -1809,6 +1808,8 @@ containing a value of this type.
         public static final int highlighted_text_material_light=0x7f090038;
         public static final int hint_foreground_material_dark=0x7f090035;
         public static final int hint_foreground_material_light=0x7f090036;
+        public static final int indigoPrimary500=0x7f09004a;
+        public static final int indigoPrimaryDark700=0x7f090049;
         public static final int lightBlueColor=0x7f090048;
         public static final int link_text_material_dark=0x7f090039;
         public static final int link_text_material_light=0x7f09003a;
@@ -1836,7 +1837,6 @@ containing a value of this type.
         public static final int secondary_text_default_material_light=0x7f09003c;
         public static final int secondary_text_disabled_material_dark=0x7f090042;
         public static final int secondary_text_disabled_material_light=0x7f090040;
-        public static final int statusBarColor=0x7f090049;
         public static final int switch_thumb_normal_material_dark=0x7f090029;
         public static final int switch_thumb_normal_material_light=0x7f09002a;
         public static final int textColor=0x7f09004d;

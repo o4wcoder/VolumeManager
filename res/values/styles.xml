@@ -24,7 +24,7 @@
     
      <!-- ActionBar styles -->
         <style name="CustomActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/actionBarColor</item>
+        <item name="android:background">@color/indigoPrimary500</item>
 
     </style>
     

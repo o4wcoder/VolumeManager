@@ -16,7 +16,7 @@
             android:id="@+id/profileTitleTextView"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:alpha="@string/primary_text_alpha_dark"
+            android:alpha="@string/secondary_text_alpha_dark"
             android:padding="2dp"
             android:textSize="24sp" />
 

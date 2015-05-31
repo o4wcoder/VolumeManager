@@ -18,6 +18,7 @@
             android:layout_height="wrap_content"
             android:alpha="@string/primary_text_alpha_dark"
             android:padding="2dp"
+            android:textColor="@color/indigoPrimary500"
             android:textSize="24sp" />
 
             <TextView

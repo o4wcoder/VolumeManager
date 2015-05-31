@@ -75,7 +75,7 @@ public class LocationProfileListFragment extends Fragment implements Constants{
 				   
 		profileList = ProfileManager.get(getActivity()).getLocationProfiles();
 
-        LocationProfileListFragment.setStatusBarColor(getActivity());
+        Util.setStatusBarColor(getActivity());
         
        
 	
@@ -313,19 +313,8 @@ public class LocationProfileListFragment extends Fragment implements Constants{
 	
 	/*******************************************************************/
 	/*                        Public Methods                           */
-	/**
-	 * @return *****************************************************************/
-	@SuppressLint("NewApi")
-	public static void setStatusBarColor(Activity activity) {
-		
-	    if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
-			Window window = activity.getWindow();
-			window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-			window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-			window.setStatusBarColor(activity.getResources().getColor(R.color.statusBarColor));
-	
-	    }
-	}
+	/*******************************************************************/
+
 
 	/************************************************************/
 	/*                      Inner Classes                       */
