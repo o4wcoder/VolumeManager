@@ -10,5 +10,7 @@
     <color name="accent_color">#536dfe</color>
     <color name="geofence_blue_color">#20536dfe</color>
     <color name="geofence_red_color">#40ff5252</color>
+    <color name="text_tab_selected">#FFFFFFFF</color>
+    <color name="text_tab_unselected">#AAFFFFFF</color>
   
 </resources>
