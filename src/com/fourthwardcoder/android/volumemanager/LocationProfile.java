@@ -44,17 +44,8 @@ public class LocationProfile extends Profile implements Constants{
 	
 	
 	public LocationProfile() {
-		/*
-		super.setId(UUID.randomUUID());
 		
-		//Setup defaults
-		super.setEnabled(true);
-		super.setStartVolumeType(VOLUME_OFF);
-		super.setEndVolumeType(VOLUME_VIBRATE);
-		super.setStartRingVolume(1);
-		super.setEndRingVolume (1);
-		*/
-		
+		latLng = null;
 		fenceRadius = GEOFENCE_RADIUS_DEFAULT;
 		
 	}

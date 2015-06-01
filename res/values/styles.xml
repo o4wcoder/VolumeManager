@@ -50,7 +50,7 @@
     </style>
 
     <style name="RadiusButton">
-        <item name="android:background">@color/radiusButtonColor</item>
+        <item name="android:background">@color/buttonColor</item>
         <item name="android:textColor">#ffffff</item>
         <item name="android:textSize">38sp</item>
         <item name="android:minHeight">35dp</item>

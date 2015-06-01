@@ -3,8 +3,7 @@
     <color name="lightBlueColor">#E2F4FB</color>
     <color name="indigoPrimaryDark700">#303f9f</color>
     <color name="indigoPrimary500">#3f51b5</color>
-    <color name="buttonColor">#536dfe</color>
-    <color name="radiusButtonColor">#9fa8da</color>
+    <color name="buttonColor">#9fa8da</color>
     <color name="textColor">#7986cb</color>
     <color name="white">#ffffff</color>
     <color name="accent_color">#536dfe</color>

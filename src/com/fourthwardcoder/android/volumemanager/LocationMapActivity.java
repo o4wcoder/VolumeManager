@@ -72,6 +72,10 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 	
 	private final static int GEOFENCE_FILL_COLOR = 0x40c62828; //Red, %25 transparent
 	private final static int GEOFENCE_STROKE_COLOR = 0x80c62828; //Red, %25 transparent
+	
+	//Keys for storing data when we have a rotation
+	private final static String KEY_ID = "profileId";
+	
 	/******************************************************************/
 	/*                         Local Data                             */
 	/******************************************************************/
@@ -90,6 +94,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 	private PendingIntent geofencePendingIntent;
 	
 	//Current Locations data
+	private UUID profileId;
 	private LocationProfile currentProfile;
 	private LatLng currentLocation;
 	private Address currentAddress;
@@ -106,20 +111,28 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_location_map);
 
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+
 		Util.setStatusBarColor(this);
 		
 		//pull out ID of profile
-		Intent intent = getIntent();
-		UUID profileId = (UUID)intent.getSerializableExtra(EXTRA_PROFILE_ID);
+		 if(savedInstanceState != null) {
+			 profileId = UUID.fromString(savedInstanceState.getString(KEY_ID));
+		 }
+		 else {
+		   Intent intent = getIntent();
+		   profileId = (UUID)intent.getSerializableExtra(EXTRA_PROFILE_ID);
+		 }
 		Log.d(TAG,"Profile id: " + profileId);
         
 		//Fetch the Profile from the ProfileManager ArrayList
 		currentProfile = ProfileManager.get(this).getLocationProfile(profileId);
 		
 		
-		currentLocation = currentProfile.getLocation();
-		currentRadius = currentProfile.getFenceRadius();
-		
+		if(currentProfile != null) {
+		   currentLocation = currentProfile.getLocation();
+		   currentRadius = currentProfile.getFenceRadius();
+		}
 		
 		MapFragment mapFragment = (MapFragment) getFragmentManager()
 				.findFragmentById(R.id.map);
@@ -168,7 +181,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		});
 		
 		radiusTextView = (TextView)findViewById(R.id.radiusTextView);
-		radiusTextView.setText(String.valueOf(currentProfile.getFenceRadius()));
+		radiusTextView.setText(String.valueOf(currentRadius));
 		
 
 		radiusTextView.addTextChangedListener(new TextWatcher() {
@@ -228,14 +241,14 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		});
 		
 		
-		
-		
-		
-		
-		
-
-
 	}
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        
+        savedInstanceState.putString(KEY_ID,profileId.toString());
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -496,6 +509,12 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		 if(currentCircle != null)
 			 currentCircle.remove();
 		 
+		 if(currentLocation == null)
+			 Log.i(TAG," current location is null!!!!");
+		 
+		 
+			 Log.i(TAG," current radius is "+ currentRadius);
+		 
 		 currentCircle = map.addCircle(new CircleOptions()
 	     .center(currentLocation)
 	     .radius(currentRadius)
@@ -649,6 +668,9 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
             String errorMessage = Util.getGeofenceErrorString(this,
                     status.getStatusCode());
             Log.e(TAG, errorMessage);
+            Toast toast = Toast.makeText(getApplicationContext(),
+				errorMessage, Toast.LENGTH_SHORT);
+			toast.show();
 			
 		}
 		

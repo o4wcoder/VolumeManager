@@ -16,6 +16,7 @@ public class Profile implements Constants{
 	private boolean enabled;
 	private int startVolumeType, endVolumeType;
 	private int startRingVolume, endRingVolume;
+	private int previousVolumeType, previousRingVolume;
 
 	public Profile() {
 		
@@ -25,6 +26,8 @@ public class Profile implements Constants{
 	   endVolumeType = VOLUME_VIBRATE;
 	   startRingVolume = 1;
 	   endRingVolume = 1;
+	   previousVolumeType = VOLUME_VIBRATE;
+	   previousRingVolume = 1;
 
 	}
 
@@ -87,6 +90,22 @@ public class Profile implements Constants{
 
 	public void setEndRingVolume(int endRingVolume) {
 		this.endRingVolume = endRingVolume;
+	}
+	
+	public int getPreviousVolumeType() {
+		return previousVolumeType;
+	}
+
+	public void setPreviousVolumeType(int previousVolumeType) {
+		this.previousVolumeType = previousVolumeType;
+	}
+
+	public int getPreviousRingVolume() {
+		return previousRingVolume;
+	}
+
+	public void setPreviousRingVolume(int previousRingVolume) {
+		this.previousRingVolume = previousRingVolume;
 	}
 
 }

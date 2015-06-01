@@ -207,7 +207,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_action_volume_on" />
+                     android:src="@drawable/ic_action_volume_on_pink" />
 
                 <SeekBar
                     android:id="@+id/startRingSeekBar"
@@ -320,7 +320,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_action_volume_on" />
+                    android:src="@drawable/ic_action_volume_on_pink" />
 
                 <SeekBar
                     android:id="@+id/endRingSeekBar"

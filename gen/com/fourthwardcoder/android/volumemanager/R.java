@@ -1747,20 +1747,20 @@ containing a value of this type.
         public static final int abc_config_showMenuShortcutsWhenKeyboardPresent=0x7f0b0003;
     }
     public static final class color {
-        public static final int abc_background_cache_hint_selector_material_dark=0x7f090054;
-        public static final int abc_background_cache_hint_selector_material_light=0x7f090055;
+        public static final int abc_background_cache_hint_selector_material_dark=0x7f090053;
+        public static final int abc_background_cache_hint_selector_material_light=0x7f090054;
         public static final int abc_input_method_navigation_guard=0x7f09001a;
-        public static final int abc_primary_text_disable_only_material_dark=0x7f090056;
-        public static final int abc_primary_text_disable_only_material_light=0x7f090057;
-        public static final int abc_primary_text_material_dark=0x7f090058;
-        public static final int abc_primary_text_material_light=0x7f090059;
-        public static final int abc_search_url_text=0x7f09005a;
+        public static final int abc_primary_text_disable_only_material_dark=0x7f090055;
+        public static final int abc_primary_text_disable_only_material_light=0x7f090056;
+        public static final int abc_primary_text_material_dark=0x7f090057;
+        public static final int abc_primary_text_material_light=0x7f090058;
+        public static final int abc_search_url_text=0x7f090059;
         public static final int abc_search_url_text_normal=0x7f090017;
         public static final int abc_search_url_text_pressed=0x7f090019;
         public static final int abc_search_url_text_selected=0x7f090018;
-        public static final int abc_secondary_text_material_dark=0x7f09005b;
-        public static final int abc_secondary_text_material_light=0x7f09005c;
-        public static final int accent_color=0x7f09004f;
+        public static final int abc_secondary_text_material_dark=0x7f09005a;
+        public static final int abc_secondary_text_material_light=0x7f09005b;
+        public static final int accent_color=0x7f09004e;
         public static final int accent_material_dark=0x7f090026;
         public static final int accent_material_light=0x7f090025;
         public static final int background_floating_material_dark=0x7f09001d;
@@ -1792,14 +1792,14 @@ containing a value of this type.
         public static final int common_signin_btn_light_text_disabled=0x7f090006;
         public static final int common_signin_btn_light_text_focused=0x7f090007;
         public static final int common_signin_btn_light_text_pressed=0x7f090005;
-        public static final int common_signin_btn_text_dark=0x7f09005d;
-        public static final int common_signin_btn_text_light=0x7f09005e;
+        public static final int common_signin_btn_text_dark=0x7f09005c;
+        public static final int common_signin_btn_text_light=0x7f09005d;
         public static final int dim_foreground_disabled_material_dark=0x7f090033;
         public static final int dim_foreground_disabled_material_light=0x7f090034;
         public static final int dim_foreground_material_dark=0x7f090031;
         public static final int dim_foreground_material_light=0x7f090032;
-        public static final int geofence_blue_color=0x7f090050;
-        public static final int geofence_red_color=0x7f090051;
+        public static final int geofence_blue_color=0x7f09004f;
+        public static final int geofence_red_color=0x7f090050;
         /**  TODO: This is 40% alpha on the default accent color. 
          */
         public static final int highlighted_text_material_dark=0x7f090037;
@@ -1830,7 +1830,6 @@ containing a value of this type.
         /**  26% of default values 
          */
         public static final int primary_text_disabled_material_light=0x7f09003f;
-        public static final int radiusButtonColor=0x7f09004c;
         public static final int ripple_material_dark=0x7f090023;
         public static final int ripple_material_light=0x7f090024;
         public static final int secondary_text_default_material_dark=0x7f09003e;
@@ -1839,9 +1838,9 @@ containing a value of this type.
         public static final int secondary_text_disabled_material_light=0x7f090040;
         public static final int switch_thumb_normal_material_dark=0x7f090029;
         public static final int switch_thumb_normal_material_light=0x7f09002a;
-        public static final int textColor=0x7f09004d;
-        public static final int text_tab_selected=0x7f090052;
-        public static final int text_tab_unselected=0x7f090053;
+        public static final int textColor=0x7f09004c;
+        public static final int text_tab_selected=0x7f090051;
+        public static final int text_tab_unselected=0x7f090052;
         public static final int wallet_bright_foreground_disabled_holo_light=0x7f09000f;
         /** 
          Wallet colors to support consistent Wallet fragment holo dark UI in client application
@@ -1860,9 +1859,9 @@ containing a value of this type.
         public static final int wallet_hint_foreground_holo_light=0x7f090011;
         public static final int wallet_holo_blue_light=0x7f090015;
         public static final int wallet_link_text_light=0x7f090016;
-        public static final int wallet_primary_text_holo_light=0x7f09005f;
-        public static final int wallet_secondary_text_holo_dark=0x7f090060;
-        public static final int white=0x7f09004e;
+        public static final int wallet_primary_text_holo_light=0x7f09005e;
+        public static final int wallet_secondary_text_holo_dark=0x7f09005f;
+        public static final int white=0x7f09004d;
     }
     public static final class dimen {
         /**  Default height of an action bar. 
