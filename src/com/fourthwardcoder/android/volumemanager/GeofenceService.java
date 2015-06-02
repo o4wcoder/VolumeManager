@@ -175,7 +175,7 @@ public class GeofenceService extends IntentService implements Constants {
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
 		.setSmallIcon(R.drawable.ic_action_place_light)
 		.setContentTitle(strTitle)
-		.setContentText(profile.getStringAddress());
+		.setContentText(profile.getAddress());
 
 		Intent i = new Intent(this,LocationMapActivity.class);
 

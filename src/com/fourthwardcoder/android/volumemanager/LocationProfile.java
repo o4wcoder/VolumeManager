@@ -110,10 +110,6 @@ public class LocationProfile extends Profile implements Constants{
 		return address;
 	}
 	
-	public String getStringAddress() {
-		
-		return address;
-	}
 	public void setAddress(String address) {
 		this.address = address;
 	}

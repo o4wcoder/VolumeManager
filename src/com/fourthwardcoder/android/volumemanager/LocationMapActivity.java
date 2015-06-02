@@ -588,9 +588,14 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		//Log.e(TAG,"In save location with currentLocation " + currentLocationData.toString());
 		
     	
-		currentProfile.setLocation(currentLocation);
-		currentProfile.setAddress(currentAddress.getAddressLine(0));
-		currentProfile.setCity(currentCity);
+		if(currentLocation != null)
+		   currentProfile.setLocation(currentLocation);
+		
+		if(currentAddress != null) {
+		   currentProfile.setAddress(currentAddress.getAddressLine(0));
+		   currentProfile.setCity(currentCity);
+		}
+		
 		currentProfile.setFenceRadius(currentRadius);
 		
 		ProfileManager.get(this).saveLocationProfiles();

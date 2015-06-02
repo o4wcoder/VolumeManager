@@ -48,8 +48,7 @@ public class EditLocationProfileFragment extends Fragment implements Constants{
 	
 	LocationProfile profile;
 	String profileTitle;
-	//LatLng currentLocation;
-	
+	 
 	/*******************************************************/
 	/*                  Override Methods                   */
 	/*******************************************************/

@@ -62,6 +62,7 @@ public interface Constants {
 	public static final float SECONDARY_TEXT_DARK = (float) .54;
 	
 	public static final String daysButtonNames[] ={"S","M","T","W","T","F","S"};
+	public static final String daysAbbreviation[]={"Su","Mo","Tu","We","Th","Fr","Sa"};
 	
 	public static enum TabName {
 		BASIC,

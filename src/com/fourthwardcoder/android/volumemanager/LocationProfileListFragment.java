@@ -432,7 +432,7 @@ public class LocationProfileListFragment extends Fragment implements Constants{
             holder.titleTextView.setText(getItem(position).getTitle());
             //Set address
             holder.addressTextView = (TextView)convertView.findViewById(R.id.addressTextView);
-            holder.addressTextView.setText(getItem(position).getStringAddress());
+            holder.addressTextView.setText(getItem(position).getAddress());
             //Set city
             holder.cityTextView = (TextView)convertView.findViewById(R.id.cityTextView);
             holder.cityTextView.setText(getItem(position).getCity());

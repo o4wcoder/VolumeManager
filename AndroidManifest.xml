@@ -43,10 +43,12 @@
                 android:value="com.fourthwardcoder.android.volumemanager.ProfileTabActivity" />
             
         </activity>
-        <activity
+        <!-- Use singleTop so when navigating back with home button, it keeps extra data from activity that called it -->
+        <activity 
             android:name="com.fourthwardcoder.android.volumemanager.LocationMapActivity"
             android:label="@string/location_settings" 
-            android:configChanges="orientation|screenSize">
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.fourthwardcoder.android.volumemanager.ProfileTabActivity" />

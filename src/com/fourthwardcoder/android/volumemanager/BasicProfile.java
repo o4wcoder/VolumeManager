@@ -180,7 +180,7 @@ public class BasicProfile extends Profile implements Constants{
 		for(int i=0; i< DAYS_OF_THE_WEEK; i++) {
 	        
 			if(daysOfTheWeek[i]) {
-				strDays += daysButtonNames[i];
+				strDays += daysAbbreviation[i];
 			    strDays += ",";
 			}
 		}
