@@ -99,12 +99,14 @@ public class EditLocationProfileFragment extends Fragment implements Constants{
 			       
 				if(checkedId == R.id.startOffRadio) {
 					startVolumeType = VOLUME_OFF;
-					Util.setSeekBarPosition(startRingSeekBar,startRingVolume,startRingVolumeTextView,0);
+					startRingVolume = 0;
+					Util.setSeekBarPosition(startRingSeekBar,startRingVolumeTextView,startRingVolume,Util.getMaxRingVolume(getActivity().getApplicationContext()));
 					
 				}
 				else if(checkedId == R.id.startVibrateRadio) {
 					startVolumeType = VOLUME_VIBRATE;
-					Util.setSeekBarPosition(startRingSeekBar,startRingVolume,startRingVolumeTextView,0);
+					startRingVolume = 0;
+					Util.setSeekBarPosition(startRingSeekBar,startRingVolumeTextView,startRingVolume,Util.getMaxRingVolume(getActivity().getApplicationContext()));
 				}
 				else {
 					startVolumeType = VOLUME_RING;
@@ -121,12 +123,13 @@ public class EditLocationProfileFragment extends Fragment implements Constants{
 			       
 				if(checkedId == R.id.endOffRadio) {
 					endVolumeType = VOLUME_OFF;
-					Util.setSeekBarPosition(endRingSeekBar,endRingVolume,endRingVolumeTextView,0);
+					endRingVolume = 0;
+					Util.setSeekBarPosition(endRingSeekBar,endRingVolumeTextView,endRingVolume,Util.getMaxRingVolume(getActivity().getApplicationContext()));
 
 				}
 				else if(checkedId == R.id.endVibrateRadio) {
 					endVolumeType = VOLUME_VIBRATE;
-					Util.setSeekBarPosition(endRingSeekBar,endRingVolume,endRingVolumeTextView,0);
+					Util.setSeekBarPosition(endRingSeekBar,endRingVolumeTextView,endRingVolume,Util.getMaxRingVolume(getActivity().getApplicationContext()));
 				}
 				else {
 					endVolumeType = VOLUME_RING;
@@ -151,7 +154,7 @@ public class EditLocationProfileFragment extends Fragment implements Constants{
 				else 
 					((RadioButton)startVolumeRadioGroup.getChildAt(VOLUME_RING)).setChecked(true);
 				
-				Util.setRingVolumeText(startRingVolumeTextView,progress);
+				Util.setRingVolumeText(startRingVolumeTextView,progress,Util.getMaxRingVolume(getActivity().getApplicationContext()));
 				startRingVolume = progress;
 			}
 			@Override
@@ -171,7 +174,7 @@ public class EditLocationProfileFragment extends Fragment implements Constants{
 				else 
 					((RadioButton)endVolumeRadioGroup.getChildAt(VOLUME_RING)).setChecked(true);
 				
-				Util.setRingVolumeText(endRingVolumeTextView,progress);
+				Util.setRingVolumeText(endRingVolumeTextView,progress,Util.getMaxRingVolume(getActivity().getApplicationContext()));
 				endRingVolume = progress;	
 			}
 			@Override
@@ -190,9 +193,10 @@ public class EditLocationProfileFragment extends Fragment implements Constants{
 	    ((RadioButton)endVolumeRadioGroup.getChildAt(endVolumeType)).setChecked(true);
 
 	    //Set Seekbar default
-	    Util.setSeekBarPosition(startRingSeekBar,startRingVolume,startRingVolumeTextView,startRingVolume);
-	    Util.setSeekBarPosition(endRingSeekBar,endRingVolume,endRingVolumeTextView,endRingVolume);
-	    
+	    Util.setSeekBarPosition(startRingSeekBar,startRingVolumeTextView,startRingVolume,Util.getMaxRingVolume(getActivity().getApplicationContext()));
+	    Util.setSeekBarPosition(endRingSeekBar,endRingVolumeTextView,endRingVolume,Util.getMaxRingVolume(getActivity().getApplicationContext()));
+	    startRingSeekBar.setMax(Util.getMaxRingVolume(getActivity().getApplicationContext()));
+	    endRingSeekBar.setMax(Util.getMaxRingVolume(getActivity().getApplicationContext()));
 	    
 		//Enable app icon to work as button and display caret
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -210,7 +214,7 @@ public class EditLocationProfileFragment extends Fragment implements Constants{
 		
 		//Pass the resource ID of the menu and populate the Menu 
 		//instance with the items defined in the xml file
-		inflater.inflate(R.menu.action_bar_location_menu, menu);
+		inflater.inflate(R.menu.action_bar_profile_menu, menu);
 		
 	}
 	
@@ -224,7 +228,7 @@ public class EditLocationProfileFragment extends Fragment implements Constants{
 				NavUtils.navigateUpFromSameTask(getActivity());
 			}
 			return true;
-		case R.id.menu_item_save_location_profile:
+		case R.id.menu_item_save_profile:
 			Log.e(TAG,"Save location menu select");
 			
 			saveSettings(); 

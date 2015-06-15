@@ -57,6 +57,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -69,13 +70,13 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 	/*                         Constants                              */
 	/******************************************************************/
 	private final static String TAG = "LocationMapActivity";
-	
+
 	private final static int GEOFENCE_FILL_COLOR = 0x40c62828; //Red, %25 transparent
 	private final static int GEOFENCE_STROKE_COLOR = 0x80c62828; //Red, %25 transparent
-	
+
 	//Keys for storing data when we have a rotation
 	private final static String KEY_ID = "profileId";
-	
+
 	/******************************************************************/
 	/*                         Local Data                             */
 	/******************************************************************/
@@ -90,17 +91,18 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 	TextView radiusTextView;
 
 	//Geofence data
-	private ArrayList<Geofence> geofenceList;
-	private PendingIntent geofencePendingIntent;
-	
+	//private ArrayList<Geofence> geofenceList;
+	//private PendingIntent geofencePendingIntent;
+	GeofenceManager geofenceManager;
+
 	//Current Locations data
 	private UUID profileId;
 	private LocationProfile currentProfile;
 	private LatLng currentLocation;
 	private Address currentAddress;
-    private String currentCity;
-    private float currentRadius;
-	
+	private String currentCity;
+	private float currentRadius;
+
 	//private LocationData currentLocationData;
 
 	/******************************************************************/
@@ -111,29 +113,42 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_location_map);
 
+		View mapView = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getView();
+
+		// Get the button view 
+		View locationButton = ((View) mapView.findViewById(1).getParent()).findViewById(2);
+
+		// place button on bottom right
+		RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
+		// position on right bottom
+		rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+		rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+		rlp.setMargins(0, 0, 30, 30);
+
+
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		Util.setStatusBarColor(this);
-		
+
 		//pull out ID of profile
-		 if(savedInstanceState != null) {
-			 profileId = UUID.fromString(savedInstanceState.getString(KEY_ID));
-		 }
-		 else {
-		   Intent intent = getIntent();
-		   profileId = (UUID)intent.getSerializableExtra(EXTRA_PROFILE_ID);
-		 }
+		if(savedInstanceState != null) {
+			profileId = UUID.fromString(savedInstanceState.getString(KEY_ID));
+		}
+		else {
+			Intent intent = getIntent();
+			profileId = (UUID)intent.getSerializableExtra(EXTRA_PROFILE_ID);
+		}
 		Log.d(TAG,"Profile id: " + profileId);
-        
+
 		//Fetch the Profile from the ProfileManager ArrayList
 		currentProfile = ProfileManager.get(this).getLocationProfile(profileId);
-		
-		
+
+
 		if(currentProfile != null) {
-		   currentLocation = currentProfile.getLocation();
-		   currentRadius = currentProfile.getFenceRadius();
+			currentLocation = currentProfile.getLocation();
+			currentRadius = currentProfile.getFenceRadius();
 		}
-		
+
 		MapFragment mapFragment = (MapFragment) getFragmentManager()
 				.findFragmentById(R.id.map);
 		mapFragment.getMapAsync(this);
@@ -155,18 +170,18 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 				.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
 				.setInterval(10 * 1000)        // 10 seconds, in milliseconds
 				.setFastestInterval(1 * 1000); // 1 second, in milliseconds
-		
 
 		//create empty list for storing all other location geofence's
-		geofenceList = new ArrayList<Geofence>();
-		
+		//geofenceList = new ArrayList<Geofence>();
+
 		//init pending intent for add/removing geofences.
-		geofencePendingIntent = null;
-		
+		//geofencePendingIntent = null;
+
+		geofenceManager = new GeofenceManager(this,mGoogleApiClient);
 
 		//Make linear layout that holds address and city textviews clickable.
 		LinearLayout lDetailsLayout = (LinearLayout)findViewById(R.id.locationDetailsLayout);
-		
+
 		lDetailsLayout.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -175,14 +190,14 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 				Intent i = new Intent(LocationMapActivity.this,EditLocationProfileActivity.class);
 				i.putExtra(EditProfileFragment.EXTRA_PROFILE_ID,currentProfile.getId());
 				startActivity(i);
-			     	
+
 			}
-			
+
 		});
-		
+
 		radiusTextView = (TextView)findViewById(R.id.radiusTextView);
 		radiusTextView.setText(String.valueOf(currentRadius));
-		
+
 
 		radiusTextView.addTextChangedListener(new TextWatcher() {
 
@@ -190,28 +205,28 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
-			   currentRadius = Float.valueOf(s.toString());
-			   drawGeofenceCircle();
-				
+				currentRadius = Float.valueOf(s.toString());
+				drawGeofenceCircle();
+
 			}
 
 			@Override
 			public void afterTextChanged(Editable s) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 		});
 
 		Button increaseRadiusButton = (Button)findViewById(R.id.increaseRadiusButton);
-		
-        increaseRadiusButton.setOnClickListener(new OnClickListener() {
+
+		increaseRadiusButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -219,48 +234,48 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 				currentRadius += Constants.GEOFENCE_RADIUS_INC;
 				radiusTextView.setText(String.valueOf(currentRadius));
 				drawGeofenceCircle();
-				
-				
+
+
 			}
-        	
-        });
-        
+
+		});
+
 		Button decreaseRadiusButton = (Button)findViewById(R.id.decreaseRadiusButton);
-		
+
 		decreaseRadiusButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				
+
 				//decrease the geofence size
 				currentRadius -= Constants.GEOFENCE_RADIUS_INC;
 				radiusTextView.setText(String.valueOf(currentRadius));
 				drawGeofenceCircle();
 			}
-			
+
 		});
-		
-		
+
+
 	}
 
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-        
-        savedInstanceState.putString(KEY_ID,profileId.toString());
-    }
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+
+		savedInstanceState.putString(KEY_ID,profileId.toString());
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		
+
 		MenuInflater inflater = getMenuInflater();
 		//Pass the resource ID of the menu and populate the Menu 
 		//instance with the items defined in the xml file
-		inflater.inflate(R.menu.action_bar_location_menu, menu);
+		inflater.inflate(R.menu.action_bar_profile_menu, menu);
 		return super.onCreateOptionsMenu(menu);
-		
+
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle presses on the action bar items
@@ -270,7 +285,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 				NavUtils.navigateUpFromSameTask(this);
 			}
 			return true;
-		case R.id.menu_item_save_location_profile:
+		case R.id.menu_item_save_profile:
 			saveLocation();
 			return true;
 		case R.id.menu_item_settings:
@@ -294,7 +309,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		//setUpMapIfNeeded();
 		mGoogleApiClient.connect();
 	}
-	
+
 
 	@Override
 	protected void onPause() {
@@ -308,7 +323,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 
 
 
-    /*****************************************************************/
+	/*****************************************************************/
 	/*                 GoogleMap Listener Methods                     */
 	/*****************************************************************/
 	@Override
@@ -321,7 +336,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		map.setOnMapLongClickListener(this);
 
 	}
-	
+
 	/**
 	 * OnMapLongClickListener Override Method
 	 * 
@@ -331,54 +346,56 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 	public void onMapLongClick(LatLng latLng) {
 		//Store current LatLng
 		currentLocation = latLng;
-				
-        addMarker();
+
+		addMarker();
 		setStreetAddress();
 		//zoomToCurrentLocation();
-	
+
 	}
-	
-	
+
+
 	/******************************************************************/
 	/*                        Geofence Methods                        */
 	/******************************************************************/
+	/*
 	private Geofence createGeofence(LocationProfile profile) {
-		
+
 		return new Geofence.Builder()
-		.setRequestId(currentProfile.getId().toString())
+		.setRequestId(profile.getId().toString())
 		.setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
 		.setCircularRegion(profile.getLocation().latitude, profile.getLocation().longitude,profile.getFenceRadius())
 		.setExpirationDuration(Geofence.NEVER_EXPIRE)
 		.build();
-		
+
 	}
-	
-	
+	 */
+	/*
 	private void populateGeofenceList() {
-		
+
 		//Get all location profiles
 		ArrayList<LocationProfile> locationProfileList = ProfileManager.get(this).getLocationProfiles();
-		
+
 		for(int i = 0; i < locationProfileList.size(); i++ ) {
-			
+
 			LocationProfile profile = locationProfileList.get(i);
 			Log.e(TAG,"Create geofence with profile " +profile.toString());
 			Geofence fence = createGeofence(profile);
-			
+
 			geofenceList.add(fence);
-			
-			
+
+
 		}
-		
+
 	}
-	
-	   /**
-     * Gets a PendingIntent to send with the request to add or remove Geofences. Location Services
-     * issues the Intent inside this PendingIntent whenever a geofence transition occurs for the
-     * current list of geofences.
-     *
-     * @return A PendingIntent for the IntentService that handles geofence transitions.
-     */
+	 */
+	/**
+	 * Gets a PendingIntent to send with the request to add or remove Geofences. Location Services
+	 * issues the Intent inside this PendingIntent whenever a geofence transition occurs for the
+	 * current list of geofences.
+	 *
+	 * @return A PendingIntent for the IntentService that handles geofence transitions.
+	 */
+	/*
     private PendingIntent getGeofencePendingIntent() {
         // Reuse the PendingIntent if we already have it.
         if (geofencePendingIntent != null) {
@@ -389,10 +406,12 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
         // addGeofences() and removeGeofences().
         return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
-	   /**
-     * Builds and returns a GeofencingRequest. Specifies the list of geofences to be monitored.
-     * Also specifies how the geofence notifications are initially triggered.
-     */
+	 */
+	/**
+	 * Builds and returns a GeofencingRequest. Specifies the list of geofences to be monitored.
+	 * Also specifies how the geofence notifications are initially triggered.
+	 */
+	/*
     private GeofencingRequest getGeofencingRequest() {
         GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
 
@@ -407,15 +426,17 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
         // Return a GeofencingRequest.
         return builder.build();
     }
-    
-    /**
-     * Adds geofences, which sets alerts to be notified when the device enters or exits one of the
-     * specified geofences. Handles the success or failure results returned by addGeofences().
-     */
+	 */
+
+	/**
+	 * Adds geofences, which sets alerts to be notified when the device enters or exits one of the
+	 * specified geofences. Handles the success or failure results returned by addGeofences().
+	 */
+	/*
     public void addGeofences() {
-    	
+
     	Log.i(TAG,"adding georfences");
-    	
+
         if (!mGoogleApiClient.isConnected()) {
             Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
             return;
@@ -437,9 +458,10 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
             //logSecurityException(securityException);
         }
     }
-    
+	 */
+	/*
     public void removeGeofence() {
-    	
+
     	 try {
              // Remove geofences.
              LocationServices.GeofencingApi.removeGeofences(
@@ -452,10 +474,10 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
              //logSecurityException(securityException);
          }
     }
-    
+	 */
 
 	/*
-	
+
     /******************************************************************/
 	/*                       Private Methods                          */
 	/******************************************************************/
@@ -472,7 +494,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 			}
 		}
 	}
-*/
+	 */
 	/**
 	 * This is where we can add markers or lines, add listeners or move the camera. In this case, we
 	 * just add a marker near Africa.
@@ -483,59 +505,59 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 	private void setUpMap() {
 		map.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
 	}
-	*/
-	
+	 */
+
 	private void addMarker() {
-		
+
 		if(currentMarker != null)
 			currentMarker.remove();
 		Log.e(TAG,"Inside add Marker with title " + currentProfile.getTitle());
 		String markerTitle;
-		
+
 		//if(profile.getTitle() == "")
 		//	markerTitle = "New Location";
-	//	else
-			markerTitle = currentProfile.getTitle();
+		//	else
+		markerTitle = currentProfile.getTitle();
 		MarkerOptions options = new MarkerOptions()
 		.position(currentLocation)
 		.title(markerTitle);
 		currentMarker = map.addMarker(options);
-		
+
 		drawGeofenceCircle();
 	}
-	
+
 	private void drawGeofenceCircle() {
-		
-		 if(currentCircle != null)
-			 currentCircle.remove();
-		 
-		 if(currentLocation == null)
-			 Log.i(TAG," current location is null!!!!");
-		 
-		 
-			 Log.i(TAG," current radius is "+ currentRadius);
-		 
-		 currentCircle = map.addCircle(new CircleOptions()
-	     .center(currentLocation)
-	     .radius(currentRadius)
-	     .strokeColor(GEOFENCE_STROKE_COLOR)
-	     .strokeWidth(5)
-	     .fillColor(GEOFENCE_FILL_COLOR));
-		 
-		
+
+		if(currentCircle != null)
+			currentCircle.remove();
+
+		if(currentLocation == null)
+			Log.i(TAG," current location is null!!!!");
+
+
+		Log.i(TAG," current radius is "+ currentRadius);
+
+		currentCircle = map.addCircle(new CircleOptions()
+		.center(currentLocation)
+		.radius(currentRadius)
+		.strokeColor(GEOFENCE_STROKE_COLOR)
+		.strokeWidth(5)
+		.fillColor(GEOFENCE_FILL_COLOR));
+
+
 	}
 	private void handleNewLocation() {
 
-        setStreetAddress();
-		
+		setStreetAddress();
+
 		//mMap.addMarker(new MarkerOptions().position(new LatLng(currentLatitude, currentLongitude)).title("Current Location"));
-        addMarker();
+		addMarker();
 		//map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 		zoomToCurrentLocation();
 	}
-	
 
-	
+
+
 	private Address getStreetAddress() throws IOException {
 
 		//Get Address of current location
@@ -545,22 +567,22 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 
 			List<Address> addresses = gcd.getFromLocation(currentLocation.latitude,
 					currentLocation.longitude,1);
-			
+
 			if(addresses.size() > 0)
 				currentAddress = addresses.get(0);
 		}
 
 		return currentAddress;
 	}
-	
+
 	private void setStreetAddress() {
-		
-        Address address;
+
+		Address address;
 		try {
 			currentAddress = getStreetAddress();
 			addressTextView.setText(currentAddress.getAddressLine(0));
 			Log.e(TAG,"address: " + currentAddress.toString());
-			
+
 			currentCity = currentAddress.getLocality() + ", " + currentAddress.getAdminArea();
 			cityTextView.setText(currentCity);
 		} catch (IOException e) {
@@ -568,63 +590,63 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 			addressTextView.setText("Unknown Street Address");
 		}
 	}
-	
+
 	private void zoomToCurrentLocation() {
 
 
 		//if (location != null) {
-			//LatLng myLocation = new LatLng(location.getLatitude(),
-				//	location.getLongitude());
-			Log.d(TAG,"Zooming to current location");
-			map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,
-					16));
+		//LatLng myLocation = new LatLng(location.getLatitude(),
+		//	location.getLongitude());
+		Log.d(TAG,"Zooming to current location");
+		map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,
+				16));
 		//}
 		//else
-			//Log.d(TAG,"Location was null!!!");
+		//Log.d(TAG,"Location was null!!!");
 	}
 
 	private void saveLocation() {
-		
+
 		//Log.e(TAG,"In save location with currentLocation " + currentLocationData.toString());
-		
-    	
+
+
 		if(currentLocation != null)
-		   currentProfile.setLocation(currentLocation);
-		
+			currentProfile.setLocation(currentLocation);
+
 		if(currentAddress != null) {
-		   currentProfile.setAddress(currentAddress.getAddressLine(0));
-		   currentProfile.setCity(currentCity);
+			currentProfile.setAddress(currentAddress.getAddressLine(0));
+			currentProfile.setCity(currentCity);
 		}
-		
+
 		currentProfile.setFenceRadius(currentRadius);
-		
+
 		ProfileManager.get(this).saveLocationProfiles();
-		
+
 		//Create geofence from new location profile
-		Geofence fence = createGeofence(currentProfile);
-		
+		//Geofence fence = createGeofence(currentProfile);
+		Geofence fence = geofenceManager.createGeofence(currentProfile);
 		//store geofence's from all other locations
-		populateGeofenceList();
-		
+		//populateGeofenceList();
+
 		//Add new geofence to list
-		geofenceList.add(fence);
-		
+		//geofenceList.add(fence);
+		geofenceManager.addGeofence(fence);
 		//Set up geofences with pending intent
-		addGeofences();
-		
-		
+		//addGeofences();
+		geofenceManager.startGeofences(this);
+
 	}
-	
+
 	@Override
 	public void onLocationChanged(Location location) {
-		
+
 		currentLocation = new LatLng(location.getLatitude(),location.getLongitude());
 		handleNewLocation();
 
 	}
 
 
-    /*************************************************************/
+	/*************************************************************/
 	/*                GoogleApi Listener Methods                 */
 	/*************************************************************/
 	@Override
@@ -642,9 +664,9 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		else {
 			//Store current latLng
 			if(currentLocation == null)
-			   currentLocation = new LatLng(location.getLatitude(),location.getLongitude());
-			
-			
+				currentLocation = new LatLng(location.getLatitude(),location.getLongitude());
+
+
 			handleNewLocation();
 		}
 
@@ -657,33 +679,33 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 	public void onResult(Status status) {
 		if(status.isSuccess()) {
 			Log.i(TAG,"Success creating intents for geofences");
-			
+
 			String msgStr = getString(R.string.geofence_added) + " " + currentAddress.getAddressLine(0);
-			
-            Toast.makeText(
-                    this,
-                    msgStr,
-                    Toast.LENGTH_SHORT
-            ).show();
+
+			Toast.makeText(
+					this,
+					msgStr,
+					Toast.LENGTH_SHORT
+					).show();
 			finish();
-			
+
 		}
 		else {
 			// Get the status code for the error and log it using a user-friendly message.
-            String errorMessage = Util.getGeofenceErrorString(this,
-                    status.getStatusCode());
-            Log.e(TAG, errorMessage);
-            Toast toast = Toast.makeText(getApplicationContext(),
-				errorMessage, Toast.LENGTH_SHORT);
+			String errorMessage = GeofenceManager.getGeofenceErrorString(this,
+					status.getStatusCode());
+			Log.e(TAG, errorMessage);
+			Toast toast = Toast.makeText(getApplicationContext(),
+					errorMessage, Toast.LENGTH_SHORT);
 			toast.show();
-			
-		}
-		
-	}
-	
 
-	
-	
+		}
+
+	}
+
+
+
+
 
 
 

@@ -5,6 +5,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationServices;
+
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -41,7 +49,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
-public class LocationProfileListFragment extends Fragment implements Constants{
+public class LocationProfileListFragment extends Fragment implements Constants, ConnectionCallbacks, OnConnectionFailedListener, ResultCallback<Status>{
 	
 	/***************************************************/
 	/*                  Constants                      */
@@ -56,6 +64,7 @@ public class LocationProfileListFragment extends Fragment implements Constants{
 	ProfileListAdapter profileAdapter;
 	ListView listview;
 	TabName tab;
+	 GoogleApiClient mGoogleApiClient;
 	/***************************************************/
 	/*                Override Methods                 */
 	/***************************************************/
@@ -77,7 +86,12 @@ public class LocationProfileListFragment extends Fragment implements Constants{
 
         Util.setStatusBarColor(getActivity());
         
-       
+		//Build Google API Client
+		mGoogleApiClient = new GoogleApiClient.Builder(getActivity().getApplicationContext())
+		.addConnectionCallbacks(this)
+		.addOnConnectionFailedListener(this)
+		.addApi(LocationServices.API)
+		.build();
 	
 		
 	}
@@ -166,6 +180,9 @@ public class LocationProfileListFragment extends Fragment implements Constants{
 						mode.finish();
                         profileManager.saveLocationProfiles();
 						profileAdapter.notifyDataSetChanged();
+						
+						updateGeofences();
+						
 						return true;
 					default:
 						return false;
@@ -215,18 +232,21 @@ public class LocationProfileListFragment extends Fragment implements Constants{
 		super.onResume();
 		
 		Log.d(TAG,"onResume");
-		//Update the List of Profiles when you come back to the ProfileListFragment
-		//After we've made changes to a Crime on another Activity
-		//if(profileAdapter != null)
-		//{
-			Log.d(TAG,"Notify adapter that data has changed");
+		mGoogleApiClient.connect();
+
 			//getListAdapter()
 		  profileAdapter.notifyDataSetChanged();
-		//}
+		
 		   
 	}
 	
-	
+	@Override
+	public void onPause() {
+		super.onPause();
+
+	    mGoogleApiClient.disconnect();
+		
+	}
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		//super.onCreateOptionsMenu(menu, inflater);
@@ -256,9 +276,11 @@ public class LocationProfileListFragment extends Fragment implements Constants{
 		switch (item.getItemId()) {
 		   case R.id.menu_item_delete_profile:
 			   ProfileManager.get(getActivity()).deleteLocationProfile(profile);
+			   ProfileManager.get(getActivity()).saveLocationProfiles();
 			   profileAdapter.notifyDataSetChanged();
-			   //Kill alarms for volume control
-			   //VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), profile,false);
+			   
+			   updateGeofences();
+			   
 			   return true;
 		  
 		}
@@ -309,6 +331,19 @@ public class LocationProfileListFragment extends Fragment implements Constants{
     	//Start CrimePagerActivity
     	startActivityForResult(i,0);
 	
+	}
+	
+	private void updateGeofences() {
+		
+		if(mGoogleApiClient.isConnected()) {
+			
+			GeofenceManager geofenceManager = new GeofenceManager(getActivity().getApplicationContext(),mGoogleApiClient);
+			
+			//Restart geofences now that the state has changed. 
+			geofenceManager.startGeofences(this);
+		}
+		else
+			Log.e(TAG,"Connection to Google API is disconnected! Not good!");
 	}
 	
 	/*******************************************************************/
@@ -412,15 +447,18 @@ public class LocationProfileListFragment extends Fragment implements Constants{
     				//Toggle Porfile's enabled state
     				if(getItem(listPosition).isEnabled()) {
     					
-    				    //Turn off alarms for this profile
+    				    //Turn off geofence for this profile
     					getItem(listPosition).setEnabled(false);
     				}
     				else {
-    					//Turn on alarms for this profile
+    					//Turn on geofence for this profile
     					getItem(listPosition).setEnabled(true);
     				}
     				//refresh listview
     				profileAdapter.notifyDataSetChanged();
+    				
+    				//Modify geofences
+    			    updateGeofences();
     				
     			}
     			
@@ -441,6 +479,39 @@ public class LocationProfileListFragment extends Fragment implements Constants{
             
             return convertView;
 		}
+		
+	}
+
+	@Override
+	public void onConnected(Bundle arg0) {
+		
+
+		
+	}
+	@Override
+	public void onConnectionSuspended(int arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void onResult(Status status) {
+		
+		if(status.isSuccess()) {
+			Log.i(TAG,"Success starting Geofences on startup");
+			
+		}
+		else {
+			// Get the status code for the error and log it using a user-friendly message.
+            String errorMessage = GeofenceManager.getGeofenceErrorString(getActivity().getApplicationContext(),
+                    status.getStatusCode());
+            Log.e(TAG, errorMessage);		
+		}
+		
+		
+	}
+	@Override
+	public void onConnectionFailed(ConnectionResult arg0) {
+		// TODO Auto-generated method stub
 		
 	}
 }

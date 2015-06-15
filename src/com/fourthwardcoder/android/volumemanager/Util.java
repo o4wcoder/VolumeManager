@@ -8,9 +8,11 @@ import com.google.android.gms.location.GeofenceStatusCodes;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.media.AudioManager;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
@@ -21,6 +23,10 @@ import android.widget.TextView;
 
 public class Util implements Constants{
 	
+	/***********************************************************************/
+	/*                           Constants                                 */
+	/***********************************************************************/
+	private final static String TAG = "Util";
 	/**
 	 * Modify the format of the time of the alarms. Changes hour from 
 	 * military time to standard. Also make sure the minute is two digits.
@@ -61,9 +67,9 @@ public class Util implements Constants{
 	 * @param textView TextView to set the ring volume level
 	 * @param pos position of the seekbar
 	 */
-	public static void setRingVolumeText(TextView textView, int pos) {
+	public static void setRingVolumeText(TextView textView, int pos, int maxVolume) {
 		
-		textView.setText("(" + pos + "/7)");
+		textView.setText("(" + pos + "/" + maxVolume + ")");
 	}
 	
 	/**
@@ -83,11 +89,10 @@ public class Util implements Constants{
 	 * @param alarmType which alarm (start or end) to set
 	 * @param pos seekbar position
 	 */
-	public static void setSeekBarPosition(SeekBar seekBar, int ringVolume, TextView textView, int pos) {
+	public static void setSeekBarPosition(SeekBar seekBar, TextView textView, int pos,int maxVolume) {
 
 		seekBar.setProgress(pos);
-		ringVolume = pos;
-		setRingVolumeText(textView,pos);
+		setRingVolumeText(textView,pos,maxVolume);
 
 	}
 	
@@ -103,27 +108,15 @@ public class Util implements Constants{
 	    }
 	}
 	
-    /** 
-     * Returns the error string for a geofencing error code. 
-     */ 
-    public static String getGeofenceErrorString(Context context, int errorCode) {
-        Resources mResources = context.getResources();
-        switch (errorCode) {
-            case GeofenceStatusCodes.GEOFENCE_NOT_AVAILABLE: 
-                return mResources.getString(R.string.geofence_not_available);
-            case GeofenceStatusCodes.GEOFENCE_TOO_MANY_GEOFENCES: 
-                return mResources.getString(R.string.geofence_too_many_geofences);
-            case GeofenceStatusCodes.GEOFENCE_TOO_MANY_PENDING_INTENTS: 
-                return mResources.getString(R.string.geofence_too_many_pending_intents);
-            default: 
-                return mResources.getString(R.string.unknown_geofence_error);
-        } 
-    } 
+
     
     public static void setAudioManager(Context context, int ringType, int ringVolume) {
     	
+    	
 		AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
+		Log.e(TAG,"Max stream audio is " + audioManager.getStreamMaxVolume(AudioManager.STREAM_RING));
+		
 		if(ringType == VOLUME_OFF)
 			audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
 		else if(ringType == VOLUME_VIBRATE)
@@ -134,6 +127,13 @@ public class Util implements Constants{
 			if(ringVolume > 0 && ringVolume <= audioManager.getStreamMaxVolume(AudioManager.STREAM_RING))
 				audioManager.setStreamVolume(AudioManager.STREAM_RING, ringVolume, AudioManager.FLAG_PLAY_SOUND);
 		}
+    }
+    
+    public static int getMaxRingVolume(Context context) {
+    	AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+    	
+    	return audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
+    	
     }
 
 }

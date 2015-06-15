@@ -40,7 +40,7 @@ public class GeofenceService extends IntentService implements Constants {
 
 		GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
 		if (geofencingEvent.hasError()) {
-			String errorMessage = Util.getGeofenceErrorString(this,
+			String errorMessage = GeofenceManager.getGeofenceErrorString(this,
 					geofencingEvent.getErrorCode());
 			Log.e(TAG, errorMessage);
 			return; 

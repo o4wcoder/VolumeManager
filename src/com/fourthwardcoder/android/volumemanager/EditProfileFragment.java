@@ -17,10 +17,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.app.FragmentManager;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -65,14 +67,12 @@ public class EditProfileFragment extends Fragment implements Constants{
 	/*                          Local Data                                  */
 	/************************************************************************/
 	BasicProfile profile;
-	Switch volumeSwitch;
 	TextView titleTextView, startTimeTextView, endTimeTextView;
-	Button startTimeButton, endTimeButton, setControlButton;
+	Button startTimeButton, endTimeButton;
 	Date startDate,endDate;
 	RadioGroup startVolumeRadioGroup;
 	RadioGroup endVolumeRadioGroup;
 	SeekBar startRingSeekBar, endRingSeekBar;
-	boolean isControlEnabled = true;
 	String profileTitle;
 	int startVolumeType,endVolumeType;
 	int startRingVolume,endRingVolume;
@@ -99,7 +99,6 @@ public class EditProfileFragment extends Fragment implements Constants{
 		//UUID profileId = (UUID)getArguments().getSerializable(EXTRA_PROFILE_ID);
 		//Fetch the Profile from the ProfileManager ArrayList
 		profile = ProfileManager.get(getActivity()).getProfile(profileId);
-		isControlEnabled = profile.isEnabled();
 		profileTitle = profile.getTitle();
 		startDate = profile.getStartDate();
 	    endDate = profile.getEndDate();
@@ -189,7 +188,7 @@ public class EditProfileFragment extends Fragment implements Constants{
 	    	@Override
 			public void onClick(View v) {
 				//Start Time Picker Dialog on CrimeFragment after clicking Time Button
-				FragmentManager fm = getActivity().getSupportFragmentManager();
+				android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
 				TimePickerFragment dialog = TimePickerFragment.newInstance(startDate,getString(R.string.start_time_dialog));
 				//Make VolumeManagerFragment the target fragment of the TimePickerFragment instance
 				dialog.setTargetFragment(EditProfileFragment.this, REQUEST_START_TIME);
@@ -203,28 +202,13 @@ public class EditProfileFragment extends Fragment implements Constants{
 	    	@Override
 			public void onClick(View v) {
 				//Start Time Picker Dialog on CrimeFragment after clicking Time Button
-				FragmentManager fm = getActivity().getSupportFragmentManager();
+				android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
 				TimePickerFragment dialog = TimePickerFragment.newInstance(endDate,getString(R.string.end_time_dialog));
 				//Make VolumeManagerFragment the target fragment of the TimePickerFragment instance
 				dialog.setTargetFragment(EditProfileFragment.this, REQUEST_END_TIME);
 				dialog.show(fm, DIALOG_TIME);
 	    		
 	    	}
-	    });
-	    //Set up Set Volume Control Button
-	    setControlButton = (Button)view.findViewById(R.id.setControlButton);
-	    setControlButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				saveSettings(); 
-	            VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), profile, true);
-				Toast toast = Toast.makeText(getActivity().getApplicationContext(),
-						R.string.toast_text, Toast.LENGTH_SHORT);
-				toast.show();
-				
-				getActivity().finish();
-			}
 	    });
 	    
 	    /*
@@ -239,12 +223,14 @@ public class EditProfileFragment extends Fragment implements Constants{
 			       
 				if(checkedId == R.id.startOffRadio) {
 					startVolumeType = VOLUME_OFF;
-					Util.setSeekBarPosition(startRingSeekBar,startRingVolume,startRingVolumeTextView,0);
+					startRingVolume = 0;
+					Util.setSeekBarPosition(startRingSeekBar,startRingVolumeTextView,startRingVolume,Util.getMaxRingVolume(getActivity().getApplicationContext()));
 					
 				}
 				else if(checkedId == R.id.startVibrateRadio) {
 					startVolumeType = VOLUME_VIBRATE;
-					Util.setSeekBarPosition(startRingSeekBar,startRingVolume,startRingVolumeTextView,0);
+					startRingVolume = 0;
+					Util.setSeekBarPosition(startRingSeekBar,startRingVolumeTextView,startRingVolume,Util.getMaxRingVolume(getActivity().getApplicationContext()));
 				}
 				else {
 					startVolumeType = VOLUME_RING;
@@ -261,12 +247,14 @@ public class EditProfileFragment extends Fragment implements Constants{
 			       
 				if(checkedId == R.id.endOffRadio) {
 					endVolumeType = VOLUME_OFF;
-					Util.setSeekBarPosition(endRingSeekBar,endRingVolume,endRingVolumeTextView,0);
+					endRingVolume = 0;
+					Util.setSeekBarPosition(endRingSeekBar,endRingVolumeTextView,endRingVolume,Util.getMaxRingVolume(getActivity().getApplicationContext()));
 
 				}
 				else if(checkedId == R.id.endVibrateRadio) {
 					endVolumeType = VOLUME_VIBRATE;
-					Util.setSeekBarPosition(endRingSeekBar,endRingVolume,endRingVolumeTextView,0);
+					endRingVolume = 0;
+					Util.setSeekBarPosition(endRingSeekBar,endRingVolumeTextView,endRingVolume,Util.getMaxRingVolume(getActivity().getApplicationContext()));
 				}
 				else {
 					endVolumeType = VOLUME_RING;
@@ -291,7 +279,7 @@ public class EditProfileFragment extends Fragment implements Constants{
 				else 
 					((RadioButton)startVolumeRadioGroup.getChildAt(VOLUME_RING)).setChecked(true);
 				
-				Util.setRingVolumeText(startRingVolumeTextView,progress);
+				Util.setRingVolumeText(startRingVolumeTextView,progress,Util.getMaxRingVolume(getActivity().getApplicationContext()));
 				startRingVolume = progress;
 			}
 			@Override
@@ -311,7 +299,7 @@ public class EditProfileFragment extends Fragment implements Constants{
 				else 
 					((RadioButton)endVolumeRadioGroup.getChildAt(VOLUME_RING)).setChecked(true);
 				
-				Util.setRingVolumeText(endRingVolumeTextView,progress);
+				Util.setRingVolumeText(endRingVolumeTextView,progress,Util.getMaxRingVolume(getActivity().getApplicationContext()));
 				endRingVolume = progress;	
 			}
 			@Override
@@ -321,42 +309,31 @@ public class EditProfileFragment extends Fragment implements Constants{
 	    });
 	    	    
 	    /*
-	     * Set up volume Switch
-	     */
-	    volumeSwitch = (Switch)view.findViewById(R.id.volumeNotifySwitch);
-	    volumeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				//Turn components on/off and save settings
-				isControlEnabled = isChecked;
-				setWidgetVisibility(isChecked);
-				
-				
-				//Shut down volume control alarm and save settings. Don't want to save settings unless the "Set"
-				//button was pushed
-				if(!isChecked) {
-					saveSettings();
-				   VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), profile,false);
-				}
-			}
-		});
-	    	    
-	    /*
 	     * Set Default and Saved Settings
 	     */
 	    //Set default or saved radio button setting
 	    ((RadioButton)startVolumeRadioGroup.getChildAt(startVolumeType)).setChecked(true);
 	    //Set default or saved radio button setting
 	    ((RadioButton)endVolumeRadioGroup.getChildAt(endVolumeType)).setChecked(true);
-	    //Setup up wigits with saved settings
-	    volumeSwitch.setChecked(isControlEnabled);
 	    startTimeTextView.setText(Util.formatTime(startDate));
 	    endTimeTextView.setText(Util.formatTime(endDate));
 	    //Set Seekbar default
-	    Util.setSeekBarPosition(startRingSeekBar,startRingVolume,startRingVolumeTextView,startRingVolume);
-	    Util.setSeekBarPosition(endRingSeekBar,endRingVolume,endRingVolumeTextView,endRingVolume);
-	    setWidgetVisibility(isControlEnabled);
+	    Util.setSeekBarPosition(startRingSeekBar,startRingVolumeTextView,startRingVolume,Util.getMaxRingVolume(getActivity().getApplicationContext()));
+	    Util.setSeekBarPosition(endRingSeekBar,endRingVolumeTextView,endRingVolume,Util.getMaxRingVolume(getActivity().getApplicationContext()));
+	    startRingSeekBar.setMax(Util.getMaxRingVolume(getActivity().getApplicationContext()));
+	    endRingSeekBar.setMax(Util.getMaxRingVolume(getActivity().getApplicationContext()));
 	    
 		return view;
+	}
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		//super.onCreateOptionsMenu(menu, inflater);
+		
+		//Pass the resource ID of the menu and populate the Menu 
+		//instance with the items defined in the xml file
+		inflater.inflate(R.menu.action_bar_profile_menu, menu);
+		
 	}
 	
 	//Get results from Dialog boxes and other Activities
@@ -388,6 +365,27 @@ public class EditProfileFragment extends Fragment implements Constants{
 				NavUtils.navigateUpFromSameTask(getActivity());
 			}
 			return true;
+		case R.id.menu_item_save_profile:
+			Log.e(TAG,"Save location menu select");
+			
+			saveSettings(); 
+			Toast toast = Toast.makeText(getActivity().getApplicationContext(),
+					R.string.toast_text, Toast.LENGTH_SHORT);
+			toast.show();
+			
+			getActivity().finish();
+			return true;
+		case R.id.menu_item_settings:
+			Intent settingsIntent = new Intent(getActivity(),SettingsActivity.class);
+			startActivity(settingsIntent);
+			return true;
+		case R.id.menu_item_about:
+			FragmentManager fm = getActivity().getFragmentManager();
+			AboutFragment dialog = AboutFragment.newInstance();
+			//Make ProfileListFragment the target fragment of the TimePickerFragment instance
+			//dialog.setTargetFragment(VolumeManagerFragment.this, REQUEST_START_TIME);
+			dialog.show(fm, "about");
+			return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
@@ -404,6 +402,7 @@ public class EditProfileFragment extends Fragment implements Constants{
 	 * by the on/off toggle switch
 	 * @param set setting of toggle switch
 	 */
+	/*
 	private void setWidgetVisibility(boolean set) {
 		
 		//Start Controls
@@ -419,7 +418,7 @@ public class EditProfileFragment extends Fragment implements Constants{
 		
 		setControlButton.setEnabled(set);
 	}
-	
+	*/
 	
 
 	
@@ -427,11 +426,8 @@ public class EditProfileFragment extends Fragment implements Constants{
 	 * Save all settings of the alarms to SharedPreferences 
 	 */
 	private void saveSettings() {
-		
-		Log.d(TAG,"Saving enabled " + isControlEnabled);
 
 		profile.setTitle(titleTextView.getText().toString());
-		profile.setEnabled(isControlEnabled);
 		profile.setStartDate(startDate);
 		profile.setEndDate(endDate);
 		profile.setStartVolumeType(startVolumeType);

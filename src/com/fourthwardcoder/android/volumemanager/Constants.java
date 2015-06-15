@@ -35,6 +35,7 @@ public interface Constants {
 	
 	public static final String PREF_VOLUME_NOTIFY_ENABLED = "volumeNotifyEnabled";
 	public static final String PREF_LOCATION_NOTIFY_ENABLED = "locationNotifyEnabled";
+	public static final String PREF_MAX_VOLUME = "maxVolume";
 	
 	//Volume Constants
 	public static final int VOLUME_OFF = 0;

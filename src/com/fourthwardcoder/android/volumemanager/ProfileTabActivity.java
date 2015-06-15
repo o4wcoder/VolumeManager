@@ -18,7 +18,11 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ActionBar.Tab;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class ProfileTabActivity extends Activity implements Constants {
@@ -43,13 +47,23 @@ public class ProfileTabActivity extends Activity implements Constants {
 		
 		//Change status bar color
 	    Util.setStatusBarColor(this);
-		
+	    
+	    /*
+	    //Get the max ringer volume for this device
+        AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+    	int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
+	    //Store max volume in shared prefs to be used in the app
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+	    SharedPreferences.Editor prefsEditor = prefs.edit();
+	    prefsEditor.putInt(PREF_MAX_VOLUME, maxVolume).commit();
+		*/
+	    
+	    //Set layout
 	    setContentView(R.layout.activity_tab);
 		
+	    //Set up action bar
 		ActionBar actionBar = getActionBar();
-
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		
 		ActionBar.TabListener tabListener = new ActionBar.TabListener() {
 
 			@Override
@@ -114,5 +128,6 @@ public class ProfileTabActivity extends Activity implements Constants {
 	    super.onRestoreInstanceState(savedInstanceState);
 
 	}
+	
 
 }

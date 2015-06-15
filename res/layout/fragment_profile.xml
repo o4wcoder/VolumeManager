@@ -6,14 +6,6 @@
     android:orientation="vertical"
     android:padding="8dp" >
 
-    <Switch
-        android:id="@+id/volumeNotifySwitch"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:padding="2dp"
-        android:text="Enable Volume Control" />
-
         <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -213,8 +205,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
-                android:layout_marginTop="4dp"
-                android:max="7" />
+                android:layout_marginTop="4dp" />
+
         </LinearLayout>
     </LinearLayout>
 
@@ -327,15 +319,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
-                android:layout_marginTop="4dp"
-                android:max="7" />
+                android:layout_marginTop="4dp" />
+
         </LinearLayout>
     </LinearLayout>
-
-    <Button
-        android:id="@+id/setControlButton"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/set_control_button" />
 
 </LinearLayout>
