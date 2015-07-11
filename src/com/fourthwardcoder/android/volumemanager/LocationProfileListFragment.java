@@ -54,7 +54,7 @@ public class LocationProfileListFragment extends Fragment implements Constants, 
 	/***************************************************/
 	/*                  Constants                      */
 	/***************************************************/
-	private static final String TAG = "LocatoinProfileListFragment";
+	private static final String TAG = "LocationProfileListFragment";
 	
 	
 	/***************************************************/

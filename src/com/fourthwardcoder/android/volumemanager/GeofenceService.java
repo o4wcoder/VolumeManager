@@ -58,14 +58,12 @@ public class GeofenceService extends IntentService implements Constants {
 			// Get the geofences that were triggered. A single event can trigger multiple geofences. 
 			List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
 
-
 			// Get the transition details as a String. 
 			ArrayList<LocationProfile> transitionProfileList = getGeofenceTransitionProfiles(
 					this,
 					geofenceTransition,
 					triggeringGeofences
 					); 
-
 
 			// Send notification and log the transition details. 
 			//sendNotification(geofenceTransitionDetails);
@@ -74,7 +72,6 @@ public class GeofenceService extends IntentService implements Constants {
 			for(int i = 0; i < transitionProfileList.size(); i++) {
 
 				LocationProfile profile = transitionProfileList.get(i);
-
 
 				if(profile != null) {
 					Log.i(TAG,"In geofence " + profile.getTitle());
