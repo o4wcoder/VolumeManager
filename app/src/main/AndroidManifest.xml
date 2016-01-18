@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.fourthwardcoder.android.volumemanager"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="21" />
+
+    <permission
+        android:name="com.bignerdranch.android.runtracker.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.bignerdranch.android.runtracker.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+    <uses-feature
+        android:name="android.hardward.location.gps"
+        android:required="true" />
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/CustomActionBarTheme" >
+        <activity
+            android:name=".activites.EditProfileActivity"
+            android:label="@string/profile_settings" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activites.ProfileTabActivity" />
+            
+        </activity>
+        <!-- Use singleTop so when navigating back with home button, it keeps extra data from activity that called it -->
+        <activity 
+            android:name=".activites.LocationMapActivity"
+            android:label="@string/location_settings" 
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTop">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activites.ProfileTabActivity" />
+        </activity>
+        <activity
+            android:name=".activites.EditLocationProfileActivity"
+            android:label="@string/location_settings" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activites.LocationMapActivity"/>
+        </activity>
+        <activity
+            android:name=".activites.SettingsActivity"
+            android:label="@string/settings_menu" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activites.ProfileTabActivity" />
+        </activity>
+        <activity
+            android:name=".activites.ProfileTabActivity"
+            android:label="@string/app_name" 
+            android:configChanges="orientation|screenSize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".services.VolumeManagerService"
+            android:exported="false" >
+        </service>
+
+        <service
+            android:name=".services.GeofenceService"
+            android:exported="false" >
+        </service>
+        <receiver android:name=".services.StartupReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+                <meta-data 
+            android:name="com.google.android.gms.version" 
+            android:value="@integer/google_play_services_version" />
+                <meta-data 
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyD3MBzcKWqj4loPAMzcoNk7-U5FteVHXP0"/>
+    </application>
+
+</manifest>
