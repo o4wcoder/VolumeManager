@@ -5,6 +5,7 @@ package com.fourthwardcoder.android.volumemanager.activites;
 import java.util.ArrayList;
 
 import com.fourthwardcoder.android.volumemanager.R;
+import com.fourthwardcoder.android.volumemanager.adapters.ProfilePagerAdapter;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.fragments.LocationProfileListFragment;
 import com.fourthwardcoder.android.volumemanager.fragments.ProfileListFragment;
@@ -17,8 +18,13 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ActionBar.Tab;
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.support.design.widget.TabLayout;
 
-public class ProfileTabActivity extends Activity implements Constants {
+public class ProfileTabActivity extends AppCompatActivity implements Constants {
 	
 	/*********************************************************************/
 	/*                          Constants                                */
@@ -40,74 +46,44 @@ public class ProfileTabActivity extends Activity implements Constants {
 		
 		//Change status bar color
 	    Util.setStatusBarColor(this);
-	    
-	    /*
-	    //Get the max ringer volume for this device
-        AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-    	int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
-	    //Store max volume in shared prefs to be used in the app
-    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-	    SharedPreferences.Editor prefsEditor = prefs.edit();
-	    prefsEditor.putInt(PREF_MAX_VOLUME, maxVolume).commit();
-		*/
-	    
+
 	    //Set layout
 	    setContentView(R.layout.activity_tab);
-		
-	    //Set up action bar
-		ActionBar actionBar = getActionBar();
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+
+		//Set toolbar
+		final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+		//getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+		//Create TabLayout for the Profiles (Basic and Location)d
+		TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+		tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.basic_tab)));
+		tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.location_tab)));
+		tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+		//Create ViewPager to swipe between the tabs
+		final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+		final PagerAdapter adapter = new ProfilePagerAdapter(getSupportFragmentManager(),
+				tabLayout.getTabCount());
+		viewPager.setAdapter(adapter);
+		viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+		tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
 			@Override
-			public void onTabSelected(Tab tab, FragmentTransaction ft) {
-				//Already created the fragment, just grab it
-				if(fragList.size() > tab.getPosition())
-					fragList.get(tab.getPosition());
-
-				if(fragment == null) {
-					
-					if(TabName.values()[tab.getPosition()] == TabName.BASIC)
-					   tabFragment = new ProfileListFragment();
-					else
-						tabFragment = new LocationProfileListFragment();
-					
-					Bundle data = new Bundle();
-					data.putInt(TAB_ID, tab.getPosition());
-					tabFragment.setArguments(data);
-					fragList.add(tabFragment);
-
-				}
-				else {
-					
-					if(TabName.values()[tab.getPosition()] == TabName.BASIC)
-					   tabFragment  = (ProfileListFragment)fragment;
-					else
-					   tabFragment  = (LocationProfileListFragment)fragment;
-				}
-				ft.replace(R.id.fragment_container, tabFragment);
-				
+			public void onTabSelected(TabLayout.Tab tab) {
+				viewPager.setCurrentItem(tab.getPosition());
 			}
 
 			@Override
-			public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-				if (fragList.size() > tab.getPosition()) {
-					ft.remove(fragList.get(tab.getPosition()));
-				}
-				
+			public void onTabUnselected(TabLayout.Tab tab) {
+
 			}
 
 			@Override
-			public void onTabReselected(Tab tab, FragmentTransaction ft) {
-				// TODO Auto-generated method stub
-				
+			public void onTabReselected(TabLayout.Tab tab) {
+
 			}
-			
-		};
-		
-		
-		actionBar.addTab(actionBar.newTab().setText(R.string.basic_tab).setTabListener(tabListener));
-		actionBar.addTab(actionBar.newTab().setText(R.string.location_tab).setTabListener(tabListener));
+		});
 		
 
 	

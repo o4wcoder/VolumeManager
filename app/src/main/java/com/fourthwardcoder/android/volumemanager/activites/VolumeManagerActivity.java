@@ -13,11 +13,11 @@ import com.fourthwardcoder.android.volumemanager.fragments.VolumeManagerFragment
  * 3/13/2015
  *
  */
-public class VolumeManagerActivity extends SingleFragmentActivity {
-
-	@Override
-	protected Fragment createFragment() {
-		// TODO Auto-generated method stub
-		return new VolumeManagerFragment();
-	}
-}
+//public class VolumeManagerActivity extends SingleFragmentActivity {
+//
+//	@Override
+//	protected Fragment createFragment() {
+//		// TODO Auto-generated method stub
+//		return new VolumeManagerFragment();
+//	}
+//}

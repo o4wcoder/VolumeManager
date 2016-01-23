@@ -7,8 +7,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.app.FragmentManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -58,6 +58,14 @@ public class ProfileListFragment extends Fragment implements Constants {
 	/*                Override Methods                 */
 	/***************************************************/
 	
+	public static ProfileListFragment newInstance() {
+
+		Bundle args = new Bundle();
+		ProfileListFragment fragment = new ProfileListFragment();
+
+		fragment.setArguments(args);
+		return fragment;
+	}
 
 	@SuppressLint("NewApi")
 	@Override
@@ -277,11 +285,11 @@ public class ProfileListFragment extends Fragment implements Constants {
 			startActivity(settingsIntent);
 			return true;
 		case R.id.menu_item_about:
-			FragmentManager fm = getActivity().getFragmentManager();
+			FragmentManager fm = getActivity().getSupportFragmentManager();
 			AboutFragment dialog = AboutFragment.newInstance();
 			//Make ProfileListFragment the target fragment of the TimePickerFragment instance
 			//dialog.setTargetFragment(VolumeManagerFragment.this, REQUEST_START_TIME);
-			dialog.show(fm, "about");
+			//dialog.show(fm, "about");
 			
 			
 		default:

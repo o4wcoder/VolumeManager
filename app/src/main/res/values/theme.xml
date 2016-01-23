@@ -10,23 +10,7 @@
         <item name="android:actionMenuTextColor">@color/text_tab_selected</item>
     </style>
     -->
-    <!-- ActionBar styles -->
-    <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/indigoPrimary500</item>
-        <item name="android:backgroundStacked">@color/indigoPrimary500</item>
-    </style>
 
-    <!-- ActionBar tabs styles -->
-    <style name="MyActionBarTabs" parent="@android:style/Widget.Holo.ActionBar.TabView">
-
-        <!-- tab indicator -->
-        <item name="android:background">@drawable/actionbar_tab_indicator</item>
-    </style>
-
-    <!-- ActionBar tabs text styles -->
-    <style name="MyActionBarTabText" parent="@android:style/Widget.Holo.ActionBar.TabText">
-        <item name="android:textColor">@drawable/tab_text_color</item>
-    </style>
 
 
 
