@@ -14,7 +14,7 @@ public class ProfileDbHelper extends SQLiteOpenHelper {
     /*                           Constants                              */
     /********************************************************************/
     private static final int DATABASE_VERSION = 1;
-    static final String DATABASE_NAME = "profiles.db";
+    public static final String DATABASE_NAME = "profiles.db";
 
     /********************************************************************/
     /*                          Constructors                            */

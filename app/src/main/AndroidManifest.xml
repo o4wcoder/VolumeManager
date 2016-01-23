@@ -78,6 +78,11 @@
             </intent-filter>
         </activity>
 
+        <provider
+            android:authorities="com.fourthwardcoder.android.volumemanager"
+            android:name=".data.ProfileProvider"
+            android:exported="false"
+            android:syncable="false" />
         <service
             android:name=".services.VolumeManagerService"
             android:exported="false" >
