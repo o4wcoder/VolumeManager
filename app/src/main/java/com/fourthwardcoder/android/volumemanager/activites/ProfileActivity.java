@@ -2,7 +2,7 @@ package com.fourthwardcoder.android.volumemanager.activites;
 
 import android.support.v4.app.Fragment;
 
-import com.fourthwardcoder.android.volumemanager.fragments.ProfileFragment;
+//import com.fourthwardcoder.android.volumemanager.fragments.ProfileFragment;
 
 /**
  * VolumeManagerActivity
@@ -13,11 +13,11 @@ import com.fourthwardcoder.android.volumemanager.fragments.ProfileFragment;
  * 3/13/2015
  *
  */
-public class ProfileActivity extends SingleFragmentActivity {
-
-	@Override
-	protected Fragment createFragment() {
-		// TODO Auto-generated method stub
-		return new ProfileFragment();
-	}
-}
+//public class ProfileActivity extends SingleFragmentActivity {
+//
+//	@Override
+//	protected Fragment createFragment() {
+//		// TODO Auto-generated method stub
+//		return new ProfileFragment();
+//	}
+//}

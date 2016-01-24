@@ -4,9 +4,11 @@ import java.util.ArrayList;
 
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -71,7 +73,7 @@ public class ProfileListFragment extends Fragment implements Constants {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.e(TAG,"Oncreate");
+		//Log.e(TAG,"Oncreate");
 		//Tell the Fragment Manager that ProfileListFragment needs
 		//to receive options menu callbacks
 		setHasOptionsMenu(true);
@@ -91,7 +93,7 @@ public class ProfileListFragment extends Fragment implements Constants {
 		View view = inflater.inflate(R.layout.fragment_profile_list, container, false);
 
 
-		
+		//Empty ListView view
 		Button newProfileButton = (Button)view.findViewById(R.id.emptyButtonAddProfile);
 		newProfileButton.setOnClickListener(new OnClickListener() {
 
@@ -102,10 +104,9 @@ public class ProfileListFragment extends Fragment implements Constants {
 			}
 			
 		});
-		
 
 		
-        Log.e(TAG,"onCreateView with prifile list size " + profileList.size());
+       // Log.e(TAG,"onCreateView with prifile list size " + profileList.size());
 		
 		listview = (ListView)view.findViewById(android.R.id.list);
 
@@ -213,7 +214,8 @@ public class ProfileListFragment extends Fragment implements Constants {
 
 		return view;
 	}
-	
+
+
 	@Override
 	public void onResume() {
 		super.onResume();

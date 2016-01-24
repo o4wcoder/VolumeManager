@@ -2,6 +2,9 @@
 
     <!-- Base application theme -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/app_primary_color</item>
+        <item name="colorPrimaryDark">@color/app_primary_dark_color</item>
+        <item name="colorAccent">@color/app_accent_color</item>
     </style>
 
     <!-- the theme applied to the application or activity -->

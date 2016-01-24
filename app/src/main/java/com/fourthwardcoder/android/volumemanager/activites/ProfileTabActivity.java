@@ -6,10 +6,13 @@ import java.util.ArrayList;
 
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.adapters.ProfilePagerAdapter;
+import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
+import com.fourthwardcoder.android.volumemanager.fragments.EditProfileFragment;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.fragments.LocationProfileListFragment;
 import com.fourthwardcoder.android.volumemanager.fragments.ProfileListFragment;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
+import com.fourthwardcoder.android.volumemanager.models.BasicProfile;
 
 
 import android.app.ActionBar;
@@ -17,12 +20,15 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ActionBar.Tab;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.TabLayout;
+import android.util.Log;
+import android.view.View;
 
 public class ProfileTabActivity extends AppCompatActivity implements Constants {
 	
@@ -97,6 +103,29 @@ public class ProfileTabActivity extends AppCompatActivity implements Constants {
 	    super.onRestoreInstanceState(savedInstanceState);
 
 	}
-	
 
+    public void clickFAB(View view) {
+        Log.e(TAG, "Inside click FAB");
+        newProfile();
+    }
+
+    private void newProfile()
+    {
+        //Add profile to the static List Array of Crimes
+        BasicProfile profile = new BasicProfile();
+        ProfileManager.get(this).addProfile(profile);
+
+        //Create intent to start up CrimePagerActivity after selecting "New Crime" menu
+    	/*
+    	 * !!!! TODO Hook up to Pager Activity when created
+    	 */
+        Intent i = new Intent(this,EditProfileActivity.class);
+
+        //Send the profile ID in the intent to CrimePagerActivity
+        i.putExtra(EditProfileFragment.EXTRA_PROFILE_ID, profile.getId());
+
+        //Start CrimePagerActivity
+        startActivityForResult(i, 0);
+
+    }
 }
