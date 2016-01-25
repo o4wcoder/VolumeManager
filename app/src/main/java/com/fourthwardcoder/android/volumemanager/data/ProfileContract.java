@@ -10,6 +10,22 @@ import android.provider.BaseColumns;
  */
 public class ProfileContract {
 
+    public static final int COL_PROFILE = 0;
+    public static final int COL_PROFILE_ID = 1;
+    public static final int COL_PROFILE_TITLE = 2;
+    public static final int COL_PROFILE_ENABLED = 3;
+    public static final int COL_PROFILE_START_VOLUME_TYPE = 4;
+    public static final int COL_PROFILE_END_VOLUME_TYPE = 5;
+    public static final int COL_PROFILE_START_RING_VOLUME = 6;
+    public static final int COL_PROFILE_END_RING_VOLUME = 7;
+    public static final int COL_PROFILE_PREVIOUS_VOLUME_TYPE = 8;
+    public static final int COL_PROFILE_PREVIOUS_RING_VOLUME = 9;
+    public static final int COL_PROFILE_ALARM_ID = 10;
+    public static final int COL_PROFILE_START_DATE = 11;
+    public static final int COL_PROFILE_END_DATE = 12;
+    public static final int COL_PROFILE_DAYS_OF_THE_WEEK = 13;
+    public static final int COL_PROFILE_IN_ALARM = 14;
+
     //Content provider authority for Movie DB
     public static final String CONTENT_AUTHORITY = "com.fourthwardcoder.android.volumemanager";
 

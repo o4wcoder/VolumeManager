@@ -2,7 +2,7 @@ package com.fourthwardcoder.android.volumemanager.activites;
 
 import android.support.v4.app.Fragment;
 
-import com.fourthwardcoder.android.volumemanager.fragments.VolumeManagerFragment;
+//import com.fourthwardcoder.android.volumemanager.fragments.VolumeManagerFragment;
 
 /**
  * VolumeManagerActivity

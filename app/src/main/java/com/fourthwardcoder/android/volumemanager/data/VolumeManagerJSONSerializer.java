@@ -17,8 +17,8 @@ import org.json.JSONTokener;
 import android.content.Context;
 import android.util.Log;
 
-import com.fourthwardcoder.android.volumemanager.models.BasicProfile;
 import com.fourthwardcoder.android.volumemanager.models.LocationProfile;
+import com.fourthwardcoder.android.volumemanager.models.Profile;
 
 public class VolumeManagerJSONSerializer {
 	
@@ -45,8 +45,8 @@ public class VolumeManagerJSONSerializer {
 	/******************************************************/
 	/*                Public Methods                      */
 	/******************************************************/
-	public ArrayList<BasicProfile> loadProfiles() throws IOException, JSONException {
-		ArrayList<BasicProfile> profiles = new ArrayList<BasicProfile>();
+	public ArrayList<Profile> loadProfiles() throws IOException, JSONException {
+		ArrayList<Profile> profiles = new ArrayList<Profile>();
 		
 		BufferedReader reader = null;
 		
@@ -66,7 +66,7 @@ public class VolumeManagerJSONSerializer {
 			JSONArray array = (JSONArray) new JSONTokener(jsonString.toString()).nextValue();
 			//Build the array of profiles from JSONObjects
 			for(int i = 0; i< array.length(); i++) {
-				profiles.add(new BasicProfile(array.getJSONObject(i)));
+				//profiles.add(new Profile(array.getJSONObject(i)));
 			}
 		} catch (FileNotFoundException e) {
 			//Ignore this on; it happens when starting fresh
@@ -109,15 +109,15 @@ public class VolumeManagerJSONSerializer {
 		return profiles;
 	}
 
-	public void saveProfiles(ArrayList<BasicProfile> profiles) throws JSONException, IOException {
+	public void saveProfiles(ArrayList<Profile> profiles) throws JSONException, IOException {
 		
 		//Build and array in JSON
 		JSONArray array = new JSONArray();
-		for(BasicProfile p : profiles) {
+		for(Profile p : profiles) {
 			
 		    //Log.d(TAG,"JSon Data");
 		    //Log.d(TAG,p.toJSON().toString());
-			array.put(p.toJSON());
+			//array.put(p.toJSON());
 		}
 		//Write the file to disk
 		Writer writer = null;

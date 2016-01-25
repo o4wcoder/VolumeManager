@@ -1,12 +1,15 @@
 package com.fourthwardcoder.android.volumemanager.fragments;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -35,7 +38,8 @@ import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
-import com.fourthwardcoder.android.volumemanager.models.BasicProfile;
+import com.fourthwardcoder.android.volumemanager.data.ProfileContract;
+import com.fourthwardcoder.android.volumemanager.models.Profile;
 
 /**
  * VolumeManagerFragment
@@ -52,7 +56,7 @@ public class EditProfileFragment extends Fragment implements Constants {
 	/************************************************************************/
 	/*                           Constants                                  */
 	/************************************************************************/
-	private final static String TAG = "VolumeManagerFragment";
+	private final static String TAG = EditProfileFragment.class.getSimpleName();
 	//Tag for the time piker Dialog
 	private static final String DIALOG_TIME = "time";
 	
@@ -64,7 +68,7 @@ public class EditProfileFragment extends Fragment implements Constants {
 	/************************************************************************/
 	/*                          Local Data                                  */
 	/************************************************************************/
-	BasicProfile profile;
+	Profile mProfile;
 	TextView titleTextView, startTimeTextView, endTimeTextView;
 	Button startTimeButton, endTimeButton;
 	Date startDate,endDate;
@@ -75,7 +79,7 @@ public class EditProfileFragment extends Fragment implements Constants {
 	int startVolumeType,endVolumeType;
 	int startRingVolume,endRingVolume;
 	TextView startRingVolumeTextView, endRingVolumeTextView;
-	boolean daysOfTheWeek[];
+	ArrayList<Boolean> daysOfTheWeek;
 	
 	/*******************************************************/
 	/*                  Override Methods                   */
@@ -96,15 +100,15 @@ public class EditProfileFragment extends Fragment implements Constants {
         
 		//UUID profileId = (UUID)getArguments().getSerializable(EXTRA_PROFILE_ID);
 		//Fetch the Profile from the ProfileManager ArrayList
-		profile = ProfileManager.get(getActivity()).getProfile(profileId);
-		profileTitle = profile.getTitle();
-		startDate = profile.getStartDate();
-	    endDate = profile.getEndDate();
-	    startVolumeType = profile.getStartVolumeType();
-        endVolumeType = profile.getEndVolumeType();
-        startRingVolume = profile.getStartRingVolume();
-        endRingVolume = profile.getEndRingVolume();
-        daysOfTheWeek = profile.getDaysOfTheWeek();
+		mProfile = ProfileManager.get(getActivity()).getProfile(profileId);
+		profileTitle = mProfile.getTitle();
+		startDate = mProfile.getStartDate();
+	    endDate = mProfile.getEndDate();
+	    startVolumeType = mProfile.getStartVolumeType();
+        endVolumeType = mProfile.getEndVolumeType();
+        startRingVolume = mProfile.getStartRingVolume();
+        endRingVolume = mProfile.getEndRingVolume();
+        daysOfTheWeek = mProfile.getDaysOfTheWeek();
 	}
 	
 	@SuppressLint("ResourceAsColor")
@@ -144,16 +148,16 @@ public class EditProfileFragment extends Fragment implements Constants {
 			public void onClick(View v) {
                  Log.d(TAG,"Button tag: " + v.getTag());
                  TextView textView = (TextView)v;
-                 boolean setting = daysOfTheWeek[(int)v.getTag()];
+                 boolean setting = daysOfTheWeek.get((int)v.getTag());
                  
                  if(setting) {
                 	 //Turn Day off
-                	 daysOfTheWeek[(int)v.getTag()] = false;
+                	 daysOfTheWeek.add((int)v.getTag(),false);
      	        	textView.setTextColor(Color.parseColor("#000000"));
                  }
                  else {
                 	 //Turn Day on
-                	 daysOfTheWeek[(int)v.getTag()] = true;
+                	 daysOfTheWeek.add((int)v.getTag(), true);
      	        	textView.setTextColor(Color.parseColor("#ffffff"));
                  }
                  
@@ -168,7 +172,7 @@ public class EditProfileFragment extends Fragment implements Constants {
 	        button.setOnClickListener(dayButtonListener);
 	        button.setTag(new Integer(i));
 	        
-	        boolean setting = daysOfTheWeek[i];
+	        boolean setting = daysOfTheWeek.get(i);
 	        if(setting) {
 	        	//Turn Day on
 	        	button.setTextColor(Color.parseColor("#ffffff"));
@@ -426,18 +430,26 @@ public class EditProfileFragment extends Fragment implements Constants {
 	 */
 	private void saveSettings() {
 
-		profile.setTitle(titleTextView.getText().toString());
-		profile.setStartDate(startDate);
-		profile.setEndDate(endDate);
-		profile.setStartVolumeType(startVolumeType);
-		profile.setEndVolumeType(endVolumeType);
-		profile.setStartRingVolume(startRingVolume);
-		profile.setEndRingVolume(endRingVolume);
-		profile.setDaysOfTheWeek(daysOfTheWeek);
+        Log.e(TAG,"Inside saveSettings()");
+
+		mProfile.setTitle(titleTextView.getText().toString());
+		mProfile.setStartDate(startDate);
+		mProfile.setEndDate(endDate);
+		mProfile.setStartVolumeType(startVolumeType);
+		mProfile.setEndVolumeType(endVolumeType);
+		mProfile.setStartRingVolume(startRingVolume);
+		mProfile.setEndRingVolume(endRingVolume);
+		mProfile.setDaysOfTheWeek(daysOfTheWeek);
 		
-		ProfileManager.get(getActivity()).saveProfiles();
-		
-	}
+		//ProfileManager.get(getActivity()).saveProfiles();
+
+		ContentValues profileValues = mProfile.getContentValues();
+
+         Uri insertedRow = getActivity().getContentResolver()
+                .insert(ProfileContract.ProfileEntry.CONTENT_URI, profileValues);
+
+        Log.e(TAG,"Insert Profile row with result " + insertedRow);
+    }
 	
 
 	

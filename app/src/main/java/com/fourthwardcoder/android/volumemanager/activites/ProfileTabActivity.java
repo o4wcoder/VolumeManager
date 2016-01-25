@@ -12,7 +12,7 @@ import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.fragments.LocationProfileListFragment;
 import com.fourthwardcoder.android.volumemanager.fragments.ProfileListFragment;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
-import com.fourthwardcoder.android.volumemanager.models.BasicProfile;
+import com.fourthwardcoder.android.volumemanager.models.Profile;
 
 
 import android.app.ActionBar;
@@ -112,7 +112,7 @@ public class ProfileTabActivity extends AppCompatActivity implements Constants {
     private void newProfile()
     {
         //Add profile to the static List Array of Crimes
-        BasicProfile profile = new BasicProfile();
+        Profile profile = new Profile();
         ProfileManager.get(this).addProfile(profile);
 
         //Create intent to start up CrimePagerActivity after selecting "New Crime" menu

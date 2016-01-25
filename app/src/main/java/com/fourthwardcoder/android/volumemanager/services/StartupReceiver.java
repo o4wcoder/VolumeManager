@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.fourthwardcoder.android.volumemanager.location.GeofenceManager;
-import com.fourthwardcoder.android.volumemanager.models.BasicProfile;
+import com.fourthwardcoder.android.volumemanager.models.Profile;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
@@ -48,7 +48,7 @@ public class StartupReceiver extends BroadcastReceiver implements Constants, Con
 
 		this.context = context;
 		//Get list of profiles
-		ArrayList<BasicProfile> profileList = ProfileManager.get(context).getProfiles();
+		ArrayList<Profile> profileList = ProfileManager.get(context).getProfiles();
 
 		for(int i = 0; i < profileList.size(); i++){
 

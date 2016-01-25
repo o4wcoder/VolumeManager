@@ -5,8 +5,8 @@ import java.util.UUID;
 import android.content.Context;
 import android.util.Log;
 
-import com.fourthwardcoder.android.volumemanager.models.BasicProfile;
 import com.fourthwardcoder.android.volumemanager.models.LocationProfile;
+import com.fourthwardcoder.android.volumemanager.models.Profile;
 
 /******************************************************************/
 /* Class: PorfileManager.java                                     */
@@ -19,7 +19,7 @@ public class ProfileManager {
 	/*                  Local Data                     */
 	/***************************************************/
 	//Store array of profiles
-	private ArrayList<BasicProfile> profileList;
+	private ArrayList<Profile> profileList;
 	private ArrayList<LocationProfile> locationProfileList;
 
 	//s prefix for static variable
@@ -47,7 +47,7 @@ public class ProfileManager {
 			profileList =   this.mSerializer.loadProfiles();
 		} catch (Exception e) {
 			//No Profiles stored. Create empty list
-			profileList =  new ArrayList<BasicProfile>();
+			profileList =  new ArrayList<Profile>();
 			Log.e(TAG,"Error loading profiles: ", e);
 		}
 		
@@ -68,16 +68,16 @@ public class ProfileManager {
 	/*                Public Methods                  */
 	/**************************************************/
 	//Serialize crimes and return if successful
-	public boolean saveProfiles() {
-		try {
-			mSerializer.saveProfiles(profileList);
-			Log.d(TAG,"profiles saved to file");
-			return true;
-		} catch (Exception e) {
-			Log.e(TAG,"Error saving profiles: ",e);
-			return false;
-		}
-	}
+//	public boolean saveProfiles() {
+//		try {
+//			mSerializer.saveProfiles(profileList);
+//			Log.d(TAG,"profiles saved to file");
+//			return true;
+//		} catch (Exception e) {
+//			Log.e(TAG,"Error saving profiles: ",e);
+//			return false;
+//		}
+//	}
 	
 	
 	public boolean saveLocationProfiles() {
@@ -91,7 +91,7 @@ public class ProfileManager {
 		}
 	}
 
-	public void addProfile(BasicProfile p) {
+	public void addProfile(Profile p) {
 		profileList.add(p);
 	}
 	
@@ -100,10 +100,10 @@ public class ProfileManager {
 		locationProfileList.add(p);
 	}
 	
-	public void deleteProfile(BasicProfile p) {
-		Log.d(TAG,"Delte profile " + p.getTitle());
-		profileList.remove(p);
-	}
+//	public void deleteProfile(Profile p) {
+//		Log.d(TAG,"Delte profile " + p.getTitle());
+//		profileList.remove(p);
+//	}
 	
 
 	public void deleteLocationProfile(LocationProfile p) {
@@ -111,7 +111,7 @@ public class ProfileManager {
 		locationProfileList.remove(p);
 	}
 	
-	public ArrayList<BasicProfile> getProfiles() {
+	public ArrayList<Profile> getProfiles() {
 		return profileList;
 	}
 	
@@ -120,8 +120,8 @@ public class ProfileManager {
 		return locationProfileList;
 	}
 	
-	public BasicProfile getProfile(UUID id) {
-		for (BasicProfile c : profileList) {
+	public Profile getProfile(UUID id) {
+		for (Profile c : profileList) {
 			if(c.getId().equals(id))
 				return c;
 		}

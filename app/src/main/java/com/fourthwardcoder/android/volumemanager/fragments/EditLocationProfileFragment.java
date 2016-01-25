@@ -275,6 +275,6 @@ public class EditLocationProfileFragment extends Fragment implements Constants {
 		profile.setStartRingVolume(startRingVolume);
 		profile.setEndRingVolume(endRingVolume);
 		
-		ProfileManager.get(getActivity()).saveProfiles();
+	//	ProfileManager.get(getActivity()).saveProfiles();
 	}
 }

@@ -6,11 +6,16 @@ import java.util.ArrayList;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -31,6 +36,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.fourthwardcoder.android.volumemanager.data.ProfileContract;
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
@@ -38,21 +44,25 @@ import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.services.VolumeManagerService;
 import com.fourthwardcoder.android.volumemanager.activites.EditProfileActivity;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
-import com.fourthwardcoder.android.volumemanager.models.BasicProfile;
+import com.fourthwardcoder.android.volumemanager.models.Profile;
 
 
-public class ProfileListFragment extends Fragment implements Constants {
+public class ProfileListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
+Constants{
 	
 	/***************************************************/
 	/*                  Constants                      */
 	/***************************************************/
 	private static final String TAG = "ProfileListFragment";
+
+    //ID for Profile Loader
+    private static final int PROFILE_LOADER = 0;
 	
 	
 	/***************************************************/
 	/*                 Local Data                      */
 	/***************************************************/
-	private ArrayList<BasicProfile> profileList;
+	private ArrayList<Profile> mProfileList;
 	ProfileListAdapter profileAdapter;
 	ListView listview;
 	TabName tab;
@@ -81,7 +91,10 @@ public class ProfileListFragment extends Fragment implements Constants {
 		//retain the instance on rotation
 		setRetainInstance(true);
 				   
-		profileList = ProfileManager.get(getActivity()).getProfiles();
+		//profileList = ProfileManager.get(getActivity()).getProfiles();
+
+        //Init the Profile Loader. Callbacks received in this fragment
+        getLoaderManager().initLoader(PROFILE_LOADER,null,this);
 
         Util.setStatusBarColor(getActivity());
         
@@ -110,8 +123,7 @@ public class ProfileListFragment extends Fragment implements Constants {
 		
 		listview = (ListView)view.findViewById(android.R.id.list);
 
-		profileAdapter = new ProfileListAdapter(profileList,listview);
-		listview.setAdapter(profileAdapter);
+
 		listview.setEmptyView(view.findViewById(android.R.id.empty));
 
 		listview.setOnItemClickListener(new OnItemClickListener(){
@@ -122,7 +134,7 @@ public class ProfileListFragment extends Fragment implements Constants {
 				// TODO Auto-generated method stub
 				// TODO Auto-generated method stub
 
-				BasicProfile p = (BasicProfile)profileAdapter.getItem(position);
+				Profile p = (Profile)profileAdapter.getItem(position);
 				Log.d(TAG,"Got profile " + p.getTitle());
 
 				//Start CrimePagerActivity with this Crime
@@ -155,7 +167,7 @@ public class ProfileListFragment extends Fragment implements Constants {
 					switch (item.getItemId()) {
 					case R.id.menu_item_delete_profile:
 						
-						ProfileManager profileManager = ProfileManager.get(getActivity());
+						//ProfileManager profileManager = ProfileManager.get(getActivity());
  
 						Log.d(TAG,"in onActionItemClicked with adapter count "+ profileAdapter.getCount());
 						//Delete selected crimes
@@ -163,13 +175,14 @@ public class ProfileListFragment extends Fragment implements Constants {
 							if(listview.isItemChecked(i)) {
 								//Kill alarms for volume control
 								VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), profileAdapter.getItem(i), false);
-								profileManager.deleteProfile(profileAdapter.getItem(i));
+                                deleteProfile(profileAdapter.getItem(i));
+							//	profileManager.deleteProfile(profileAdapter.getItem(i));
 							}
 						}
 
 						//Destroy Action mode context menu
 						mode.finish();
-                        profileManager.saveProfiles();
+                       // profileManager.saveProfiles();
 						profileAdapter.notifyDataSetChanged();
 						return true;
 					default:
@@ -228,6 +241,7 @@ public class ProfileListFragment extends Fragment implements Constants {
 			Log.d(TAG,"Notify adapter that data has changed");
 			
 			//getListAdapter()
+        if(profileAdapter != null)
 		  profileAdapter.notifyDataSetChanged();
 		//}
 		   
@@ -258,11 +272,13 @@ public class ProfileListFragment extends Fragment implements Constants {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
 		int position = info.position;
 		
-		BasicProfile profile = profileAdapter.getItem(position);
+		Profile profile = profileAdapter.getItem(position);
 		
 		switch (item.getItemId()) {
 		   case R.id.menu_item_delete_profile:
-			   ProfileManager.get(getActivity()).deleteProfile(profile);
+			 //  ProfileManager.get(getActivity()).deleteProfile(profile);
+
+               deleteProfile(profile);
 			   profileAdapter.notifyDataSetChanged();
 			   //Kill alarms for volume control
 			   VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), profile,false);
@@ -305,7 +321,7 @@ public class ProfileListFragment extends Fragment implements Constants {
 	private void newProfile()
 	{
     	//Add profile to the static List Array of Crimes
-    	BasicProfile profile = new BasicProfile();
+    	Profile profile = new Profile();
     	ProfileManager.get(getActivity()).addProfile(profile);
     	
     	//Create intent to start up CrimePagerActivity after selecting "New Crime" menu
@@ -321,8 +337,59 @@ public class ProfileListFragment extends Fragment implements Constants {
     	startActivityForResult(i,0);
 	
 	}
-	
-	/*******************************************************************/
+
+    private void deleteProfile(Profile profile) {
+
+        //Put togeter SQL selection
+        String selection = ProfileContract.ProfileEntry.COLUMN_ID + "=?";
+        String[] selectionArgs = new String[1];
+        selectionArgs[0] = String.valueOf(profile.getId());
+
+        //Remove movie data from the content provider
+        int deletedRow = getActivity().getContentResolver().delete(ProfileContract.ProfileEntry.CONTENT_URI, selection, selectionArgs);
+
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Log.e(TAG, "Inside onCreateLoader");
+
+        Uri profileUri = ProfileContract.ProfileEntry.buildProfileUri();
+
+        return new CursorLoader(getActivity(),
+                profileUri,
+                null,
+                null,
+                null,
+                null);
+
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+
+        ArrayList<Profile> profileList = new ArrayList<>(cursor.getCount());
+
+        while(cursor.moveToNext()) {
+            Profile profile = new Profile(cursor);
+            profileList.add(profile);
+        }
+
+        if(getActivity() != null && listview != null && profileList != null) {
+
+            //Store global copy
+            mProfileList = profileList;
+            profileAdapter = new ProfileListAdapter(profileList, listview);
+            listview.setAdapter(profileAdapter);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
+
+    /*******************************************************************/
 	/*                        Public Methods                           */
 	/**
 	 ******************************************************************/
@@ -340,14 +407,14 @@ public class ProfileListFragment extends Fragment implements Constants {
 		public TextView daysTextView;
 	}
 	
-	private class ProfileListAdapter extends ArrayAdapter<BasicProfile> {
+	private class ProfileListAdapter extends ArrayAdapter<Profile> {
 
 		//private ListView listview;
-		private ArrayList<BasicProfile> profiles;
+		private ArrayList<Profile> profiles;
 				
 
 		
-		public ProfileListAdapter(ArrayList<BasicProfile> profiles, ListView listview) {
+		public ProfileListAdapter(ArrayList<Profile> profiles, ListView listview) {
 			super(getActivity(), 0, profiles);
 			// TODO Auto-generated constructor stub
 			

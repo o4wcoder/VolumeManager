@@ -1,5 +1,6 @@
 package com.fourthwardcoder.android.volumemanager.services;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
@@ -20,7 +21,8 @@ import com.fourthwardcoder.android.volumemanager.activites.EditProfileActivity;
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
-import com.fourthwardcoder.android.volumemanager.models.BasicProfile;
+import com.fourthwardcoder.android.volumemanager.models.Profile;
+import com.fourthwardcoder.android.volumemanager.models.Profile;
 
 
 /**
@@ -44,7 +46,7 @@ public class VolumeManagerService extends IntentService implements Constants {
 	/*********************************************************************/
 	/*                          Local Data                               */
 	/*********************************************************************/
-	BasicProfile profile;
+	Profile profile;
 
 	public VolumeManagerService() {
 		super(TAG);
@@ -152,14 +154,14 @@ public class VolumeManagerService extends IntentService implements Constants {
 	 * @param profile
 	 * @return
 	 */
-	private boolean isAlarmSetForToday(BasicProfile profile) {
+	private boolean isAlarmSetForToday(Profile profile) {
 
 		Calendar calendar = Calendar.getInstance();
 		int day = calendar.get(Calendar.DAY_OF_WEEK);
 
-		boolean dayArray[] = profile.getDaysOfTheWeek();
+		ArrayList<Boolean> dayArray = profile.getDaysOfTheWeek();
 
-		if(dayArray[day-1])
+		if(dayArray.get(day-1))
 			return true;
 		else
 			return false;
@@ -177,7 +179,7 @@ public class VolumeManagerService extends IntentService implements Constants {
 	 * @param context the context of calling fragment
 	 * @param isOn flag to turn the alarm on/off
 	 */
-	public static void setServiceAlarm(Context context, BasicProfile profile, boolean isOn) {
+	public static void setServiceAlarm(Context context, Profile profile, boolean isOn) {
 
 		//Construct pending intent that will start PollService
 		Log.d(TAG,"Setting Service (start/end) Alarm");
