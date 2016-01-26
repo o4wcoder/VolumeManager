@@ -47,9 +47,10 @@ public interface Constants {
 	public static final int ID_END_ALARM = 1;
 	
 	//Extras
-	public static final String EXTRA_START_ALARM = "com.fourthwardcoder.android.volumemanager.startalarm";
-	public static final String EXTRA_PROFILE_ID = "com.fourthwardcoder.android.volumemanager.profile_id";
-	public static final String EXTRA_LOCATION_PROFILE = "com.fourthwardcoder.android.volumemanager.location_profile";
+	public static final String EXTRA_START_ALARM = "com.fourthwardcoder.android.volumemanager.extra_startalarm";
+	public static final String EXTRA_PROFILE_ID = "com.fourthwardcoder.android.volumemanager.extra_profile_id";
+	public static final String EXTRA_PROFILE = "com.fourthwardcoder.android.volumemanager.extra_profile";
+	public static final String EXTRA_LOCATION_PROFILE = "com.fourthwardcoder.android.volumemanager.extra_location_profile";
 	
 	public static final String MONDAY = "Monday";
 	public static final String TUESDAY = "Tuesday";

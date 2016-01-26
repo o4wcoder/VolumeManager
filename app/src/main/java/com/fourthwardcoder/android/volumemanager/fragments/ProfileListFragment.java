@@ -36,10 +36,12 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.fourthwardcoder.android.volumemanager.activites.ProfileTabActivity;
 import com.fourthwardcoder.android.volumemanager.data.ProfileContract;
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
+import com.fourthwardcoder.android.volumemanager.helpers.ProfileHelper;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.services.VolumeManagerService;
 import com.fourthwardcoder.android.volumemanager.activites.EditProfileActivity;
@@ -112,7 +114,7 @@ Constants{
 
 			@Override
 			public void onClick(View v) {
-				newProfile();
+				ProfileHelper.newProfile(getActivity());
 				
 			}
 			
@@ -142,7 +144,7 @@ Constants{
 
 				//Tell Volume Manager Fragment which Profile to display by making
 				//giving id as Intent extra
-				i.putExtra(EditProfileFragment.EXTRA_PROFILE_ID,p.getId());
+				i.putExtra(EditProfileFragment.EXTRA_PROFILE, p);
 				startActivity(i);
 
 			}
@@ -175,7 +177,7 @@ Constants{
 							if(listview.isItemChecked(i)) {
 								//Kill alarms for volume control
 								VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), profileAdapter.getItem(i), false);
-                                deleteProfile(profileAdapter.getItem(i));
+                                ProfileHelper.deleteProfile(getActivity(),profileAdapter.getItem(i));
 							//	profileManager.deleteProfile(profileAdapter.getItem(i));
 							}
 						}
@@ -278,7 +280,7 @@ Constants{
 		   case R.id.menu_item_delete_profile:
 			 //  ProfileManager.get(getActivity()).deleteProfile(profile);
 
-               deleteProfile(profile);
+               ProfileHelper.deleteProfile(getActivity(), profile);
 			   profileAdapter.notifyDataSetChanged();
 			   //Kill alarms for volume control
 			   VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), profile,false);
@@ -295,7 +297,7 @@ Constants{
 		switch(item.getItemId()) {
 		//New Crime menu item
 		case R.id.menu_item_new_profile:
-			newProfile();
+			ProfileHelper.newProfile(getActivity());
 			//Return true, no further processing is necessary
 			return true; 	
 		case R.id.menu_item_settings:
@@ -318,37 +320,26 @@ Constants{
 	/***********************************************************/
 	/*                   Private Methods                       */
 	/***********************************************************/
-	private void newProfile()
-	{
-    	//Add profile to the static List Array of Crimes
-    	Profile profile = new Profile();
-    	ProfileManager.get(getActivity()).addProfile(profile);
-    	
-    	//Create intent to start up CrimePagerActivity after selecting "New Crime" menu
-    	/*
-    	 * !!!! TODO Hook up to Pager Activity when created
-    	 */
-    	Intent i = new Intent(getActivity(),EditProfileActivity.class);
-    	
-    	//Send the profile ID in the intent to CrimePagerActivity
-    	i.putExtra(EditProfileFragment.EXTRA_PROFILE_ID, profile.getId());
-    	
-    	//Start CrimePagerActivity
-    	startActivityForResult(i,0);
-	
-	}
+//	private void newProfile()
+//	{
+//    	//Add profile to the static List Array of Crimes
+//    	Profile profile = new Profile();
+//    	ProfileManager.get(getActivity()).addProfile(profile);
+//
+//    	//Create intent to start up CrimePagerActivity after selecting "New Crime" menu
+//    	/*
+//    	 * !!!! TODO Hook up to Pager Activity when created
+//    	 */
+//    	Intent i = new Intent(getActivity(),EditProfileActivity.class);
+//
+//    	//Send the profile ID in the intent to CrimePagerActivity
+//    	i.putExtra(EditProfileFragment.EXTRA_PROFILE_ID, profile.getId());
+//
+//    	//Start CrimePagerActivity
+//    	startActivityForResult(i,0);
+//
+//	}
 
-    private void deleteProfile(Profile profile) {
-
-        //Put togeter SQL selection
-        String selection = ProfileContract.ProfileEntry.COLUMN_ID + "=?";
-        String[] selectionArgs = new String[1];
-        selectionArgs[0] = String.valueOf(profile.getId());
-
-        //Remove movie data from the content provider
-        int deletedRow = getActivity().getContentResolver().delete(ProfileContract.ProfileEntry.CONTENT_URI, selection, selectionArgs);
-
-    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {

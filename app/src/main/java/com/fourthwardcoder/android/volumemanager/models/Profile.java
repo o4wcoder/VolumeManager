@@ -2,6 +2,8 @@ package com.fourthwardcoder.android.volumemanager.models;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import com.fourthwardcoder.android.volumemanager.data.ProfileContract;
@@ -16,50 +18,50 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
-public class Profile implements Constants {
-	
-	/*****************************************************/
+public class Profile implements Constants, Parcelable {
+
+    /*****************************************************/
 	/*                    Constants                      */
-	/*****************************************************/
+    /*****************************************************/
     private static final String TAG = Profile.class.getSimpleName();
 
-	private static final int DAYS_OF_THE_WEEK = 7;
-	/*****************************************************/
+    private static final int DAYS_OF_THE_WEEK = 7;
+    /*****************************************************/
 	/*                   Local Data                      */
-	/*****************************************************/
-	private UUID id;
-	private String title;
-	private boolean enabled;
-	private int startVolumeType, endVolumeType;
-	private int startRingVolume, endRingVolume;
-	private int previousVolumeType, previousRingVolume;
-	private Date startDate, endDate;
-	private int alarmId;
-	//private boolean daysOfTheWeek[] = new boolean[DAYS_OF_THE_WEEK];
+    /*****************************************************/
+    private UUID id;
+    private String title;
+    private boolean enabled;
+    private int startVolumeType, endVolumeType;
+    private int startRingVolume, endRingVolume;
+    private int previousVolumeType, previousRingVolume;
+    private Date startDate, endDate;
+    private int alarmId;
+    //private boolean daysOfTheWeek[] = new boolean[DAYS_OF_THE_WEEK];
     private ArrayList<Boolean> daysOfTheWeek;
-	private boolean inAlarm;
+    private boolean inAlarm;
 
 
-	public Profile() {
-		
+    public Profile() {
+
         id = UUID.randomUUID();
         enabled = true;
-	    startVolumeType = VOLUME_OFF;
-	    endVolumeType = VOLUME_VIBRATE;
-	    startRingVolume = 1;
-	    endRingVolume = 1;
-	    previousVolumeType = VOLUME_VIBRATE;
-	    previousRingVolume = 1;
-		startDate = new Date();
-		endDate = new Date();
-		inAlarm = false;
+        startVolumeType = VOLUME_OFF;
+        endVolumeType = VOLUME_VIBRATE;
+        startRingVolume = 1;
+        endRingVolume = 1;
+        previousVolumeType = VOLUME_VIBRATE;
+        previousRingVolume = 1;
+        startDate = new Date();
+        endDate = new Date();
+        inAlarm = false;
 
-		calculateAlarmId();
+        calculateAlarmId();
         daysOfTheWeek = new ArrayList<>(DAYS_OF_THE_WEEK);
         Log.e(TAG, "Size of daysOfTheWeek array " + daysOfTheWeek.size());
-		initDaysOfWeek();
+        initDaysOfWeek();
 
-	}
+    }
 
     public Profile(Cursor cursor) {
 
@@ -82,102 +84,102 @@ public class Profile implements Constants {
 
     }
 
-	public ContentValues getContentValues() {
+    public ContentValues getContentValues() {
 
-		ContentValues profileValues = new ContentValues();
-		profileValues.put(ProfileContract.ProfileEntry.COLUMN_ID,this.id.toString());
-		profileValues.put(ProfileContract.ProfileEntry.COLUMN_TITLE,this.title);
-		profileValues.put(ProfileContract.ProfileEntry.COLUMN_ENABLED,this.enabled);
-		profileValues.put(ProfileContract.ProfileEntry.COLUMN_START_VOLUME_TYPE,this.startVolumeType);
-		profileValues.put(ProfileContract.ProfileEntry.COLUMN_END_VOLUME_TYPE,this.endVolumeType);
-		profileValues.put(ProfileContract.ProfileEntry.COLUMN_START_RING_VOLUME,this.startRingVolume);
-		profileValues.put(ProfileContract.ProfileEntry.COLUMN_END_RING_VOLUME,this.endRingVolume);
-		profileValues.put(ProfileContract.ProfileEntry.COLUMN_PREVIOUS_VOLUME_TYPE,this.previousVolumeType);
-		profileValues.put(ProfileContract.ProfileEntry.COLUMN_PREVIOUS_RING_VOLUME,this.previousRingVolume);
-		profileValues.put(ProfileContract.ProfileEntry.COLUMN_ALARM_ID,this.alarmId);
-		profileValues.put(ProfileContract.ProfileEntry.COLUMN_START_DATE,this.startDate.getTime());
-		profileValues.put(ProfileContract.ProfileEntry.COLUMN_END_DATE,this.endDate.getTime());
-		profileValues.put(ProfileContract.ProfileEntry.COLUMN_DAYS_OF_THE_WEEK, new Gson().toJson(this.daysOfTheWeek));
-		profileValues.put(ProfileContract.ProfileEntry.COLUMN_IN_ALARM, this.inAlarm);
-		return profileValues;
-	}
+        ContentValues profileValues = new ContentValues();
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_ID,this.id.toString());
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_TITLE,this.title);
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_ENABLED,this.enabled);
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_START_VOLUME_TYPE,this.startVolumeType);
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_END_VOLUME_TYPE,this.endVolumeType);
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_START_RING_VOLUME,this.startRingVolume);
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_END_RING_VOLUME,this.endRingVolume);
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_PREVIOUS_VOLUME_TYPE,this.previousVolumeType);
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_PREVIOUS_RING_VOLUME,this.previousRingVolume);
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_ALARM_ID,this.alarmId);
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_START_DATE,this.startDate.getTime());
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_END_DATE,this.endDate.getTime());
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_DAYS_OF_THE_WEEK, new Gson().toJson(this.daysOfTheWeek));
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_IN_ALARM, this.inAlarm);
+        return profileValues;
+    }
 
-	@Override
-	public String toString() {
-		return title;
-	}
-	
-	public UUID getId() {
-		return id;
-	}
+    @Override
+    public String toString() {
+        return title;
+    }
 
-	public void setId(UUID id) {
-		this.id = id;
-	}
+    public UUID getId() {
+        return id;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public boolean isEnabled() {
-		return enabled;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
+    public boolean isEnabled() {
+        return enabled;
+    }
 
-	public int getStartVolumeType() {
-		return startVolumeType;
-	}
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
-	public void setStartVolumeType(int startVolumeType) {
-		this.startVolumeType = startVolumeType;
-	}
+    public int getStartVolumeType() {
+        return startVolumeType;
+    }
 
-	public int getEndVolumeType() {
-		return endVolumeType;
-	}
+    public void setStartVolumeType(int startVolumeType) {
+        this.startVolumeType = startVolumeType;
+    }
 
-	public void setEndVolumeType(int endVolumeType) {
-		this.endVolumeType = endVolumeType;
-	}
+    public int getEndVolumeType() {
+        return endVolumeType;
+    }
 
-	public int getStartRingVolume() {
-		return startRingVolume;
-	}
+    public void setEndVolumeType(int endVolumeType) {
+        this.endVolumeType = endVolumeType;
+    }
 
-	public void setStartRingVolume(int startRingVolume) {
-		this.startRingVolume = startRingVolume;
-	}
+    public int getStartRingVolume() {
+        return startRingVolume;
+    }
 
-	public int getEndRingVolume() {
-		return endRingVolume;
-	}
+    public void setStartRingVolume(int startRingVolume) {
+        this.startRingVolume = startRingVolume;
+    }
 
-	public void setEndRingVolume(int endRingVolume) {
-		this.endRingVolume = endRingVolume;
-	}
-	
-	public int getPreviousVolumeType() {
-		return previousVolumeType;
-	}
+    public int getEndRingVolume() {
+        return endRingVolume;
+    }
 
-	public void setPreviousVolumeType(int previousVolumeType) {
-		this.previousVolumeType = previousVolumeType;
-	}
+    public void setEndRingVolume(int endRingVolume) {
+        this.endRingVolume = endRingVolume;
+    }
 
-	public int getPreviousRingVolume() {
-		return previousRingVolume;
-	}
+    public int getPreviousVolumeType() {
+        return previousVolumeType;
+    }
 
-	public void setPreviousRingVolume(int previousRingVolume) {
-		this.previousRingVolume = previousRingVolume;
-	}
+    public void setPreviousVolumeType(int previousVolumeType) {
+        this.previousVolumeType = previousVolumeType;
+    }
+
+    public int getPreviousRingVolume() {
+        return previousRingVolume;
+    }
+
+    public void setPreviousRingVolume(int previousRingVolume) {
+        this.previousRingVolume = previousRingVolume;
+    }
 
     public ArrayList<Boolean> getDaysOfTheWeek() {
         return daysOfTheWeek;
@@ -189,76 +191,123 @@ public class Profile implements Constants {
 
     public int getStartAlarmId() {
 
-		return alarmId;
-	}
+        return alarmId;
+    }
 
-	public int getEndAlarmId() {
+    public int getEndAlarmId() {
 
-		return alarmId + 1;
-	}
+        return alarmId + 1;
+    }
 
-	public Date getStartDate() {
-		return startDate;
-	}
+    public Date getStartDate() {
+        return startDate;
+    }
 
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
 
-	public Date getEndDate() {
-		return endDate;
-	}
+    public Date getEndDate() {
+        return endDate;
+    }
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
 
-	public String getFullTimeForListItem() {
+    public String getFullTimeForListItem() {
 
-		return Util.formatTime(startDate) + " - " + Util.formatTime(endDate);
-	}
+        return Util.formatTime(startDate) + " - " + Util.formatTime(endDate);
+    }
 
-	public String getDaysOfWeekString() {
+    public String getDaysOfWeekString() {
 
-		String strDays = "";
-		for(int i=0; i< DAYS_OF_THE_WEEK; i++) {
+        String strDays = "";
+        for(int i=0; i< DAYS_OF_THE_WEEK; i++) {
 
-			if(daysOfTheWeek.get(i)) {
-				strDays += daysAbbreviation[i];
-				strDays += ",";
-			}
-		}
+            if(daysOfTheWeek.get(i)) {
+                strDays += daysAbbreviation[i];
+                strDays += ",";
+            }
+        }
 
-		//remove last comma from string
-		if(strDays.length() > 0)
-			strDays = strDays.substring(0, strDays.length() - 1);
+        //remove last comma from string
+        if(strDays.length() > 0)
+            strDays = strDays.substring(0, strDays.length() - 1);
 
-		return strDays;
-	}
+        return strDays;
+    }
 
-	public boolean isInAlarm() {
-		return inAlarm;
-	}
+    public boolean isInAlarm() {
+        return inAlarm;
+    }
 
-	public void setInAlarm(boolean inAlarm) {
-		this.inAlarm = inAlarm;
-	}
-	/*****************************************************/
+    public void setInAlarm(boolean inAlarm) {
+        this.inAlarm = inAlarm;
+    }
+    /*****************************************************/
 	/*                   Private Methods                 */
-	/*****************************************************/
-	private void initDaysOfWeek() {
+    /*****************************************************/
+    private void initDaysOfWeek() {
 
-		for(int i = 0; i < 7; i++)
-			daysOfTheWeek.add(i,true);
-	}
-	private void calculateAlarmId() {
+        for(int i = 0; i < 7; i++)
+            daysOfTheWeek.add(i,true);
+    }
+    private void calculateAlarmId() {
 
-		String str=""+ this.id;
-		int uid=str.hashCode();
-		String filterStr=""+uid;
-		str=filterStr.replaceAll("-", "");
-		alarmId = Integer.parseInt(str);
+        String str=""+ this.id;
+        int uid=str.hashCode();
+        String filterStr=""+uid;
+        str=filterStr.replaceAll("-", "");
+        alarmId = Integer.parseInt(str);
 
-	}
+    }
 
+
+    protected Profile(Parcel in) {
+        id = (UUID) in.readValue(UUID.class.getClassLoader());
+        title = in.readString();
+        enabled = in.readByte() != 0x00;
+        alarmId = in.readInt();
+        if (in.readByte() == 0x01) {
+            daysOfTheWeek = new ArrayList<Boolean>();
+            in.readList(daysOfTheWeek, Boolean.class.getClassLoader());
+        } else {
+            daysOfTheWeek = null;
+        }
+        inAlarm = in.readByte() != 0x00;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(id);
+        dest.writeString(title);
+        dest.writeByte((byte) (enabled ? 0x01 : 0x00));
+        dest.writeInt(alarmId);
+        if (daysOfTheWeek == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(daysOfTheWeek);
+        }
+        dest.writeByte((byte) (inAlarm ? 0x01 : 0x00));
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Profile> CREATOR = new Parcelable.Creator<Profile>() {
+        @Override
+        public Profile createFromParcel(Parcel in) {
+            return new Profile(in);
+        }
+
+        @Override
+        public Profile[] newArray(int size) {
+            return new Profile[size];
+        }
+    };
 }

@@ -43,13 +43,13 @@ public class ProfileManager {
 		mSerializer = new VolumeManagerJSONSerializer(mAppContext);
 		
 		//Load Profiles from JSON file
-		try {
-			profileList =   this.mSerializer.loadProfiles();
-		} catch (Exception e) {
-			//No Profiles stored. Create empty list
-			profileList =  new ArrayList<Profile>();
-			Log.e(TAG,"Error loading profiles: ", e);
-		}
+//		try {
+//			profileList =   this.mSerializer.loadProfiles();
+//		} catch (Exception e) {
+//			//No Profiles stored. Create empty list
+//			profileList =  new ArrayList<Profile>();
+//			Log.e(TAG,"Error loading profiles: ", e);
+//		}
 		
 		
 		//Load Location Profiles from JSON file
@@ -91,9 +91,9 @@ public class ProfileManager {
 		}
 	}
 
-	public void addProfile(Profile p) {
-		profileList.add(p);
-	}
+//	public void addProfile(Profile p) {
+//		profileList.add(p);
+//	}
 	
 	
 	public void addLocationProfile(LocationProfile p) {
@@ -120,14 +120,14 @@ public class ProfileManager {
 		return locationProfileList;
 	}
 	
-	public Profile getProfile(UUID id) {
-		for (Profile c : profileList) {
-			if(c.getId().equals(id))
-				return c;
-		}
-		
-		return null;
-	}
+//	public Profile getProfile(UUID id) {
+//		for (Profile c : profileList) {
+//			if(c.getId().equals(id))
+//				return c;
+//		}
+//
+//		return null;
+//	}
 
 	
 	public LocationProfile getLocationProfile(UUID id) {

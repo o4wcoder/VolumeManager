@@ -2,10 +2,13 @@ package com.fourthwardcoder.android.volumemanager.data;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+
+import com.fourthwardcoder.android.volumemanager.models.Profile;
 
 /**
  * Class ProfileProvider
@@ -161,4 +164,6 @@ public class ProfileProvider extends ContentProvider{
 
         return updatedRows;
     }
+
+
 }

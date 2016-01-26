@@ -19,6 +19,8 @@ import android.util.Log;
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.activites.EditProfileActivity;
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
+import com.fourthwardcoder.android.volumemanager.data.ProfileProvider;
+import com.fourthwardcoder.android.volumemanager.helpers.ProfileHelper;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
@@ -93,7 +95,8 @@ public class VolumeManagerService extends IntentService implements Constants {
 				}
 				
 				//Save profile updates to to alarm flag
-				ProfileManager.get(getApplicationContext()).saveProfiles();
+				//ProfileManager.get(getApplicationContext()).saveProfiles();
+				ProfileHelper.updateProfile(getApplicationContext(), profile);
 				Log.d(TAG, "Inside onHandleIntent with start alarm with ring type " + ringType);
 
 				//Get access to system audio manager and set volume
