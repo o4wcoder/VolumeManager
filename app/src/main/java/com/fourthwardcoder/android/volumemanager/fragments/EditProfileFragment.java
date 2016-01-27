@@ -2,7 +2,6 @@ package com.fourthwardcoder.android.volumemanager.fragments;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.UUID;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -10,7 +9,6 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.app.FragmentManager;
@@ -33,7 +31,6 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
@@ -106,8 +103,8 @@ public class EditProfileFragment extends Fragment implements Constants {
         }
         
 		//UUID profileId = (UUID)getArguments().getSerializable(EXTRA_PROFILE_ID);
-		//Fetch the Profile from the ProfileManager ArrayList
-	//	mProfile = ProfileManager.get(getActivity()).getProfile(profileId);
+		//Fetch the Profile from the ProfileJSONManager ArrayList
+	//	mProfile = ProfileJSONManager.get(getActivity()).getProfile(profileId);
 		//profileTitle = mProfile.getTitle();
 		//startDate = mProfile.getStartDate();
 	   // endDate = mProfile.getEndDate();
@@ -454,7 +451,7 @@ public class EditProfileFragment extends Fragment implements Constants {
 		//mProfile.setEndRingVolume(endRingVolume);
 		//mProfile.setDaysOfTheWeek(daysOfTheWeek);
 		
-		//ProfileManager.get(getActivity()).saveProfiles();
+		//ProfileJSONManager.get(getActivity()).saveProfiles();
 
 		ContentValues profileValues = mProfile.getContentValues();
 

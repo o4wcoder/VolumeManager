@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fourthwardcoder.android.volumemanager.models.LocationProfile;
-import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
+import com.fourthwardcoder.android.volumemanager.data.ProfileJSONManager;
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.fragments.AboutFragment;
@@ -131,8 +131,8 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		}
 		Log.d(TAG,"Profile id: " + profileId);
 
-		//Fetch the Profile from the ProfileManager ArrayList
-		currentProfile = ProfileManager.get(this).getLocationProfile(profileId);
+		//Fetch the Profile from the ProfileJSONManager ArrayList
+		currentProfile = ProfileJSONManager.get(this).getLocationProfile(profileId);
 
 
 		if(currentProfile != null) {
@@ -364,7 +364,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 	private void populateGeofenceList() {
 
 		//Get all location profiles
-		ArrayList<LocationProfile> locationProfileList = ProfileManager.get(this).getLocationProfiles();
+		ArrayList<LocationProfile> locationProfileList = ProfileJSONManager.get(this).getLocationProfiles();
 
 		for(int i = 0; i < locationProfileList.size(); i++ ) {
 
@@ -611,7 +611,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 
 		currentProfile.setFenceRadius(currentRadius);
 
-		ProfileManager.get(this).saveLocationProfiles();
+		ProfileJSONManager.get(this).saveLocationProfiles();
 
 		//Create geofence from new location profile
 		//Geofence fence = createGeofence(currentProfile);

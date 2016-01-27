@@ -4,13 +4,11 @@ import java.util.ArrayList;
 
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
@@ -36,12 +34,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.fourthwardcoder.android.volumemanager.activites.ProfileTabActivity;
 import com.fourthwardcoder.android.volumemanager.data.ProfileContract;
-import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
-import com.fourthwardcoder.android.volumemanager.helpers.ProfileHelper;
+import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.services.VolumeManagerService;
 import com.fourthwardcoder.android.volumemanager.activites.EditProfileActivity;
@@ -93,7 +89,7 @@ Constants{
 		//retain the instance on rotation
 		setRetainInstance(true);
 				   
-		//profileList = ProfileManager.get(getActivity()).getProfiles();
+		//profileList = ProfileJSONManager.get(getActivity()).getProfiles();
 
         //Init the Profile Loader. Callbacks received in this fragment
         getLoaderManager().initLoader(PROFILE_LOADER,null,this);
@@ -114,7 +110,7 @@ Constants{
 
 			@Override
 			public void onClick(View v) {
-				ProfileHelper.newProfile(getActivity());
+				ProfileManager.newProfile(getActivity());
 				
 			}
 			
@@ -169,7 +165,7 @@ Constants{
 					switch (item.getItemId()) {
 					case R.id.menu_item_delete_profile:
 						
-						//ProfileManager profileManager = ProfileManager.get(getActivity());
+						//ProfileJSONManager profileManager = ProfileJSONManager.get(getActivity());
  
 						Log.d(TAG,"in onActionItemClicked with adapter count "+ profileAdapter.getCount());
 						//Delete selected crimes
@@ -177,7 +173,7 @@ Constants{
 							if(listview.isItemChecked(i)) {
 								//Kill alarms for volume control
 								VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), profileAdapter.getItem(i), false);
-                                ProfileHelper.deleteProfile(getActivity(),profileAdapter.getItem(i));
+                                ProfileManager.deleteProfile(getActivity(), profileAdapter.getItem(i));
 							//	profileManager.deleteProfile(profileAdapter.getItem(i));
 							}
 						}
@@ -278,9 +274,9 @@ Constants{
 		
 		switch (item.getItemId()) {
 		   case R.id.menu_item_delete_profile:
-			 //  ProfileManager.get(getActivity()).deleteProfile(profile);
+			 //  ProfileJSONManager.get(getActivity()).deleteProfile(profile);
 
-               ProfileHelper.deleteProfile(getActivity(), profile);
+               ProfileManager.deleteProfile(getActivity(), profile);
 			   profileAdapter.notifyDataSetChanged();
 			   //Kill alarms for volume control
 			   VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), profile,false);
@@ -297,7 +293,7 @@ Constants{
 		switch(item.getItemId()) {
 		//New Crime menu item
 		case R.id.menu_item_new_profile:
-			ProfileHelper.newProfile(getActivity());
+			ProfileManager.newProfile(getActivity());
 			//Return true, no further processing is necessary
 			return true; 	
 		case R.id.menu_item_settings:
@@ -324,7 +320,7 @@ Constants{
 //	{
 //    	//Add profile to the static List Array of Crimes
 //    	Profile profile = new Profile();
-//    	ProfileManager.get(getActivity()).addProfile(profile);
+//    	ProfileJSONManager.get(getActivity()).addProfile(profile);
 //
 //    	//Create intent to start up CrimePagerActivity after selecting "New Crime" menu
 //    	/*

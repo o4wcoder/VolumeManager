@@ -30,7 +30,7 @@
 //import android.widget.Switch;
 //import android.widget.TextView;
 //
-//import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
+//import com.fourthwardcoder.android.volumemanager.data.ProfileJSONManager;
 //import com.fourthwardcoder.android.volumemanager.R;
 //import com.fourthwardcoder.android.volumemanager.helpers.Util;
 //import com.fourthwardcoder.android.volumemanager.services.VolumeManagerService;
@@ -97,8 +97,8 @@
 //
 //
 //		//UUID profileId = (UUID)getArguments().getSerializable(EXTRA_PROFILE_ID);
-//		//Fetch the Profile from the ProfileManager ArrayList
-//		profile = ProfileManager.get(getActivity()).getProfile(profileId);
+//		//Fetch the Profile from the ProfileJSONManager ArrayList
+//		profile = ProfileJSONManager.get(getActivity()).getProfile(profileId);
 //		isControlEnabled = profile.isEnabled();
 //		profileTitle = profile.getTitle();
 //		startDate = profile.getStartDate();
@@ -450,7 +450,7 @@
 //		profile.setEndRingVolume(endRingVolume);
 //		profile.setDaysOfTheWeek(daysOfTheWeek);
 //
-//		ProfileManager.get(getActivity()).saveProfiles();
+//		ProfileJSONManager.get(getActivity()).saveProfiles();
 //
 //	}
 //

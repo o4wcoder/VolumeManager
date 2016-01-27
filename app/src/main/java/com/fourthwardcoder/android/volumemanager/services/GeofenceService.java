@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fourthwardcoder.android.volumemanager.activites.LocationMapActivity;
+import com.fourthwardcoder.android.volumemanager.data.ProfileJSONManager;
 import com.fourthwardcoder.android.volumemanager.models.LocationProfile;
-import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
@@ -131,7 +131,7 @@ public class GeofenceService extends IntentService implements Constants {
 			//Get Id of geofence. Turn from string to UUID
 			UUID profileID = UUID.fromString(geofence.getRequestId());
 			//Get Location Profile, based on id.
-			LocationProfile triggeredProfile = ProfileManager.get(this).getLocationProfile(profileID);
+			LocationProfile triggeredProfile = ProfileJSONManager.get(this).getLocationProfile(profileID);
 			triggeringGeofenceProfileList.add(triggeredProfile);
 		} 
 		//String triggeringGeofencesIdsString = TextUtils.join(", ",  triggeringGeofenceProfileList);

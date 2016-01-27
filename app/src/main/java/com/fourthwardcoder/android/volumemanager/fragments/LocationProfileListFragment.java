@@ -2,7 +2,7 @@ package com.fourthwardcoder.android.volumemanager.fragments;
 
 import java.util.ArrayList;
 
-import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
+import com.fourthwardcoder.android.volumemanager.data.ProfileJSONManager;
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
@@ -79,7 +79,7 @@ public class LocationProfileListFragment extends Fragment implements Constants, 
 		//retain the instance on rotation
 		setRetainInstance(true);
 				   
-		profileList = ProfileManager.get(getActivity()).getLocationProfiles();
+		profileList = ProfileJSONManager.get(getActivity()).getLocationProfiles();
 
         Util.setStatusBarColor(getActivity());
         
@@ -161,7 +161,7 @@ public class LocationProfileListFragment extends Fragment implements Constants, 
 					switch (item.getItemId()) {
 					case R.id.menu_item_delete_profile:
 						
-						ProfileManager profileManager = ProfileManager.get(getActivity());
+						ProfileJSONManager profileJSONManager = ProfileJSONManager.get(getActivity());
  
 						Log.d(TAG,"in onActionItemClicked with adapter count "+ profileAdapter.getCount());
 						//Delete selected crimes
@@ -169,13 +169,13 @@ public class LocationProfileListFragment extends Fragment implements Constants, 
 							if(listview.isItemChecked(i)) {
 								//Kill alarms for volume control
 								//VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), profileAdapter.getItem(i),false);
-								profileManager.deleteLocationProfile(profileAdapter.getItem(i));
+								profileJSONManager.deleteLocationProfile(profileAdapter.getItem(i));
 							}
 						}
 
 						//Destroy Action mode context menu
 						mode.finish();
-                        profileManager.saveLocationProfiles();
+                        profileJSONManager.saveLocationProfiles();
 						profileAdapter.notifyDataSetChanged();
 						
 						updateGeofences();
@@ -272,8 +272,8 @@ public class LocationProfileListFragment extends Fragment implements Constants, 
 		
 		switch (item.getItemId()) {
 		   case R.id.menu_item_delete_profile:
-			   ProfileManager.get(getActivity()).deleteLocationProfile(profile);
-			   ProfileManager.get(getActivity()).saveLocationProfiles();
+			   ProfileJSONManager.get(getActivity()).deleteLocationProfile(profile);
+			   ProfileJSONManager.get(getActivity()).saveLocationProfiles();
 			   profileAdapter.notifyDataSetChanged();
 			   
 			   updateGeofences();
@@ -318,7 +318,7 @@ public class LocationProfileListFragment extends Fragment implements Constants, 
 	{
     	//Add profile to the static List Array of Locations
     	LocationProfile profile = new LocationProfile();
-    	ProfileManager.get(getActivity()).addLocationProfile(profile);
+    	ProfileJSONManager.get(getActivity()).addLocationProfile(profile);
     	
     	Intent i = new Intent(getActivity(),LocationMapActivity.class);
     	

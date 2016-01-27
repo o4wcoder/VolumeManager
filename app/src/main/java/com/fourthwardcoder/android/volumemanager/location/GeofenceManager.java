@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 import com.fourthwardcoder.android.volumemanager.services.GeofenceService;
 import com.fourthwardcoder.android.volumemanager.models.LocationProfile;
-import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
+import com.fourthwardcoder.android.volumemanager.data.ProfileJSONManager;
 import com.fourthwardcoder.android.volumemanager.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -80,7 +80,7 @@ public class GeofenceManager {
 	private void populateGeofenceList() {
 		
 		//Get all location profiles
-		ArrayList<LocationProfile> locationProfileList = ProfileManager.get(context).getLocationProfiles();
+		ArrayList<LocationProfile> locationProfileList = ProfileJSONManager.get(context).getLocationProfiles();
 		
 		for(int i = 0; i < locationProfileList.size(); i++ ) {
 			

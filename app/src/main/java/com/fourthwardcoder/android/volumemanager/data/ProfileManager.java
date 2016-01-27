@@ -1,152 +1,109 @@
 package com.fourthwardcoder.android.volumemanager.data;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+
+import com.fourthwardcoder.android.volumemanager.activites.EditProfileActivity;
+import com.fourthwardcoder.android.volumemanager.data.ProfileContract;
+import com.fourthwardcoder.android.volumemanager.models.Profile;
+
 import java.util.ArrayList;
 import java.util.UUID;
 
-import android.content.Context;
-import android.util.Log;
-
-import com.fourthwardcoder.android.volumemanager.models.LocationProfile;
-import com.fourthwardcoder.android.volumemanager.models.Profile;
-
-/******************************************************************/
-/* Class: PorfileManager.java                                     */
-/*                                                                */
-/* Singleton Class to store one instance of ArrayList of Profiles */
-/**************************************************************/
+/**
+ * Created by Chris Hare on 1/25/2016.
+ */
 public class ProfileManager {
-	
-	/***************************************************/
-	/*                  Local Data                     */
-	/***************************************************/
-	//Store array of profiles
-	private ArrayList<Profile> profileList;
-	private ArrayList<LocationProfile> locationProfileList;
 
-	//s prefix for static variable
-	private static ProfileManager sProfileManager;
-	
-	private VolumeManagerJSONSerializer mSerializer;
-	
-	//Context parameter allows singleton to start activities,
-	//access project resources, find application's private storage, etc
-	private Context mAppContext;
-	
-	private static final String TAG = "ProfileManager";
+    public static void newProfile(Activity activity)
+    {
 
-	
-	/***************************************************/
-	/*                  Constructors                   */
-	/***************************************************/
-	private ProfileManager(Context appContext) {
-		mAppContext = appContext;
-		
-		mSerializer = new VolumeManagerJSONSerializer(mAppContext);
-		
-		//Load Profiles from JSON file
-//		try {
-//			profileList =   this.mSerializer.loadProfiles();
-//		} catch (Exception e) {
-//			//No Profiles stored. Create empty list
-//			profileList =  new ArrayList<Profile>();
-//			Log.e(TAG,"Error loading profiles: ", e);
-//		}
-		
-		
-		//Load Location Profiles from JSON file
-		try {
-			locationProfileList =   this.mSerializer.loadLocationProfiles();
-		} catch (Exception e) {
-			//No Profiles stored. Create empty list
-			Log.e(TAG,"No location files stored! Create empty list");
-			locationProfileList =  new ArrayList<LocationProfile>();
-			Log.e(TAG,"Error loading profiles: ", e);
-		}
+    	/*
+    	 * !!!! TODO Hook up to Pager Activity when created
+    	 */
+        Intent i = new Intent(activity,EditProfileActivity.class);
 
-	}
-	
-	/**************************************************/
-	/*                Public Methods                  */
-	/**************************************************/
-	//Serialize crimes and return if successful
-//	public boolean saveProfiles() {
-//		try {
-//			mSerializer.saveProfiles(profileList);
-//			Log.d(TAG,"profiles saved to file");
-//			return true;
-//		} catch (Exception e) {
-//			Log.e(TAG,"Error saving profiles: ",e);
-//			return false;
-//		}
-//	}
-	
-	
-	public boolean saveLocationProfiles() {
-		try {
-			mSerializer.saveLocationProfiles(locationProfileList);
-			Log.d(TAG,"location profiles saved to file");
-			return true;
-		} catch (Exception e) {
-			Log.e(TAG,"Error saving profiles: ",e);
-			return false;
-		}
-	}
+        //Send the profile ID in the intent to
+        // i.putExtra(EditProfileFragment.EXTRA_PROFILE_ID, null);
 
-//	public void addProfile(Profile p) {
-//		profileList.add(p);
-//	}
-	
-	
-	public void addLocationProfile(LocationProfile p) {
-		locationProfileList.add(p);
-	}
-	
-//	public void deleteProfile(Profile p) {
-//		Log.d(TAG,"Delte profile " + p.getTitle());
-//		profileList.remove(p);
-//	}
-	
+        activity.startActivityForResult(i, 0);
 
-	public void deleteLocationProfile(LocationProfile p) {
-		Log.d(TAG,"Delte profile " + p.getTitle());
-		locationProfileList.remove(p);
-	}
-	
-	public ArrayList<Profile> getProfiles() {
-		return profileList;
-	}
-	
-	
-	public ArrayList<LocationProfile> getLocationProfiles() {
-		return locationProfileList;
-	}
-	
-//	public Profile getProfile(UUID id) {
-//		for (Profile c : profileList) {
-//			if(c.getId().equals(id))
-//				return c;
-//		}
-//
-//		return null;
-//	}
 
-	
-	public LocationProfile getLocationProfile(UUID id) {
-		for (LocationProfile c : locationProfileList) {
-			if(c.getId().equals(id))
-				return c;
-		}
-		
-		return null;
-	}
-	
-	public static ProfileManager get(Context c) {
-		if(sProfileManager == null) {
-			//To ensure that the singleton has a long-term Context to work with,
-			//call getApplicationContext() and trade the passed-in Context for the
-			//application context
-			sProfileManager = new ProfileManager(c.getApplicationContext());
-		}
-		return sProfileManager;
-	}
+    }
+
+    public static Profile getProfile(Context context, UUID profileId) {
+
+        //Put togeter SQL selection
+        String selection = ProfileContract.ProfileEntry.COLUMN_ID + "=?";
+        String[] selectionArgs = new String[1];
+        selectionArgs[0] = String.valueOf(profileId);
+
+        Cursor cursor = context.getContentResolver().query(ProfileContract.ProfileEntry.CONTENT_URI,
+                null,
+                selection,
+                selectionArgs,
+                null);
+
+        if(cursor == null)
+            return null;
+        else {
+            return new Profile(cursor);
+        }
+    }
+
+    public static ArrayList<Profile> getProfileList(Context context) {
+
+
+        //Get all rows(profiles) in the table
+        Cursor cursor = context.getContentResolver().query(ProfileContract.ProfileEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                null);
+
+        if(cursor != null) {
+
+            ArrayList<Profile> profileList = new ArrayList<>(cursor.getCount());
+
+            cursor.moveToFirst();
+            while(cursor.moveToNext()) {
+                Profile profile = new Profile(cursor);
+                profileList.add(profile);
+            }
+            return profileList;
+        }
+        else {
+            return null;
+        }
+
+    }
+
+    public static int updateProfile(Context context, Profile profile) {
+
+        //Put togeter SQL selection
+        String selection = ProfileContract.ProfileEntry.COLUMN_ID + "=?";
+        String[] selectionArgs = new String[1];
+        selectionArgs[0] = String.valueOf(profile.getId());
+
+        //Update profile in the content provider
+        return context.getContentResolver().update(ProfileContract.ProfileEntry.CONTENT_URI,profile.getContentValues(),
+                selection,selectionArgs);
+
+
+    }
+
+    public static int deleteProfile(Context context, Profile profile) {
+
+        //Put togeter SQL selection
+        String selection = ProfileContract.ProfileEntry.COLUMN_ID + "=?";
+        String[] selectionArgs = new String[1];
+        selectionArgs[0] = String.valueOf(profile.getId());
+
+        //Remove profile from the content provider
+        return context.getContentResolver().delete(ProfileContract.ProfileEntry.CONTENT_URI, selection, selectionArgs);
+
+    }
 
 }

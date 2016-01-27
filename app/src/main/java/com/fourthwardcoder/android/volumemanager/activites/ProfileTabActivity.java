@@ -7,22 +7,11 @@ import java.util.ArrayList;
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.adapters.ProfilePagerAdapter;
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
-import com.fourthwardcoder.android.volumemanager.fragments.EditProfileFragment;
-import com.fourthwardcoder.android.volumemanager.helpers.ProfileHelper;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
-import com.fourthwardcoder.android.volumemanager.fragments.LocationProfileListFragment;
-import com.fourthwardcoder.android.volumemanager.fragments.ProfileListFragment;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
-import com.fourthwardcoder.android.volumemanager.models.Profile;
 
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.app.ActionBar.Tab;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -108,7 +97,7 @@ public class ProfileTabActivity extends AppCompatActivity implements Constants {
 
     public void clickFAB(View view) {
         Log.e(TAG, "Inside click FAB");
-        ProfileHelper.newProfile(this);
+        ProfileManager.newProfile(this);
     }
 
 

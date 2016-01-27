@@ -2,6 +2,7 @@ package com.fourthwardcoder.android.volumemanager.services;
 
 import java.util.ArrayList;
 
+import com.fourthwardcoder.android.volumemanager.data.ProfileJSONManager;
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.fourthwardcoder.android.volumemanager.location.GeofenceManager;
@@ -48,7 +49,8 @@ public class StartupReceiver extends BroadcastReceiver implements Constants, Con
 
 		this.context = context;
 		//Get list of profiles
-		ArrayList<Profile> profileList = ProfileManager.get(context).getProfiles();
+		//ArrayList<Profile> profileList = ProfileJSONManager.get(context).getProfiles();
+        ArrayList<Profile> profileList = ProfileManager.getProfileList(context);
 
 		for(int i = 0; i < profileList.size(); i++){
 

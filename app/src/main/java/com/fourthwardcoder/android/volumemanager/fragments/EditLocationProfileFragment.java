@@ -2,8 +2,8 @@ package com.fourthwardcoder.android.volumemanager.fragments;
 
 import java.util.UUID;
 
+import com.fourthwardcoder.android.volumemanager.data.ProfileJSONManager;
 import com.fourthwardcoder.android.volumemanager.models.LocationProfile;
-import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
@@ -60,7 +60,7 @@ public class EditLocationProfileFragment extends Fragment implements Constants {
 		setHasOptionsMenu(true);
 		
 		UUID profileId = (UUID) getActivity().getIntent().getSerializableExtra(Constants.EXTRA_PROFILE_ID);
-		profile = ProfileManager.get(getActivity()).getLocationProfile(profileId);
+		profile = ProfileJSONManager.get(getActivity()).getLocationProfile(profileId);
 		Log.e(TAG,"I've been passed profile with id " + profile.getId());
 		
 		profileTitle = profile.getTitle();
@@ -275,6 +275,6 @@ public class EditLocationProfileFragment extends Fragment implements Constants {
 		profile.setStartRingVolume(startRingVolume);
 		profile.setEndRingVolume(endRingVolume);
 		
-	//	ProfileManager.get(getActivity()).saveProfiles();
+	//	ProfileJSONManager.get(getActivity()).saveProfiles();
 	}
 }
