@@ -7,12 +7,14 @@ import java.util.ArrayList;
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.adapters.ProfilePagerAdapter;
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
+import com.fourthwardcoder.android.volumemanager.fragments.ProfileListFragment;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -21,7 +23,7 @@ import android.support.design.widget.TabLayout;
 import android.util.Log;
 import android.view.View;
 
-public class ProfileTabActivity extends AppCompatActivity implements Constants {
+public class ProfileTabActivity extends AppCompatActivity implements ProfileListFragment.Callback, Constants {
 	
 	/*********************************************************************/
 	/*                          Constants                                */
@@ -34,6 +36,7 @@ public class ProfileTabActivity extends AppCompatActivity implements Constants {
 	ArrayList<Fragment> fragList = new ArrayList<Fragment>();
 	Fragment fragment = null;
     Fragment tabFragment = null;
+    FloatingActionButton mFloatingActionButton;
     
 	
 	@Override
@@ -66,23 +69,24 @@ public class ProfileTabActivity extends AppCompatActivity implements Constants {
 		viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 		tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
-			@Override
-			public void onTabSelected(TabLayout.Tab tab) {
-				viewPager.setCurrentItem(tab.getPosition());
-			}
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
 
-			@Override
-			public void onTabUnselected(TabLayout.Tab tab) {
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
 
-			}
+            }
 
-			@Override
-			public void onTabReselected(TabLayout.Tab tab) {
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
 
-			}
-		});
+            }
+        });
 		
-
+        mFloatingActionButton = (FloatingActionButton)findViewById(R.id.fab_new_profile);
+        onListViewChange();
 	
 		
 
@@ -101,4 +105,14 @@ public class ProfileTabActivity extends AppCompatActivity implements Constants {
     }
 
 
+    @Override
+    public void onListViewChange() {
+
+        Log.e(TAG,"!!!! Listview Changed !!!!");
+        if(ProfileManager.isDatabaseEmpty(this))
+            mFloatingActionButton.setVisibility(View.INVISIBLE);
+        else
+            mFloatingActionButton.setVisibility(View.VISIBLE);
+
+    }
 }

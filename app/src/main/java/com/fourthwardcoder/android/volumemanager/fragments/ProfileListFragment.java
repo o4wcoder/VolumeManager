@@ -181,7 +181,8 @@ Constants{
 						//Destroy Action mode context menu
 						mode.finish();
                        // profileManager.saveProfiles();
-						profileAdapter.notifyDataSetChanged();
+						//profileAdapter.notifyDataSetChanged();
+                        notifyListViewChanged();
 						return true;
 					default:
 						return false;
@@ -240,7 +241,8 @@ Constants{
 			
 			//getListAdapter()
         if(profileAdapter != null)
-		  profileAdapter.notifyDataSetChanged();
+            notifyListViewChanged();
+		  //profileAdapter.notifyDataSetChanged();
 		//}
 		   
 	}
@@ -277,7 +279,8 @@ Constants{
 			 //  ProfileJSONManager.get(getActivity()).deleteProfile(profile);
 
                ProfileManager.deleteProfile(getActivity(), profile);
-			   profileAdapter.notifyDataSetChanged();
+			   //profileAdapter.notifyDataSetChanged();
+               notifyListViewChanged();
 			   //Kill alarms for volume control
 			   VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), profile,false);
 			   return true;
@@ -461,8 +464,8 @@ Constants{
     					VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), getItem(listPosition), true);
     				}
     				//refresh listview
-    				profileAdapter.notifyDataSetChanged();
-    				
+    				//profileAdapter.notifyDataSetChanged();
+                    notifyListViewChanged();
     			}
     			
     		});
@@ -484,4 +487,13 @@ Constants{
 		}
 		
 	}
+
+    private void notifyListViewChanged() {
+        profileAdapter.notifyDataSetChanged();
+        ((Callback)getActivity()).onListViewChange();
+    }
+    public interface Callback {
+
+        void onListViewChange();
+    }
 }

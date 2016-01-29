@@ -124,4 +124,17 @@ public class ProfileManager {
 
     }
 
+    public static boolean isDatabaseEmpty(Context context) {
+        Cursor cursor = context.getContentResolver().query(ProfileContract.ProfileEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                null);
+
+        if (cursor != null && cursor.getCount() > 0)
+            return false;
+        else
+            return true;
+    }
+
 }
