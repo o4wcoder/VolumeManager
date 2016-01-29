@@ -1,9 +1,12 @@
 package com.fourthwardcoder.android.volumemanager.data;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
+import android.util.Log;
 
 import com.fourthwardcoder.android.volumemanager.activites.EditProfileActivity;
 import com.fourthwardcoder.android.volumemanager.data.ProfileContract;
@@ -16,6 +19,8 @@ import java.util.UUID;
  * Created by Chris Hare on 1/25/2016.
  */
 public class ProfileManager {
+
+    private static final String TAG = ProfileManager.class.getSimpleName();
 
     public static void newProfile(Activity activity)
     {
@@ -49,6 +54,11 @@ public class ProfileManager {
         if(cursor == null)
             return null;
         else {
+            //Move cursor to the row returned
+            cursor.moveToFirst();
+
+            Log.e(TAG,"Title: " + cursor.getString(cursor.getColumnIndex(ProfileContract.ProfileEntry.COLUMN_TITLE)));
+            Log.e(TAG, "getProfile(): Cursor has title " + cursor.getString(ProfileContract.COL_PROFILE_TITLE));
             return new Profile(cursor);
         }
     }
@@ -92,6 +102,14 @@ public class ProfileManager {
                 selection,selectionArgs);
 
 
+    }
+
+    public static Uri insertProfile(Context context, Profile profile) {
+
+        ContentValues profileValues = profile.getContentValues();
+
+        return context.getContentResolver()
+                .insert(ProfileContract.ProfileEntry.CONTENT_URI, profileValues);
     }
 
     public static int deleteProfile(Context context, Profile profile) {

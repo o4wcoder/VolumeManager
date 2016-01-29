@@ -312,29 +312,6 @@ Constants{
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
-	/***********************************************************/
-	/*                   Private Methods                       */
-	/***********************************************************/
-//	private void newProfile()
-//	{
-//    	//Add profile to the static List Array of Crimes
-//    	Profile profile = new Profile();
-//    	ProfileJSONManager.get(getActivity()).addProfile(profile);
-//
-//    	//Create intent to start up CrimePagerActivity after selecting "New Crime" menu
-//    	/*
-//    	 * !!!! TODO Hook up to Pager Activity when created
-//    	 */
-//    	Intent i = new Intent(getActivity(),EditProfileActivity.class);
-//
-//    	//Send the profile ID in the intent to CrimePagerActivity
-//    	i.putExtra(EditProfileFragment.EXTRA_PROFILE_ID, profile.getId());
-//
-//    	//Start CrimePagerActivity
-//    	startActivityForResult(i,0);
-//
-//	}
 
 
     @Override

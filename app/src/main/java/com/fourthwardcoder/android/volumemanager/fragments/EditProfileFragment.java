@@ -33,6 +33,7 @@ import android.widget.TextView;
 
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
+import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.fourthwardcoder.android.volumemanager.data.ProfileContract;
@@ -101,18 +102,7 @@ public class EditProfileFragment extends Fragment implements Constants {
         else {
             mProfile = new Profile();
         }
-        
-		//UUID profileId = (UUID)getArguments().getSerializable(EXTRA_PROFILE_ID);
-		//Fetch the Profile from the ProfileJSONManager ArrayList
-	//	mProfile = ProfileJSONManager.get(getActivity()).getProfile(profileId);
-		//profileTitle = mProfile.getTitle();
-		//startDate = mProfile.getStartDate();
-	   // endDate = mProfile.getEndDate();
-	  //  startVolumeType = mProfile.getStartVolumeType();
-       // endVolumeType = mProfile.getEndVolumeType();
-        //startRingVolume = mProfile.getStartRingVolume();
-        //endRingVolume = mProfile.getEndRingVolume();
-        //daysOfTheWeek = mProfile.getDaysOfTheWeek();
+
 	}
 	
 	@SuppressLint("ResourceAsColor")
@@ -182,7 +172,7 @@ public class EditProfileFragment extends Fragment implements Constants {
 	        button.setOnClickListener(dayButtonListener);
 	        button.setTag(new Integer(i));
 	        
-	        boolean setting = daysOfTheWeek.get(i);
+	        boolean setting = mProfile.getDaysOfTheWeek().get(i);
 	        if(setting) {
 	        	//Turn Day on
 	        	button.setTextColor(Color.parseColor("#ffffff"));
@@ -212,17 +202,17 @@ public class EditProfileFragment extends Fragment implements Constants {
 	    //Setup end time of volume control
 	    endTimeButton = (Button)view.findViewById(R.id.endTimeButton);
 	    endTimeButton.setOnClickListener(new OnClickListener() {
-	    	@Override
-			public void onClick(View v) {
-				//Start Time Picker Dialog on CrimeFragment after clicking Time Button
-				android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
-				TimePickerFragment dialog = TimePickerFragment.newInstance(mProfile.getEndDate(),getString(R.string.end_time_dialog));
-				//Make VolumeManagerFragment the target fragment of the TimePickerFragment instance
-				dialog.setTargetFragment(EditProfileFragment.this, REQUEST_END_TIME);
-				dialog.show(fm, DIALOG_TIME);
-	    		
-	    	}
-	    });
+            @Override
+            public void onClick(View v) {
+                //Start Time Picker Dialog on CrimeFragment after clicking Time Button
+                android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
+                TimePickerFragment dialog = TimePickerFragment.newInstance(mProfile.getEndDate(), getString(R.string.end_time_dialog));
+                //Make VolumeManagerFragment the target fragment of the TimePickerFragment instance
+                dialog.setTargetFragment(EditProfileFragment.this, REQUEST_END_TIME);
+                dialog.show(fm, DIALOG_TIME);
+
+            }
+        });
 	    
 	    /*
 	     * Setup Radio Buttons                  
@@ -255,25 +245,23 @@ public class EditProfileFragment extends Fragment implements Constants {
 	    //Set up Ringer type Radio Buttons
 	    endVolumeRadioGroup = (RadioGroup)view.findViewById(R.id.endVolumeRadioGroup);
 	    endVolumeRadioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(RadioGroup group, int checkedId) {
-			       
-				if(checkedId == R.id.endOffRadio) {
-					mProfile.setEndVolumeType(VOLUME_OFF);
-					mProfile.setEndRingVolume(0);
-					Util.setSeekBarPosition(endRingSeekBar,endRingVolumeTextView,mProfile.getEndRingVolume(),Util.getMaxRingVolume(getActivity().getApplicationContext()));
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-				}
-				else if(checkedId == R.id.endVibrateRadio) {
-					mProfile.setEndVolumeType(VOLUME_VIBRATE);
-					mProfile.setEndRingVolume(0);
-					Util.setSeekBarPosition(endRingSeekBar,endRingVolumeTextView,mProfile.getEndRingVolume(),Util.getMaxRingVolume(getActivity().getApplicationContext()));
-				}
-				else {
-					mProfile.setEndVolumeType(VOLUME_RING);
-				}
-			}
-	    });
+                if (checkedId == R.id.endOffRadio) {
+                    mProfile.setEndVolumeType(VOLUME_OFF);
+                    mProfile.setEndRingVolume(0);
+                    Util.setSeekBarPosition(endRingSeekBar, endRingVolumeTextView, mProfile.getEndRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
+
+                } else if (checkedId == R.id.endVibrateRadio) {
+                    mProfile.setEndVolumeType(VOLUME_VIBRATE);
+                    mProfile.setEndRingVolume(0);
+                    Util.setSeekBarPosition(endRingSeekBar, endRingVolumeTextView, mProfile.getEndRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
+                } else {
+                    mProfile.setEndVolumeType(VOLUME_RING);
+                }
+            }
+        });
 	    
 	    /*
 	     * Setup SeekBars                    
@@ -304,23 +292,28 @@ public class EditProfileFragment extends Fragment implements Constants {
 	    //Set up Ringer SeekBar
 	    endRingSeekBar = (SeekBar)view.findViewById(R.id.endRingSeekBar);
 	    endRingSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress,
-					boolean fromUser) {
-				if(progress == 0)
-					 ((RadioButton)endVolumeRadioGroup.getChildAt(VOLUME_OFF)).setChecked(true);
-				else 
-					((RadioButton)endVolumeRadioGroup.getChildAt(VOLUME_RING)).setChecked(true);
-				
-				Util.setRingVolumeText(endRingVolumeTextView,progress,Util.getMaxRingVolume(getActivity().getApplicationContext()));
-				mProfile.setEndRingVolume(progress);
-			}
-			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {}
-			@Override
-			public void onStopTrackingTouch(SeekBar seekBar){}
-	    });
-	    	    
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress,
+                                          boolean fromUser) {
+                if (progress == 0)
+                    ((RadioButton) endVolumeRadioGroup.getChildAt(VOLUME_OFF)).setChecked(true);
+                else
+                    ((RadioButton) endVolumeRadioGroup.getChildAt(VOLUME_RING)).setChecked(true);
+
+                Util.setRingVolumeText(endRingVolumeTextView, progress, Util.getMaxRingVolume(getActivity().getApplicationContext()));
+                mProfile.setEndRingVolume(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+
 	    /*
 	     * Set Default and Saved Settings
 	     */
@@ -328,6 +321,8 @@ public class EditProfileFragment extends Fragment implements Constants {
 	    ((RadioButton)startVolumeRadioGroup.getChildAt(mProfile.getStartVolumeType())).setChecked(true);
 	    //Set default or saved radio button setting
 	    ((RadioButton)endVolumeRadioGroup.getChildAt(mProfile.getEndVolumeType())).setChecked(true);
+
+
 	    startTimeTextView.setText(Util.formatTime(mProfile.getStartDate()));
 	    endTimeTextView.setText(Util.formatTime(mProfile.getEndDate()));
 	    //Set Seekbar default
@@ -452,13 +447,16 @@ public class EditProfileFragment extends Fragment implements Constants {
 		//mProfile.setDaysOfTheWeek(daysOfTheWeek);
 		
 		//ProfileJSONManager.get(getActivity()).saveProfiles();
+        Log.e(TAG,"Saving settings with start date " + mProfile.getStartDate() + " with long value: " +
+                mProfile.getStartDate().getTime());
 
-		ContentValues profileValues = mProfile.getContentValues();
-
-         Uri insertedRow = getActivity().getContentResolver()
-                .insert(ProfileContract.ProfileEntry.CONTENT_URI, profileValues);
+        Uri insertedRow = ProfileManager.insertProfile(getActivity(),mProfile);
 
         Log.e(TAG,"Insert Profile row with result " + insertedRow);
+
+        Profile pullProfile = ProfileManager.getProfile(getActivity(),mProfile.getId());
+
+        Log.e(TAG,"Pulled profile has start date: " + pullProfile.getStartDate());
     }
 	
 

@@ -32,10 +32,14 @@ public class Profile implements Constants, Parcelable {
     private UUID id;
     private String title;
     private boolean enabled;
-    private int startVolumeType, endVolumeType;
-    private int startRingVolume, endRingVolume;
-    private int previousVolumeType, previousRingVolume;
-    private Date startDate, endDate;
+    private int startVolumeType;
+    private int endVolumeType;
+    private int startRingVolume;
+    private int endRingVolume;
+    private int previousVolumeType;
+    private int previousRingVolume;
+    private Date startDate;
+    private Date endDate;
     private int alarmId;
     //private boolean daysOfTheWeek[] = new boolean[DAYS_OF_THE_WEEK];
     private ArrayList<Boolean> daysOfTheWeek;
@@ -58,7 +62,6 @@ public class Profile implements Constants, Parcelable {
 
         calculateAlarmId();
         daysOfTheWeek = new ArrayList<>(DAYS_OF_THE_WEEK);
-        Log.e(TAG, "Size of daysOfTheWeek array " + daysOfTheWeek.size());
         initDaysOfWeek();
 
     }
@@ -75,8 +78,8 @@ public class Profile implements Constants, Parcelable {
         this.previousVolumeType = cursor.getInt(ProfileContract.COL_PROFILE_PREVIOUS_VOLUME_TYPE);
         this.previousRingVolume = cursor.getInt(ProfileContract.COL_PROFILE_PREVIOUS_RING_VOLUME);
         this.alarmId = cursor.getInt(ProfileContract.COL_PROFILE_ALARM_ID);
-        this.startDate = new Date(cursor.getInt(ProfileContract.COL_PROFILE_START_DATE));
-        this.endDate = new Date(cursor.getInt(ProfileContract.COL_PROFILE_END_DATE));
+        this.startDate = new Date(cursor.getLong(ProfileContract.COL_PROFILE_START_DATE));
+        this.endDate = new Date(cursor.getLong(ProfileContract.COL_PROFILE_END_DATE));
 
         Type booleanType = new TypeToken<ArrayList<Boolean>>(){}.getType();
         this.daysOfTheWeek = new Gson().fromJson(cursor.getString(ProfileContract.COL_PROFILE_DAYS_OF_THE_WEEK),booleanType);
@@ -263,11 +266,20 @@ public class Profile implements Constants, Parcelable {
 
     }
 
-
     protected Profile(Parcel in) {
         id = (UUID) in.readValue(UUID.class.getClassLoader());
         title = in.readString();
         enabled = in.readByte() != 0x00;
+        startVolumeType = in.readInt();
+        endVolumeType = in.readInt();
+        startRingVolume = in.readInt();
+        endRingVolume = in.readInt();
+        previousVolumeType = in.readInt();
+        previousRingVolume = in.readInt();
+        long tmpStartDate = in.readLong();
+        startDate = tmpStartDate != -1 ? new Date(tmpStartDate) : null;
+        long tmpEndDate = in.readLong();
+        endDate = tmpEndDate != -1 ? new Date(tmpEndDate) : null;
         alarmId = in.readInt();
         if (in.readByte() == 0x01) {
             daysOfTheWeek = new ArrayList<Boolean>();
@@ -288,6 +300,14 @@ public class Profile implements Constants, Parcelable {
         dest.writeValue(id);
         dest.writeString(title);
         dest.writeByte((byte) (enabled ? 0x01 : 0x00));
+        dest.writeInt(startVolumeType);
+        dest.writeInt(endVolumeType);
+        dest.writeInt(startRingVolume);
+        dest.writeInt(endRingVolume);
+        dest.writeInt(previousVolumeType);
+        dest.writeInt(previousRingVolume);
+        dest.writeLong(startDate != null ? startDate.getTime() : -1L);
+        dest.writeLong(endDate != null ? endDate.getTime() : -1L);
         dest.writeInt(alarmId);
         if (daysOfTheWeek == null) {
             dest.writeByte((byte) (0x00));
