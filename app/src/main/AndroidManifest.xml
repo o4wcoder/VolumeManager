@@ -9,7 +9,7 @@
         android:targetSdkVersion="21" />
 
     <permission
-        android:name="com.bignerdranch.android.runtracker.permission.MAPS_RECEIVE"
+        android:name="com.fourthwardcoder.android.volumemanager.MAPS_RECEIVE"
         android:protectionLevel="signature" />
 
     <uses-permission android:name="com.bignerdranch.android.runtracker.permission.MAPS_RECEIVE" />
