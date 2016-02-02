@@ -31,13 +31,13 @@
 
     <include layout="@layout/days_of_the_week_buttons"/>
 
-
+<!--
     <GridLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:columnCount="2"
         android:rowCount="6"></GridLayout>
-
+-->
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -143,7 +143,10 @@
 
         </LinearLayout>
 
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"/>
 
         <LinearLayout
             android:layout_width="match_parent"

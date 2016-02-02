@@ -46,14 +46,18 @@
     </style>
         
     <style name="DayButton">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">38dp</item>
+        <item name="android:layout_height">38dp</item>
         <item name="android:layout_weight">1</item>
+        <item name="android:layout_gravity">center</item>
         <item name="android:textColor">#0FA1D3</item>
         <item name="android:textSize">20sp</item>
+        <!--
         <item name="android:minHeight">38dp</item>
         <item name="android:minWidth">38dp</item>
-        <item name="android:background">@color/buttonColor</item>
+        -->
+        <item name="android:layout_margin">6dp</item>
+        <item name="android:background">@drawable/round_button</item>
     </style>
 
     <style name="AlarmButton">
