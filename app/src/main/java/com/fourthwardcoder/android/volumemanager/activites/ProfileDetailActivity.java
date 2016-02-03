@@ -1,12 +1,10 @@
 package com.fourthwardcoder.android.volumemanager.activites;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.fourthwardcoder.android.volumemanager.R;
-import com.fourthwardcoder.android.volumemanager.fragments.EditProfileFragment;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 
 /**
@@ -18,7 +16,7 @@ import com.fourthwardcoder.android.volumemanager.helpers.Util;
  * 3/13/2015
  *
  */
-public class EditProfileActivity extends AppCompatActivity {
+public class ProfileDetailActivity extends AppCompatActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +25,7 @@ public class EditProfileActivity extends AppCompatActivity {
 		//Change status bar color
 		Util.setStatusBarColor(this);
 
-		setContentView(R.layout.activity_profile);
+		setContentView(R.layout.activity_profile_detail);
 		final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);

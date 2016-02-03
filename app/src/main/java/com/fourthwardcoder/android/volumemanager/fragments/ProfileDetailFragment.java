@@ -5,7 +5,6 @@ import java.util.Date;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -22,6 +21,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TableRow;
@@ -36,7 +36,6 @@ import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
-import com.fourthwardcoder.android.volumemanager.data.ProfileContract;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
 
 /**
@@ -49,12 +48,12 @@ import com.fourthwardcoder.android.volumemanager.models.Profile;
  * 3/13/2015
  *
  */
-public class EditProfileFragment extends Fragment implements Constants {
+public class ProfileDetailFragment extends Fragment implements Constants {
 	
 	/************************************************************************/
 	/*                           Constants                                  */
 	/************************************************************************/
-	private final static String TAG = EditProfileFragment.class.getSimpleName();
+	private final static String TAG = ProfileDetailFragment.class.getSimpleName();
 	//Tag for the time piker Dialog
 	private static final String DIALOG_TIME = "time";
 	
@@ -68,7 +67,7 @@ public class EditProfileFragment extends Fragment implements Constants {
 	/************************************************************************/
 	Profile mProfile;
 	TextView titleTextView, startTimeTextView, endTimeTextView;
-	Button startTimeButton, endTimeButton;
+	//Button startTimeButton, endTimeButton;
 //	Date startDate,endDate;
 	RadioGroup startVolumeRadioGroup;
 	RadioGroup endVolumeRadioGroup;
@@ -78,6 +77,7 @@ public class EditProfileFragment extends Fragment implements Constants {
 	//int startRingVolume,endRingVolume;
 	TextView startRingVolumeTextView, endRingVolumeTextView;
 	ArrayList<Boolean> daysOfTheWeek;
+	ImageView startVolumeImageView, endVolumeImageView;
 	
 	/*******************************************************/
 	/*                  Override Methods                   */
@@ -110,7 +110,7 @@ public class EditProfileFragment extends Fragment implements Constants {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, 
 			Bundle savedInstanceState){
 				
-		View view = inflater.inflate(R.layout.fragment_profile, container, false);
+		View view = inflater.inflate(R.layout.fragment_profile_detail, container, false);
 
 		//Enable app icon to work as button and display caret
 //		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -118,7 +118,10 @@ public class EditProfileFragment extends Fragment implements Constants {
 //				getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 //			}
 //		}
-		
+
+		//Get volume icons
+		startVolumeImageView = (ImageView)view.findViewById(R.id.volumeStartImageView);
+		endVolumeImageView = (ImageView)view.findViewById(R.id.volumeEndImageView);
 	    /*
 	     * Setup TextViews                        
 	     */
@@ -186,29 +189,29 @@ public class EditProfileFragment extends Fragment implements Constants {
 	        
 		}
 	    //Setup start time of volume control
-	    startTimeButton = (Button)view.findViewById(R.id.startTimeButton);
-	    startTimeButton.setOnClickListener(new OnClickListener() {
+	  //  startTimeButton = (Button)view.findViewById(R.id.startTimeButton);
+	    startTimeTextView.setOnClickListener(new OnClickListener() {
 	    	@Override
 			public void onClick(View v) {
 				//Start Time Picker Dialog on CrimeFragment after clicking Time Button
 				android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
 				TimePickerFragment dialog = TimePickerFragment.newInstance(mProfile.getStartDate(),getString(R.string.start_time_dialog));
 				//Make VolumeManagerFragment the target fragment of the TimePickerFragment instance
-				dialog.setTargetFragment(EditProfileFragment.this, REQUEST_START_TIME);
+				dialog.setTargetFragment(ProfileDetailFragment.this, REQUEST_START_TIME);
 				dialog.show(fm, DIALOG_TIME);
 	    		
 	    	}
 	    });
 	    //Setup end time of volume control
-	    endTimeButton = (Button)view.findViewById(R.id.endTimeButton);
-	    endTimeButton.setOnClickListener(new OnClickListener() {
+	   // endTimeButton = (Button)view.findViewById(R.id.endTimeButton);
+	    endTimeTextView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Start Time Picker Dialog on CrimeFragment after clicking Time Button
                 android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
                 TimePickerFragment dialog = TimePickerFragment.newInstance(mProfile.getEndDate(), getString(R.string.end_time_dialog));
                 //Make VolumeManagerFragment the target fragment of the TimePickerFragment instance
-                dialog.setTargetFragment(EditProfileFragment.this, REQUEST_END_TIME);
+                dialog.setTargetFragment(ProfileDetailFragment.this, REQUEST_END_TIME);
                 dialog.show(fm, DIALOG_TIME);
 
             }
@@ -330,7 +333,10 @@ public class EditProfileFragment extends Fragment implements Constants {
 	    Util.setSeekBarPosition(endRingSeekBar,endRingVolumeTextView,mProfile.getEndRingVolume(),Util.getMaxRingVolume(getActivity().getApplicationContext()));
 	    startRingSeekBar.setMax(Util.getMaxRingVolume(getActivity().getApplicationContext()));
 	    endRingSeekBar.setMax(Util.getMaxRingVolume(getActivity().getApplicationContext()));
-	    
+
+		//Set Volume Icon
+        setVolumeIcon();
+
 		return view;
 	}
 	
@@ -401,8 +407,38 @@ public class EditProfileFragment extends Fragment implements Constants {
 	/*******************************************************************/
 	/*                        Private Methods                          */
 	/*******************************************************************/
-	
-	
+
+    private int getVolumeIconResource(int volumeType) {
+
+        switch(volumeType) {
+
+            case VOLUME_OFF:
+                 return R.drawable.ic_volume_off;
+            case VOLUME_VIBRATE:
+                 return R.drawable.ic_vibration;
+            case VOLUME_RING:
+                return R.drawable.ic_volume_up;
+            default:
+            //Something went wrong if we get here.
+            return R.drawable.ic_volume_off;
+
+        }
+    }
+	private void setVolumeIcon() {
+
+        int volumeIconRes = 0;
+        //Set Start Volume Icon
+        volumeIconRes = getVolumeIconResource(mProfile.getStartVolumeType());
+        startVolumeImageView.setImageResource(volumeIconRes);
+
+        //Set End Volume Icon
+        volumeIconRes = getVolumeIconResource(mProfile.getEndVolumeType());
+        endVolumeImageView.setImageResource(volumeIconRes);
+
+
+	}
+
+
 	
 	
 	/**

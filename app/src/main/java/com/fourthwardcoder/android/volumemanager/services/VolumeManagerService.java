@@ -17,8 +17,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.fourthwardcoder.android.volumemanager.R;
-import com.fourthwardcoder.android.volumemanager.activites.EditProfileActivity;
-import com.fourthwardcoder.android.volumemanager.data.ProfileJSONManager;
+import com.fourthwardcoder.android.volumemanager.activites.ProfileDetailActivity;
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
@@ -135,7 +134,7 @@ public class VolumeManagerService extends IntentService implements Constants {
 		.setContentTitle(strTitle)
 		.setContentText(strTime);
 
-        Intent i = new Intent(this,EditProfileActivity.class);
+        Intent i = new Intent(this,ProfileDetailActivity.class);
        
         i.putExtra(EXTRA_PROFILE_ID,profile.getId());
         

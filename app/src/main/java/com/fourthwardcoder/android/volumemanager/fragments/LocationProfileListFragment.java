@@ -136,7 +136,7 @@ public class LocationProfileListFragment extends Fragment implements Constants, 
 
 				//Tell Volume Manager Fragment which Profile to display by making
 				//giving id as Intent extra
-				i.putExtra(EditProfileFragment.EXTRA_PROFILE_ID,p.getId());
+				i.putExtra(ProfileDetailFragment.EXTRA_PROFILE_ID,p.getId());
 				startActivity(i);
 
 			}
@@ -323,7 +323,7 @@ public class LocationProfileListFragment extends Fragment implements Constants, 
     	Intent i = new Intent(getActivity(),LocationMapActivity.class);
     	
     	//Send the profile ID in the intent to 
-    	i.putExtra(EditProfileFragment.EXTRA_PROFILE_ID, profile.getId());
+    	i.putExtra(ProfileDetailFragment.EXTRA_PROFILE_ID, profile.getId());
     	
     	//Start CrimePagerActivity
     	startActivityForResult(i,0);

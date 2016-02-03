@@ -40,7 +40,7 @@ import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.services.VolumeManagerService;
-import com.fourthwardcoder.android.volumemanager.activites.EditProfileActivity;
+import com.fourthwardcoder.android.volumemanager.activites.ProfileDetailActivity;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
 
@@ -136,11 +136,11 @@ Constants{
 				Log.d(TAG,"Got profile " + p.getTitle());
 
 				//Start CrimePagerActivity with this Crime
-				Intent i = new Intent(getActivity(),EditProfileActivity.class);
+				Intent i = new Intent(getActivity(),ProfileDetailActivity.class);
 
 				//Tell Volume Manager Fragment which Profile to display by making
 				//giving id as Intent extra
-				i.putExtra(EditProfileFragment.EXTRA_PROFILE, p);
+				i.putExtra(ProfileDetailFragment.EXTRA_PROFILE, p);
 				startActivity(i);
 
 			}

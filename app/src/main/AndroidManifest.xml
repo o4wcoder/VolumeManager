@@ -36,7 +36,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".activites.EditProfileActivity"
+            android:name=".activites.ProfileDetailActivity"
             android:label="@string/profile_settings" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

@@ -2,7 +2,7 @@
 <resources>
     <color name="app_primary_color">@color/indigoPrimary500</color>
     <color name="app_primary_dark_color">@color/indigoPrimaryDark700</color>
-    <color name="app_accent_color">@color/lime_accent_color</color>
+    <color name="app_accent_color">@color/green_accent_color</color>
 
     <color name="lightBlueColor">#E2F4FB</color>
     <color name="indigoPrimaryDark700">#303f9f</color>
@@ -10,6 +10,9 @@
     <color name="buttonColor">#9fa8da</color>
     <color name="textColor">#7986cb</color>
     <color name="white">#ffffff</color>
+
+    <!-- Accent Colors -->
+    <color name ="green_accent_color">#009688</color>
     <color name="lime_accent_color">#CDDC39</color>
     <color name="geofence_blue_color">#20536dfe</color>
     <color name="geofence_red_color">#40ff5252</color>

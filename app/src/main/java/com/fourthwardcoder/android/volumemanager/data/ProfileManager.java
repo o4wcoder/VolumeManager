@@ -8,8 +8,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
-import com.fourthwardcoder.android.volumemanager.activites.EditProfileActivity;
-import com.fourthwardcoder.android.volumemanager.data.ProfileContract;
+import com.fourthwardcoder.android.volumemanager.activites.ProfileDetailActivity;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
 
 import java.util.ArrayList;
@@ -28,10 +27,10 @@ public class ProfileManager {
     	/*
     	 * !!!! TODO Hook up to Pager Activity when created
     	 */
-        Intent i = new Intent(activity,EditProfileActivity.class);
+        Intent i = new Intent(activity,ProfileDetailActivity.class);
 
         //Send the profile ID in the intent to
-        // i.putExtra(EditProfileFragment.EXTRA_PROFILE_ID, null);
+        // i.putExtra(ProfileDetailFragment.EXTRA_PROFILE_ID, null);
 
         activity.startActivityForResult(i, 0);
 

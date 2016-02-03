@@ -31,38 +31,17 @@
 
     <include layout="@layout/days_of_the_week_buttons"/>
 
-<!--
-    <GridLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:columnCount="2"
-        android:rowCount="6"></GridLayout>
--->
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="4dp"
-            android:orientation="horizontal" >
 
             <TextView
                 android:id="@+id/startTimeTextView"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="2"
-                android:gravity="center"
-                android:padding="2dp"
-                android:textColor="#0FA1D3"
-                android:textSize="20sp" />
-
-            <Button
-                android:id="@+id/startTimeButton"
-                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/start_time" />
+                android:gravity="center"
+                android:padding="4dp"
+                android:textSize="48sp"
+                android:text="10:30"
+                android:fontFamily="sans-serif-light" />
 
-        </LinearLayout>
 
         <TextView
             android:id="@+id/addressTextView"
@@ -132,7 +111,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_action_volume_on_pink" />
+                android:src="@drawable/ic_volume_up"
+                android:padding="4dp" />
 
             <SeekBar
                 android:id="@+id/startRingSeekBar"
@@ -148,31 +128,21 @@
         android:layout_height="1dp"
         android:background="?android:attr/listDivider"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="4dp"
-            android:orientation="horizontal" >
+
 
             <TextView
                 android:id="@+id/endTimeTextView"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="2"
-                android:gravity="center"
-                android:padding="2dp"
-                android:textColor="#0FA1D3"
-                android:textSize="20sp" />
-
-            <Button
-                android:id="@+id/endTimeButton"
-                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/end_time" />
 
-        </LinearLayout>
+                android:gravity="center"
+                android:padding="4dp"
+                android:textSize="48sp"
+                android:text="8:00"
+                android:fontFamily="sans-serif-light"
+                android:layout_margin="4dp" />
+
+
 
         <TextView
             android:id="@+id/TextView02"
@@ -242,7 +212,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_action_volume_on_pink" />
+                android:src="@drawable/ic_volume_up"
+                android:padding="4dp" />
 
             <SeekBar
                 android:id="@+id/endRingSeekBar"
