@@ -26,8 +26,5 @@ public class ProfileDetailActivity extends AppCompatActivity {
 		Util.setStatusBarColor(this);
 
 		setContentView(R.layout.activity_profile_detail);
-		final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 }

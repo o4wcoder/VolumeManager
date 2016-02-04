@@ -37,7 +37,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".activites.ProfileDetailActivity"
-            android:label="@string/profile_settings" >
+            android:label="@string/profile_settings"
+            android:windowSoftInputMode="stateHidden|adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activites.ProfileTabActivity" />

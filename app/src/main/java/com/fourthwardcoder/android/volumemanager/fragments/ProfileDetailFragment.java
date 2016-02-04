@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -94,13 +96,19 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 		//Get Fragment arguments and pull out ID of profile
 		Intent intent = getActivity().getIntent();
 
-        //See if we have a Profile object. If so we are editing the Profile.
-        //If not, it's a new profile
-        if(intent.hasExtra(EXTRA_PROFILE)) {
-            mProfile = intent.getParcelableExtra(EXTRA_PROFILE);
+        //First check if we have don't have anything in saveInstanceState from a rotation
+        if(saveInstanceState == null) {
+            //See if we have a Profile object. If so we are editing the Profile.
+            //If not, it's a new profile
+            if (intent.hasExtra(EXTRA_PROFILE)) {
+                mProfile = intent.getParcelableExtra(EXTRA_PROFILE);
+            } else {
+                mProfile = new Profile();
+            }
         }
         else {
-            mProfile = new Profile();
+            //Restore Profile from rotation.
+            mProfile = saveInstanceState.getParcelable(EXTRA_PROFILE);
         }
 
 	}
@@ -119,6 +127,13 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 //			}
 //		}
 
+        //Setup Toolbar
+        AppCompatActivity activity = (AppCompatActivity)getActivity();
+        final Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        if(toolbar != null) {
+            activity.setSupportActionBar(toolbar);
+            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 		//Get volume icons
 		startVolumeImageView = (ImageView)view.findViewById(R.id.volumeStartImageView);
 		endVolumeImageView = (ImageView)view.findViewById(R.id.volumeEndImageView);
@@ -151,14 +166,16 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 
                  if(setting) {
                 	 //Turn Day off
-                	daysOfTheWeek.add((int)v.getTag(),false);
+                	daysOfTheWeek.add((int) v.getTag(), false);
 
      	        	textView.setTextColor(Color.parseColor("#000000"));
+                     v.setBackgroundColor(Color.TRANSPARENT);
                  }
                  else {
                 	 //Turn Day on
-                	 daysOfTheWeek.add((int)v.getTag(), true);
-     	        	textView.setTextColor(Color.parseColor("#ffffff"));
+                	 daysOfTheWeek.add((int) v.getTag(), true);
+     	        	 textView.setTextColor(Color.parseColor("#ffffff"));
+                   //  v.setBackgroundColor(getResources().getColor(R.color.buttonColor));
                  }
 
                 //Update days of the week in Profile
@@ -178,12 +195,17 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 	        boolean setting = mProfile.getDaysOfTheWeek().get(i);
 	        if(setting) {
 	        	//Turn Day on
+                Log.e(TAG,"turn on day");
 	        	button.setTextColor(Color.parseColor("#ffffff"));
+              //  button.setBackgroundColor(getResources().getColor(R.color.buttonColor));
 	        }
 	        else {
 	        	//Turn Day off
 	        	//button.setTextColor(R
 				//		.color.primary_material_dark);
+                button.setTextColor(Color.parseColor("#000000"));
+                Log.e(TAG,"turn off day");
+                button.setBackgroundColor(Color.TRANSPARENT);
 	        }
 	        	
 	        
@@ -241,6 +263,8 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 				else {
 					mProfile.setStartVolumeType(VOLUME_RING);
 				}
+
+                setVolumeIcon();
 			    
 			}
 	    	
@@ -263,6 +287,8 @@ public class ProfileDetailFragment extends Fragment implements Constants {
                 } else {
                     mProfile.setEndVolumeType(VOLUME_RING);
                 }
+
+                setVolumeIcon();
             }
         });
 	    
@@ -285,6 +311,8 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 				
 				Util.setRingVolumeText(startRingVolumeTextView,progress,Util.getMaxRingVolume(getActivity().getApplicationContext()));
 				mProfile.setStartRingVolume(progress);
+
+                setVolumeIcon();
 			}
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {}
@@ -305,6 +333,8 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 
                 Util.setRingVolumeText(endRingVolumeTextView, progress, Util.getMaxRingVolume(getActivity().getApplicationContext()));
                 mProfile.setEndRingVolume(progress);
+
+                setVolumeIcon();
             }
 
             @Override
@@ -339,7 +369,14 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 
 		return view;
 	}
-	
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+
+        savedInstanceState.putParcelable(EXTRA_PROFILE,mProfile);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		//super.onCreateOptionsMenu(menu, inflater);
@@ -483,16 +520,12 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 		//mProfile.setDaysOfTheWeek(daysOfTheWeek);
 		
 		//ProfileJSONManager.get(getActivity()).saveProfiles();
-        Log.e(TAG,"Saving settings with start date " + mProfile.getStartDate() + " with long value: " +
-                mProfile.getStartDate().getTime());
+        ProfileManager.insertProfile(getActivity(), mProfile);
 
-        Uri insertedRow = ProfileManager.insertProfile(getActivity(),mProfile);
 
-        Log.e(TAG,"Insert Profile row with result " + insertedRow);
 
-        Profile pullProfile = ProfileManager.getProfile(getActivity(),mProfile.getId());
 
-        Log.e(TAG,"Pulled profile has start date: " + pullProfile.getStartDate());
+
     }
 	
 
