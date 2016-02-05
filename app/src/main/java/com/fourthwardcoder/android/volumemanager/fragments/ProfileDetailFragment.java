@@ -169,13 +169,13 @@ public class ProfileDetailFragment extends Fragment implements Constants {
                 	daysOfTheWeek.add((int) v.getTag(), false);
 
      	        	textView.setTextColor(Color.parseColor("#000000"));
-                     v.setBackgroundColor(Color.TRANSPARENT);
+                     v.setBackground(getResources().getDrawable(R.drawable.round_button_off));
                  }
                  else {
                 	 //Turn Day on
                 	 daysOfTheWeek.add((int) v.getTag(), true);
      	        	 textView.setTextColor(Color.parseColor("#ffffff"));
-                   //  v.setBackgroundColor(getResources().getColor(R.color.buttonColor));
+                     v.setBackground(getResources().getDrawable(R.drawable.round_button));
                  }
 
                 //Update days of the week in Profile
@@ -195,7 +195,7 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 	        boolean setting = mProfile.getDaysOfTheWeek().get(i);
 	        if(setting) {
 	        	//Turn Day on
-                Log.e(TAG,"turn on day");
+                Log.e(TAG, "turn on day");
 	        	button.setTextColor(Color.parseColor("#ffffff"));
               //  button.setBackgroundColor(getResources().getColor(R.color.buttonColor));
 	        }
@@ -356,8 +356,8 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 	    ((RadioButton)endVolumeRadioGroup.getChildAt(mProfile.getEndVolumeType())).setChecked(true);
 
 
-	    startTimeTextView.setText(Util.formatTime(mProfile.getStartDate()));
-	    endTimeTextView.setText(Util.formatTime(mProfile.getEndDate()));
+	    Util.setTimeForLargeTextView(mProfile.getStartDate(),startTimeTextView);
+	    Util.setTimeForLargeTextView(mProfile.getEndDate(),endTimeTextView);
 	    //Set Seekbar default
 	    Util.setSeekBarPosition(startRingSeekBar,startRingVolumeTextView,mProfile.getStartRingVolume(),Util.getMaxRingVolume(getActivity().getApplicationContext()));
 	    Util.setSeekBarPosition(endRingSeekBar,endRingVolumeTextView,mProfile.getEndRingVolume(),Util.getMaxRingVolume(getActivity().getApplicationContext()));
@@ -397,14 +397,13 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 		
 		if(requestCode == REQUEST_START_TIME) {
             mProfile.setStartDate((Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME));
-			startTimeTextView.setText(Util.formatTime(mProfile.getStartDate()));
+			Util.setTimeForLargeTextView(mProfile.getStartDate(),startTimeTextView);
 		}
 		else if(requestCode == REQUEST_END_TIME) {
             mProfile.setEndDate((Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME));
-			endTimeTextView.setText(Util.formatTime(mProfile.getEndDate()));
+            Util.setTimeForLargeTextView(mProfile.getEndDate(),endTimeTextView);
 		}
-		
-		//saveSettings();
+
 	}
 	
 	@Override

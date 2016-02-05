@@ -24,8 +24,6 @@ public class Profile implements Constants, Parcelable {
 	/*                    Constants                      */
     /*****************************************************/
     private static final String TAG = Profile.class.getSimpleName();
-
-    private static final int DAYS_OF_THE_WEEK = 7;
     /*****************************************************/
 	/*                   Local Data                      */
     /*****************************************************/
@@ -226,6 +224,7 @@ public class Profile implements Constants, Parcelable {
     public String getDaysOfWeekString() {
 
         String strDays = "";
+
         for(int i=0; i< DAYS_OF_THE_WEEK; i++) {
 
             if(daysOfTheWeek.get(i)) {

@@ -32,6 +32,8 @@
     <string name="settings_menu">Settings</string>
     <string name="about_menu">About</string>
     <string name="save_menu">SAVE</string>
+
+    <string name="daily">Daily</string>
     <!-- Basic Profile -->
 
 

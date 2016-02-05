@@ -99,9 +99,8 @@ public class TimePickerFragment extends DialogFragment implements Constants {
 				//Translating hourOfDay & minute into a Date object using a calendar, date keeps
 				//the same
 				mTime = calendar.getTime();
-				//Log.d(TAG,"Hour in data object " + mTime.getHours());
-			
-			
+				Log.d(TAG,"Hour in data object " + mTime.getHours());
+
 				//Update arguments to preserve selected value on rotation
 				getArguments().putSerializable(EXTRA_TIME, mTime);
 			}

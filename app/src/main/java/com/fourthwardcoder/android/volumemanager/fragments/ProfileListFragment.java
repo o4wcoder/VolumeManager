@@ -480,7 +480,10 @@ Constants{
             holder.timeTextView.setText(getItem(position).getFullTimeForListItem());
             //holder.timeTextView.setAlpha(SECONDARY_TEXT_DARK);
             holder.daysTextView = (TextView)convertView.findViewById(R.id.profileDaysTextView);
-            holder.daysTextView.setText(getItem(position).getDaysOfWeekString());
+			if(checkIfSetDaily(getItem(position).getDaysOfTheWeek()))
+				holder.daysTextView.setText(R.string.daily);
+			else
+                holder.daysTextView.setText(getItem(position).getDaysOfWeekString());
             //holder.daysTextView.setAlpha(SECONDARY_TEXT_DARK);
               	
             return convertView;
@@ -488,6 +491,15 @@ Constants{
 		
 	}
 
+	private boolean checkIfSetDaily(ArrayList<Boolean> daysOfTheWeek) {
+
+		for(int i = 0; i< daysOfTheWeek.size(); i++) {
+			if(daysOfTheWeek.get(i) == false)
+				return false;
+		}
+
+		return true;
+	}
     private void notifyListViewChanged() {
         profileAdapter.notifyDataSetChanged();
         ((Callback)getActivity()).onListViewChange();

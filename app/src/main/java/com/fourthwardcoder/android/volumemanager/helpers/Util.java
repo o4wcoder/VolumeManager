@@ -11,6 +11,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.media.AudioManager;
 import android.os.Build;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
@@ -24,40 +28,59 @@ public class Util implements Constants {
 	/***********************************************************************/
 	/*                           Constants                                 */
 	/***********************************************************************/
-	private final static String TAG = "Util";
+    private final static String TAG = "Util";
+
+	/**
+	 * Modify the format of the time of the alarms. Changes hour from
+	 * military time to standard. Also make sure the minute is two digits.
+	 *
+	 * @param date Stores the time of the alarm
+	 */
+	public static String formatTime(Date date) {
+
+        Log.e(TAG,"Hours in date: " + date.getHours());
+		String am_or_pm = (date.getHours() < 12) ? "AM" : "PM";
+
+		//Log.d(TAG,"In update time with hour " + date.getHours());
+
+		//Create a Calendar to get the time
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+
+		int hour = calendar.get(Calendar.HOUR);
+		int min = calendar.get(Calendar.MINUTE);
+
+		String strHour = String.valueOf(hour);
+
+		if(hour == 0)
+			strHour = "12";
+
+		String strMin = String.valueOf(min);
+
+		//Make sure minute is 2 digits
+		if(min < 10)
+			strMin = "0" + strMin;
+
+
+		String time = strHour + ":" + strMin + " " + am_or_pm;
+
+		return time;
+	}
+
 	/**
 	 * Modify the format of the time of the alarms. Changes hour from 
 	 * military time to standard. Also make sure the minute is two digits.
 	 * 
 	 * @param date Stores the time of the alarm
 	 */
-	public static String formatTime(Date date) {
-		
-		String am_or_pm = (date.getHours() < 12) ? "AM" : "PM";
-		
-		//Log.d(TAG,"In update time with hour " + date.getHours());
-		
-		//Create a Calendar to get the time
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
-		
-		int hour = calendar.get(Calendar.HOUR);
-		int min = calendar.get(Calendar.MINUTE);
-		
-		String strHour = String.valueOf(hour);
-		
-		if(hour == 0)
-			strHour = "12";
-		
-		String strMin = String.valueOf(min);
-		
-		//Make sure minute is 2 digits
-		if(min < 10)
-			strMin = "0" + strMin;
-		
-		String time = strHour + ":" + strMin + " " + am_or_pm;
-		
-		return time;
+	public static void setTimeForLargeTextView(Date date, TextView textView) {
+
+        //Make the AM or PM half the size of the time
+        String time = formatTime(date);
+		SpannableString ss1 = new SpannableString(time);
+		ss1.setSpan(new RelativeSizeSpan(.5f), time.length()-3,time.length(),0);
+
+		textView.setText(ss1);
 	}
 	
 	/**
@@ -133,6 +156,8 @@ public class Util implements Constants {
     	return audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
     	
     }
+
+
 
 
 
