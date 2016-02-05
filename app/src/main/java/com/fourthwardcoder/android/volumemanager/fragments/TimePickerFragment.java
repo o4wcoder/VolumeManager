@@ -84,6 +84,8 @@ public class TimePickerFragment extends DialogFragment implements Constants {
 		timePicker.setCurrentHour(hour);
 		timePicker.setCurrentMinute(min);
 		timePicker.setIs24HourView(false);
+
+
 		timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
 			
 			@Override

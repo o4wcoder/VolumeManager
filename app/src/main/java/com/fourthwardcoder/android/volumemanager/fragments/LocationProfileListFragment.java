@@ -97,8 +97,6 @@ public class LocationProfileListFragment extends Fragment implements Constants, 
 			Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.fragment_location_profile_list, container, false);
-
-        Log.d(TAG,"Inside LocationProfileListFragment");
 		
 		Button newProfileButton = (Button)view.findViewById(R.id.emptyButtonAddProfile);
 		newProfileButton.setOnClickListener(new OnClickListener() {
@@ -112,9 +110,7 @@ public class LocationProfileListFragment extends Fragment implements Constants, 
 		});
 		
 
-		
 		listview = (ListView)view.findViewById(android.R.id.list);
-		
 		
 		profileAdapter = new ProfileListAdapter(profileList,listview);
 		listview.setAdapter(profileAdapter);

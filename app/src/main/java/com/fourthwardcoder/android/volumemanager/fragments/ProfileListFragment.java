@@ -120,7 +120,8 @@ Constants{
        // Log.e(TAG,"onCreateView with prifile list size " + profileList.size());
 		
 		listview = (ListView)view.findViewById(android.R.id.list);
-
+		ViewGroup headerView = (ViewGroup)inflater.inflate(R.layout.listview_header,listview,false);
+		listview.addHeaderView(headerView);
 
 		listview.setEmptyView(view.findViewById(android.R.id.empty));
 
