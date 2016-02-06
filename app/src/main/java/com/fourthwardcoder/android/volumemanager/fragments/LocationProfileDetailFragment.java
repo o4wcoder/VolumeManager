@@ -30,12 +30,12 @@ import android.widget.Toast;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
-public class EditLocationProfileFragment extends Fragment implements Constants {
+public class LocationProfileDetailFragment extends Fragment implements Constants {
 	
 	/*******************************************************/
 	/*                    Constants                        */
 	/*******************************************************/
-	private static final String TAG = "EditLocationProfileFragment";
+	private static final String TAG = "LocationProfileDetailFragment";
 	
 	/*******************************************************/
 	/*                   Local Data                        */
