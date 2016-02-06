@@ -5,13 +5,14 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fourthwardcoder.android.volumemanager.fragments.ProfileDetailFragment;
-import com.fourthwardcoder.android.volumemanager.models.LocationProfile;
+//import com.fourthwardcoder.android.volumemanager.models.LocationProfile;
 import com.fourthwardcoder.android.volumemanager.json.ProfileJSONManager;
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.fragments.AboutFragment;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.fourthwardcoder.android.volumemanager.location.GeofenceManager;
+import com.fourthwardcoder.android.volumemanager.models.Profile;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -88,7 +89,8 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 
 	//Current Locations data
 	private UUID profileId;
-	private LocationProfile currentProfile;
+	//private LocationProfile currentProfile;
+	private Profile mProfile;
 	private LatLng currentLocation;
 	private Address currentAddress;
 	private String currentCity;
@@ -117,27 +119,33 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		rlp.setMargins(0, 0, 30, 30);
 
 
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+	//	getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		Util.setStatusBarColor(this);
 
-		//pull out ID of profile
-		if(savedInstanceState != null) {
-			profileId = UUID.fromString(savedInstanceState.getString(KEY_ID));
+		Intent intent = getIntent();
+		//First check if we have don't have anything in saveInstanceState from a rotation
+		if(savedInstanceState == null) {
+			//See if we have a Profile object. If so we are editing the Profile.
+			//If not, it's a new profile
+			if (intent.hasExtra(EXTRA_PROFILE)) {
+				mProfile = intent.getParcelableExtra(EXTRA_PROFILE);
+			} else {
+				mProfile = new Profile();
+			}
 		}
 		else {
-			Intent intent = getIntent();
-			profileId = (UUID)intent.getSerializableExtra(EXTRA_PROFILE_ID);
+			//Restore Profile from rotation.
+			mProfile = savedInstanceState.getParcelable(EXTRA_PROFILE);
 		}
-		Log.d(TAG,"Profile id: " + profileId);
-
-		//Fetch the Profile from the ProfileJSONManager ArrayList
-		currentProfile = ProfileJSONManager.get(this).getLocationProfile(profileId);
 
 
-		if(currentProfile != null) {
-			currentLocation = currentProfile.getLocation();
-			currentRadius = currentProfile.getFenceRadius();
+
+		if(mProfile != null) {
+            if(mProfile.getLocation() != null) {
+                currentLocation = mProfile.getLocation().getLatLng();
+                currentRadius = mProfile.getLocation().getFenceRadius();
+            }
 		}
 
 		MapFragment mapFragment = (MapFragment) getFragmentManager()
@@ -179,7 +187,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent i = new Intent(LocationMapActivity.this,EditLocationProfileActivity.class);
-				i.putExtra(ProfileDetailFragment.EXTRA_PROFILE_ID,currentProfile.getId());
+				i.putExtra(ProfileDetailFragment.EXTRA_PROFILE_ID,mProfile.getId());
 				startActivity(i);
 
 			}
@@ -251,9 +259,9 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-		super.onSaveInstanceState(savedInstanceState);
 
-		savedInstanceState.putString(KEY_ID,profileId.toString());
+        savedInstanceState.putParcelable(EXTRA_PROFILE,mProfile);
+        super.onSaveInstanceState(savedInstanceState);
 	}
 
 	@Override
@@ -502,13 +510,13 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 
 		if(currentMarker != null)
 			currentMarker.remove();
-		Log.e(TAG,"Inside add Marker with title " + currentProfile.getTitle());
+	//	Log.e(TAG,"Inside add Marker with title " + currentProfile.getTitle());
 		String markerTitle;
 
 		//if(profile.getTitle() == "")
 		//	markerTitle = "New Location";
 		//	else
-		markerTitle = currentProfile.getTitle();
+		markerTitle = mProfile.getTitle();
 		MarkerOptions options = new MarkerOptions()
 		.position(currentLocation)
 		.title(markerTitle);
@@ -602,20 +610,20 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 
 
 		if(currentLocation != null)
-			currentProfile.setLocation(currentLocation);
+			mProfile.getLocation().setLatLng(currentLocation);
 
 		if(currentAddress != null) {
-			currentProfile.setAddress(currentAddress.getAddressLine(0));
-			currentProfile.setCity(currentCity);
+			mProfile.getLocation().setAddress(currentAddress.getAddressLine(0));
+			mProfile.getLocation().setCity(currentCity);
 		}
 
-		currentProfile.setFenceRadius(currentRadius);
+		mProfile.getLocation().setFenceRadius(currentRadius);
 
 		ProfileJSONManager.get(this).saveLocationProfiles();
 
 		//Create geofence from new location profile
 		//Geofence fence = createGeofence(currentProfile);
-		Geofence fence = geofenceManager.createGeofence(currentProfile);
+		Geofence fence = geofenceManager.createGeofence(mProfile);
 		//store geofence's from all other locations
 		//populateGeofenceList();
 

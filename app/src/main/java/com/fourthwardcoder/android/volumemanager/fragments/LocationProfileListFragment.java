@@ -2,6 +2,7 @@ package com.fourthwardcoder.android.volumemanager.fragments;
 
 import java.util.ArrayList;
 
+import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.json.ProfileJSONManager;
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
@@ -23,8 +24,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.app.FragmentManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -61,12 +62,19 @@ public class LocationProfileListFragment extends Fragment implements Constants, 
 	ProfileListAdapter profileAdapter;
 	ListView listview;
 	TabName tab;
-	 GoogleApiClient mGoogleApiClient;
+    GoogleApiClient mGoogleApiClient;
+
+	public static LocationProfileListFragment newInstance() {
+
+		Bundle args = new Bundle();
+		LocationProfileListFragment fragment = new LocationProfileListFragment();
+
+		fragment.setArguments(args);
+		return fragment;
+	}
 	/***************************************************/
 	/*                Override Methods                 */
 	/***************************************************/
-	
-
 	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -103,7 +111,7 @@ public class LocationProfileListFragment extends Fragment implements Constants, 
 
 			@Override
 			public void onClick(View v) {
-				newProfile();
+                ProfileManager.newLocationProfile(getActivity());
 				
 			}
 			
@@ -295,11 +303,11 @@ public class LocationProfileListFragment extends Fragment implements Constants, 
 			startActivity(settingsIntent);
 			return true;
 		case R.id.menu_item_about:
-			FragmentManager fm = getActivity().getFragmentManager();
-			AboutFragment dialog = AboutFragment.newInstance();
+		//	FragmentManager fm = getActivity().getFragmentManager();
+			//AboutFragment dialog = AboutFragment.newInstance();
 			//Make ProfileListFragment the target fragment of the TimePickerFragment instance
 			//dialog.setTargetFragment(VolumeManagerFragment.this, REQUEST_START_TIME);
-			dialog.show(fm, "about");
+		//	dialog.show(fm, "about");
 			
 			
 		default:

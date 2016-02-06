@@ -32,51 +32,51 @@ public class LocationProfile extends Profile implements Constants {
 	/*******************************************************/
 	/*
 	public LocationData(LatLng latLng) {
-		
+
 		this.latLng = latLng;
 	}
 	*/
-	
-	
-	
+
+
+
 	public LocationProfile() {
-		
+
 		latLng = null;
 		fenceRadius = GEOFENCE_RADIUS_DEFAULT;
-		
+
 	}
 	public LocationProfile(JSONObject json) throws JSONException {
 		super.setId(UUID.fromString(json.getString(JSON_ID)));
-		
+
 		if(json.has(JSON_TITLE)) {
 			super.setTitle(json.getString(JSON_TITLE));
 		}
-		
+
 		this.address = json.getString(JSON_ADDRESS);
 		this.city = json.getString(JSON_CITY);
-		
+
 		//Get LatLng data
 		double latitude = json.getDouble(JSON_LATITUDE);
 		double longitude = json.getDouble(JSON_LONGITUDE);
 		latLng = new LatLng(latitude,longitude);
-		
+
 		super.setEnabled(json.getBoolean(JSON_ENABLED));
 		super.setStartVolumeType(json.getInt(JSON_START_VOLUME_TYPE));
 		super.setEndVolumeType(json.getInt(JSON_END_VOLUME_TYPE));
 		super.setStartRingVolume(json.getInt(JSON_START_RING_VOLUME));
 		super.setEndRingVolume(json.getInt(JSON_END_RING_VOLUME));
-		
+
 		fenceRadius = (float)json.getDouble(JSON_RADIUS);
-		
-		
-		
+
+
+
 	}
-	
+
 	/*******************************************************/
 	/*                    Public Methods                   */
 	/*******************************************************/
 	public JSONObject toJSON() throws JSONException {
-	
+
 		JSONObject json = new JSONObject();
 		json.put(JSON_ID, super.getId().toString());
 		json.put(JSON_TITLE, super.getTitle());
@@ -92,20 +92,20 @@ public class LocationProfile extends Profile implements Constants {
 		json.put(JSON_RADIUS, fenceRadius);
 
 
-		
+
 		return json;
 	}
 
-	public LatLng getLocation() {
-		return this.latLng;
-	}
-	public void setLocation(LatLng latLng) {
-		this.latLng = latLng;
-	}
+//	public LatLng getLocation() {
+//		return this.latLng;
+//	}
+//	public void setLocation(LatLng latLng) {
+//		this.latLng = latLng;
+//	}
 	public String getAddress() {
 		return address;
 	}
-	
+
 	public void setAddress(String address) {
 		this.address = address;
 	}
@@ -121,10 +121,10 @@ public class LocationProfile extends Profile implements Constants {
 	public String getCity() {
 		return city;
 	}
-	
+
 	public void setCity(String city) {
 		this.city = city;
 	}
 
-	
+
 }

@@ -42,7 +42,7 @@ public class Profile implements Constants, Parcelable {
     //private boolean daysOfTheWeek[] = new boolean[DAYS_OF_THE_WEEK];
     private ArrayList<Boolean> daysOfTheWeek;
     private boolean inAlarm;
-
+    private GeoFenceLocation location;
 
     public Profile() {
 
@@ -61,6 +61,7 @@ public class Profile implements Constants, Parcelable {
         calculateAlarmId();
         daysOfTheWeek = new ArrayList<>(DAYS_OF_THE_WEEK);
         initDaysOfWeek();
+        location = null;
 
     }
 
@@ -247,6 +248,15 @@ public class Profile implements Constants, Parcelable {
     public void setInAlarm(boolean inAlarm) {
         this.inAlarm = inAlarm;
     }
+
+    public GeoFenceLocation getLocation() {
+        return location;
+    }
+
+    public void setLocation(GeoFenceLocation location) {
+        this.location = location;
+    }
+
     /*****************************************************/
 	/*                   Private Methods                 */
     /*****************************************************/
@@ -287,6 +297,7 @@ public class Profile implements Constants, Parcelable {
             daysOfTheWeek = null;
         }
         inAlarm = in.readByte() != 0x00;
+        location = (GeoFenceLocation) in.readValue(GeoFenceLocation.class.getClassLoader());
     }
 
     @Override
@@ -315,6 +326,7 @@ public class Profile implements Constants, Parcelable {
             dest.writeList(daysOfTheWeek);
         }
         dest.writeByte((byte) (inAlarm ? 0x01 : 0x00));
+        dest.writeValue(location);
     }
 
     @SuppressWarnings("unused")

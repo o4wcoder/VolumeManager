@@ -1,6 +1,7 @@
 package com.fourthwardcoder.android.volumemanager.location;
 import java.util.ArrayList;
 
+import com.fourthwardcoder.android.volumemanager.models.Profile;
 import com.fourthwardcoder.android.volumemanager.services.GeofenceService;
 import com.fourthwardcoder.android.volumemanager.models.LocationProfile;
 import com.fourthwardcoder.android.volumemanager.json.ProfileJSONManager;
@@ -66,12 +67,12 @@ public class GeofenceManager {
 	}
 	
 	
-	public Geofence createGeofence(LocationProfile profile) {
+	public Geofence createGeofence(Profile profile) {
 		
 		return new Geofence.Builder()
 		.setRequestId(profile.getId().toString())
 		.setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
-		.setCircularRegion(profile.getLocation().latitude, profile.getLocation().longitude,profile.getFenceRadius())
+		.setCircularRegion(profile.getLocation().getLatLng().latitude, profile.getLocation().getLatLng().longitude,profile.getLocation().getFenceRadius())
 		.setExpirationDuration(Geofence.NEVER_EXPIRE)
 		.build();
 		

@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
+import com.fourthwardcoder.android.volumemanager.activites.LocationMapActivity;
 import com.fourthwardcoder.android.volumemanager.activites.ProfileDetailActivity;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
 
@@ -23,18 +24,17 @@ public class ProfileManager {
 
     public static void newProfile(Activity activity)
     {
-
-    	/*
-    	 * !!!! TODO Hook up to Pager Activity when created
-    	 */
         Intent i = new Intent(activity,ProfileDetailActivity.class);
-
-        //Send the profile ID in the intent to
-        // i.putExtra(ProfileDetailFragment.EXTRA_PROFILE_ID, null);
 
         activity.startActivityForResult(i, 0);
 
+    }
 
+    public static void newLocationProfile(Activity activity) {
+
+        Intent i = new Intent(activity,LocationMapActivity.class);
+
+        activity.startActivityForResult(i, 0);
     }
 
     public static Profile getProfile(Context context, UUID profileId) {

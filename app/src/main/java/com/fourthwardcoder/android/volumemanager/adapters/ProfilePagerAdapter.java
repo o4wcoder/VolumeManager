@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.fourthwardcoder.android.volumemanager.fragments.LocationProfileListFragment;
 import com.fourthwardcoder.android.volumemanager.fragments.ProfileListFragment;
 
 /**
@@ -36,7 +37,7 @@ public class ProfilePagerAdapter extends FragmentStatePagerAdapter {
                 ProfileListFragment tab1 = ProfileListFragment.newInstance();
                 return tab1;
             case 1:
-                ProfileListFragment tab2 = ProfileListFragment.newInstance();
+                LocationProfileListFragment tab2 = LocationProfileListFragment.newInstance();
                 return tab2;
             default:
                 return null;
