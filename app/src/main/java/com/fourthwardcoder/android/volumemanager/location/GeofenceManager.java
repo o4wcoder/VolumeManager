@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 import com.fourthwardcoder.android.volumemanager.services.GeofenceService;
 import com.fourthwardcoder.android.volumemanager.models.LocationProfile;
-import com.fourthwardcoder.android.volumemanager.data.ProfileJSONManager;
+import com.fourthwardcoder.android.volumemanager.json.ProfileJSONManager;
 import com.fourthwardcoder.android.volumemanager.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;

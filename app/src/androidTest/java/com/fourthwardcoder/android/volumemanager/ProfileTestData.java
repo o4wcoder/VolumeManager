@@ -31,4 +31,18 @@ public class ProfileTestData {
         return profileValues;
 
     }
+
+    static ContentValues createLocationValues() {
+
+        ContentValues locationValues = new ContentValues();
+
+        locationValues.put(ProfileContract.LocationEntry.COLUMN_LATITUDE,34.123);
+        locationValues.put(ProfileContract.LocationEntry.COLUMN_LONGITUDE,45.5678);
+        locationValues.put(ProfileContract.LocationEntry.COLUMN_ADDRESS,"123 Spring St. NE");
+        locationValues.put(ProfileContract.LocationEntry.COLUMN_CITY,"Atlanta");
+        locationValues.put(ProfileContract.LocationEntry.COLUMN_RADIUS,50);
+
+        return locationValues;
+
+    }
 }

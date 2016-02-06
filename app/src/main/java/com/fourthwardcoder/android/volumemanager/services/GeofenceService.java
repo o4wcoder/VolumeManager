@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fourthwardcoder.android.volumemanager.activites.LocationMapActivity;
-import com.fourthwardcoder.android.volumemanager.data.ProfileJSONManager;
+import com.fourthwardcoder.android.volumemanager.json.ProfileJSONManager;
 import com.fourthwardcoder.android.volumemanager.models.LocationProfile;
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;

@@ -2,7 +2,6 @@ package com.fourthwardcoder.android.volumemanager.services;
 
 import java.util.ArrayList;
 
-import com.fourthwardcoder.android.volumemanager.data.ProfileJSONManager;
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.fourthwardcoder.android.volumemanager.location.GeofenceManager;

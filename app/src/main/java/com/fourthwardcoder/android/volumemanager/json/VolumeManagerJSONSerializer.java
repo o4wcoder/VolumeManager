@@ -1,4 +1,4 @@
-package com.fourthwardcoder.android.volumemanager.data;
+package com.fourthwardcoder.android.volumemanager.json;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

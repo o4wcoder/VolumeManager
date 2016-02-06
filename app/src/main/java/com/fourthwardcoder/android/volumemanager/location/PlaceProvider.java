@@ -17,8 +17,8 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.util.Log;
 
-import com.fourthwardcoder.android.volumemanager.data.PlaceDetailsJSONParser;
-import com.fourthwardcoder.android.volumemanager.data.PlaceJSONParser;
+import com.fourthwardcoder.android.volumemanager.places.PlaceDetailsJSONParser;
+import com.fourthwardcoder.android.volumemanager.places.PlaceJSONParser;
 
 public class PlaceProvider extends ContentProvider{
 	

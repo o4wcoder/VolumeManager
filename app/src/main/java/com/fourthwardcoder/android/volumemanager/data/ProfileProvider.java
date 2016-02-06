@@ -24,6 +24,8 @@ public class ProfileProvider extends ContentProvider{
     /************************************************************************/
     static final int PROFILE = 100;
     static final int PROFILE_WITH_ID = 101;
+    static final int PROFILE_WITH_LOCATION = 102;
+    static final int LOCATION = 200;
 
     /************************************************************************/
     /*                           Local Data                                 */

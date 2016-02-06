@@ -1,4 +1,4 @@
-package com.fourthwardcoder.android.volumemanager.data;
+package com.fourthwardcoder.android.volumemanager.places;
 
 import java.util.ArrayList;
 import java.util.HashMap;

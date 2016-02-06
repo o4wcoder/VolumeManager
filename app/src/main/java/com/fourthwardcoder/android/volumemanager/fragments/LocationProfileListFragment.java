@@ -2,7 +2,7 @@ package com.fourthwardcoder.android.volumemanager.fragments;
 
 import java.util.ArrayList;
 
-import com.fourthwardcoder.android.volumemanager.data.ProfileJSONManager;
+import com.fourthwardcoder.android.volumemanager.json.ProfileJSONManager;
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;

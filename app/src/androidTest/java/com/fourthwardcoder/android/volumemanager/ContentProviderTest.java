@@ -118,4 +118,31 @@ public class ContentProviderTest extends ApplicationTestCase<Application> {
         assertTrue( "Error: No Records returned from profile query", profileCursor.moveToFirst() );
 
     }
+
+    public void testLocationQuery() {
+
+        ProfileDbHelper dbHelper = new ProfileDbHelper(mContext);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        ContentValues locationValues = ProfileTestData.createLocationValues();
+
+        long locationRowId = db.insert(ProfileContract.LocationEntry.TABLE_NAME, null, locationValues);
+        assertTrue("Unable to Insert ProfileEntry into the Database", locationRowId != -1);
+
+        db.close();
+
+        // Test the basic content provider query
+        Cursor profileCursor = mContext.getContentResolver().query(
+                ProfileContract.LocationEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                null
+        );
+
+        // Move the cursor to the first valid database row and check to see if we have any rows
+        assertTrue( "Error: No Records returned from profile query", profileCursor.moveToFirst() );
+
+
+    }
 }
