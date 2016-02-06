@@ -40,7 +40,7 @@ public class ProfileTestData {
         locationValues.put(ProfileContract.LocationEntry.COLUMN_LONGITUDE,45.5678);
         locationValues.put(ProfileContract.LocationEntry.COLUMN_ADDRESS,"123 Spring St. NE");
         locationValues.put(ProfileContract.LocationEntry.COLUMN_CITY,"Atlanta");
-        locationValues.put(ProfileContract.LocationEntry.COLUMN_RADIUS,50);
+        locationValues.put(ProfileContract.LocationEntry.COLUMN_RADIUS,50.0);
 
         return locationValues;
 

@@ -14,7 +14,7 @@ public class ProfileDbHelper extends SQLiteOpenHelper {
     /********************************************************************/
     /*                           Constants                              */
     /********************************************************************/
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "profiles.db";
 
     /********************************************************************/
@@ -31,12 +31,12 @@ public class ProfileDbHelper extends SQLiteOpenHelper {
          * Create Location Table
          */
         final String SQL_CREATE_LOCATION_TABLE = "CREATE TABLE " + LocationEntry.TABLE_NAME + " (" +
-                LocationEntry._ID + " INTEGER PRIMARY KEY," +
-                LocationEntry.COLUMN_LATITUDE + " REAL NOT NULL," +
-                LocationEntry.COLUMN_LONGITUDE + " REAL NOT NULL," +
-                LocationEntry.COLUMN_ADDRESS + " TEXT NOT NULL," +
-                LocationEntry.COLUMN_CITY + " TEXT NOT NULL," +
-                LocationEntry.COLUMN_RADIUS + " REAL NOT NULL," +
+                LocationEntry._ID + " INTEGER PRIMARY KEY, " +
+                LocationEntry.COLUMN_LATITUDE + " REAL NOT NULL, " +
+                LocationEntry.COLUMN_LONGITUDE + " REAL NOT NULL, " +
+                LocationEntry.COLUMN_ADDRESS + " TEXT NOT NULL, " +
+                LocationEntry.COLUMN_CITY + " TEXT NOT NULL, " +
+                LocationEntry.COLUMN_RADIUS + " REAL NOT NULL " +
                 " );";
         /*
          * Create Profile Table
@@ -58,7 +58,7 @@ public class ProfileDbHelper extends SQLiteOpenHelper {
                 ProfileEntry.COLUMN_END_DATE + " INTEGER NOT NULL, " +
                 ProfileEntry.COLUMN_DAYS_OF_THE_WEEK + " INTEGER," +
                 ProfileEntry.COLUMN_IN_ALARM + " BIT NOT NULL, " +
-                ProfileEntry.COLUMN_LOC_KEY + " INTEGER NOT NULL, " +
+                ProfileEntry.COLUMN_LOC_KEY + " INTEGER, " +
 
                 // Set up the location column as a foreign key to location table.
                 " FOREIGN KEY (" + ProfileEntry.COLUMN_LOC_KEY + ") REFERENCES " +
@@ -68,6 +68,7 @@ public class ProfileDbHelper extends SQLiteOpenHelper {
                 ProfileEntry.COLUMN_LOC_KEY + ") ON CONFLICT REPLACE);";
 
         //Put location and profile tables in Database
+
         sqLiteDatabase.execSQL(SQL_CREATE_LOCATION_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_PROFILE_TABLE);
 

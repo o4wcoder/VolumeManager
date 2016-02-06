@@ -40,6 +40,7 @@ public class ProfileProvider extends ContentProvider{
 
         sURIMather.addURI(authority, ProfileContract.PATH_PROFILE, PROFILE);
         sURIMather.addURI(authority, ProfileContract.PATH_PROFILE + "/#", PROFILE_WITH_ID);
+        sURIMather.addURI(authority, ProfileContract.PATH_LOCATION, LOCATION);
 
         return sURIMather;
     }
@@ -67,6 +68,20 @@ public class ProfileProvider extends ContentProvider{
                 );
                 break;
             }
+
+            case LOCATION: {
+                retCursor = mProfileDbHelper.getReadableDatabase().query(
+                        ProfileContract.LocationEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            }
+
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -85,6 +100,10 @@ public class ProfileProvider extends ContentProvider{
                 return ProfileContract.ProfileEntry.CONTENT_TYPE;
             case PROFILE_WITH_ID:
                 return ProfileContract.ProfileEntry.CONTENT_ITEM_TYPE;
+            case PROFILE_WITH_LOCATION:
+                return ProfileContract.ProfileEntry.CONTENT_ITEM_TYPE;
+            case LOCATION:
+                return ProfileContract.LocationEntry.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -101,6 +120,14 @@ public class ProfileProvider extends ContentProvider{
                 long _id = db.insert(ProfileContract.ProfileEntry.TABLE_NAME, null, contentValues);
                 if (_id > 0)
                     returnUri = ProfileContract.ProfileEntry.buildProfileUri();
+                else
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                break;
+            }
+            case LOCATION: {
+                long _id = db.insert(ProfileContract.LocationEntry.TABLE_NAME, null, contentValues);
+                if ( _id > 0 )
+                    returnUri = ProfileContract.LocationEntry.buildLocationUri(_id);
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
@@ -130,6 +157,9 @@ public class ProfileProvider extends ContentProvider{
                 deletedRows = db.delete(ProfileContract.ProfileEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             }
+            case LOCATION:
+                deletedRows = db.delete(ProfileContract.LocationEntry.TABLE_NAME, selection, selectionArgs);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknow uri: " + uri);
         }

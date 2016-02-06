@@ -8,6 +8,7 @@ import android.content.pm.ProviderInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.test.ApplicationTestCase;
+import android.util.Log;
 
 import com.fourthwardcoder.android.volumemanager.data.ProfileContract;
 import com.fourthwardcoder.android.volumemanager.data.ProfileDbHelper;
@@ -17,6 +18,8 @@ import com.fourthwardcoder.android.volumemanager.data.ProfileProvider;
  * Created by Chris Hare on 1/22/2016.
  */
 public class ContentProviderTest extends ApplicationTestCase<Application> {
+
+    private static final String TAG = ContentProviderTest.class.getSimpleName();
 
     public ContentProviderTest() {
         super(Application.class);
@@ -45,6 +48,23 @@ public class ContentProviderTest extends ApplicationTestCase<Application> {
                 null
         );
         assertEquals("Error: Records not deleted from Weather table during delete", 0, cursor.getCount());
+        cursor.close();
+
+        mContext.getContentResolver().delete(
+                ProfileContract.LocationEntry.CONTENT_URI,
+                null,
+                null
+        );
+
+        //Query the Content Provider DB and make sure it's empty
+        Cursor locationCursor = mContext.getContentResolver().query(
+                ProfileContract.LocationEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                null
+        );
+        assertEquals("Error: Records not deleted from Weather table during delete", 0, locationCursor.getCount());
         cursor.close();
     }
 
@@ -127,12 +147,13 @@ public class ContentProviderTest extends ApplicationTestCase<Application> {
         ContentValues locationValues = ProfileTestData.createLocationValues();
 
         long locationRowId = db.insert(ProfileContract.LocationEntry.TABLE_NAME, null, locationValues);
-        assertTrue("Unable to Insert ProfileEntry into the Database", locationRowId != -1);
+
+        assertTrue("Unable to Insert LocationEntry into the Database", locationRowId != -1);
 
         db.close();
 
         // Test the basic content provider query
-        Cursor profileCursor = mContext.getContentResolver().query(
+        Cursor locationCursor = mContext.getContentResolver().query(
                 ProfileContract.LocationEntry.CONTENT_URI,
                 null,
                 null,
@@ -141,7 +162,7 @@ public class ContentProviderTest extends ApplicationTestCase<Application> {
         );
 
         // Move the cursor to the first valid database row and check to see if we have any rows
-        assertTrue( "Error: No Records returned from profile query", profileCursor.moveToFirst() );
+        assertTrue( "Error: No Records returned from profile query", locationCursor.moveToFirst() );
 
 
     }

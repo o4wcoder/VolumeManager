@@ -34,13 +34,15 @@ public class DatabaseTest extends ApplicationTestCase<Application> {
      */
     public void testCreateDb() throws Throwable{
 
-        String tableName = ProfileContract.ProfileEntry.TABLE_NAME;
+       // String tableName = ProfileContract.ProfileEntry.TABLE_NAME;
 
         SQLiteDatabase db = new ProfileDbHelper(this.mContext).getWritableDatabase();
 
         assertEquals(true, db.isOpen());
 
     }
+
+
 
     public void testProfileTable() {
 

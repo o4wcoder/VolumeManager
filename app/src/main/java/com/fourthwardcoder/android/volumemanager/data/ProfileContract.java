@@ -26,6 +26,13 @@ public class ProfileContract {
     public static final int COL_PROFILE_DAYS_OF_THE_WEEK = 13;
     public static final int COL_PROFILE_IN_ALARM = 14;
 
+    public static final int COL_LOCATION = 0;
+    public static final int COL_LOCATION_LATITUDE = 1;
+    public static final int COL_LOCATION_LONGITUDE = 2;
+    public static final int COL_LOCATION_ADDRESS = 3;
+    public static final int COL_LOCATION_RADIUS = 4;
+
+
     //Content provider authority for Movie DB
     public static final String CONTENT_AUTHORITY = "com.fourthwardcoder.android.volumemanager";
 
@@ -61,14 +68,14 @@ public class ProfileContract {
         public static final String COLUMN_CITY = "location_city";
         public static final String COLUMN_RADIUS = "location_radius";
 
-        public static Uri buildProfileUri() {
-            return CONTENT_URI;
+        public static Uri buildLocationUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI,id);
         }
 
-        public static Uri buildProfileWithIdUri(int id) {
-
-            return ContentUris.withAppendedId(CONTENT_URI, id);
-        }
+//        public static Uri buildProfileWithIdUri(int id) {
+//
+//            return ContentUris.withAppendedId(CONTENT_URI, id);
+//        }
     }
 
     /*********************************************************************/
