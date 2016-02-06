@@ -40,7 +40,7 @@ public class VolumeManagerService extends IntentService implements Constants {
 	/*                           Constants                               */
 	/*********************************************************************/
 	private static final int POLL_INTERVAL = 1000 * 5; //15 seconds
-	private static final String TAG = "VolumeManagerService";
+	private static final String TAG = VolumeManagerService.class.getSimpleName();
 
 	/*********************************************************************/
 	/*                          Local Data                               */
@@ -57,16 +57,18 @@ public class VolumeManagerService extends IntentService implements Constants {
 		int ringType = VOLUME_OFF;
 		int ringVolume = 1;
 
+		Log.e(TAG,"In onHandleIntent(). Get Profile ID");
 		
 		//SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		UUID profileId = (UUID)intent.getSerializableExtra(EXTRA_PROFILE_ID);
 		//profile = ProfileJSONManager.get(getApplicationContext()).getProfile(profileId);
+        profile = ProfileManager.getProfile(this,profileId);
 
-        profile = ProfileManager.getProfile(getApplicationContext(),profileId);
 
 		if(profile != null) {
 
+            profile = ProfileManager.getProfile(getApplicationContext(),profileId);
 			//Only fire off volume change if it is set to start for that day, or is
 			//currently in the alarm period and waiting for it to end. It period may end on the next day
 			if(isAlarmSetForToday(profile) || (profile.isInAlarm() == true)) {
@@ -184,7 +186,7 @@ public class VolumeManagerService extends IntentService implements Constants {
 	public static void setServiceAlarm(Context context, Profile profile, boolean isOn) {
 
 		//Construct pending intent that will start PollService
-		Log.d(TAG,"Setting Service (start/end) Alarm");
+		Log.e(TAG,"Setting Service (start/end) Alarm for profile " + profile.getTitle());
 		//Create start alarm intent
 
 

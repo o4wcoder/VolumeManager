@@ -133,7 +133,7 @@ Constants{
 				// TODO Auto-generated method stub
 				// TODO Auto-generated method stub
 
-				Profile p = (Profile)profileAdapter.getItem(position);
+				Profile p = (Profile)parent.getItemAtPosition(position);
 				Log.d(TAG,"Got profile " + p.getTitle());
 
 				//Start CrimePagerActivity with this Crime
@@ -167,14 +167,16 @@ Constants{
 					case R.id.menu_item_delete_profile:
 						
 						//ProfileJSONManager profileManager = ProfileJSONManager.get(getActivity());
- 
-						Log.d(TAG,"in onActionItemClicked with adapter count "+ profileAdapter.getCount());
-						//Delete selected crimes
-						for(int i = profileAdapter.getCount() - 1; i >= 0; i--) {
+
+						Log.e(TAG,"in onActionItemClicked with adapter count "+ profileAdapter.getCount());
+                        Log.e(TAG,"listivew count " + listview.getCount());
+
+						//Delete selected profiles
+						for(int i = listview.getCount() - 1; i > 0; i--) {
 							if(listview.isItemChecked(i)) {
 								//Kill alarms for volume control
-								VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), profileAdapter.getItem(i), false);
-                                ProfileManager.deleteProfile(getActivity(), profileAdapter.getItem(i));
+								VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), profileAdapter.getItem(i-1), false);
+                                ProfileManager.deleteProfile(getActivity(), profileAdapter.getItem(i-1));
 							//	profileManager.deleteProfile(profileAdapter.getItem(i));
 							}
 						}
@@ -268,12 +270,14 @@ Constants{
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		
-		Log.d(TAG,"in onContextItemSelected");
+
 		//Get menu item in context menu. ListView is a subclass of AdapterView
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
 		int position = info.position;
-		
-		Profile profile = profileAdapter.getItem(position);
+      //  Log.d(TAG,"in onContextItemSelected with position: " + );
+
+		Profile profile = (Profile)listview.getItemAtPosition(position);
+        Log.e(TAG,"Deleting profile " + profile.getTitle());
 		
 		switch (item.getItemId()) {
 		   case R.id.menu_item_delete_profile:

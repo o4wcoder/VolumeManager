@@ -39,6 +39,7 @@ import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
+import com.fourthwardcoder.android.volumemanager.services.VolumeManagerService;
 
 /**
  * VolumeManagerFragment
@@ -356,8 +357,8 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 	    ((RadioButton)endVolumeRadioGroup.getChildAt(mProfile.getEndVolumeType())).setChecked(true);
 
 
-	    Util.setTimeForLargeTextView(mProfile.getStartDate(),startTimeTextView);
-	    Util.setTimeForLargeTextView(mProfile.getEndDate(),endTimeTextView);
+	    Util.setTimeForLargeTextView(mProfile.getStartDate(), startTimeTextView);
+	    Util.setTimeForLargeTextView(mProfile.getEndDate(), endTimeTextView);
 	    //Set Seekbar default
 	    Util.setSeekBarPosition(startRingSeekBar,startRingVolumeTextView,mProfile.getStartRingVolume(),Util.getMaxRingVolume(getActivity().getApplicationContext()));
 	    Util.setSeekBarPosition(endRingSeekBar,endRingVolumeTextView,mProfile.getEndRingVolume(),Util.getMaxRingVolume(getActivity().getApplicationContext()));
@@ -397,7 +398,7 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 		
 		if(requestCode == REQUEST_START_TIME) {
             mProfile.setStartDate((Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME));
-			Util.setTimeForLargeTextView(mProfile.getStartDate(),startTimeTextView);
+			Util.setTimeForLargeTextView(mProfile.getStartDate(), startTimeTextView);
 		}
 		else if(requestCode == REQUEST_END_TIME) {
             mProfile.setEndDate((Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME));
@@ -520,6 +521,9 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 		
 		//ProfileJSONManager.get(getActivity()).saveProfiles();
         ProfileManager.insertProfile(getActivity(), mProfile);
+
+        //Set Volume Control Alarms
+        VolumeManagerService.setServiceAlarm(getActivity(),mProfile,true);
 
 
 
