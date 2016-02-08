@@ -64,11 +64,11 @@ public class ProfileManager {
 
     public static ArrayList<Profile> getProfileList(Context context) {
 
-
+        String selection = ProfileContract.ProfileEntry.COLUMN_LOC_KEY + " IS NULL";
         //Get all rows(profiles) in the table
         Cursor cursor = context.getContentResolver().query(ProfileContract.ProfileEntry.CONTENT_URI,
                 null,
-                null,
+                selection,
                 null,
                 null);
 
@@ -89,6 +89,32 @@ public class ProfileManager {
 
     }
 
+    public static ArrayList<Profile> getLocationProfileList(Context context) {
+
+        String selection = ProfileContract.ProfileEntry.COLUMN_LOC_KEY + " IS NOT NULL";
+        //Get all rows(profiles) in the table
+        Cursor cursor = context.getContentResolver().query(ProfileContract.ProfileEntry.CONTENT_URI,
+                null,
+                selection,
+                null,
+                null);
+
+        if(cursor != null) {
+
+            ArrayList<Profile> profileList = new ArrayList<>(cursor.getCount());
+
+            cursor.moveToFirst();
+            while(cursor.moveToNext()) {
+                Profile profile = new Profile(cursor);
+                profileList.add(profile);
+            }
+            return profileList;
+        }
+        else {
+            return null;
+        }
+
+    }
     public static int updateProfile(Context context, Profile profile) {
 
         //Put togeter SQL selection

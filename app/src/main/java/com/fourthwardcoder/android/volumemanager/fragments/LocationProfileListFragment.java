@@ -3,14 +3,15 @@ package com.fourthwardcoder.android.volumemanager.fragments;
 import java.util.ArrayList;
 
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
-import com.fourthwardcoder.android.volumemanager.json.ProfileJSONManager;
+//import com.fourthwardcoder.android.volumemanager.json.ProfileJSONManager;
 import com.fourthwardcoder.android.volumemanager.R;
-import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
+//import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.activites.LocationMapActivity;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.fourthwardcoder.android.volumemanager.location.GeofenceManager;
-import com.fourthwardcoder.android.volumemanager.models.LocationProfile;
+//import com.fourthwardcoder.android.volumemanager.models.LocationProfile;
+import com.fourthwardcoder.android.volumemanager.models.Profile;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
@@ -58,7 +59,7 @@ public class LocationProfileListFragment extends Fragment implements Constants, 
 	/***************************************************/
 	/*                 Local Data                      */
 	/***************************************************/
-	private ArrayList<LocationProfile> profileList;
+	private ArrayList<Profile> profileList;
 	ProfileListAdapter profileAdapter;
 	ListView listview;
 	TabName tab;
@@ -87,7 +88,7 @@ public class LocationProfileListFragment extends Fragment implements Constants, 
 		//retain the instance on rotation
 		setRetainInstance(true);
 				   
-		profileList = ProfileJSONManager.get(getActivity()).getLocationProfiles();
+		//profileList = ProfileJSONManager.get(getActivity()).getLocationProfiles();
 
         Util.setStatusBarColor(getActivity());
         
@@ -132,7 +133,7 @@ public class LocationProfileListFragment extends Fragment implements Constants, 
 				// TODO Auto-generated method stub
 				// TODO Auto-generated method stub
 
-				LocationProfile p = (LocationProfile)profileAdapter.getItem(position);
+				Profile p = (Profile)profileAdapter.getItem(position);
 				Log.d(TAG,"Got profile " + p.getTitle());
 
 				//Start CrimePagerActivity with this Crime
@@ -165,7 +166,7 @@ public class LocationProfileListFragment extends Fragment implements Constants, 
 					switch (item.getItemId()) {
 					case R.id.menu_item_delete_profile:
 						
-						ProfileJSONManager profileJSONManager = ProfileJSONManager.get(getActivity());
+						//ProfileJSONManager profileJSONManager = ProfileJSONManager.get(getActivity());
  
 						Log.d(TAG,"in onActionItemClicked with adapter count "+ profileAdapter.getCount());
 						//Delete selected crimes
@@ -173,13 +174,13 @@ public class LocationProfileListFragment extends Fragment implements Constants, 
 							if(listview.isItemChecked(i)) {
 								//Kill alarms for volume control
 								//VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), profileAdapter.getItem(i),false);
-								profileJSONManager.deleteLocationProfile(profileAdapter.getItem(i));
+								//profileJSONManager.deleteLocationProfile(profileAdapter.getItem(i));
 							}
 						}
 
 						//Destroy Action mode context menu
 						mode.finish();
-                        profileJSONManager.saveLocationProfiles();
+                     //   profileJSONManager.saveLocationProfiles();
 						profileAdapter.notifyDataSetChanged();
 						
 						updateGeofences();
@@ -272,12 +273,12 @@ public class LocationProfileListFragment extends Fragment implements Constants, 
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
 		int position = info.position;
 		
-		LocationProfile profile = profileAdapter.getItem(position);
+		Profile profile = profileAdapter.getItem(position);
 		
 		switch (item.getItemId()) {
 		   case R.id.menu_item_delete_profile:
-			   ProfileJSONManager.get(getActivity()).deleteLocationProfile(profile);
-			   ProfileJSONManager.get(getActivity()).saveLocationProfiles();
+			  // ProfileJSONManager.get(getActivity()).deleteLocationProfile(profile);
+			   //ProfileJSONManager.get(getActivity()).saveLocationProfiles();
 			   profileAdapter.notifyDataSetChanged();
 			   
 			   updateGeofences();
@@ -299,8 +300,8 @@ public class LocationProfileListFragment extends Fragment implements Constants, 
 			//Return true, no further processing is necessary
 			return true;  	
 		case R.id.menu_item_settings:
-			Intent settingsIntent = new Intent(getActivity(),SettingsActivity.class);
-			startActivity(settingsIntent);
+			//Intent settingsIntent = new Intent(getActivity(),SettingsActivity.class);
+			//startActivity(settingsIntent);
 			return true;
 		case R.id.menu_item_about:
 		//	FragmentManager fm = getActivity().getFragmentManager();
@@ -321,8 +322,8 @@ public class LocationProfileListFragment extends Fragment implements Constants, 
 	private void newProfile()
 	{
     	//Add profile to the static List Array of Locations
-    	LocationProfile profile = new LocationProfile();
-    	ProfileJSONManager.get(getActivity()).addLocationProfile(profile);
+    	Profile profile = new Profile();
+    	//ProfileJSONManager.get(getActivity()).addLocationProfile(profile);
     	
     	Intent i = new Intent(getActivity(),LocationMapActivity.class);
     	
@@ -367,15 +368,15 @@ public class LocationProfileListFragment extends Fragment implements Constants, 
 		public TextView radiusTextView;
 	}
 	
-	private class ProfileListAdapter extends ArrayAdapter<LocationProfile> {
+	private class ProfileListAdapter extends ArrayAdapter<Profile> {
 
 		private ListView listview;
-		private ArrayList<LocationProfile> profiles;
+		private ArrayList<Profile> profiles;
 		
 		private static final int NORMAL_PROFILE = 0;
 		private static final int MOVING_PROFILE = 1;
 		
-		public ProfileListAdapter(ArrayList<LocationProfile> profileList, ListView listview) {
+		public ProfileListAdapter(ArrayList<Profile> profileList, ListView listview) {
 			super(getActivity(), 0, profileList);
 			// TODO Auto-generated constructor stub
 			
@@ -471,10 +472,10 @@ public class LocationProfileListFragment extends Fragment implements Constants, 
             holder.titleTextView.setText(getItem(position).getTitle());
             //Set address
             holder.addressTextView = (TextView)convertView.findViewById(R.id.addressTextView);
-            holder.addressTextView.setText(getItem(position).getAddress());
+            holder.addressTextView.setText(getItem(position).getLocation().getAddress());
             //Set city
             holder.cityTextView = (TextView)convertView.findViewById(R.id.cityTextView);
-            holder.cityTextView.setText(getItem(position).getCity());
+            holder.cityTextView.setText(getItem(position).getLocation().getCity());
 
             
             

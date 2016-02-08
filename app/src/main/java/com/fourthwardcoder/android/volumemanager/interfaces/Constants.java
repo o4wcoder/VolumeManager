@@ -11,28 +11,6 @@ package com.fourthwardcoder.android.volumemanager.interfaces;
 public interface Constants {
 	
 	//Shared Preferences
-	/*
-	public static final String PREF_CONTROL_ENABLED = "controlEnabled";
-	public static final String PREF_START_HOUR = "startHour";
-	public static final String PREF_START_MIN = "startMin";
-	public static final String PREF_END_HOUR = "endHour";
-	public static final String PREF_END_MIN = "endMib";
-	public static final String PREF_START_VOLUME_TYPE = "startRingType";
-	public static final String PREF_END_VOLUME_TYPE = "endRingType";
-	public static final String PREF_START_RING_VOLUME = "startRingVolume";
-	public static final String PREF_END_RING_VOLUME = "endRingVolume";
-	public static final String PREF_IS_ALARM_ON = "isAlarmOn";
-	*/
-	
-	public static final String JSON_ID = "id";
-	public static final String JSON_TITLE = "title";
-	public static final String JSON_ENABLED = "enabled";
-	public static final String JSON_START_VOLUME_TYPE = "startVolumeType";
-	public static final String JSON_END_VOLUME_TYPE = "endVolumeType";
-	public static final String JSON_START_RING_VOLUME = "startRingVolume";
-	public static final String JSON_END_RING_VOLUME = "endRingVolume";
-
-	
 	public static final String PREF_VOLUME_NOTIFY_ENABLED = "volumeNotifyEnabled";
 	public static final String PREF_LOCATION_NOTIFY_ENABLED = "locationNotifyEnabled";
 	public static final String PREF_MAX_VOLUME = "maxVolume";
@@ -53,14 +31,7 @@ public interface Constants {
 	public static final String EXTRA_PROFILE_ID = "com.fourthwardcoder.android.volumemanager.extra_profile_id";
 	public static final String EXTRA_PROFILE = "com.fourthwardcoder.android.volumemanager.extra_profile";
 	public static final String EXTRA_LOCATION_PROFILE = "com.fourthwardcoder.android.volumemanager.extra_location_profile";
-	
-	public static final String MONDAY = "Monday";
-	public static final String TUESDAY = "Tuesday";
-	public static final String WEDNESDAY = "Wednesday";
-	public static final String THURSDAY = "THURSDAY";
-	public static final String FRIDAY = "Friday";
-	public static final String SATURDAY = "Saturday";
-	public static final String SUNDAY = "Sunday";
+    public static final String EXTRA_PROFILE_TYPE = "com.fourthwardcoder.android.volumemanager.extra_profile_type";
 	
 	public static final float PRIMARY_TEXT_DARK = (float) .87;
 	public static final float SECONDARY_TEXT_DARK = (float) .54;
@@ -80,7 +51,9 @@ public interface Constants {
 	
 	public static final float GEOFENCE_RADIUS_DEFAULT = 50;
 	public static final float GEOFENCE_RADIUS_INC = 10;
-	
+
+	public static final int TIME_PROFILE_LIST = 0;
+	public static final int LOCATION_PROFILE_LIST = 1;
 	
 
 }

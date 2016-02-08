@@ -34,19 +34,28 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.fourthwardcoder.android.volumemanager.adapters.LocationProfileListAdapter;
+import com.fourthwardcoder.android.volumemanager.adapters.ProfileListAdapter;
 import com.fourthwardcoder.android.volumemanager.data.ProfileContract;
 import com.fourthwardcoder.android.volumemanager.R;
-import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
+//import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
+import com.fourthwardcoder.android.volumemanager.location.GeofenceManager;
 import com.fourthwardcoder.android.volumemanager.services.VolumeManagerService;
 import com.fourthwardcoder.android.volumemanager.activites.ProfileDetailActivity;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationServices;
 
 
 public class ProfileListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
-Constants{
+        LocationProfileListAdapter.LocationAdapterCallback, GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status>, Constants{
 	
 	/***************************************************/
 	/*                  Constants                      */
@@ -63,14 +72,16 @@ Constants{
 	private ArrayList<Profile> mProfileList;
 	ProfileListAdapter profileAdapter;
 	ListView listview;
-	TabName tab;
+    int mProfileType;
+    GoogleApiClient mGoogleApiClient;
 	/***************************************************/
 	/*                Override Methods                 */
 	/***************************************************/
 	
-	public static ProfileListFragment newInstance() {
+	public static ProfileListFragment newInstance(int profileType) {
 
 		Bundle args = new Bundle();
+        args.putInt(EXTRA_PROFILE_TYPE,profileType);
 		ProfileListFragment fragment = new ProfileListFragment();
 
 		fragment.setArguments(args);
@@ -88,13 +99,31 @@ Constants{
 		
 		//retain the instance on rotation
 		setRetainInstance(true);
+
+        if(savedInstanceState != null) {
+            mProfileType = savedInstanceState.getInt(EXTRA_PROFILE_TYPE);
+        }
+        else {
+            Bundle bundle = getArguments();
+            mProfileType = bundle.getInt(EXTRA_PROFILE_TYPE);
+        }
 				   
 		//profileList = ProfileJSONManager.get(getActivity()).getProfiles();
 
         //Init the Profile Loader. Callbacks received in this fragment
-        getLoaderManager().initLoader(PROFILE_LOADER,null,this);
+        getLoaderManager().initLoader(PROFILE_LOADER, null, this);
 
         Util.setStatusBarColor(getActivity());
+
+        //Get Google Api Client if this is the list of Location Profiles
+        if(mProfileType == LOCATION_PROFILE_LIST) {
+            //Build Google API Client
+            mGoogleApiClient = new GoogleApiClient.Builder(getActivity().getApplicationContext())
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
         
 	}
 	@SuppressLint("NewApi")
@@ -108,13 +137,13 @@ Constants{
 		Button newProfileButton = (Button)view.findViewById(R.id.emptyButtonAddProfile);
 		newProfileButton.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				ProfileManager.newProfile(getActivity());
-				
-			}
-			
-		});
+            @Override
+            public void onClick(View v) {
+                ProfileManager.newProfile(getActivity());
+
+            }
+
+        });
 
 		
        // Log.e(TAG,"onCreateView with prifile list size " + profileList.size());
@@ -125,28 +154,28 @@ Constants{
 
 		listview.setEmptyView(view.findViewById(android.R.id.empty));
 
-		listview.setOnItemClickListener(new OnItemClickListener(){
+		listview.setOnItemClickListener(new OnItemClickListener() {
 
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				// TODO Auto-generated method stub
-				// TODO Auto-generated method stub
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                // TODO Auto-generated method stub
+                // TODO Auto-generated method stub
 
-				Profile p = (Profile)parent.getItemAtPosition(position);
-				Log.d(TAG,"Got profile " + p.getTitle());
+                Profile p = (Profile) parent.getItemAtPosition(position);
+                Log.d(TAG, "Got profile " + p.getTitle());
 
-				//Start CrimePagerActivity with this Crime
-				Intent i = new Intent(getActivity(),ProfileDetailActivity.class);
+                //Start CrimePagerActivity with this Crime
+                Intent i = new Intent(getActivity(), ProfileDetailActivity.class);
 
-				//Tell Volume Manager Fragment which Profile to display by making
-				//giving id as Intent extra
-				i.putExtra(ProfileDetailFragment.EXTRA_PROFILE, p);
-				startActivity(i);
+                //Tell Volume Manager Fragment which Profile to display by making
+                //giving id as Intent extra
+                i.putExtra(ProfileDetailFragment.EXTRA_PROFILE, p);
+                startActivity(i);
 
-			}
+            }
 
-		});
+        });
 
 		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 			//Use floating context menues for Froyo and Gingerbread
@@ -160,96 +189,101 @@ Constants{
 			//Set listener for context menu in action mode
 			listview.setMultiChoiceModeListener(new MultiChoiceModeListener() {
 
-				@Override
-				public boolean onActionItemClicked(android.view.ActionMode mode,
-						MenuItem item) {
-					switch (item.getItemId()) {
-					case R.id.menu_item_delete_profile:
-						
-						//ProfileJSONManager profileManager = ProfileJSONManager.get(getActivity());
+                @Override
+                public boolean onActionItemClicked(android.view.ActionMode mode,
+                                                   MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.menu_item_delete_profile:
 
-						Log.e(TAG,"in onActionItemClicked with adapter count "+ profileAdapter.getCount());
-                        Log.e(TAG,"listivew count " + listview.getCount());
+                            //ProfileJSONManager profileManager = ProfileJSONManager.get(getActivity());
 
-						//Delete selected profiles
-						for(int i = listview.getCount() - 1; i > 0; i--) {
-							if(listview.isItemChecked(i)) {
-								//Kill alarms for volume control
-								VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), profileAdapter.getItem(i-1), false);
-                                ProfileManager.deleteProfile(getActivity(), profileAdapter.getItem(i-1));
-							//	profileManager.deleteProfile(profileAdapter.getItem(i));
-							}
-						}
+                            Log.e(TAG, "in onActionItemClicked with adapter count " + profileAdapter.getCount());
+                            Log.e(TAG, "listivew count " + listview.getCount());
 
-						//Destroy Action mode context menu
-						mode.finish();
-                       // profileManager.saveProfiles();
-						//profileAdapter.notifyDataSetChanged();
-                        notifyListViewChanged();
-						return true;
-					default:
-						return false;
-					}
-				}
-				@Override
-				public boolean onCreateActionMode(android.view.ActionMode mode, Menu menu) {
+                            //Delete selected profiles
+                            for (int i = listview.getCount() - 1; i > 0; i--) {
+                                if (listview.isItemChecked(i)) {
+                                    //Kill alarms for volume control
+                                    VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), profileAdapter.getItem(i - 1), false);
+                                    ProfileManager.deleteProfile(getActivity(), profileAdapter.getItem(i - 1));
+                                    //	profileManager.deleteProfile(profileAdapter.getItem(i));
+                                }
+                            }
 
-					MenuInflater inflater = mode.getMenuInflater();
-					inflater.inflate(R.menu.context_menu, menu);
+                            //Destroy Action mode context menu
+                            mode.finish();
+                            // profileManager.saveProfiles();
+                            //profileAdapter.notifyDataSetChanged();
+                            notifyListViewChanged();
+                            return true;
+                        default:
+                            return false;
+                    }
+                }
 
-					return true;
-				}
+                @Override
+                public boolean onCreateActionMode(android.view.ActionMode mode, Menu menu) {
 
-				@Override
-				public void onDestroyActionMode(android.view.ActionMode mode) {
-					// TODO Auto-generated method stub
+                    MenuInflater inflater = mode.getMenuInflater();
+                    inflater.inflate(R.menu.context_menu, menu);
 
-				}
+                    return true;
+                }
 
-				@Override
-				public boolean onPrepareActionMode(android.view.ActionMode mode,
-						Menu menu) {
-					// TODO Auto-generated method stub
-					return false;
-				}
+                @Override
+                public void onDestroyActionMode(android.view.ActionMode mode) {
+                    // TODO Auto-generated method stub
 
-				@Override
-				public void onItemCheckedStateChanged(android.view.ActionMode mode,
-						int position, long id, boolean checked) {
-					// TODO Auto-generated method stub
-					Log.d(TAG,"Selected list item at position " + position);
+                }
 
-				}
+                @Override
+                public boolean onPrepareActionMode(android.view.ActionMode mode,
+                                                   Menu menu) {
+                    // TODO Auto-generated method stub
+                    return false;
+                }
+
+                @Override
+                public void onItemCheckedStateChanged(android.view.ActionMode mode,
+                                                      int position, long id, boolean checked) {
+                    // TODO Auto-generated method stub
+                    Log.d(TAG, "Selected list item at position " + position);
+
+                }
 
 
-			});
+            });
 		}
-		
-
-
 		return view;
 	}
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putInt(EXTRA_PROFILE_TYPE, mProfileType);
+        super.onSaveInstanceState(savedInstanceState);
 
+    }
 	@Override
 	public void onResume() {
 		super.onResume();
-		
-		Log.d(TAG,"onResume");
-		//Update the List of Profiles when you come back to the ProfileListFragment
-		//After we've made changes to a Crime on another Activity
-		//if(profileAdapter != null)
-		//{
-			Log.d(TAG,"Notify adapter that data has changed");
-			
-			//getListAdapter()
+
+        //Re-connect to Google service
+        if(mProfileType == LOCATION_PROFILE_LIST)
+            mGoogleApiClient.connect();
+
         if(profileAdapter != null)
             notifyListViewChanged();
-		  //profileAdapter.notifyDataSetChanged();
-		//}
-		   
 	}
-	
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        //Disconnect to Google service
+        if(mProfileType == LOCATION_PROFILE_LIST)
+        mGoogleApiClient.disconnect();
+
+    }
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -305,8 +339,8 @@ Constants{
 			//Return true, no further processing is necessary
 			return true; 	
 		case R.id.menu_item_settings:
-			Intent settingsIntent = new Intent(getActivity(),SettingsActivity.class);
-			startActivity(settingsIntent);
+			//Intent settingsIntent = new Intent(getActivity(),SettingsActivity.class);
+			//startActivity(settingsIntent);
 			return true;
 		case R.id.menu_item_about:
 			FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -327,11 +361,12 @@ Constants{
         Log.e(TAG, "Inside onCreateLoader");
 
         Uri profileUri = ProfileContract.ProfileEntry.buildProfileUri();
+		String selection = ProfileContract.ProfileEntry.COLUMN_LOC_KEY + " IS NULL";
 
         return new CursorLoader(getActivity(),
                 profileUri,
                 null,
-                null,
+                selection,
                 null,
                 null);
 
@@ -351,7 +386,7 @@ Constants{
 
             //Store global copy
             mProfileList = profileList;
-            profileAdapter = new ProfileListAdapter(profileList, listview);
+            profileAdapter = new ProfileListAdapter(getActivity(),profileList);
             listview.setAdapter(profileAdapter);
         }
     }
@@ -361,154 +396,51 @@ Constants{
 
     }
 
-    /*******************************************************************/
-	/*                        Public Methods                           */
-	/**
-	 ******************************************************************/
 
 
-	/************************************************************/
-	/*                      Inner Classes                       */
-	/************************************************************/
-	//Class to hold different views of the listview. This helps
-	//it run smoothly when scrolling
-	private static class ViewHolder {
 
-		public TextView titleTextView;
-		public TextView timeTextView;
-		public TextView daysTextView;
-	}
-	
-	private class ProfileListAdapter extends ArrayAdapter<Profile> {
-
-		//private ListView listview;
-		private ArrayList<Profile> profiles;
-				
-
-		
-		public ProfileListAdapter(ArrayList<Profile> profiles, ListView listview) {
-			super(getActivity(), 0, profiles);
-			// TODO Auto-generated constructor stub
-			
-			//this.listview = listview;
-			this.profiles = profiles;
-		}
-		
-		//Override method needed from multiple layouts in listview
-		//Determines the type of layout to display in the row
-		@Override
-		public int getItemViewType(int position) {
-
-			if(getItem(position).isEnabled() == true)
-				return NORMAL_PROFILE;
-			else
-				return DISABLED_PROFILE;
-
-		}
-		//Override method needed from multiple layouts in listview
-		//Returns how many different layouts the listview can have
-		@Override
-		public int getViewTypeCount() {
-			return 2;
-		}
-		//Override getView to return a view inflated from the custom
-		//layout and inflated with Profile Data
-		
-		
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-
-			ViewHolder holder = null;
-            int rowType = getItemViewType(position);
-      
-            
-            //Log.e(TAG,"VP: " + listView.getFirstVisiblePosition() +": " + getItem(listView.getFirstVisiblePosition()).getHour() + " hp: " + headerPosition);
-       
-            
-			//If we weren't given a view, inflate one
-            if (convertView == null) {
-            	holder = new ViewHolder();
- 
-            	if(rowType == NORMAL_PROFILE) {
-            		convertView = getActivity().getLayoutInflater().inflate(R.layout.profile_list_item,null);
-            	           		        	    
-            	}
-            	else {
-                   //Set up disabled profile
-            		convertView = getActivity().getLayoutInflater().inflate(R.layout.profile_list_item_off,null);
-            	}
-            	convertView.setTag(holder);
-            }
-			else {
-				holder = (ViewHolder)convertView.getTag();
-				//Log.e(TAG,"In getView(!null) with profile " +holder.titleTextView.getText() + " position: " + position);
-			}
-            
-    		//Set up click listner on volume image button to turn profile on/off
-    		ImageView volumeImage = (ImageView)convertView.findViewById(R.id.volumeStartImageView);
-    		
-    		volumeImage.setOnClickListener(new OnClickListener() {
-
-    			@Override
-    			public void onClick(View v) {
-    				//get the position from the view's tag
-    				
-    				Integer listPosition = (Integer)v.getTag();
-    				Log.e(TAG,"Click image at position " + v.getTag().toString());
-    				
-    				//Toggle Porfile's enabled state
-    				if(getItem(listPosition).isEnabled()) {
-    					
-    				    //Turn off alarms for this profile
-    					getItem(listPosition).setEnabled(false);
-    					VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), getItem(listPosition),false);
-    				}
-    				else {
-    					//Turn on alarms for this profile
-    					getItem(listPosition).setEnabled(true);
-    					VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), getItem(listPosition), true);
-    				}
-    				//refresh listview
-    				//profileAdapter.notifyDataSetChanged();
-                    notifyListViewChanged();
-    			}
-    			
-    		});
-    		
-    		volumeImage.setTag(new Integer(position));
-    		
-        	holder.titleTextView = (TextView)convertView.findViewById(R.id.profileTitleTextView);
-            holder.titleTextView.setText(getItem(position).getTitle());
-            //holder.titleTextView.setAlpha(PRIMARY_TEXT_DARK);
-            
-            holder.timeTextView = (TextView)convertView.findViewById(R.id.timeTextView);
-            holder.timeTextView.setText(getItem(position).getFullTimeForListItem());
-            //holder.timeTextView.setAlpha(SECONDARY_TEXT_DARK);
-            holder.daysTextView = (TextView)convertView.findViewById(R.id.profileDaysTextView);
-			if(checkIfSetDaily(getItem(position).getDaysOfTheWeek()))
-				holder.daysTextView.setText(R.string.daily);
-			else
-                holder.daysTextView.setText(getItem(position).getDaysOfWeekString());
-            //holder.daysTextView.setAlpha(SECONDARY_TEXT_DARK);
-              	
-            return convertView;
-		}
-		
-	}
-
-	private boolean checkIfSetDaily(ArrayList<Boolean> daysOfTheWeek) {
-
-		for(int i = 0; i< daysOfTheWeek.size(); i++) {
-			if(daysOfTheWeek.get(i) == false)
-				return false;
-		}
-
-		return true;
-	}
     private void notifyListViewChanged() {
         profileAdapter.notifyDataSetChanged();
         ((Callback)getActivity()).onListViewChange();
     }
+
+    @Override
+    public void onToggleLocationIcon() {
+
+        if(mGoogleApiClient.isConnected()) {
+
+            GeofenceManager geofenceManager = new GeofenceManager(getActivity().getApplicationContext(),mGoogleApiClient);
+
+            //Restart geofences now that the state has changed.
+            geofenceManager.startGeofences(this);
+        }
+        else
+            Log.e(TAG,"Connection to Google API is disconnected! Not good!");
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onResult(Status status) {
+
+    }
+
+    /*******************************************************************/
+	/*                        Public Methods                           */
+    /*******************************************************************/
     public interface Callback {
 
         void onListViewChange();

@@ -4,14 +4,16 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.fragments.ProfileDetailFragment;
 //import com.fourthwardcoder.android.volumemanager.models.LocationProfile;
-import com.fourthwardcoder.android.volumemanager.json.ProfileJSONManager;
+//import com.fourthwardcoder.android.volumemanager.json.ProfileJSONManager;
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.fragments.AboutFragment;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.fourthwardcoder.android.volumemanager.location.GeofenceManager;
+import com.fourthwardcoder.android.volumemanager.models.GeoFenceLocation;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -40,6 +42,8 @@ import  com.google.android.gms.location.LocationListener;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -54,7 +58,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class LocationMapActivity extends FragmentActivity
+public class LocationMapActivity extends AppCompatActivity
 implements OnMapReadyCallback, OnMapLongClickListener, GoogleApiClient.ConnectionCallbacks,
 GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultCallback<Status>{
 
@@ -119,6 +123,11 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		rlp.setMargins(0, 0, 30, 30);
 
 
+		final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		if(toolbar != null) {
+			setSupportActionBar(toolbar);
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		}
 	//	getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		Util.setStatusBarColor(this);
@@ -186,8 +195,8 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent i = new Intent(LocationMapActivity.this,EditLocationProfileActivity.class);
-				i.putExtra(ProfileDetailFragment.EXTRA_PROFILE_ID,mProfile.getId());
+				Intent i = new Intent(LocationMapActivity.this,ProfileDetailActivity.class);
+				i.putExtra(ProfileDetailFragment.EXTRA_PROFILE,mProfile);
 				startActivity(i);
 
 			}
@@ -288,8 +297,8 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 			saveLocation();
 			return true;
 		case R.id.menu_item_settings:
-			Intent settingsIntent = new Intent(this,SettingsActivity.class);
-			startActivity(settingsIntent);
+			//Intent settingsIntent = new Intent(this,SettingsActivity.class);
+			//startActivity(settingsIntent);
 			return true;
 		case R.id.menu_item_about:
 			FragmentManager fm = this.getFragmentManager();
@@ -497,8 +506,6 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 	/**
 	 * This is where we can add markers or lines, add listeners or move the camera. In this case, we
 	 * just add a marker near Africa.
-	 * <p/>
-	 * This should only be called once and when we are sure that {@link #mMap} is not null.
 	 */
 	/*
 	private void setUpMap() {
@@ -608,7 +615,10 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 
 		//Log.e(TAG,"In save location with currentLocation " + currentLocationData.toString());
 
-
+        //Create Location object if it's empty
+        if(mProfile.getLocation() == null) {
+            mProfile.setLocation(new GeoFenceLocation());
+        }
 		if(currentLocation != null)
 			mProfile.getLocation().setLatLng(currentLocation);
 
@@ -619,8 +629,8 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 
 		mProfile.getLocation().setFenceRadius(currentRadius);
 
-		ProfileJSONManager.get(this).saveLocationProfiles();
-
+		//ProfileJSONManager.get(this).saveLocationProfiles();
+        ProfileManager.insertProfile(this,mProfile);
 		//Create geofence from new location profile
 		//Geofence fence = createGeofence(currentProfile);
 		Geofence fence = geofenceManager.createGeofence(mProfile);
