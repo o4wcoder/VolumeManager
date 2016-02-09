@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.fourthwardcoder.android.volumemanager.activites.LocationMapActivity;
 import com.fourthwardcoder.android.volumemanager.activites.ProfileDetailActivity;
+import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import java.util.UUID;
 /**
  * Created by Chris Hare on 1/25/2016.
  */
-public class ProfileManager {
+public class ProfileManager implements Constants{
 
     private static final String TAG = ProfileManager.class.getSimpleName();
 
@@ -64,7 +65,7 @@ public class ProfileManager {
 
     public static ArrayList<Profile> getProfileList(Context context) {
 
-        String selection = ProfileContract.ProfileEntry.COLUMN_LOC_KEY + " IS NULL";
+        String selection = getProfileDbSelection();
         //Get all rows(profiles) in the table
         Cursor cursor = context.getContentResolver().query(ProfileContract.ProfileEntry.CONTENT_URI,
                 null,
@@ -91,7 +92,7 @@ public class ProfileManager {
 
     public static ArrayList<Profile> getLocationProfileList(Context context) {
 
-        String selection = ProfileContract.ProfileEntry.COLUMN_LOC_KEY + " IS NOT NULL";
+        String selection = getLocationDbProfileSelection();
         //Get all rows(profiles) in the table
         Cursor cursor = context.getContentResolver().query(ProfileContract.ProfileEntry.CONTENT_URI,
                 null,
@@ -149,10 +150,16 @@ public class ProfileManager {
 
     }
 
-    public static boolean isDatabaseEmpty(Context context) {
+    public static boolean isDatabaseEmpty(Context context, int profileType) {
+
+        String selection;
+        if(profileType == LOCATION_PROFILE_LIST)
+            selection = getLocationDbProfileSelection();
+        else
+            selection = getProfileDbSelection();
         Cursor cursor = context.getContentResolver().query(ProfileContract.ProfileEntry.CONTENT_URI,
                 null,
-                null,
+                selection,
                 null,
                 null);
 
@@ -160,6 +167,16 @@ public class ProfileManager {
             return false;
         else
             return true;
+    }
+
+    public static String getProfileDbSelection() {
+
+        return ProfileContract.ProfileEntry.COLUMN_LOC_KEY + " IS NULL";
+    }
+
+    public static String getLocationDbProfileSelection() {
+
+        return ProfileContract.ProfileEntry.COLUMN_LOC_KEY + " IS NOT NULL";
     }
 
 }

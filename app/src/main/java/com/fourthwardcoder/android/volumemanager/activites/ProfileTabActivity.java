@@ -34,9 +34,9 @@ public class ProfileTabActivity extends AppCompatActivity implements ProfileList
 	/*                         Local Data                                */
 	/*********************************************************************/
 	ArrayList<Fragment> fragList = new ArrayList<Fragment>();
-	Fragment fragment = null;
-    Fragment tabFragment = null;
+	TabLayout mTabLayout;
     FloatingActionButton mFloatingActionButton;
+	//int mProfileType;
     
 	
 	@Override
@@ -47,6 +47,7 @@ public class ProfileTabActivity extends AppCompatActivity implements ProfileList
 		//Change status bar color
 	    Util.setStatusBarColor(this);
 
+		//mProfileType = TIME_PROFILE_LIST;
 	    //Set layout
 	    setContentView(R.layout.activity_tab);
 
@@ -56,22 +57,25 @@ public class ProfileTabActivity extends AppCompatActivity implements ProfileList
 		//getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		//Create TabLayout for the Profiles (Basic and Location)d
-		TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-		tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.basic_tab)));
-		tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.location_tab)));
-		tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+		mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+		mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.basic_tab)));
+		mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.location_tab)));
+		mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
 		//Create ViewPager to swipe between the tabs
 		final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
 		final PagerAdapter adapter = new ProfilePagerAdapter(getSupportFragmentManager(),
-				tabLayout.getTabCount());
+				mTabLayout.getTabCount());
 		viewPager.setAdapter(adapter);
-		viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-		tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+		viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+		mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
+				//mProfileType = tab.getPosition();
+				Log.e(TAG,"Got tab " + tab.getPosition());
+				setFABVisibility();
             }
 
             @Override
@@ -86,7 +90,7 @@ public class ProfileTabActivity extends AppCompatActivity implements ProfileList
         });
 		
         mFloatingActionButton = (FloatingActionButton)findViewById(R.id.fab_new_profile);
-        onListViewChange();
+        //onListViewChange(mProfileType);
 	
 		
 
@@ -101,18 +105,24 @@ public class ProfileTabActivity extends AppCompatActivity implements ProfileList
 
     public void clickFAB(View view) {
         Log.e(TAG, "Inside click FAB");
-        ProfileManager.newProfile(this);
+		if(mTabLayout.getSelectedTabPosition() == LOCATION_PROFILE_LIST)
+			ProfileManager.newLocationProfile(this);
+		else
+            ProfileManager.newProfile(this);
     }
 
+    private void setFABVisibility() {
+		Log.e(TAG,"!!!! Listview Changed !!!!, Selected tab: " + mTabLayout.getSelectedTabPosition());
+		if(ProfileManager.isDatabaseEmpty(this,mTabLayout.getSelectedTabPosition()))
+			mFloatingActionButton.setVisibility(View.INVISIBLE);
+		else
+			mFloatingActionButton.setVisibility(View.VISIBLE);
+	}
 
     @Override
     public void onListViewChange() {
 
-        Log.e(TAG,"!!!! Listview Changed !!!!");
-        if(ProfileManager.isDatabaseEmpty(this))
-            mFloatingActionButton.setVisibility(View.INVISIBLE);
-        else
-            mFloatingActionButton.setVisibility(View.VISIBLE);
+           setFABVisibility();
 
     }
 }

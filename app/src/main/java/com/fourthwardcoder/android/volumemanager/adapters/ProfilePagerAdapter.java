@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.fourthwardcoder.android.volumemanager.fragments.LocationProfileListFragment;
+//import com.fourthwardcoder.android.volumemanager.fragments.LocationProfileListFragment;
 import com.fourthwardcoder.android.volumemanager.fragments.ProfileListFragment;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 

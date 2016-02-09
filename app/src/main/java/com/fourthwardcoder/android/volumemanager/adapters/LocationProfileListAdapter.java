@@ -27,15 +27,17 @@ public class LocationProfileListAdapter extends ArrayAdapter<Profile> implements
     private static final String TAG = LocationProfileListAdapter.class.getSimpleName();
 
     private Context mContext;
-
+    ProfileListFragment mCallingFragment;
 
     private static final int NORMAL_PROFILE = 0;
     private static final int MOVING_PROFILE = 1;
 
-    public LocationProfileListAdapter(Context context, ArrayList<Profile> profileList) {
+    public LocationProfileListAdapter(Context context, ArrayList<Profile> profileList,
+                                      ProfileListFragment callingFragment) {
         super(context, 0, profileList);
 
         this.mContext = context;
+        mCallingFragment = callingFragment;
     }
 
     //Override method needed from multiple layouts in listview
@@ -111,6 +113,7 @@ public class LocationProfileListAdapter extends ArrayAdapter<Profile> implements
 
                 //Modify geofences
                // updateGeofences();
+                mCallingFragment.onToggleLocationIcon();
 
             }
 

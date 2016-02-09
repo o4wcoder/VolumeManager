@@ -29,11 +29,13 @@ import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.fourthwardcoder.android.volumemanager.activites.LocationMapActivity;
 import com.fourthwardcoder.android.volumemanager.adapters.LocationProfileListAdapter;
 import com.fourthwardcoder.android.volumemanager.adapters.ProfileListAdapter;
 import com.fourthwardcoder.android.volumemanager.data.ProfileContract;
@@ -70,7 +72,8 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
 	/*                 Local Data                      */
 	/***************************************************/
 	private ArrayList<Profile> mProfileList;
-	ProfileListAdapter profileAdapter;
+	//ProfileListAdapter mProfileAdapter;
+    BaseAdapter mProfileAdapter;
 	ListView listview;
     int mProfileType;
     GoogleApiClient mGoogleApiClient;
@@ -130,7 +133,11 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_profile_list, container, false);
+        View view;
+        if(mProfileType == LOCATION_PROFILE_LIST)
+            view = inflater.inflate(R.layout.fragment_location_profile_list, container, false);
+		else
+            view = inflater.inflate(R.layout.fragment_profile_list, container, false);
 
 
 		//Empty ListView view
@@ -139,7 +146,11 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
 
             @Override
             public void onClick(View v) {
-                ProfileManager.newProfile(getActivity());
+
+                if(mProfileType == LOCATION_PROFILE_LIST)
+                    ProfileManager.newLocationProfile(getActivity());
+                else
+                    ProfileManager.newProfile(getActivity());
 
             }
 
@@ -165,13 +176,16 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
                 Profile p = (Profile) parent.getItemAtPosition(position);
                 Log.d(TAG, "Got profile " + p.getTitle());
 
-                //Start CrimePagerActivity with this Crime
-                Intent i = new Intent(getActivity(), ProfileDetailActivity.class);
+                Intent intent;
+                if (mProfileType == LOCATION_PROFILE_LIST)
+                    intent = new Intent(getActivity(), LocationMapActivity.class);
+                else
+                    intent = new Intent(getActivity(), ProfileDetailActivity.class);
 
                 //Tell Volume Manager Fragment which Profile to display by making
                 //giving id as Intent extra
-                i.putExtra(ProfileDetailFragment.EXTRA_PROFILE, p);
-                startActivity(i);
+                intent.putExtra(ProfileDetailFragment.EXTRA_PROFILE, p);
+                startActivity(intent);
 
             }
 
@@ -197,24 +211,30 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
 
                             //ProfileJSONManager profileManager = ProfileJSONManager.get(getActivity());
 
-                            Log.e(TAG, "in onActionItemClicked with adapter count " + profileAdapter.getCount());
+                            Log.e(TAG, "in onActionItemClicked with adapter count " + mProfileAdapter.getCount());
                             Log.e(TAG, "listivew count " + listview.getCount());
 
-                            //Delete selected profiles
-                            for (int i = listview.getCount() - 1; i > 0; i--) {
-                                if (listview.isItemChecked(i)) {
-                                    //Kill alarms for volume control
-                                    VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), profileAdapter.getItem(i - 1), false);
-                                    ProfileManager.deleteProfile(getActivity(), profileAdapter.getItem(i - 1));
-                                    //	profileManager.deleteProfile(profileAdapter.getItem(i));
+                            //Kill alarms for Time Profiles
+                            if(mProfileType == TIME_PROFILE_LIST) {
+                                //Delete selected profiles
+                                for (int i = listview.getCount() - 1; i > 0; i--) {
+                                    if (listview.isItemChecked(i)) {
+                                        //Kill alarms for volume control
+                                        VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), (Profile) mProfileAdapter.getItem(i - 1), false);
+                                        ProfileManager.deleteProfile(getActivity(), (Profile) mProfileAdapter.getItem(i - 1));
+                                        //	profileManager.deleteProfile(profileAdapter.getItem(i));
+                                    }
                                 }
                             }
 
                             //Destroy Action mode context menu
                             mode.finish();
-                            // profileManager.saveProfiles();
-                            //profileAdapter.notifyDataSetChanged();
+
                             notifyListViewChanged();
+
+                            if(mProfileType == LOCATION_PROFILE_LIST)
+                                updateGeofences();
+
                             return true;
                         default:
                             return false;
@@ -266,12 +286,12 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
 	@Override
 	public void onResume() {
 		super.onResume();
-
+        Log.e(TAG,"onResume()");
         //Re-connect to Google service
         if(mProfileType == LOCATION_PROFILE_LIST)
             mGoogleApiClient.connect();
 
-        if(profileAdapter != null)
+        if(mProfileAdapter != null)
             notifyListViewChanged();
 	}
 
@@ -311,17 +331,20 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
       //  Log.d(TAG,"in onContextItemSelected with position: " + );
 
 		Profile profile = (Profile)listview.getItemAtPosition(position);
-        Log.e(TAG,"Deleting profile " + profile.getTitle());
+        Log.e(TAG, "Deleting profile " + profile.getTitle());
 		
 		switch (item.getItemId()) {
 		   case R.id.menu_item_delete_profile:
-			 //  ProfileJSONManager.get(getActivity()).deleteProfile(profile);
 
-               ProfileManager.deleteProfile(getActivity(), profile);
-			   //profileAdapter.notifyDataSetChanged();
+               if(mProfileType == LOCATION_PROFILE_LIST)
+                   updateGeofences();
+               else {
+                   ProfileManager.deleteProfile(getActivity(), profile);
+                   //Kill alarms for volume control
+                   VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), profile, false);
+               }
                notifyListViewChanged();
-			   //Kill alarms for volume control
-			   VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), profile,false);
+
 			   return true;
 		  
 		}
@@ -361,7 +384,12 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
         Log.e(TAG, "Inside onCreateLoader");
 
         Uri profileUri = ProfileContract.ProfileEntry.buildProfileUri();
-		String selection = ProfileContract.ProfileEntry.COLUMN_LOC_KEY + " IS NULL";
+        String selection;
+
+        if(mProfileType == LOCATION_PROFILE_LIST)
+            selection = ProfileManager.getLocationDbProfileSelection();
+        else
+            selection = ProfileManager.getProfileDbSelection();
 
         return new CursorLoader(getActivity(),
                 profileUri,
@@ -386,8 +414,12 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
 
             //Store global copy
             mProfileList = profileList;
-            profileAdapter = new ProfileListAdapter(getActivity(),profileList);
-            listview.setAdapter(profileAdapter);
+            if(mProfileType == LOCATION_PROFILE_LIST)
+                mProfileAdapter = new LocationProfileListAdapter(getActivity(),profileList,this);
+            else
+                mProfileAdapter = new ProfileListAdapter(getActivity(),profileList);
+
+            listview.setAdapter(mProfileAdapter);
         }
     }
 
@@ -400,13 +432,11 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
 
 
     private void notifyListViewChanged() {
-        profileAdapter.notifyDataSetChanged();
+        mProfileAdapter.notifyDataSetChanged();
         ((Callback)getActivity()).onListViewChange();
     }
 
-    @Override
-    public void onToggleLocationIcon() {
-
+    private void updateGeofences() {
         if(mGoogleApiClient.isConnected()) {
 
             GeofenceManager geofenceManager = new GeofenceManager(getActivity().getApplicationContext(),mGoogleApiClient);
@@ -416,6 +446,11 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
         }
         else
             Log.e(TAG,"Connection to Google API is disconnected! Not good!");
+    }
+
+    @Override
+    public void onToggleLocationIcon() {
+        updateGeofences();
     }
 
     @Override
