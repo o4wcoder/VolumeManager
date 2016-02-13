@@ -58,7 +58,7 @@ public class ProfileTabActivity extends AppCompatActivity implements ProfileList
 
 		//Create TabLayout for the Profiles (Basic and Location)d
 		mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
-		mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.basic_tab)));
+		mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.time_tab)));
 		mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.location_tab)));
 		mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 

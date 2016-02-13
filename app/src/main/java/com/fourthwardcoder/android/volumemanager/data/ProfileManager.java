@@ -157,13 +157,15 @@ public class ProfileManager implements Constants{
             selection = getLocationDbProfileSelection();
         else
             selection = getProfileDbSelection();
+
+
         Cursor cursor = context.getContentResolver().query(ProfileContract.ProfileEntry.CONTENT_URI,
                 null,
                 selection,
                 null,
                 null);
-
-        if (cursor != null && cursor.getCount() > 0)
+        Log.e(TAG,"Cursor count: " + cursor.getCount());
+        if (cursor != null || cursor.getCount() > 0)
             return false;
         else
             return true;
