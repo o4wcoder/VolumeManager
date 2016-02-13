@@ -27,11 +27,12 @@ public interface Constants {
 	public static final int ID_END_ALARM = 1;
 	
 	//Extras
-	public static final String EXTRA_START_ALARM = "com.fourthwardcoder.android.volumemanager.extra_startalarm";
-	public static final String EXTRA_PROFILE_ID = "com.fourthwardcoder.android.volumemanager.extra_profile_id";
-	public static final String EXTRA_PROFILE = "com.fourthwardcoder.android.volumemanager.extra_profile";
-	public static final String EXTRA_LOCATION_PROFILE = "com.fourthwardcoder.android.volumemanager.extra_location_profile";
-    public static final String EXTRA_PROFILE_TYPE = "com.fourthwardcoder.android.volumemanager.extra_profile_type";
+	String EXTRA_START_ALARM = "com.fourthwardcoder.android.volumemanager.extra_startalarm";
+	String EXTRA_PROFILE_ID = "com.fourthwardcoder.android.volumemanager.extra_profile_id";
+	String EXTRA_PROFILE = "com.fourthwardcoder.android.volumemanager.extra_profile";
+    String EXTRA_LOCATION_PROFILE = "com.fourthwardcoder.android.volumemanager.extra_location_profile";
+    String EXTRA_PROFILE_TYPE = "com.fourthwardcoder.android.volumemanager.extra_profile_type";
+	String EXTRA_IS_NEW_PROFILE = "com.fourthwardcoder.android.volumemanager.extra_is_new_profile";
 	
 	public static final float PRIMARY_TEXT_DARK = (float) .87;
 	public static final float SECONDARY_TEXT_DARK = (float) .54;

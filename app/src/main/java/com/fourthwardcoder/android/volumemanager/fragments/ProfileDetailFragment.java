@@ -14,7 +14,10 @@ import android.app.FragmentManager;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -69,18 +72,15 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 	/*                          Local Data                                  */
 	/************************************************************************/
 	Profile mProfile;
-	TextView titleTextView, startTimeTextView, endTimeTextView;
-	//Button startTimeButton, endTimeButton;
-//	Date startDate,endDate;
+	TextView mTitleTextView, startTimeTextView, endTimeTextView;
 	RadioGroup startVolumeRadioGroup;
 	RadioGroup endVolumeRadioGroup;
 	SeekBar startRingSeekBar, endRingSeekBar;
-	//String profileTitle;
-	//int startVolumeType,endVolumeType;
-	//int startRingVolume,endRingVolume;
 	TextView startRingVolumeTextView, endRingVolumeTextView;
-	ArrayList<Boolean> daysOfTheWeek;
 	ImageView startVolumeImageView, endVolumeImageView;
+
+	boolean mIsNewProfile = false;
+    Menu mToolbarMenu;
 	
 	/*******************************************************/
 	/*                  Override Methods                   */
@@ -103,13 +103,16 @@ public class ProfileDetailFragment extends Fragment implements Constants {
             //If not, it's a new profile
             if (intent.hasExtra(EXTRA_PROFILE)) {
                 mProfile = intent.getParcelableExtra(EXTRA_PROFILE);
+				mIsNewProfile = false;
             } else {
                 mProfile = new Profile();
+				mIsNewProfile = true;
             }
         }
         else {
             //Restore Profile from rotation.
             mProfile = saveInstanceState.getParcelable(EXTRA_PROFILE);
+			mIsNewProfile = false;
         }
 
 	}
@@ -141,8 +144,25 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 	    /*
 	     * Setup TextViews                        
 	     */
-		titleTextView = (TextView)view.findViewById(R.id.titleTextView);
-		titleTextView.setText(mProfile.getTitle());
+		mTitleTextView = (TextView)view.findViewById(R.id.titleTextView);
+		mTitleTextView.setText(mProfile.getTitle());
+        mTitleTextView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                 setSaveMenu();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
 		
 	    startTimeTextView = (TextView)view.findViewById(R.id.startTimeTextView);
         //Set up Ring Volume TextView
@@ -375,16 +395,21 @@ public class ProfileDetailFragment extends Fragment implements Constants {
     public void onSaveInstanceState(Bundle savedInstanceState) {
 
         savedInstanceState.putParcelable(EXTRA_PROFILE,mProfile);
+		savedInstanceState.putBoolean(EXTRA_IS_NEW_PROFILE,mIsNewProfile);
         super.onSaveInstanceState(savedInstanceState);
     }
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		//super.onCreateOptionsMenu(menu, inflater);
-		
+
+
 		//Pass the resource ID of the menu and populate the Menu 
 		//instance with the items defined in the xml file
 		inflater.inflate(R.menu.action_bar_profile_menu, menu);
+        Log.e(TAG, "Storing toolbar menu");
+        mToolbarMenu = menu;
+        setSaveMenu();
 		
 	}
 	
@@ -476,7 +501,15 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 	}
 
 
-	
+	private void setSaveMenu() {
+
+        MenuItem saveMenuItem = mToolbarMenu.findItem(R.id.menu_item_save_profile);
+
+        if(mTitleTextView.getText().length() > 0)
+            saveMenuItem.setEnabled(true);
+        else
+            saveMenuItem.setEnabled(false);
+    }
 	
 	/**
 	 * Sets each components visibility in the fragment. This is set
@@ -510,17 +543,13 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 
         Log.e(TAG, "Inside saveSettings()");
 
-        mProfile.setTitle(titleTextView.getText().toString());
-		//mProfile.setStartDate(startDate);
-		//mProfile.setEndDate(endDate);
-		//mProfile.setStartVolumeType(startVolumeType);
-		//mProfile.setEndVolumeType(endVolumeType);
-		//mProfile.setStartRingVolume(startRingVolume);
-		//mProfile.setEndRingVolume(endRingVolume);
-		//mProfile.setDaysOfTheWeek(daysOfTheWeek);
-		
-		//ProfileJSONManager.get(getActivity()).saveProfiles();
-        ProfileManager.insertProfile(getActivity(), mProfile);
+        mProfile.setTitle(mTitleTextView.getText().toString());
+
+        //Insert into DB if it's a new profile, otherwise update existing record.
+		if(mIsNewProfile)
+            ProfileManager.insertProfile(getActivity(), mProfile);
+		else
+		    ProfileManager.updateProfile(getActivity(),mProfile);
 
         //Set Volume Control Alarms
         VolumeManagerService.setServiceAlarm(getActivity(),mProfile,true);

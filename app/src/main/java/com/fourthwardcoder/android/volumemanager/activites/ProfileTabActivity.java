@@ -43,7 +43,7 @@ public class ProfileTabActivity extends AppCompatActivity implements ProfileList
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		
+		Log.e(TAG,"onCreate()");
 		//Change status bar color
 	    Util.setStatusBarColor(this);
 
@@ -92,7 +92,7 @@ public class ProfileTabActivity extends AppCompatActivity implements ProfileList
         mFloatingActionButton = (FloatingActionButton)findViewById(R.id.fab_new_profile);
         //onListViewChange(mProfileType);
 	
-		
+		setFABVisibility();
 
 	}
 	
@@ -112,7 +112,7 @@ public class ProfileTabActivity extends AppCompatActivity implements ProfileList
     }
 
     private void setFABVisibility() {
-		Log.e(TAG,"!!!! Listview Changed !!!!, Selected tab: " + mTabLayout.getSelectedTabPosition());
+		Log.e(TAG,"!!!! The Listview Changed again!!!!, Selected tab: " + mTabLayout.getSelectedTabPosition());
 		if(ProfileManager.isDatabaseEmpty(this,mTabLayout.getSelectedTabPosition()))
 			mFloatingActionButton.setVisibility(View.INVISIBLE);
 		else

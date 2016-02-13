@@ -124,8 +124,8 @@ public class ProfileManager implements Constants{
         selectionArgs[0] = String.valueOf(profile.getId());
 
         //Update profile in the content provider
-        return context.getContentResolver().update(ProfileContract.ProfileEntry.CONTENT_URI,profile.getContentValues(),
-                selection,selectionArgs);
+        return context.getContentResolver().update(ProfileContract.ProfileEntry.CONTENT_URI, profile.getContentValues(),
+                selection, selectionArgs);
 
 
     }
@@ -164,11 +164,19 @@ public class ProfileManager implements Constants{
                 selection,
                 null,
                 null);
-        Log.e(TAG,"Cursor count: " + cursor.getCount());
-        if (cursor != null || cursor.getCount() > 0)
-            return false;
-        else
+
+        if(cursor != null) {
+
+            if (cursor.getCount() > 0) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        else {
+            //Null cursor, return empty
             return true;
+        }
     }
 
     public static String getProfileDbSelection() {
