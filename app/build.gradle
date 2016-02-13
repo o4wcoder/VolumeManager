@@ -8,12 +8,18 @@ android {
         applicationId "com.fourthwardcoder.android.volumemanager"
         minSdkVersion 14
         targetSdkVersion 21
+
+
     }
 
     buildTypes {
+        debug {
+            resValue "string", "MAPS_API_KEY", MAPS_API_KEY
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            resValue "string", "MAPS_API_KEY", MAPS_API_KEY
         }
     }
 }

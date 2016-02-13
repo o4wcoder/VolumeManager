@@ -26,6 +26,7 @@ build.xml
 ant.properties
 local.properties
 project.properties
+gradle.properties
 
 # Eclipse project files
 .classpath
