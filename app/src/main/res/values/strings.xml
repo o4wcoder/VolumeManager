@@ -78,6 +78,9 @@
     <string name="pref_location_radius_units_meters">meters</string>
     <string name="pref_location_radius_units_feet">feet</string>
 
+    <!-- Animations -->
+    <string name="trans_profile_title">trans_profile_title</string>
+
 
 
 </resources>

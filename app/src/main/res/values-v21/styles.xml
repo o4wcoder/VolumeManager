@@ -6,4 +6,14 @@
         <item name="android:colorPrimary">@color/app_primary_color</item>
         <item name="android:colorPrimaryDark">@color/app_primary_dark_color</item>
     </style>
+
+    <style name="AppTheme.Main" parent="@style/AppTheme">
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+
+    <style name="AppTheme.Details" parent="@style/AppTheme">
+    <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowEnterTransition">@transition/trans_profile_title</item>
+        <item name="android:windowReturnTransition">@transition/trans_profile_title</item>
+    </style>
 </resources>

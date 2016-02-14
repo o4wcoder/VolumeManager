@@ -22,14 +22,16 @@
         android:elevation="6dp">
     <EditText
         android:layout_marginTop="?attr/actionBarSize"
-        android:id="@+id/titleTextView"
+        android:id="@+id/profileTitleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/title_hint"
         android:maxLength="20"
         android:gravity="left"
-        android:singleLine="true"/>
+        android:singleLine="true"
+        android:transitionName="@string/trans_profile_title"/>
+
 
     </android.support.v7.widget.Toolbar>
 

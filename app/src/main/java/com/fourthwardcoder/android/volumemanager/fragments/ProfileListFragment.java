@@ -9,10 +9,13 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.util.Pair;
+import android.telecom.Call;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -30,6 +33,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.fourthwardcoder.android.volumemanager.activites.LocationMapActivity;
 import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
@@ -173,17 +177,9 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
                 Profile p = (Profile) parent.getItemAtPosition(position);
                 Log.d(TAG, "Got profile " + p.getTitle());
 
-                Intent intent;
-                if (mProfileType == LOCATION_PROFILE_LIST)
-                    intent = new Intent(getActivity(), LocationMapActivity.class);
-                else
-                    intent = new Intent(getActivity(), ProfileDetailActivity.class);
+                TextView textView = (TextView)view.findViewById(R.id.profileTitleTextView);
 
-                //Tell Volume Manager Fragment which Profile to display by making
-                //giving id as Intent extra
-                intent.putExtra(ProfileDetailFragment.EXTRA_PROFILE, p);
-                startActivity(intent);
-
+                ((Callback)getActivity()).onItemSelected(p,mProfileType,textView);
             }
 
         });
@@ -461,5 +457,7 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
     public interface Callback {
 
         void onListViewChange();
+
+        void onItemSelected(Profile profile, int profileType, TextView textView);
     }
 }

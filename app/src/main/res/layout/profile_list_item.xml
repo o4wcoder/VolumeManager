@@ -19,7 +19,8 @@
             android:layout_weight="1"
             android:alpha="@string/primary_text_alpha_dark"
             android:padding="2dp"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:transitionName="@string/trans_profile_title"/>
 
         <LinearLayout
             android:layout_width="match_parent"

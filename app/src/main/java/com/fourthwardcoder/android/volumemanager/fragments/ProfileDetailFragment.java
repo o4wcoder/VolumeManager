@@ -142,7 +142,7 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 	    /*
 	     * Setup TextViews                        
 	     */
-		mTitleTextView = (TextView)view.findViewById(R.id.titleTextView);
+		mTitleTextView = (TextView)view.findViewById(R.id.profileTitleTextView);
 		mTitleTextView.setText(mProfile.getTitle());
         mTitleTextView.addTextChangedListener(new TextWatcher() {
             @Override

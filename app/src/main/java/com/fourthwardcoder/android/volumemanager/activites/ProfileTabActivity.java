@@ -7,14 +7,19 @@ import java.util.ArrayList;
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.adapters.ProfilePagerAdapter;
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
+import com.fourthwardcoder.android.volumemanager.fragments.ProfileDetailFragment;
 import com.fourthwardcoder.android.volumemanager.fragments.ProfileListFragment;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
+import com.fourthwardcoder.android.volumemanager.models.Profile;
 
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +27,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.design.widget.TabLayout;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 public class ProfileTabActivity extends AppCompatActivity implements ProfileListFragment.Callback, Constants {
 	
@@ -125,4 +131,37 @@ public class ProfileTabActivity extends AppCompatActivity implements ProfileList
            setFABVisibility();
 
     }
+
+	@Override
+	public void onItemSelected(Profile profile, int profileType, TextView textView) {
+
+		if(textView != null) {
+			Log.e(TAG,"TextView text: " + textView.getText());
+		}
+		else
+			Log.e(TAG,"TExt view null!!");
+
+		Intent intent;
+		if (profileType == LOCATION_PROFILE_LIST)
+			intent = new Intent(this, LocationMapActivity.class);
+		else
+			intent = new Intent(this, ProfileDetailActivity.class);
+
+		//Tell Volume Manager Fragment which Profile to display by making
+		//giving id as Intent extra
+		intent.putExtra(ProfileDetailFragment.EXTRA_PROFILE, profile);
+
+
+        ActivityOptionsCompat activityOptions =
+                ActivityOptionsCompat.makeSceneTransitionAnimation(this,
+                        new Pair<View, String>(textView, getString(R.string.trans_profile_title)));
+
+//		ActivityOptionsCompat activityOptions =
+//				ActivityOptionsCompat.makeCustomAnimation(this,
+//						new Pair<View,String>(textView,
+//								getString(R.string.trans_profile_title)));
+
+
+		startActivity(intent,activityOptions.toBundle());
+	}
 }
