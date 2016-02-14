@@ -8,6 +8,6 @@
 
     <string-array name="pref_units_values">
         <item>@string/pref_location_radius_units_meters</item>
-        <item>@string/pref_location_radius_units_meters</item>
+        <item>@string/pref_location_radius_units_feet</item>
     </string-array>
 </resources>

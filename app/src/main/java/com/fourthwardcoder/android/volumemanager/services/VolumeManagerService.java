@@ -105,7 +105,14 @@ public class VolumeManagerService extends IntentService implements Constants {
 
 				//Send notification if they are turned on
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-				if(prefs.getBoolean(PREF_VOLUME_NOTIFY_ENABLED, false))
+
+				//Get Time notification setting
+			    String notificationKey = getApplicationContext().getString(R.string.pref_time_notifications_key);
+
+				boolean displayNotifications = prefs.getBoolean(notificationKey,Boolean.parseBoolean(getApplicationContext().
+                        getString(R.string.pref_notifications_default)));
+
+				if(displayNotifications)
 					showNotification(isStartAlarm);
 
 			}
@@ -131,10 +138,13 @@ public class VolumeManagerService extends IntentService implements Constants {
 			strTitle = "End Alarm: " + profile.getTitle();
 			id = 2;
 		}
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-		.setSmallIcon(R.drawable.ic_action_volume_on_light)
-		.setContentTitle(strTitle)
-		.setContentText(strTime);
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_action_volume_on_light)
+                .setContentTitle(strTitle)
+                .setGroup(GROUP_NOTIFICATIONS)
+                .setGroupSummary(true)
+                .setContentText(strTime);
 
         Intent i = new Intent(this,ProfileDetailActivity.class);
        

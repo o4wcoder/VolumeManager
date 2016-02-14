@@ -96,7 +96,12 @@ public class GeofenceService extends IntentService implements Constants {
 
 					//Send notification if they are turned on
 					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-					if(prefs.getBoolean(PREF_LOCATION_NOTIFY_ENABLED, false))
+					String notificationKey = getApplicationContext().getString(R.string.pref_location_notifications_key);
+
+					boolean displayNotifications = prefs.getBoolean(notificationKey, Boolean.parseBoolean(getApplicationContext().
+							getString(R.string.pref_notifications_default)));
+
+					if(displayNotifications)
 						showNotification(geofenceTransition,profile);
 
 				}
@@ -178,12 +183,14 @@ public class GeofenceService extends IntentService implements Constants {
 			strTitle = getString(R.string.geofence_transition_exited) + " " + profile.getTitle();
 			id = 2;
 		}
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-		.setSmallIcon(R.drawable.ic_action_place_light)
-		.setContentTitle(strTitle)
-		.setContentText(profile.getLocation().getAddress());
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_action_place_light)
+                .setContentTitle(strTitle)
+                .setGroup(GROUP_NOTIFICATIONS)
+                .setGroupSummary(true)
+                .setContentText(profile.getLocation().getAddress());
 
-		Intent i = new Intent(this,LocationMapActivity.class);
+        Intent i = new Intent(this, LocationMapActivity.class);
 
 		i.putExtra(EXTRA_PROFILE_ID,profile.getId());
 

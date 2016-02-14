@@ -35,6 +35,7 @@ import android.widget.TextView;
 
 import com.fourthwardcoder.android.volumemanager.R;
 //import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
+import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
@@ -449,15 +450,8 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 			getActivity().finish();
 			return true;
 		case R.id.menu_item_settings:
-		//	Intent settingsIntent = new Intent(getActivity(),SettingsActivity.class);
-			//startActivity(settingsIntent);
-			return true;
-		case R.id.menu_item_about:
-			//FragmentManager fm = getActivity().getFragmentManager();
-			//AboutFragment dialog = AboutFragment.newInstance();
-			//Make ProfileListFragment the target fragment of the TimePickerFragment instance
-			//dialog.setTargetFragment(VolumeManagerFragment.this, REQUEST_START_TIME);
-			//dialog.show(fm, "about");
+		    Intent settingsIntent = new Intent(getActivity(),SettingsActivity.class);
+			startActivity(settingsIntent);
 			return true;
 			default:
 				return super.onOptionsItemSelected(item);

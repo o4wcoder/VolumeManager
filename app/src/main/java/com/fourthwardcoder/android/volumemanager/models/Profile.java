@@ -254,6 +254,14 @@ public class Profile implements Constants, Parcelable {
         this.location = location;
     }
 
+    public boolean isLocationProfile() {
+
+        if(location != null)
+            return true;
+        else
+            return false;
+    }
+
     /*****************************************************/
 	/*                   Private Methods                 */
     /*****************************************************/
