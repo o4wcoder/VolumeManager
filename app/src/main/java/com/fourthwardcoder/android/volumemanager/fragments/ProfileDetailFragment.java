@@ -7,17 +7,14 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.app.FragmentManager;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -377,8 +374,8 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 	    ((RadioButton)endVolumeRadioGroup.getChildAt(mProfile.getEndVolumeType())).setChecked(true);
 
 
-	    Util.setTimeForLargeTextView(mProfile.getStartDate(), startTimeTextView);
-	    Util.setTimeForLargeTextView(mProfile.getEndDate(), endTimeTextView);
+	    Util.setTimeForLargeTextView(getActivity(),mProfile.getStartDate(), startTimeTextView);
+	    Util.setTimeForLargeTextView(getActivity(),mProfile.getEndDate(), endTimeTextView);
 	    //Set Seekbar default
 	    Util.setSeekBarPosition(startRingSeekBar,startRingVolumeTextView,mProfile.getStartRingVolume(),Util.getMaxRingVolume(getActivity().getApplicationContext()));
 	    Util.setSeekBarPosition(endRingSeekBar,endRingVolumeTextView,mProfile.getEndRingVolume(),Util.getMaxRingVolume(getActivity().getApplicationContext()));
@@ -406,7 +403,7 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 
 		//Pass the resource ID of the menu and populate the Menu 
 		//instance with the items defined in the xml file
-		inflater.inflate(R.menu.action_bar_profile_menu, menu);
+		inflater.inflate(R.menu.toolbar_profile_detail_menu, menu);
         Log.e(TAG, "Storing toolbar menu");
         mToolbarMenu = menu;
         setSaveMenu();
@@ -423,11 +420,11 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 		
 		if(requestCode == REQUEST_START_TIME) {
             mProfile.setStartDate((Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME));
-			Util.setTimeForLargeTextView(mProfile.getStartDate(), startTimeTextView);
+			Util.setTimeForLargeTextView(getActivity(),mProfile.getStartDate(), startTimeTextView);
 		}
 		else if(requestCode == REQUEST_END_TIME) {
             mProfile.setEndDate((Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME));
-            Util.setTimeForLargeTextView(mProfile.getEndDate(),endTimeTextView);
+            Util.setTimeForLargeTextView(getActivity(),mProfile.getEndDate(),endTimeTextView);
 		}
 
 	}
@@ -456,11 +453,11 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 			//startActivity(settingsIntent);
 			return true;
 		case R.id.menu_item_about:
-			FragmentManager fm = getActivity().getFragmentManager();
-			AboutFragment dialog = AboutFragment.newInstance();
+			//FragmentManager fm = getActivity().getFragmentManager();
+			//AboutFragment dialog = AboutFragment.newInstance();
 			//Make ProfileListFragment the target fragment of the TimePickerFragment instance
 			//dialog.setTargetFragment(VolumeManagerFragment.this, REQUEST_START_TIME);
-			dialog.show(fm, "about");
+			//dialog.show(fm, "about");
 			return true;
 			default:
 				return super.onOptionsItemSelected(item);

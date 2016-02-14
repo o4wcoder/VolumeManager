@@ -63,15 +63,14 @@
                 android:value=".activites.LocationMapActivity"/>
         </activity>
         -->
-        <!--
         <activity
             android:name=".activites.SettingsActivity"
-            android:label="@string/settings_menu" >
+            android:label="@string/settings_menu"
+            android:theme="@style/SettingsTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activites.ProfileTabActivity" />
         </activity>
-        -->
         <activity
             android:name=".activites.ProfileTabActivity"
             android:label="@string/app_name" 

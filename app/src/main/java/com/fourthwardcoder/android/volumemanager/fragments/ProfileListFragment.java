@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -28,14 +27,12 @@ import android.widget.AdapterView;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.fourthwardcoder.android.volumemanager.activites.LocationMapActivity;
+import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
 import com.fourthwardcoder.android.volumemanager.adapters.LocationProfileListAdapter;
 import com.fourthwardcoder.android.volumemanager.adapters.ProfileListAdapter;
 import com.fourthwardcoder.android.volumemanager.data.ProfileContract;
@@ -311,7 +308,7 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
 		
 		//Pass the resource ID of the menu and populate the Menu 
 		//instance with the items defined in the xml file
-		inflater.inflate(R.menu.action_bar_list_menu, menu);
+		inflater.inflate(R.menu.toolbar_profile_list_menu, menu);
 		
 	}
 	
@@ -351,32 +348,21 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
 		
 		return super.onContextItemSelected(item);
 	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		//Get menu option by it's ID
-		switch(item.getItemId()) {
-		//New Crime menu item
-		case R.id.menu_item_new_profile:
-			ProfileManager.newProfile(getActivity());
-			//Return true, no further processing is necessary
-			return true; 	
-		case R.id.menu_item_settings:
-			//Intent settingsIntent = new Intent(getActivity(),SettingsActivity.class);
-			//startActivity(settingsIntent);
-			return true;
-		case R.id.menu_item_about:
-			FragmentManager fm = getActivity().getSupportFragmentManager();
-			AboutFragment dialog = AboutFragment.newInstance();
-			//Make ProfileListFragment the target fragment of the TimePickerFragment instance
-			//dialog.setTargetFragment(VolumeManagerFragment.this, REQUEST_START_TIME);
-			//dialog.show(fm, "about");
-			
-			
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //Get menu option by it's ID
+        switch (item.getItemId()) {
+
+            case R.id.menu_item_settings:
+                Intent settingsIntent = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(settingsIntent);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
 
     @Override
@@ -397,7 +383,6 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
                 selection,
                 null,
                 null);
-
     }
 
     @Override
@@ -427,9 +412,6 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
     public void onLoaderReset(Loader<Cursor> loader) {
 
     }
-
-
-
 
     private void notifyListViewChanged() {
         mProfileAdapter.notifyDataSetChanged();

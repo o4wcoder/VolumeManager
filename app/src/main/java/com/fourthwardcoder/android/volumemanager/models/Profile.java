@@ -217,10 +217,7 @@ public class Profile implements Constants, Parcelable {
         this.endDate = endDate;
     }
 
-    public String getFullTimeForListItem() {
 
-        return Util.formatTime(startDate) + " - " + Util.formatTime(endDate);
-    }
 
     public String getDaysOfWeekString() {
 

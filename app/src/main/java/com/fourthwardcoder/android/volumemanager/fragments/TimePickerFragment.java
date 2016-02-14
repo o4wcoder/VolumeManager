@@ -1,29 +1,22 @@
 package com.fourthwardcoder.android.volumemanager.fragments;
 
-import java.text.DateFormat;
+
 import java.util.Calendar;
 import java.util.Date;
 
 
 import android.app.Activity;
-//import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
+
 import android.widget.TimePicker;
-import android.support.v7.app.AlertDialog;
+import android.text.format.DateFormat;
 
-
-import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 
 /**
@@ -85,7 +78,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
         int min = calendar.get(Calendar.MINUTE);
 
         return new TimePickerDialog(getActivity(), this, hour, min,
-                false);
+               DateFormat.is24HourFormat(getActivity()));
 
     }
 
@@ -106,7 +99,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
         i.putExtra(EXTRA_TIME, mTime);
 
         //Send result to VolumeManager Fragment
-        //Request code to tell the target who is returning hte result
+        //Request code to tell the target who is returning the result
         //result code to determine what action to take
         //An intent that can have extra data
         getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, i);

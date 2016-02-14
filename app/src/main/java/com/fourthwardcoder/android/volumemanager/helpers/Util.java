@@ -5,6 +5,7 @@ import java.util.Date;
 
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
+import com.fourthwardcoder.android.volumemanager.models.Profile;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -14,6 +15,7 @@ import android.os.Build;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.format.DateFormat;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.Window;
@@ -36,35 +38,46 @@ public class Util implements Constants {
 	 *
 	 * @param date Stores the time of the alarm
 	 */
-	public static String formatTime(Date date) {
+	public static String formatTime(Context context, Date date) {
 
-        Log.e(TAG,"Hours in date: " + date.getHours());
-		String am_or_pm = (date.getHours() < 12) ? "AM" : "PM";
+        String time;
+        int hour;
 
-		//Log.d(TAG,"In update time with hour " + date.getHours());
+        //Create a Calendar to get the time
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
 
-		//Create a Calendar to get the time
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
+        int min = calendar.get(Calendar.MINUTE);
 
-		int hour = calendar.get(Calendar.HOUR);
-		int min = calendar.get(Calendar.MINUTE);
+        String strMin = String.valueOf(min);
 
-		String strHour = String.valueOf(hour);
+        //Make sure minute is 2 digits
+        if (min < 10)
+            strMin = "0" + strMin;
 
-		if(hour == 0)
-			strHour = "12";
+        if(!DateFormat.is24HourFormat(context)) {
+            Log.e(TAG, "Hours in date: " + date.getHours());
+            String am_or_pm = (date.getHours() < 12) ? "AM" : "PM";
 
-		String strMin = String.valueOf(min);
+            hour = calendar.get(Calendar.HOUR);
+            String strHour = String.valueOf(hour);
 
-		//Make sure minute is 2 digits
-		if(min < 10)
-			strMin = "0" + strMin;
+            if (hour == 0)
+                strHour = "12";
 
-
-		String time = strHour + ":" + strMin + " " + am_or_pm;
+            time = strHour + ":" + strMin + " " + am_or_pm;
+        }
+        else {
+            hour = calendar.get(Calendar.HOUR_OF_DAY);
+            time = String.valueOf(hour) + ":" + strMin;
+        }
 
 		return time;
+	}
+
+	public static String getFullTimeForListItem(Context context, Profile profile) {
+
+		return Util.formatTime(context, profile.getStartDate()) + " - " + Util.formatTime(context, profile.getEndDate());
 	}
 
 	/**
@@ -73,14 +86,20 @@ public class Util implements Constants {
 	 * 
 	 * @param date Stores the time of the alarm
 	 */
-	public static void setTimeForLargeTextView(Date date, TextView textView) {
+	public static void setTimeForLargeTextView(Context context, Date date, TextView textView) {
 
         //Make the AM or PM half the size of the time
-        String time = formatTime(date);
-		SpannableString ss1 = new SpannableString(time);
-		ss1.setSpan(new RelativeSizeSpan(.5f), time.length()-3,time.length(),0);
+        String time = formatTime(context,date);
 
-		textView.setText(ss1);
+        if(!DateFormat.is24HourFormat(context)) {
+            SpannableString ss1 = new SpannableString(time);
+            ss1.setSpan(new RelativeSizeSpan(.5f), time.length() - 3, time.length(), 0);
+
+            textView.setText(ss1);
+        }
+        else {
+            textView.setText(time);
+        }
 	}
 	
 	/**

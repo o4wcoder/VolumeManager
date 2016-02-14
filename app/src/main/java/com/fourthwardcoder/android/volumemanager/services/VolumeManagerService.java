@@ -120,7 +120,7 @@ public class VolumeManagerService extends IntentService implements Constants {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(System.currentTimeMillis());
 
-		String strTime = Util.formatTime(calendar.getTime());
+		String strTime = Util.formatTime(this,calendar.getTime());
 		String strTitle;
 		int id;
 		if(isStartAlarm) {

@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.fragments.ProfileListFragment;
+import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
 import com.fourthwardcoder.android.volumemanager.services.VolumeManagerService;
@@ -122,7 +123,7 @@ public class ProfileListAdapter extends ArrayAdapter<Profile> implements Constan
         //holder.titleTextView.setAlpha(PRIMARY_TEXT_DARK);
 
         holder.timeTextView = (TextView)convertView.findViewById(R.id.timeTextView);
-        holder.timeTextView.setText(getItem(position).getFullTimeForListItem());
+        holder.timeTextView.setText(Util.getFullTimeForListItem(mContext,getItem(position)));
         //holder.timeTextView.setAlpha(SECONDARY_TEXT_DARK);
         holder.daysTextView = (TextView)convertView.findViewById(R.id.profileDaysTextView);
         if(checkIfSetDaily(getItem(position).getDaysOfTheWeek()))

@@ -10,7 +10,6 @@ import com.fourthwardcoder.android.volumemanager.fragments.ProfileDetailFragment
 //import com.fourthwardcoder.android.volumemanager.json.ProfileJSONManager;
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
-import com.fourthwardcoder.android.volumemanager.fragments.AboutFragment;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.fourthwardcoder.android.volumemanager.location.GeofenceManager;
 import com.fourthwardcoder.android.volumemanager.models.GeoFenceLocation;
@@ -33,14 +32,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import  com.google.android.gms.location.LocationListener;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -279,7 +276,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		MenuInflater inflater = getMenuInflater();
 		//Pass the resource ID of the menu and populate the Menu 
 		//instance with the items defined in the xml file
-		inflater.inflate(R.menu.action_bar_profile_menu, menu);
+		inflater.inflate(R.menu.toolbar_profile_detail_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 
 	}
@@ -301,11 +298,11 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 			//startActivity(settingsIntent);
 			return true;
 		case R.id.menu_item_about:
-			FragmentManager fm = this.getFragmentManager();
-			AboutFragment dialog = AboutFragment.newInstance();
+			//FragmentManager fm = this.getFragmentManager();
+			//AboutFragment dialog = AboutFragment.newInstance();
 			//Make ProfileListFragment the target fragment of the TimePickerFragment instance
 			//dialog.setTargetFragment(VolumeManagerFragment.this, REQUEST_START_TIME);
-			dialog.show(fm, "about");
+			//dialog.show(fm, "about");
 		default:
 			return super.onOptionsItemSelected(item);
 		}

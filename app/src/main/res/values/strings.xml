@@ -59,4 +59,25 @@
     <string name="geofence_transition_entered">Entered</string>
     <string name="geofence_transition_exited">Exited</string>
     <string name="unknown_geofence_transition">Unknown Transition</string>
+
+    <!-- Preferences -->
+    <string name="pref_time_notifications_label">Time Profile Notifications</string>
+    <string name="pref_time_notifications_key" translatable="false">time_notifications</string>
+
+    <string name="pref_location_notifications_label">Location Profile Notifications</string>
+    <string name="pref_location_notifications_key" translatable="false">location_notifications</string>
+
+    <string name="pref_notifications_true">Enabled</string>
+    <string name="pref_notifications_false">Disabled</string>
+    <string name="pref_notifications_default" translatable="false">false</string>
+
+    <string name="pref_location_radius_units_label">Location Radius Units</string>
+    <string name="pref_location_radius_units_label_meters">Meters</string>
+    <string name="pref_location_radius_units_label_feet">Feet</string>
+    <string name="pref_location_radius_units_key" translatable="false">location_radius_units</string>
+    <string name="pref_location_radius_units_meters">meters</string>
+    <string name="pref_location_radius_units_feet">feet</string>
+
+
+
 </resources>
