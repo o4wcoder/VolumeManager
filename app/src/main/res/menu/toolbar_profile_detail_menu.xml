@@ -4,9 +4,13 @@
     <item android:id="@+id/menu_item_save_profile"
         android:title="@string/save_menu"
         app:showAsAction="always|withText" />
-    
+
+    <item android:id="@+id/menu_item_delete_profile"
+        android:title="@string/delete_menu"
+        app:showAsAction="never" />
+
     <item android:id="@+id/menu_item_settings"
         android:title="@string/settings_menu"
-        android:showAsAction="never" />
+        app:showAsAction="never" />
 
 </menu>

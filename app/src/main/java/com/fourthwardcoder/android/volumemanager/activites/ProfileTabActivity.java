@@ -156,10 +156,6 @@ public class ProfileTabActivity extends AppCompatActivity implements ProfileList
                 ActivityOptionsCompat.makeSceneTransitionAnimation(this,
                         new Pair<View, String>(textView, getString(R.string.trans_profile_title)));
 
-//		ActivityOptionsCompat activityOptions =
-//				ActivityOptionsCompat.makeCustomAnimation(this,
-//						new Pair<View,String>(textView,
-//								getString(R.string.trans_profile_title)));
 
 
 		startActivity(intent,activityOptions.toBundle());

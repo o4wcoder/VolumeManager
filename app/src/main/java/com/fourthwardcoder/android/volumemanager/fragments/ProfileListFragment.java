@@ -212,10 +212,7 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
                                 //Delete selected profiles
                                 for (int i = listview.getCount() - 1; i > 0; i--) {
                                     if (listview.isItemChecked(i)) {
-                                        //Kill alarms for volume control
-                                        VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), (Profile) mProfileAdapter.getItem(i - 1), false);
                                         ProfileManager.deleteProfile(getActivity(), (Profile) mProfileAdapter.getItem(i - 1));
-                                        //	profileManager.deleteProfile(profileAdapter.getItem(i));
                                     }
                                 }
                             }
@@ -333,8 +330,6 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
                    updateGeofences();
                else {
                    ProfileManager.deleteProfile(getActivity(), profile);
-                   //Kill alarms for volume control
-                   VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), profile, false);
                }
                notifyListViewChanged();
 

@@ -5,11 +5,13 @@ import java.util.Date;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -429,37 +431,63 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 		}
 
 	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		
-		switch(item.getItemId()) {
-		case android.R.id.home:
-			if(NavUtils.getParentActivityName(getActivity()) != null) {
-				NavUtils.navigateUpFromSameTask(getActivity());
-			}
-			return true;
-		case R.id.menu_item_save_profile:
-			Log.e(TAG,"Save location menu select");
-			
-			saveSettings(); 
-			Toast toast = Toast.makeText(getActivity().getApplicationContext(),
-					R.string.toast_text, Toast.LENGTH_SHORT);
-			toast.show();
-			
-			getActivity().finish();
-			return true;
-		case R.id.menu_item_settings:
-		    Intent settingsIntent = new Intent(getActivity(),SettingsActivity.class);
-			startActivity(settingsIntent);
-			return true;
-			default:
-				return super.onOptionsItemSelected(item);
-		}
-	}
-	/*******************************************************************/
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if (NavUtils.getParentActivityName(getActivity()) != null) {
+                    NavUtils.navigateUpFromSameTask(getActivity());
+                }
+                return true;
+            case R.id.menu_item_save_profile:
+                Log.e(TAG, "Save location menu select");
+
+                saveSettings();
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(),
+                        R.string.toast_text, Toast.LENGTH_SHORT);
+                toast.show();
+
+                getActivity().finish();
+                return true;
+            case R.id.menu_item_delete_profile:
+
+                confirmDeleteDialog();
+
+                return true;
+            case R.id.menu_item_settings:
+                Intent settingsIntent = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(settingsIntent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    /*******************************************************************/
 	/*                        Private Methods                          */
 	/*******************************************************************/
+
+    private void confirmDeleteDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        builder.setMessage(getString(R.string.dialog_delete_profile,mProfile.getTitle()))
+                .setPositiveButton(getString(R.string.dialog_yes), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ProfileManager.deleteProfile(getActivity(),mProfile);
+                getActivity().finish();
+            }
+        })
+        .setNegativeButton(getString(R.string.dialog_no), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        }).show();
+
+    }
 
     private int getVolumeIconResource(int volumeType) {
 

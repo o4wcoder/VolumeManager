@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
 
     <string name="app_name">Volume Manager</string>
     <string name="hello_world">Hello world!</string>
@@ -18,7 +18,6 @@
     <string name="new_profile">New Profile</string>
     <string name="title_hint">Enter a title for the profile.</string>
     <string name="profile_header">Profiles</string>
-    <string name="delete_profile">Delete Profile</string>
     <string name="profile_settings">Profile Settings</string>
     <string name="notification_text">Enable Notifcations to be sent every time there is a volume control change by a profile</string>
     <string name="notification_header">Notifications</string>
@@ -28,10 +27,17 @@
     <string name="secondary_text_alpha_dark">.54</string>
     <string name="hint_disabled_text_alpha_dark">.26</string>
     <string name="previous_volume_setting">Use Previous Volume Setting</string>
+    <string name="context_menu_delete_profile">Delete profile</string>
     <!-- Menu Items -->
     <string name="settings_menu">Settings</string>
     <string name="about_menu">About</string>
     <string name="save_menu">SAVE</string>
+    <string name="delete_menu">Delete</string>
+
+    <!-- Delete Profile Dialog -->
+    <string name="dialog_delete_profile">Delete profile <xliff:g id="high">%1$s</xliff:g>?</string>
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
 
     <string name="daily">Daily</string>
     <!-- Time Profile -->

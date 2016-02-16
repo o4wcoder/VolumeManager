@@ -12,6 +12,7 @@ import com.fourthwardcoder.android.volumemanager.activites.LocationMapActivity;
 import com.fourthwardcoder.android.volumemanager.activites.ProfileDetailActivity;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
+import com.fourthwardcoder.android.volumemanager.services.VolumeManagerService;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -144,6 +145,15 @@ public class ProfileManager implements Constants{
         String selection = ProfileContract.ProfileEntry.COLUMN_ID + "=?";
         String[] selectionArgs = new String[1];
         selectionArgs[0] = String.valueOf(profile.getId());
+
+
+        if(profile.isLocationProfile()) {
+            //Delete Geofences
+        }
+        else {
+            //Kill alarms for volume control
+            VolumeManagerService.setServiceAlarm(context.getApplicationContext(), profile, false);
+        }
 
         //Remove profile from the content provider
         return context.getContentResolver().delete(ProfileContract.ProfileEntry.CONTENT_URI, selection, selectionArgs);
