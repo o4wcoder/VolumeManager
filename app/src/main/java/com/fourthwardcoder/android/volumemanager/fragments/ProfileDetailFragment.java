@@ -216,7 +216,6 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 	        boolean setting = mProfile.getDaysOfTheWeek().get(i);
 	        if(setting) {
 	        	//Turn Day on
-                Log.e(TAG, "turn on day");
 	        	button.setTextColor(Color.parseColor("#ffffff"));
               //  button.setBackgroundColor(getResources().getColor(R.color.buttonColor));
 	        }
@@ -522,12 +521,15 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 
 	private void setSaveMenu() {
 
-        MenuItem saveMenuItem = mToolbarMenu.findItem(R.id.menu_item_save_profile);
+        if(mToolbarMenu != null) {
 
-        if(mTitleTextView.getText().length() > 0)
-            saveMenuItem.setEnabled(true);
-        else
-            saveMenuItem.setEnabled(false);
+            MenuItem saveMenuItem = mToolbarMenu.findItem(R.id.menu_item_save_profile);
+
+            if (mTitleTextView.getText().length() > 0)
+                saveMenuItem.setEnabled(true);
+            else
+                saveMenuItem.setEnabled(false);
+        }
     }
 	
 	/**
