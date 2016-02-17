@@ -17,9 +17,9 @@ public class GeoFenceLocation implements Constants, Parcelable {
     private String city;
     private float fenceRadius;
 
-    public GeoFenceLocation() {
+    public GeoFenceLocation(LatLng latLng) {
 
-        latLng = null;
+        this.latLng = latLng;
         fenceRadius = GEOFENCE_RADIUS_DEFAULT;
     }
 

@@ -303,16 +303,15 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
-		//setUpMapIfNeeded();
+	protected void onStart() {
+		super.onStart();
 		mGoogleApiClient.connect();
 	}
 
 
 	@Override
-	protected void onPause() {
-		super.onPause();
+	protected void onStop() {
+		super.onStop();
 
 		if (mGoogleApiClient.isConnected()) {
 			LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
@@ -351,158 +350,6 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		//zoomToCurrentLocation();
 
 	}
-
-
-	/******************************************************************/
-	/*                        Geofence Methods                        */
-	/******************************************************************/
-	/*
-	private Geofence createGeofence(LocationProfile profile) {
-
-		return new Geofence.Builder()
-		.setRequestId(profile.getId().toString())
-		.setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
-		.setCircularRegion(profile.getLocation().latitude, profile.getLocation().longitude,profile.getFenceRadius())
-		.setExpirationDuration(Geofence.NEVER_EXPIRE)
-		.build();
-
-	}
-	 */
-	/*
-	private void populateGeofenceList() {
-
-		//Get all location profiles
-		ArrayList<LocationProfile> locationProfileList = ProfileJSONManager.get(this).getLocationProfiles();
-
-		for(int i = 0; i < locationProfileList.size(); i++ ) {
-
-			LocationProfile profile = locationProfileList.get(i);
-			Log.e(TAG,"Create geofence with profile " +profile.toString());
-			Geofence fence = createGeofence(profile);
-
-			geofenceList.add(fence);
-
-
-		}
-
-	}
-	 */
-	/**
-	 * Gets a PendingIntent to send with the request to add or remove Geofences. Location Services
-	 * issues the Intent inside this PendingIntent whenever a geofence transition occurs for the
-	 * current list of geofences.
-	 *
-	 * @return A PendingIntent for the IntentService that handles geofence transitions.
-	 */
-	/*
-    private PendingIntent getGeofencePendingIntent() {
-        // Reuse the PendingIntent if we already have it.
-        if (geofencePendingIntent != null) {
-            return geofencePendingIntent;
-        }
-        Intent intent = new Intent(this, GeofenceService.class);
-        // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when calling
-        // addGeofences() and removeGeofences().
-        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-	 */
-	/**
-	 * Builds and returns a GeofencingRequest. Specifies the list of geofences to be monitored.
-	 * Also specifies how the geofence notifications are initially triggered.
-	 */
-	/*
-    private GeofencingRequest getGeofencingRequest() {
-        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
-
-        // The INITIAL_TRIGGER_ENTER flag indicates that geofencing service should trigger a
-        // GEOFENCE_TRANSITION_ENTER notification when the geofence is added and if the device
-        // is already inside that geofence.
-        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
-
-        // Add the geofences to be monitored by geofencing service.
-        builder.addGeofences(geofenceList);
-
-        // Return a GeofencingRequest.
-        return builder.build();
-    }
-	 */
-
-	/**
-	 * Adds geofences, which sets alerts to be notified when the device enters or exits one of the
-	 * specified geofences. Handles the success or failure results returned by addGeofences().
-	 */
-	/*
-    public void addGeofences() {
-
-    	Log.i(TAG,"adding georfences");
-
-        if (!mGoogleApiClient.isConnected()) {
-            Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        try {
-            LocationServices.GeofencingApi.addGeofences(
-                    mGoogleApiClient,
-                    // The GeofenceRequest object.
-                    getGeofencingRequest(),
-                    // A pending intent that that is reused when calling removeGeofences(). This
-                    // pending intent is used to generate an intent when a matched geofence
-                    // transition is observed.
-                    getGeofencePendingIntent()
-            ).setResultCallback(this); // Result processed in onResult().
-        } catch (SecurityException securityException) {
-            // Catch exception generated if the app does not use ACCESS_FINE_LOCATION permission.
-        	Log.e(TAG,"Security exception when trying to add geofences.");
-            //logSecurityException(securityException);
-        }
-    }
-	 */
-	/*
-    public void removeGeofence() {
-
-    	 try {
-             // Remove geofences.
-             LocationServices.GeofencingApi.removeGeofences(
-                     mGoogleApiClient,
-                     // This is the same pending intent that was used in addGeofences().
-                     getGeofencePendingIntent()
-             ).setResultCallback(this); // Result processed in onResult().
-         } catch (SecurityException securityException) {
-             // Catch exception generated if the app does not use ACCESS_FINE_LOCATION permission.
-             //logSecurityException(securityException);
-         }
-    }
-	 */
-
-	/*
-
-    /******************************************************************/
-	/*                       Private Methods                          */
-	/******************************************************************/
-	/*
-    private void setUpMapIfNeeded() {
-		// Do a null check to confirm that we have not already instantiated the map.
-		if (map == null) {
-			// Try to obtain the map from the SupportMapFragment.
-			map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-					.getMap();
-			// Check if we were successful in obtaining the map.
-			if (map != null) {
-				setUpMap();
-			}
-		}
-	}
-	 */
-	/**
-	 * This is where we can add markers or lines, add listeners or move the camera. In this case, we
-	 * just add a marker near Africa.
-	 */
-	/*
-	private void setUpMap() {
-		map.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
-	}
-	 */
 
 	private void addMarker() {
 
@@ -608,10 +455,8 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 
         //Create Location object if it's empty
         if(mProfile.getLocation() == null) {
-            mProfile.setLocation(new GeoFenceLocation());
+            mProfile.setLocation(new GeoFenceLocation(currentLocation));
         }
-		if(currentLocation != null)
-			mProfile.getLocation().setLatLng(currentLocation);
 
 		if(currentAddress != null) {
 			mProfile.getLocation().setAddress(currentAddress.getAddressLine(0));
@@ -623,16 +468,10 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		//ProfileJSONManager.get(this).saveLocationProfiles();
         ProfileManager.insertProfile(this,mProfile);
 		//Create geofence from new location profile
-		//Geofence fence = createGeofence(currentProfile);
-		Geofence fence = geofenceManager.createGeofence(mProfile);
-		//store geofence's from all other locations
-		//populateGeofenceList();
 
-		//Add new geofence to list
-		//geofenceList.add(fence);
+		Geofence fence = geofenceManager.createGeofence(mProfile);
 		geofenceManager.addGeofence(fence);
-		//Set up geofences with pending intent
-		//addGeofences();
+
 		geofenceManager.startGeofences(this);
 
 	}
@@ -657,6 +496,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 
 	@Override
 	public void onConnected(Bundle bundle) {
+		Log.e(TAG,"onConnected()");
 		Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 		if (location == null) {
 			LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);

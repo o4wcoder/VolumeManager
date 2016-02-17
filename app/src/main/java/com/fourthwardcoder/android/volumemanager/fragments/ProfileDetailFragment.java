@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
@@ -38,12 +39,21 @@ import android.widget.TextView;
 
 import com.fourthwardcoder.android.volumemanager.R;
 //import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
+import com.fourthwardcoder.android.volumemanager.activites.LocationMapActivity;
 import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
+import com.fourthwardcoder.android.volumemanager.adapters.LocationProfileListAdapter;
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
+import com.fourthwardcoder.android.volumemanager.models.GeoFenceLocation;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
 import com.fourthwardcoder.android.volumemanager.services.VolumeManagerService;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 
 /**
  * VolumeManagerFragment
@@ -55,7 +65,8 @@ import com.fourthwardcoder.android.volumemanager.services.VolumeManagerService;
  * 3/13/2015
  *
  */
-public class ProfileDetailFragment extends Fragment implements Constants {
+public class ProfileDetailFragment extends Fragment implements  LocationProfileListAdapter.LocationAdapterCallback, GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants {
 	
 	/************************************************************************/
 	/*                           Constants                                  */
@@ -85,6 +96,11 @@ public class ProfileDetailFragment extends Fragment implements Constants {
     int mProfileType;
 
     Menu mToolbarMenu;
+
+    //Location profile only members
+    ImageView mThumbnailImageView;
+    private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
 	
 	/*******************************************************/
 	/*                  Override Methods                   */
@@ -119,6 +135,29 @@ public class ProfileDetailFragment extends Fragment implements Constants {
             //Restore Profile from rotation.
             mProfile = saveInstanceState.getParcelable(EXTRA_PROFILE);
 			mIsNewProfile = false;
+        }
+
+        //Get Location if this is a location profile
+        if(mProfileType == LOCATION_PROFILE_LIST) {
+
+            //Get current location if there is not location set
+            if(mProfile.getLocation() == null) {
+                Log.e(TAG,"Creating Google API and Location requests");
+                //Build Google API Client
+                mGoogleApiClient = new GoogleApiClient.Builder(getActivity().getApplicationContext())
+                        .addConnectionCallbacks(this)
+                        .addOnConnectionFailedListener(this)
+                        .addApi(LocationServices.API)
+                        .build();
+
+                // Create the LocationRequest object
+                mLocationRequest = LocationRequest.create()
+                        .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                        .setInterval(10 * 1000)        // 10 seconds, in milliseconds
+                        .setFastestInterval(1 * 1000); // 1 second, in milliseconds
+            }
+
+
         }
 
 	}
@@ -372,6 +411,20 @@ public class ProfileDetailFragment extends Fragment implements Constants {
             }
         });
 
+        //Location views
+        if(mProfileType == LOCATION_PROFILE_LIST) {
+
+            mThumbnailImageView = (ImageView)view.findViewById(R.id.location_thumbnail);
+
+            mThumbnailImageView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent i = new Intent(getActivity(), LocationMapActivity.class);
+                    startActivity(i);
+                }
+            });
+        }
 
 	    /*
 	     * Set Default and Saved Settings
@@ -398,6 +451,22 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 		return view;
 	}
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        if (mGoogleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            mGoogleApiClient.disconnect();
+        }
+    }
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
 
@@ -551,32 +620,7 @@ public class ProfileDetailFragment extends Fragment implements Constants {
                 saveMenuItem.setEnabled(false);
         }
     }
-	
-	/**
-	 * Sets each components visibility in the fragment. This is set
-	 * by the on/off toggle switch
-	 * @param set setting of toggle switch
-	 */
-	/*
-	private void setWidgetVisibility(boolean set) {
-		
-		//Start Controls
-		startTimeButton.setEnabled(set);
-		startTimeTextView.setEnabled(set);
-		Util.setRadioGroupVisibility(startVolumeRadioGroup,set);
-		startRingSeekBar.setEnabled(set);
-		//End Controls
-		endTimeButton.setEnabled(set);
-		endTimeTextView.setEnabled(set);
-		Util.setRadioGroupVisibility(endVolumeRadioGroup,set);
-		endRingSeekBar.setEnabled(set);
-		
-		setControlButton.setEnabled(set);
-	}
-	*/
-	
 
-	
 	/**
 	 * Save all settings of the alarms to SharedPreferences 
      */
@@ -600,8 +644,42 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 
 
     }
-	
 
-	
 
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.e(TAG,"onConnected()");
+        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (location == null) {
+            Log.e(TAG,"Location was null");
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        }
+        else {
+            //Store location into profile
+            LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+            mProfile.setLocation(new GeoFenceLocation(latLng));
+
+            Log.e(TAG,"LatLng: " + latLng.toString());
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onToggleLocationIcon() {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+          Log.e(TAG,"onConnectionFailed(): " + connectionResult.toString());
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+          Log.e(TAG,"onLocationChanged(): " + location.toString());
+    }
 }

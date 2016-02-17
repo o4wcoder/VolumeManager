@@ -55,15 +55,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activites.ProfileTabActivity" />
         </activity>
-        <!--
-        <activity
-            android:name=".activites.LocationProfileDetailActivity"
-            android:label="@string/location_settings" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activites.LocationMapActivity"/>
-        </activity>
-        -->
+
         <activity
             android:name=".activites.SettingsActivity"
             android:label="@string/settings_menu"
