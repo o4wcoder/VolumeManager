@@ -8,8 +8,13 @@
     <string name="off">Off</string>
     <string name="vibrate">Vibrate</string>
     <string name="ring">Ring</string>
-    <string name="start_volume_settings">Start Control Volume</string>
-    <string name="end_volume_settings">End Control Volume</string>
+
+    <!-- Volume Control Headings -->
+    <string name="start_volume_settings_time">Start Volume Control</string>
+    <string name="end_volume_settings_time">End Volume Control</string>
+    <string name="start_volume_control_settings_location">Enter Volume Control</string>
+    <string name="emd_volume_control_settings_location">Exit Volume Control</string>
+
     <string name="start_time_dialog">Volume control start time:</string>
     <string name="end_time_dialog">Volume control end time:</string>
     <string name="set_control_button">Set Volume Control</string>

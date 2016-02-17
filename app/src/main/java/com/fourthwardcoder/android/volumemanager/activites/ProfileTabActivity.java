@@ -110,11 +110,8 @@ public class ProfileTabActivity extends AppCompatActivity implements ProfileList
 	}
 
     public void clickFAB(View view) {
-        Log.e(TAG, "Inside click FAB");
-		if(mTabLayout.getSelectedTabPosition() == LOCATION_PROFILE_LIST)
-			ProfileManager.newLocationProfile(this);
-		else
-            ProfileManager.newProfile(this);
+
+        ProfileManager.newProfile(this,mTabLayout.getSelectedTabPosition());
     }
 
     private void setFABVisibility() {
@@ -129,34 +126,21 @@ public class ProfileTabActivity extends AppCompatActivity implements ProfileList
     public void onListViewChange() {
 
            setFABVisibility();
-
     }
 
 	@Override
 	public void onItemSelected(Profile profile, int profileType, TextView textView) {
 
-		if(textView != null) {
-			Log.e(TAG,"TextView text: " + textView.getText());
-		}
-		else
-			Log.e(TAG,"TExt view null!!");
-
-		Intent intent;
-		if (profileType == LOCATION_PROFILE_LIST)
-			intent = new Intent(this, LocationMapActivity.class);
-		else
-			intent = new Intent(this, ProfileDetailActivity.class);
+        Intent intent = new Intent(this, ProfileDetailActivity.class);
 
 		//Tell Volume Manager Fragment which Profile to display by making
 		//giving id as Intent extra
 		intent.putExtra(ProfileDetailFragment.EXTRA_PROFILE, profile);
-
+        intent.putExtra(EXTRA_PROFILE_TYPE,profileType);
 
         ActivityOptionsCompat activityOptions =
                 ActivityOptionsCompat.makeSceneTransitionAnimation(this,
                         new Pair<View, String>(textView, getString(R.string.trans_profile_title)));
-
-
 
 		startActivity(intent,activityOptions.toBundle());
 	}

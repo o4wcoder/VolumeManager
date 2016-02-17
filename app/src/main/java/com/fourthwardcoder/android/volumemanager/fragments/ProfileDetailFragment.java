@@ -26,6 +26,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TableRow;
@@ -80,6 +81,9 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 	ImageView startVolumeImageView, endVolumeImageView;
 
 	boolean mIsNewProfile = false;
+
+    int mProfileType;
+
     Menu mToolbarMenu;
 	
 	/*******************************************************/
@@ -96,6 +100,8 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 		
 		//Get Fragment arguments and pull out ID of profile
 		Intent intent = getActivity().getIntent();
+
+        mProfileType = intent.getIntExtra(EXTRA_PROFILE_TYPE,TIME_PROFILE_LIST);
 
         //First check if we have don't have anything in saveInstanceState from a rotation
         if(saveInstanceState == null) {
@@ -387,6 +393,8 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 		//Set Volume Icon
         setVolumeIcon();
 
+        setLocationLayout(view);
+
 		return view;
 	}
 
@@ -401,7 +409,6 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		//super.onCreateOptionsMenu(menu, inflater);
-
 
 		//Pass the resource ID of the menu and populate the Menu 
 		//instance with the items defined in the xml file
@@ -467,6 +474,19 @@ public class ProfileDetailFragment extends Fragment implements Constants {
 	/*                        Private Methods                          */
 	/*******************************************************************/
 
+    private void setLocationLayout(View view) {
+
+        if(mProfileType == LOCATION_PROFILE_LIST) {
+           (view.findViewById(R.id.location_layout)).setVisibility(View.VISIBLE);
+            (view.findViewById(R.id.startTimeTextView)).setVisibility(View.GONE);
+            (view.findViewById(R.id.endTimeTextView)).setVisibility(View.GONE);
+        }
+        else {
+            (view.findViewById(R.id.location_layout)).setVisibility(View.GONE);
+            (view.findViewById(R.id.startTimeTextView)).setVisibility(View.VISIBLE);
+            (view.findViewById(R.id.startTimeTextView)).setVisibility(View.VISIBLE);
+        }
+    }
     private void confirmDeleteDialog() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

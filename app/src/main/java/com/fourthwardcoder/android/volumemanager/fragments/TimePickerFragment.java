@@ -68,7 +68,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         mTime = (Date) getArguments().getSerializable(EXTRA_TIME);
-        mDialogTitle = (String) getArguments().getString(EXTRA_TITLE);
+        mDialogTitle = getArguments().getString(EXTRA_TITLE);
 
         //Create a Calendar to get the time
         Calendar calendar = Calendar.getInstance();
@@ -77,8 +77,11 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int min = calendar.get(Calendar.MINUTE);
 
-        return new TimePickerDialog(getActivity(), this, hour, min,
-               DateFormat.is24HourFormat(getActivity()));
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), this, hour, min,
+                DateFormat.is24HourFormat(getActivity()));
+
+        timePickerDialog.setTitle(mDialogTitle);
+        return timePickerDialog;
 
     }
 

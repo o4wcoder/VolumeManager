@@ -24,20 +24,13 @@ public class ProfileManager implements Constants{
 
     private static final String TAG = ProfileManager.class.getSimpleName();
 
-    public static void newProfile(Activity activity)
+    public static void newProfile(Activity activity, int profileType)
     {
         Intent i = new Intent(activity,ProfileDetailActivity.class);
-
-        activity.startActivityForResult(i, 0);
-
-    }
-
-    public static void newLocationProfile(Activity activity) {
-
-        Intent i = new Intent(activity,LocationMapActivity.class);
-
+        i.putExtra(EXTRA_PROFILE_TYPE,profileType);
         activity.startActivityForResult(i, 0);
     }
+
 
     public static Profile getProfile(Context context, UUID profileId) {
 

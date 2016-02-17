@@ -19,7 +19,7 @@
 
 
     <TextView
-        android:id="@+id/TextView02"
+        android:id="@+id/end_volume_control_heading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"

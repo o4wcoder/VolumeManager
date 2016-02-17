@@ -297,12 +297,6 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 			//Intent settingsIntent = new Intent(this,SettingsActivity.class);
 			//startActivity(settingsIntent);
 			return true;
-		case R.id.menu_item_about:
-			//FragmentManager fm = this.getFragmentManager();
-			//AboutFragment dialog = AboutFragment.newInstance();
-			//Make ProfileListFragment the target fragment of the TimePickerFragment instance
-			//dialog.setTargetFragment(VolumeManagerFragment.this, REQUEST_START_TIME);
-			//dialog.show(fm, "about");
 		default:
 			return super.onOptionsItemSelected(item);
 		}

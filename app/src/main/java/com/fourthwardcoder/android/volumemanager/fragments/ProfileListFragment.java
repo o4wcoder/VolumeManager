@@ -148,10 +148,7 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
             @Override
             public void onClick(View v) {
 
-                if(mProfileType == LOCATION_PROFILE_LIST)
-                    ProfileManager.newLocationProfile(getActivity());
-                else
-                    ProfileManager.newProfile(getActivity());
+                ProfileManager.newProfile(getActivity(),mProfileType);
 
             }
 
