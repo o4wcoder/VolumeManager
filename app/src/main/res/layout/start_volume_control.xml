@@ -35,7 +35,6 @@
             android:id="@+id/startVolumeRadioGroup"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_marginBottom="4dp"
             android:layout_marginTop="4dp"
             android:orientation="horizontal" >
 
@@ -79,18 +78,14 @@
 
         <ImageView
             android:id="@+id/volumeStartImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_volume_up"
-            android:padding="4dp" />
+            style="@style/ProfileIcon"
+            android:src="@drawable/ic_volume_up" />
 
         <SeekBar
             android:id="@+id/startRingSeekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="4dp" />
+            android:layout_gravity="center" />
 
     </LinearLayout>
 </LinearLayout>

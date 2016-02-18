@@ -1,5 +1,6 @@
 package com.fourthwardcoder.android.volumemanager.fragments;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -8,6 +9,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Address;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -111,6 +113,7 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 
     //Location profile only members
     ImageView mThumbnailImageView;
+    TextView mAddressTextView;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
 	
@@ -437,6 +440,16 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
                     startActivity(i);
                 }
             });
+
+            mAddressTextView = (TextView)view.findViewById(R.id.address_textview);
+            mAddressTextView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent i = new Intent(getActivity(), LocationMapActivity.class);
+                    startActivity(i);
+                }
+            });
         }
 
 	    /*
@@ -709,6 +722,19 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 
              //   Log.e(TAG, "Loading image....");
                 Picasso.with(getActivity()).load(getThumbnailUri(latLng)).into(mThumbnailImageView);
+            }
+
+            //Finally set street address of location
+            if(latLng != null) {
+
+                try {
+                    Address address = Util.getStreetAddress(getActivity(), latLng);
+                    String strFullAddress = address.getAddressLine(0) + " " + address.getLocality() +
+                            ", " + address.getAdminArea();
+                    mAddressTextView.setText(strFullAddress);
+                } catch(IOException e) {
+                    mAddressTextView.setText("Unknown Street Address");
+                }
             }
         }
     }

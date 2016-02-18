@@ -402,28 +402,28 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 
 
 
-	private Address getStreetAddress() throws IOException {
-
-		//Get Address of current location
-		//Address currentAddress = null;
-		if(Geocoder.isPresent()) {
-			Geocoder gcd = new Geocoder(getBaseContext());
-
-			List<Address> addresses = gcd.getFromLocation(currentLocation.latitude,
-					currentLocation.longitude,1);
-
-			if(addresses.size() > 0)
-				currentAddress = addresses.get(0);
-		}
-
-		return currentAddress;
-	}
+//	private Address getStreetAddress() throws IOException {
+//
+//		//Get Address of current location
+//		//Address currentAddress = null;
+//		if(Geocoder.isPresent()) {
+//			Geocoder gcd = new Geocoder(getBaseContext());
+//
+//			List<Address> addresses = gcd.getFromLocation(currentLocation.latitude,
+//					currentLocation.longitude,1);
+//
+//			if(addresses.size() > 0)
+//				currentAddress = addresses.get(0);
+//		}
+//
+//		return currentAddress;
+//	}
 
 	private void setStreetAddress() {
 
 		Address address;
 		try {
-			currentAddress = getStreetAddress();
+			currentAddress = Util.getStreetAddress(this,currentLocation);
 			addressTextView.setText(currentAddress.getAddressLine(0));
 			Log.e(TAG,"address: " + currentAddress.toString());
 

@@ -1,15 +1,20 @@
 package com.fourthwardcoder.android.volumemanager.helpers;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
+import com.google.android.gms.maps.model.LatLng;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.media.AudioManager;
 import android.os.Build;
 import android.text.Html;
@@ -176,7 +181,26 @@ public class Util implements Constants {
     	
     }
 
+    /*****************************************************************************/
+    /*                       Location/Maps Helpers                               */
+    /*****************************************************************************/
+    public static Address getStreetAddress(Context context, LatLng latLng) throws IOException {
 
+        //Get Address of current location
+        Address currentAddress = null;
+
+        if(Geocoder.isPresent()) {
+            Geocoder gcd = new Geocoder(context);
+
+            List<Address> addresses = gcd.getFromLocation(latLng.latitude,
+                    latLng.longitude,1);
+
+            if(addresses.size() > 0)
+                currentAddress = addresses.get(0);
+        }
+
+        return currentAddress;
+    }
 
 
 
