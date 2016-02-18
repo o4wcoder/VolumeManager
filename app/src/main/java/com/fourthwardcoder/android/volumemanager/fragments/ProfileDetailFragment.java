@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
@@ -54,6 +55,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
+import com.squareup.picasso.Picasso;
 
 /**
  * VolumeManagerFragment
@@ -79,7 +81,17 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 	public static final int REQUEST_START_TIME = 0;
 	public static final int REQUEST_END_TIME = 1;
 
-	
+    //Google Static Maps paramters
+    private static final String GOOGLE_STAIC_MAPS_URL = "http://maps.google.com/maps/api/staticmap";
+	private static final String MAPS_PARAM_CENTER = "center";
+    private static final String MAPS_PARAM_SIZE = "size";
+    private static final String MAPS_PARAM_ZOOM = "zoom";
+    private static final String MAPS_PARAM_SENSOR = "sensor";
+    private static final String MAPS_PARAM_MARKERS = "markers";
+
+    private static final String MAPS_SIZE_SMALL = "400x200";
+    private static final String MAPS_ZOOM_VAL = "15";
+    private static final String MAPS_SENSOR_VAL = "false";
 	/************************************************************************/
 	/*                          Local Data                                  */
 	/************************************************************************/
@@ -108,7 +120,7 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 	@Override
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState);
-		
+		Log.e(TAG,"onCreate");
 		setHasOptionsMenu(true);
 		
 		//Change status bar color
@@ -117,10 +129,12 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 		//Get Fragment arguments and pull out ID of profile
 		Intent intent = getActivity().getIntent();
 
-        mProfileType = intent.getIntExtra(EXTRA_PROFILE_TYPE,TIME_PROFILE_LIST);
+
 
         //First check if we have don't have anything in saveInstanceState from a rotation
         if(saveInstanceState == null) {
+           Log.e(TAG,"No saved vars");
+            mProfileType = intent.getIntExtra(EXTRA_PROFILE_TYPE,TIME_PROFILE_LIST);
             //See if we have a Profile object. If so we are editing the Profile.
             //If not, it's a new profile
             if (intent.hasExtra(EXTRA_PROFILE)) {
@@ -132,16 +146,18 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
             }
         }
         else {
+            Log.e(TAG,"Saved vars");
             //Restore Profile from rotation.
             mProfile = saveInstanceState.getParcelable(EXTRA_PROFILE);
-			mIsNewProfile = false;
+            mProfileType = saveInstanceState.getInt(EXTRA_PROFILE_TYPE);
+			mIsNewProfile = saveInstanceState.getBoolean(EXTRA_IS_NEW_PROFILE);
+            Log.e(TAG,"Saved mProfile type " + mProfileType);
         }
 
         //Get Location if this is a location profile
         if(mProfileType == LOCATION_PROFILE_LIST) {
 
             //Get current location if there is not location set
-            if(mProfile.getLocation() == null) {
                 Log.e(TAG,"Creating Google API and Location requests");
                 //Build Google API Client
                 mGoogleApiClient = new GoogleApiClient.Builder(getActivity().getApplicationContext())
@@ -155,9 +171,6 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
                         .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                         .setInterval(10 * 1000)        // 10 seconds, in milliseconds
                         .setFastestInterval(1 * 1000); // 1 second, in milliseconds
-            }
-
-
         }
 
 	}
@@ -454,7 +467,11 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
     @Override
     public void onStart() {
         super.onStart();
-        mGoogleApiClient.connect();
+
+        //If the Google Client is null we are either a Time Profile or we already have the location
+        //for a location profile
+        if(mGoogleApiClient != null)
+            mGoogleApiClient.connect();
     }
 
 
@@ -462,16 +479,19 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
     public void onStop() {
         super.onStop();
 
-        if (mGoogleApiClient.isConnected()) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-            mGoogleApiClient.disconnect();
+        if(mGoogleApiClient != null) {
+            if (mGoogleApiClient.isConnected()) {
+                LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+                mGoogleApiClient.disconnect();
+            }
         }
     }
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
 
-        savedInstanceState.putParcelable(EXTRA_PROFILE,mProfile);
+        savedInstanceState.putParcelable(EXTRA_PROFILE, mProfile);
 		savedInstanceState.putBoolean(EXTRA_IS_NEW_PROFILE,mIsNewProfile);
+        savedInstanceState.putInt(EXTRA_PROFILE_TYPE,mProfileType);
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -482,7 +502,7 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 		//Pass the resource ID of the menu and populate the Menu 
 		//instance with the items defined in the xml file
 		inflater.inflate(R.menu.toolbar_profile_detail_menu, menu);
-        Log.e(TAG, "Storing toolbar menu");
+
         mToolbarMenu = menu;
         setSaveMenu();
 		
@@ -543,6 +563,25 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 	/*                        Private Methods                          */
 	/*******************************************************************/
 
+    private Uri getThumbnailUri(LatLng latLng) {
+
+        String strLocation = String.valueOf(latLng.latitude) + "," + String.valueOf(latLng.longitude);
+        Log.e(TAG, "strLocation: " + strLocation);
+
+       // String strMarkers = "color:red|" + strLocation
+        Uri mapsUri = Uri.parse(GOOGLE_STAIC_MAPS_URL).buildUpon()
+                .appendQueryParameter(MAPS_PARAM_CENTER,strLocation)
+                .appendQueryParameter(MAPS_PARAM_ZOOM,MAPS_ZOOM_VAL)
+                .appendQueryParameter(MAPS_PARAM_SIZE,MAPS_SIZE_SMALL)
+                .appendQueryParameter(MAPS_PARAM_SENSOR, MAPS_SENSOR_VAL)
+                .appendQueryParameter(MAPS_PARAM_MARKERS,strLocation)
+                .build();
+
+        Log.e(TAG,"The mapsUri: " + mapsUri);
+
+        return mapsUri;
+
+    }
     private void setLocationLayout(View view) {
 
         if(mProfileType == LOCATION_PROFILE_LIST) {
@@ -651,15 +690,26 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
         Log.e(TAG,"onConnected()");
         Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (location == null) {
-            Log.e(TAG,"Location was null");
+          //  Log.e(TAG,"Location was null");
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
         else {
-            //Store location into profile
-            LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
-            mProfile.setLocation(new GeoFenceLocation(latLng));
+            LatLng latLng;
+            if(mProfile.getLocation() == null) {
+                //Store location into profile
+                latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                mProfile.setLocation(new GeoFenceLocation(latLng));
+            }
+            else {
+                latLng = mProfile.getLocation().getLatLng();
+            }
+           // Log.e(TAG,"LatLng: " + latLng.toString());
 
-            Log.e(TAG,"LatLng: " + latLng.toString());
+            if(mThumbnailImageView != null) {
+
+             //   Log.e(TAG, "Loading image....");
+                Picasso.with(getActivity()).load(getThumbnailUri(latLng)).into(mThumbnailImageView);
+            }
         }
     }
 

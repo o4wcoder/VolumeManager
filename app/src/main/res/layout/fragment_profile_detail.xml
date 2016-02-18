@@ -1,101 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:focusable="true"
-    android:focusableInTouchMode="true">
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:minHeight="?attr/actionBarSize"
-        android:background="@color/app_primary_color"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        android:elevation="6dp">
-    <EditText
-        android:layout_marginTop="?attr/actionBarSize"
-        android:id="@+id/profileTitleTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/title_hint"
-        android:maxLength="20"
-        android:gravity="left"
-        android:singleLine="true"
-        android:transitionName="@string/trans_profile_title"/>
-
-
-    </android.support.v7.widget.Toolbar>
-
-    <include layout="@layout/days_of_the_week_buttons"/>
 
     <LinearLayout
-        android:id="@+id/location_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:orientation="vertical">
 
-        <LinearLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:background="@color/app_primary_color"
+            android:elevation="6dp"
+            android:minHeight="?attr/actionBarSize"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-            <ImageView
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/profileTitleTextView"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:padding="4dp"
-                android:src="@drawable/ic_map" />
+                android:layout_marginTop="?attr/actionBarSize"
+                android:ems="10"
+                android:gravity="left"
+                android:hint="@string/title_hint"
+                android:maxLength="20"
+                android:singleLine="true"
+                android:transitionName="@string/trans_profile_title" />
+
+
+        </android.support.v7.widget.Toolbar>
+
+        <include layout="@layout/days_of_the_week_buttons" />
+
+        <LinearLayout
+            android:id="@+id/location_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
 
             <ImageView
                 android:id="@+id/location_thumbnail"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center" />
+                android:layout_weight="4"
+                android:adjustViewBounds="true"
+                android:padding="8dp"
+                android:scaleType="fitCenter" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_place" />
+
+                <TextView
+                    android:id="@+id/address_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:padding="4dp"
-                android:src="@drawable/ic_place" />
+        <include layout="@layout/start_volume_control" />
 
-            <TextView
-                android:id="@+id/address_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?android:attr/listDivider"/>
+            android:background="?android:attr/listDivider" />
+
+        <include layout="@layout/end_volume_control" />
+
     </LinearLayout>
-
-
-
-    <include layout="@layout/start_volume_control"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider"/>
-
-    <include layout="@layout/end_volume_control"/>
-
-</LinearLayout>
 </ScrollView>
