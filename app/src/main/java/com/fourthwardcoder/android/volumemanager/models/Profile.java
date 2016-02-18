@@ -43,6 +43,8 @@ public class Profile implements Constants, Parcelable {
     private ArrayList<Boolean> daysOfTheWeek;
     private boolean inAlarm;
     private GeoFenceLocation location;
+    //key to locatoin data
+    private long locationKey;
 
     public Profile() {
 
@@ -62,6 +64,7 @@ public class Profile implements Constants, Parcelable {
         daysOfTheWeek = new ArrayList<>(DAYS_OF_THE_WEEK);
         initDaysOfWeek();
         location = null;
+        locationKey = 0;
 
     }
 
@@ -83,7 +86,7 @@ public class Profile implements Constants, Parcelable {
         Type booleanType = new TypeToken<ArrayList<Boolean>>(){}.getType();
         this.daysOfTheWeek = new Gson().fromJson(cursor.getString(ProfileContract.COL_PROFILE_DAYS_OF_THE_WEEK),booleanType);
         this.inAlarm = (cursor.getInt(ProfileContract.COL_PROFILE_IN_ALARM))  > 0 ? true : false;
-
+        this.locationKey = cursor.getLong(ProfileContract.COL_PROFILE_LOCATION_KEY);
     }
 
     public ContentValues getContentValues() {
@@ -103,6 +106,11 @@ public class Profile implements Constants, Parcelable {
         profileValues.put(ProfileContract.ProfileEntry.COLUMN_END_DATE,this.endDate.getTime());
         profileValues.put(ProfileContract.ProfileEntry.COLUMN_DAYS_OF_THE_WEEK, new Gson().toJson(this.daysOfTheWeek));
         profileValues.put(ProfileContract.ProfileEntry.COLUMN_IN_ALARM, this.inAlarm);
+
+        //Put key of the location data
+        if(location != null)
+            profileValues.put(ProfileContract.ProfileEntry.COLUMN_LOC_KEY,this.locationKey);
+
         return profileValues;
     }
 
@@ -254,6 +262,14 @@ public class Profile implements Constants, Parcelable {
         this.location = location;
     }
 
+    public long getLocationKey() {
+        return locationKey;
+    }
+
+    public void setLocationKey(long locationKey) {
+        this.locationKey = locationKey;
+    }
+
     public boolean isLocationProfile() {
 
         if(location != null)
@@ -303,6 +319,7 @@ public class Profile implements Constants, Parcelable {
         }
         inAlarm = in.readByte() != 0x00;
         location = (GeoFenceLocation) in.readValue(GeoFenceLocation.class.getClassLoader());
+        locationKey = in.readLong();
     }
 
     @Override
@@ -332,6 +349,7 @@ public class Profile implements Constants, Parcelable {
         }
         dest.writeByte((byte) (inAlarm ? 0x01 : 0x00));
         dest.writeValue(location);
+        dest.writeLong(locationKey);
     }
 
     @SuppressWarnings("unused")

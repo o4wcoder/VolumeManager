@@ -14,7 +14,7 @@ public class ProfileDbHelper extends SQLiteOpenHelper {
     /********************************************************************/
     /*                           Constants                              */
     /********************************************************************/
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "profiles.db";
 
     /********************************************************************/
@@ -34,8 +34,8 @@ public class ProfileDbHelper extends SQLiteOpenHelper {
                 LocationEntry._ID + " INTEGER PRIMARY KEY, " +
                 LocationEntry.COLUMN_LATITUDE + " REAL NOT NULL, " +
                 LocationEntry.COLUMN_LONGITUDE + " REAL NOT NULL, " +
-                LocationEntry.COLUMN_ADDRESS + " TEXT NOT NULL, " +
-                LocationEntry.COLUMN_CITY + " TEXT NOT NULL, " +
+                LocationEntry.COLUMN_ADDRESS + " TEXT, " +
+                LocationEntry.COLUMN_CITY + " TEXT, " +
                 LocationEntry.COLUMN_RADIUS + " REAL NOT NULL " +
                 " );";
         /*

@@ -59,6 +59,7 @@
     <string name="click_help_text">click here to modify volume settings</string>
     <string name="geofence_added">Goefence added for </string>
     <string name="radius_text">radius(m)</string>
+    <string name="unknown_street_address">Unknown Street Address</string>
     
     <!-- Geofence strings -->
     <string name="not_connected">GoogleApiClient no yet connected. Try again.</string>

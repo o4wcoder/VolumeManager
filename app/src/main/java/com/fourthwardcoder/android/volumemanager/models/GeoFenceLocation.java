@@ -1,9 +1,12 @@
 package com.fourthwardcoder.android.volumemanager.models;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.location.Address;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.fourthwardcoder.android.volumemanager.data.ProfileContract;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -21,6 +24,17 @@ public class GeoFenceLocation implements Constants, Parcelable {
 
         this.latLng = latLng;
         fenceRadius = GEOFENCE_RADIUS_DEFAULT;
+    }
+
+    public GeoFenceLocation(Cursor cursor) {
+
+        Long lat = cursor.getLong(ProfileContract.COL_LOCATION_LATITUDE);
+        Long lng = cursor.getLong(ProfileContract.COL_LOCATION_LONGITUDE);
+        this.latLng = new LatLng(lat,lng);
+        this.address = cursor.getString(ProfileContract.COL_LOCATION_ADDRESS);
+        this.city = cursor.getString(ProfileContract.COL_LOCATION_CITY);
+        this.fenceRadius = cursor.getFloat(ProfileContract.COL_LOCATION_RADIUS);
+
     }
 
     public LatLng getLatLng() {
@@ -55,11 +69,24 @@ public class GeoFenceLocation implements Constants, Parcelable {
         this.fenceRadius = fenceRadius;
     }
 
+
+    public ContentValues getContentValues() {
+
+        ContentValues profileValues = new ContentValues();
+        profileValues.put(ProfileContract.LocationEntry.COLUMN_LONGITUDE,this.latLng.longitude);
+        profileValues.put(ProfileContract.LocationEntry.COLUMN_LATITUDE,this.latLng.latitude);
+        profileValues.put(ProfileContract.LocationEntry.COLUMN_ADDRESS,this.address);
+        profileValues.put(ProfileContract.LocationEntry.COLUMN_CITY,this.city);
+        profileValues.put(ProfileContract.LocationEntry.COLUMN_RADIUS,this.fenceRadius);
+
+        return profileValues;
+    }
     protected GeoFenceLocation(Parcel in) {
         latLng = (LatLng) in.readValue(LatLng.class.getClassLoader());
         address = in.readString();
         city = in.readString();
         fenceRadius = in.readFloat();
+
     }
 
     @Override
@@ -73,6 +100,7 @@ public class GeoFenceLocation implements Constants, Parcelable {
         dest.writeString(address);
         dest.writeString(city);
         dest.writeFloat(fenceRadius);
+
     }
 
     @SuppressWarnings("unused")

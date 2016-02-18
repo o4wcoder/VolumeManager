@@ -25,12 +25,14 @@ public class ProfileContract {
     public static final int COL_PROFILE_END_DATE = 12;
     public static final int COL_PROFILE_DAYS_OF_THE_WEEK = 13;
     public static final int COL_PROFILE_IN_ALARM = 14;
+    public static final int COL_PROFILE_LOCATION_KEY = 15;
 
     public static final int COL_LOCATION = 0;
     public static final int COL_LOCATION_LATITUDE = 1;
     public static final int COL_LOCATION_LONGITUDE = 2;
     public static final int COL_LOCATION_ADDRESS = 3;
-    public static final int COL_LOCATION_RADIUS = 4;
+    public static final int COL_LOCATION_CITY = 4;
+    public static final int COL_LOCATION_RADIUS = 5;
 
 
     //Content provider authority for Movie DB

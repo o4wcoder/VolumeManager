@@ -6,6 +6,8 @@ import java.util.Date;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -45,6 +47,7 @@ import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.activites.LocationMapActivity;
 import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
 import com.fourthwardcoder.android.volumemanager.adapters.LocationProfileListAdapter;
+import com.fourthwardcoder.android.volumemanager.data.ProfileContract;
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
@@ -660,6 +663,7 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 	}
 
 
+
 	private void setSaveMenu() {
 
         if(mToolbarMenu != null) {
@@ -682,15 +686,22 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 
         mProfile.setTitle(mTitleTextView.getText().toString());
 
+        if(mProfileType == LOCATION_PROFILE_LIST) {
+            //Store location data into table and get key
+            long locationId = addLocation(mProfile.getLocation());
+            mProfile.setLocationKey(locationId);
+        }
+
         //Insert into DB if it's a new profile, otherwise update existing record.
 		if(mIsNewProfile)
             ProfileManager.insertProfile(getActivity(), mProfile);
 		else
 		    ProfileManager.updateProfile(getActivity(),mProfile);
 
-        //Set Volume Control Alarms
-        VolumeManagerService.setServiceAlarm(getActivity(),mProfile,true);
-
+        if(mProfileType == TIME_PROFILE_LIST) {
+            //Set Volume Control Alarms
+            VolumeManagerService.setServiceAlarm(getActivity(), mProfile, true);
+        }
 
 
 
@@ -709,12 +720,46 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
         else {
             LatLng latLng;
             if(mProfile.getLocation() == null) {
+                //We have a new profile. Set it up
                 //Store location into profile
                 latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 mProfile.setLocation(new GeoFenceLocation(latLng));
+
+                //Finally set street address of location
+                if(latLng != null) {
+
+                    String strFullAddress;
+
+                    try {
+                        Address address = Util.getStreetAddress(getActivity(), latLng);
+
+                        //Get and store street address
+                        String strStreetAddress = address.getAddressLine(0);
+                        mProfile.getLocation().setAddress(strStreetAddress);
+
+                        //Get and store city
+                        String strCity =  address.getLocality() + ", " + address.getAdminArea();
+                        mProfile.getLocation().setCity(strCity);
+
+                        strFullAddress = strStreetAddress + " " + strCity;
+
+                    } catch(IOException e) {
+                        //Could not get address
+                        strFullAddress = getString(R.string.unknown_street_address);
+
+                        mProfile.getLocation().setAddress(strFullAddress);
+                        mProfile.getLocation().setCity("");
+                    }
+
+                    //Set Street TextView
+                    mAddressTextView.setText(strFullAddress);
+                }
             }
             else {
+                //Have existing profile
                 latLng = mProfile.getLocation().getLatLng();
+                mAddressTextView.setText(mProfile.getLocation().getAddress() + ", " +
+                mProfile.getLocation().getCity());
             }
            // Log.e(TAG,"LatLng: " + latLng.toString());
 
@@ -723,20 +768,24 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
              //   Log.e(TAG, "Loading image....");
                 Picasso.with(getActivity()).load(getThumbnailUri(latLng)).into(mThumbnailImageView);
             }
-
-            //Finally set street address of location
-            if(latLng != null) {
-
-                try {
-                    Address address = Util.getStreetAddress(getActivity(), latLng);
-                    String strFullAddress = address.getAddressLine(0) + " " + address.getLocality() +
-                            ", " + address.getAdminArea();
-                    mAddressTextView.setText(strFullAddress);
-                } catch(IOException e) {
-                    mAddressTextView.setText("Unknown Street Address");
-                }
-            }
         }
+    }
+
+    public long addLocation(GeoFenceLocation location) {
+        long locationId;
+
+        //Get content values from location
+        ContentValues contentValues = location.getContentValues();
+
+        // Finally, insert location data into the database.
+        Uri insertedUri = getContext().getContentResolver().insert(
+                ProfileContract.LocationEntry.CONTENT_URI,
+                contentValues
+        );
+
+        locationId = ContentUris.parseId(insertedUri);
+        Log.e(TAG, "Inserted location at " + locationId);
+        return locationId;
     }
 
     @Override

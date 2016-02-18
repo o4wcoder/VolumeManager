@@ -40,6 +40,7 @@ public class ProfileProvider extends ContentProvider{
 
         sURIMather.addURI(authority, ProfileContract.PATH_PROFILE, PROFILE);
         sURIMather.addURI(authority, ProfileContract.PATH_PROFILE + "/#", PROFILE_WITH_ID);
+        sURIMather.addURI(authority, ProfileContract.PATH_PROFILE + "/*", PROFILE_WITH_LOCATION);
         sURIMather.addURI(authority, ProfileContract.PATH_LOCATION, LOCATION);
 
         return sURIMather;
@@ -101,7 +102,7 @@ public class ProfileProvider extends ContentProvider{
             case PROFILE_WITH_ID:
                 return ProfileContract.ProfileEntry.CONTENT_ITEM_TYPE;
             case PROFILE_WITH_LOCATION:
-                return ProfileContract.ProfileEntry.CONTENT_ITEM_TYPE;
+                return ProfileContract.ProfileEntry.CONTENT_TYPE;
             case LOCATION:
                 return ProfileContract.LocationEntry.CONTENT_TYPE;
             default:

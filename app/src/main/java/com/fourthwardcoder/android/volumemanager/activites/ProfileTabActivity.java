@@ -53,7 +53,6 @@ public class ProfileTabActivity extends AppCompatActivity implements ProfileList
 		//Change status bar color
 	    Util.setStatusBarColor(this);
 
-		//mProfileType = TIME_PROFILE_LIST;
 	    //Set layout
 	    setContentView(R.layout.activity_tab);
 

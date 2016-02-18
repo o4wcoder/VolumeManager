@@ -11,6 +11,7 @@ import android.util.Log;
 import com.fourthwardcoder.android.volumemanager.activites.LocationMapActivity;
 import com.fourthwardcoder.android.volumemanager.activites.ProfileDetailActivity;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
+import com.fourthwardcoder.android.volumemanager.models.GeoFenceLocation;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
 import com.fourthwardcoder.android.volumemanager.services.VolumeManagerService;
 
@@ -54,6 +55,29 @@ public class ProfileManager implements Constants{
             Log.e(TAG,"Title: " + cursor.getString(cursor.getColumnIndex(ProfileContract.ProfileEntry.COLUMN_TITLE)));
             Log.e(TAG, "getProfile(): Cursor has title " + cursor.getString(ProfileContract.COL_PROFILE_TITLE));
             return new Profile(cursor);
+        }
+    }
+
+    public static Cursor getLocation(Context context, long profileId) {
+
+        //Put togeter SQL selection
+        String selection = ProfileContract.LocationEntry._ID + "=?";
+        String[] selectionArgs = new String[1];
+        selectionArgs[0] = String.valueOf(profileId);
+
+        Cursor cursor = context.getContentResolver().query(ProfileContract.LocationEntry.CONTENT_URI,
+                null,
+                selection,
+                selectionArgs,
+                null);
+
+        if(cursor == null)
+            return null;
+        else {
+            //Move cursor to the row returned
+            cursor.moveToFirst();
+
+            return cursor;
         }
     }
 
