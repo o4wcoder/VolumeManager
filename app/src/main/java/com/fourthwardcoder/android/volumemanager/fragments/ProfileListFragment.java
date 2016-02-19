@@ -135,13 +135,9 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
     @SuppressLint("NewApi")
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View view;
-        if (mProfileType == LOCATION_PROFILE_LIST)
-            view = inflater.inflate(R.layout.fragment_location_profile_list, container, false);
-        else
-            view = inflater.inflate(R.layout.fragment_profile_list, container, false);
 
+        view = inflater.inflate(R.layout.fragment_profile_list, container, false);
 
         //Empty ListView view
         Button newProfileButton = (Button) view.findViewById(R.id.emptyButtonAddProfile);
@@ -151,16 +147,19 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
             public void onClick(View v) {
 
                 ProfileManager.newProfile(getActivity(), mProfileType);
-
             }
 
         });
 
-
-        // Log.e(TAG,"onCreateView with prifile list size " + profileList.size());
-
         listview = (ListView) view.findViewById(android.R.id.list);
         ViewGroup headerView = (ViewGroup) inflater.inflate(R.layout.listview_header, listview, false);
+        TextView headerTextView = (TextView)headerView.findViewById(R.id.profileHeaderTextView);
+
+        if(mProfileType == TIME_PROFILE_LIST)
+            headerTextView.setText(getString(R.string.profile_header));
+        else
+            headerTextView.setText(getString(R.string.location_profile_header));
+
         listview.addHeaderView(headerView);
 
         listview.setEmptyView(view.findViewById(android.R.id.empty));
@@ -402,14 +401,18 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
                             Log.e(TAG,"size of cursor = " + cursor.getCount());
 
                             String strAddress = locCursor.getString(ProfileContract.COL_LOCATION_ADDRESS);
-                            Long lat = locCursor.getLong(ProfileContract.COL_LOCATION_LATITUDE);
-                            Long lng = locCursor.getLong(ProfileContract.COL_LOCATION_LONGITUDE);
+                            double lat = locCursor.getLong(ProfileContract.COL_LOCATION_LATITUDE);
+                            double lng = locCursor.getLong(ProfileContract.COL_LOCATION_LONGITUDE);
                             String city = locCursor.getString(ProfileContract.COL_LOCATION_CITY);
+                            Float radius = locCursor.getFloat(ProfileContract.COL_LOCATION_RADIUS);
                             Log.e(TAG,"Address = " + strAddress);
                             Log.e(TAG,"Lat, Lng = " + lat + ","+lng);
                             Log.e(TAG,"City: " + city);
+                            Log.e(TAG, "Radius: " + radius);
 
-                            profile.setLocation(new GeoFenceLocation(locCursor));
+                                    profile.setLocation(new GeoFenceLocation(locCursor));
+                            Log.e(TAG, "Double check address ");
+                            Log.e(TAG,"Address = " + profile.getLocation().getAddress());
                             profileList.add(profile);
                         }
                     }

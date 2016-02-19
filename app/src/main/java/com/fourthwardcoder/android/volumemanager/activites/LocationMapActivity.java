@@ -107,6 +107,12 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_location_map);
 
+		final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		if(toolbar != null) {
+			setSupportActionBar(toolbar);
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		}
+
 		View mapView = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getView();
 
 		// Get the button view 
@@ -119,13 +125,6 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
 		rlp.setMargins(0, 0, 30, 30);
 
-
-		final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		if(toolbar != null) {
-			setSupportActionBar(toolbar);
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		}
-	//	getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		Util.setStatusBarColor(this);
 
@@ -146,11 +145,13 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		}
 
 
+        Log.e(TAG,"Check radius");
 
 		if(mProfile != null) {
             if(mProfile.getLocation() != null) {
                 currentLocation = mProfile.getLocation().getLatLng();
                 currentRadius = mProfile.getLocation().getFenceRadius();
+                Log.e(TAG,"Setting currentRadius = " + currentRadius);
             }
 		}
 
@@ -423,7 +424,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 
 		Address address;
 		try {
-			currentAddress = Util.getStreetAddress(this,currentLocation);
+			currentAddress = Util.getStreetAddress(this, currentLocation);
 			addressTextView.setText(currentAddress.getAddressLine(0));
 			Log.e(TAG,"address: " + currentAddress.toString());
 
@@ -466,9 +467,13 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		mProfile.getLocation().setFenceRadius(currentRadius);
 
 		//ProfileJSONManager.get(this).saveLocationProfiles();
-        ProfileManager.insertProfile(this,mProfile);
+        ProfileManager.updateProfile(this,mProfile);
 		//Create geofence from new location profile
 
+        Log.e(TAG,"Saving on map");
+        Log.e(TAG,"Address: " + mProfile.getLocation().getAddress());
+        Log.e(TAG,"City: " + mProfile.getLocation().getCity());
+        Log.e(TAG,"Radius: " + mProfile.getLocation().getFenceRadius());
 		Geofence fence = geofenceManager.createGeofence(mProfile);
 		geofenceManager.addGeofence(fence);
 

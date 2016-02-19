@@ -28,8 +28,8 @@ public class GeoFenceLocation implements Constants, Parcelable {
 
     public GeoFenceLocation(Cursor cursor) {
 
-        Long lat = cursor.getLong(ProfileContract.COL_LOCATION_LATITUDE);
-        Long lng = cursor.getLong(ProfileContract.COL_LOCATION_LONGITUDE);
+        double lat = cursor.getDouble(ProfileContract.COL_LOCATION_LATITUDE);
+        double lng = cursor.getDouble(ProfileContract.COL_LOCATION_LONGITUDE);
         this.latLng = new LatLng(lat,lng);
         this.address = cursor.getString(ProfileContract.COL_LOCATION_ADDRESS);
         this.city = cursor.getString(ProfileContract.COL_LOCATION_CITY);
@@ -69,6 +69,9 @@ public class GeoFenceLocation implements Constants, Parcelable {
         this.fenceRadius = fenceRadius;
     }
 
+    public String getFullAddress() {
+        return this.address + " " + this.city;
+    }
 
     public ContentValues getContentValues() {
 

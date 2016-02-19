@@ -52,8 +52,8 @@ public class ProfileManager implements Constants{
             //Move cursor to the row returned
             cursor.moveToFirst();
 
-            Log.e(TAG,"Title: " + cursor.getString(cursor.getColumnIndex(ProfileContract.ProfileEntry.COLUMN_TITLE)));
-            Log.e(TAG, "getProfile(): Cursor has title " + cursor.getString(ProfileContract.COL_PROFILE_TITLE));
+         //   Log.e(TAG,"Title: " + cursor.getString(cursor.getColumnIndex(ProfileContract.ProfileEntry.COLUMN_TITLE)));
+         //   Log.e(TAG, "getProfile(): Cursor has title " + cursor.getString(ProfileContract.COL_PROFILE_TITLE));
             return new Profile(cursor);
         }
     }

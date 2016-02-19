@@ -49,7 +49,6 @@
                 android:id="@+id/mapAddressTextView"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:alpha="@string/primary_text_alpha_dark"
                 android:background="@color/white"
                 android:padding="8dp"
                 android:text="Address"
@@ -59,20 +58,10 @@
                 android:id="@+id/mapCityTextView"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
-                android:alpha="@string/secondary_text_alpha_dark"
                 android:background="@color/white"
                 android:padding="8dp"
                 android:text="City" />
 
-            <TextView
-                android:id="@+id/hintTextView"
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:alpha="@string/hint_disabled_text_alpha_dark"
-                android:background="@color/white"
-                android:gravity="center"
-                android:padding="2dp"
-                android:text="@string/click_help_text" />
         </LinearLayout>
 
         <LinearLayout

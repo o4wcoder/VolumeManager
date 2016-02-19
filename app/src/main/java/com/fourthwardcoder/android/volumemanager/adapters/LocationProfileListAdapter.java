@@ -73,12 +73,12 @@ public class LocationProfileListAdapter extends ArrayAdapter<Profile> implements
             LayoutInflater inflater = (LayoutInflater) mContext
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             if(rowType == NORMAL_PROFILE) {
-                convertView = inflater.inflate(R.layout.profile_list_item,null);
+                convertView = inflater.inflate(R.layout.location_profile_list_item,null);
 
             }
             else {
                 //Set up disabled profile
-                convertView = inflater.inflate(R.layout.profile_list_item_off,null);
+                convertView = inflater.inflate(R.layout.location_profile_list_item_off,null);
             }
             convertView.setTag(holder);
         }

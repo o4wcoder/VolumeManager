@@ -433,26 +433,18 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
         //Location views
         if(mProfileType == LOCATION_PROFILE_LIST) {
 
-            mThumbnailImageView = (ImageView)view.findViewById(R.id.location_thumbnail);
-
-            mThumbnailImageView.setOnClickListener(new OnClickListener() {
+            OnClickListener locationListener = new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    Intent i = new Intent(getActivity(), LocationMapActivity.class);
-                    startActivity(i);
+                    startLocationMapActivity();
                 }
-            });
+            };
 
-            mAddressTextView = (TextView)view.findViewById(R.id.address_textview);
-            mAddressTextView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            mThumbnailImageView = (ImageView) view.findViewById(R.id.location_thumbnail);
+            mThumbnailImageView.setOnClickListener(locationListener);
 
-                    Intent i = new Intent(getActivity(), LocationMapActivity.class);
-                    startActivity(i);
-                }
-            });
+            mAddressTextView = (TextView) view.findViewById(R.id.address_textview);
+            mAddressTextView.setOnClickListener(locationListener);
         }
 
 	    /*
@@ -483,7 +475,7 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
     @Override
     public void onStart() {
         super.onStart();
-
+        Log.e(TAG,"onStart");
         //If the Google Client is null we are either a Time Profile or we already have the location
         //for a location profile
         if(mGoogleApiClient != null)
@@ -502,6 +494,7 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
             }
         }
     }
+
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
 
@@ -579,6 +572,12 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 	/*                        Private Methods                          */
 	/*******************************************************************/
 
+    private void startLocationMapActivity() {
+
+        Intent i = new Intent(getActivity(), LocationMapActivity.class);
+        i.putExtra(EXTRA_PROFILE,mProfile);
+        startActivity(i);
+    }
     private Uri getThumbnailUri(LatLng latLng) {
 
         String strLocation = String.valueOf(latLng.latitude) + "," + String.valueOf(latLng.longitude);
@@ -757,9 +756,9 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
             }
             else {
                 //Have existing profile
+                Log.e(TAG,"Have existing profile with address " + mProfile.getLocation().getFullAddress());
                 latLng = mProfile.getLocation().getLatLng();
-                mAddressTextView.setText(mProfile.getLocation().getAddress() + ", " +
-                mProfile.getLocation().getCity());
+                mAddressTextView.setText(mProfile.getLocation().getFullAddress());
             }
            // Log.e(TAG,"LatLng: " + latLng.toString());
 
