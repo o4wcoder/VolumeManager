@@ -3,6 +3,7 @@ package com.fourthwardcoder.android.volumemanager.fragments;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.UUID;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -51,6 +52,7 @@ import com.fourthwardcoder.android.volumemanager.data.ProfileContract;
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
+import com.fourthwardcoder.android.volumemanager.location.GeofenceManager;
 import com.fourthwardcoder.android.volumemanager.models.GeoFenceLocation;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
 import com.fourthwardcoder.android.volumemanager.services.VolumeManagerService;
@@ -141,10 +143,21 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
         if(saveInstanceState == null) {
            Log.e(TAG,"No saved vars");
             mProfileType = intent.getIntExtra(EXTRA_PROFILE_TYPE,TIME_PROFILE_LIST);
+
             //See if we have a Profile object. If so we are editing the Profile.
             //If not, it's a new profile
-            if (intent.hasExtra(EXTRA_PROFILE)) {
-                mProfile = intent.getParcelableExtra(EXTRA_PROFILE);
+            if (intent.hasExtra(EXTRA_PROFILE_ID)) {
+                Log.e(TAG,"Get uuid");
+                UUID id = (UUID)intent.getSerializableExtra(EXTRA_PROFILE_ID);
+                Log.e(TAG,"Get profile");
+                mProfile = ProfileManager.getProfile(getActivity(),id);
+
+               // if(mProfileType == LOCATION_PROFILE_LIST) {
+
+                //    Log.e(TAG,"onCreate() with address " + mProfile.getLocation().getAddress());
+               // }
+
+                Log.e(TAG,"Got the profile");
 				mIsNewProfile = false;
             } else {
                 mProfile = new Profile();
@@ -658,9 +671,7 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
         volumeIconRes = getVolumeIconResource(mProfile.getEndVolumeType());
         endVolumeImageView.setImageResource(volumeIconRes);
 
-
 	}
-
 
 
 	private void setSaveMenu() {
@@ -687,7 +698,7 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 
         if(mProfileType == LOCATION_PROFILE_LIST) {
             //Store location data into table and get key
-            long locationId = addLocation(mProfile.getLocation());
+            long locationId = ProfileManager.addLocation(getActivity(), mProfile.getLocation());
             mProfile.setLocationKey(locationId);
         }
 
@@ -756,8 +767,12 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
             }
             else {
                 //Have existing profile
+
+                //Poll DB incase location has changed
+                mProfile.setLocation(ProfileManager.getLocation(getActivity(), mProfile.getLocationKey()));
                 Log.e(TAG,"Have existing profile with address " + mProfile.getLocation().getFullAddress());
                 latLng = mProfile.getLocation().getLatLng();
+                Log.e(TAG,"latLng "+ latLng.toString());
                 mAddressTextView.setText(mProfile.getLocation().getFullAddress());
             }
            // Log.e(TAG,"LatLng: " + latLng.toString());
@@ -770,22 +785,7 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
         }
     }
 
-    public long addLocation(GeoFenceLocation location) {
-        long locationId;
 
-        //Get content values from location
-        ContentValues contentValues = location.getContentValues();
-
-        // Finally, insert location data into the database.
-        Uri insertedUri = getContext().getContentResolver().insert(
-                ProfileContract.LocationEntry.CONTENT_URI,
-                contentValues
-        );
-
-        locationId = ContentUris.parseId(insertedUri);
-        Log.e(TAG, "Inserted location at " + locationId);
-        return locationId;
-    }
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -804,6 +804,8 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 
     @Override
     public void onLocationChanged(Location location) {
-          Log.e(TAG,"onLocationChanged(): " + location.toString());
+          Log.e(TAG, "onLocationChanged(): " + location.toString());
     }
+
+
 }

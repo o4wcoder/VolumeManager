@@ -394,25 +394,11 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
 
                         Log.e(TAG,"Got a location, query it");
 
-                        Cursor locCursor = ProfileManager.getLocation(getActivity(),profile.getLocationKey());
+                        GeoFenceLocation location = ProfileManager.getLocation(getActivity(),profile.getLocationKey());
 
-                        if(locCursor != null) {
-                            Log.e(TAG,"Location was not null!!");
-                            Log.e(TAG,"size of cursor = " + cursor.getCount());
+                        if(location != null) {
 
-                            String strAddress = locCursor.getString(ProfileContract.COL_LOCATION_ADDRESS);
-                            double lat = locCursor.getLong(ProfileContract.COL_LOCATION_LATITUDE);
-                            double lng = locCursor.getLong(ProfileContract.COL_LOCATION_LONGITUDE);
-                            String city = locCursor.getString(ProfileContract.COL_LOCATION_CITY);
-                            Float radius = locCursor.getFloat(ProfileContract.COL_LOCATION_RADIUS);
-                            Log.e(TAG,"Address = " + strAddress);
-                            Log.e(TAG,"Lat, Lng = " + lat + ","+lng);
-                            Log.e(TAG,"City: " + city);
-                            Log.e(TAG, "Radius: " + radius);
-
-                                    profile.setLocation(new GeoFenceLocation(locCursor));
-                            Log.e(TAG, "Double check address ");
-                            Log.e(TAG,"Address = " + profile.getLocation().getAddress());
+                            profile.setLocation(location);
                             profileList.add(profile);
                         }
                     }

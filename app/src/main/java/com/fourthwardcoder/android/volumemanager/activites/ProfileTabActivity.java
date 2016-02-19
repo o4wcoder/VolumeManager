@@ -134,7 +134,7 @@ public class ProfileTabActivity extends AppCompatActivity implements ProfileList
 
 		//Tell Volume Manager Fragment which Profile to display by making
 		//giving id as Intent extra
-		intent.putExtra(ProfileDetailFragment.EXTRA_PROFILE, profile);
+		intent.putExtra(ProfileDetailFragment.EXTRA_PROFILE_ID, profile.getId());
         intent.putExtra(EXTRA_PROFILE_TYPE,profileType);
 
         ActivityOptionsCompat activityOptions =

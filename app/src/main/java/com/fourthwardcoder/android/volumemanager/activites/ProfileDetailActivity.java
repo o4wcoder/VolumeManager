@@ -3,9 +3,11 @@ package com.fourthwardcoder.android.volumemanager.activites;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
+import com.fourthwardcoder.android.volumemanager.models.GeoFenceLocation;
 
 /**
  * VolumeManagerActivity
@@ -27,4 +29,5 @@ public class ProfileDetailActivity extends AppCompatActivity {
 
 		setContentView(R.layout.activity_profile_detail);
 	}
+
 }

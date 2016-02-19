@@ -187,6 +187,10 @@ public class ProfileProvider extends ContentProvider{
                 updatedRows = db.update(ProfileContract.ProfileEntry.TABLE_NAME, contentValues, selection, selectionArgs);
                 break;
             }
+            case LOCATION: {
+                updatedRows = db.update(ProfileContract.LocationEntry.TABLE_NAME, contentValues, selection, selectionArgs);
+                break;
+            }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }

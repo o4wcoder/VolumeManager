@@ -1,6 +1,7 @@
 package com.fourthwardcoder.android.volumemanager.data;
 
 import android.app.Activity;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -58,7 +59,7 @@ public class ProfileManager implements Constants{
         }
     }
 
-    public static Cursor getLocation(Context context, long profileId) {
+    public static GeoFenceLocation getLocation(Context context, long profileId) {
 
         //Put togeter SQL selection
         String selection = ProfileContract.LocationEntry._ID + "=?";
@@ -77,7 +78,7 @@ public class ProfileManager implements Constants{
             //Move cursor to the row returned
             cursor.moveToFirst();
 
-            return cursor;
+            return new GeoFenceLocation(cursor);
         }
     }
 
@@ -214,6 +215,35 @@ public class ProfileManager implements Constants{
     public static String getLocationDbProfileSelection() {
 
         return ProfileContract.ProfileEntry.COLUMN_LOC_KEY + " IS NOT NULL";
+    }
+
+    public static long addLocation(Context context, GeoFenceLocation location) {
+        long locationId;
+
+        //Get content values from location
+        ContentValues contentValues = location.getContentValues();
+
+        // Finally, insert location data into the database.
+        Uri insertedUri = context.getContentResolver().insert(
+                ProfileContract.LocationEntry.CONTENT_URI,
+                contentValues
+        );
+
+        locationId = ContentUris.parseId(insertedUri);
+        Log.e(TAG, "Inserted location at " + locationId);
+        return locationId;
+    }
+
+    public static int updateLocation(Context context, GeoFenceLocation location, long locationId) {
+
+        //Put togeter SQL selection
+        String selection = ProfileContract.LocationEntry._ID + "=?";
+        String[] selectionArgs = new String[1];
+        selectionArgs[0] = String.valueOf(locationId);
+
+        //Update profile in the content provider
+        return context.getContentResolver().update(ProfileContract.LocationEntry.CONTENT_URI, location.getContentValues(),
+                selection, selectionArgs);
     }
 
 }

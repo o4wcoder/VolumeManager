@@ -131,13 +131,8 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		Intent intent = getIntent();
 		//First check if we have don't have anything in saveInstanceState from a rotation
 		if(savedInstanceState == null) {
-			//See if we have a Profile object. If so we are editing the Profile.
-			//If not, it's a new profile
-			if (intent.hasExtra(EXTRA_PROFILE)) {
-				mProfile = intent.getParcelableExtra(EXTRA_PROFILE);
-			} else {
-				mProfile = new Profile();
-			}
+
+            mProfile = intent.getParcelableExtra(EXTRA_PROFILE);
 		}
 		else {
 			//Restore Profile from rotation.
@@ -150,6 +145,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		if(mProfile != null) {
             if(mProfile.getLocation() != null) {
                 currentLocation = mProfile.getLocation().getLatLng();
+                Log.e(TAG,"Location sent to Map " + currentLocation.toString());
                 currentRadius = mProfile.getLocation().getFenceRadius();
                 Log.e(TAG,"Setting currentRadius = " + currentRadius);
             }
@@ -177,33 +173,10 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 				.setInterval(10 * 1000)        // 10 seconds, in milliseconds
 				.setFastestInterval(1 * 1000); // 1 second, in milliseconds
 
-		//create empty list for storing all other location geofence's
-		//geofenceList = new ArrayList<Geofence>();
-
-		//init pending intent for add/removing geofences.
-		//geofencePendingIntent = null;
-
 		geofenceManager = new GeofenceManager(this,mGoogleApiClient);
-
-		//Make linear layout that holds address and city textviews clickable.
-		LinearLayout lDetailsLayout = (LinearLayout)findViewById(R.id.locationDetailsLayout);
-
-		lDetailsLayout.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent i = new Intent(LocationMapActivity.this,ProfileDetailActivity.class);
-				i.putExtra(ProfileDetailFragment.EXTRA_PROFILE,mProfile);
-				startActivity(i);
-
-			}
-
-		});
 
 		radiusTextView = (TextView)findViewById(R.id.radiusTextView);
 		radiusTextView.setText(String.valueOf(currentRadius));
-
 
 		radiusTextView.addTextChangedListener(new TextWatcher() {
 
@@ -344,6 +317,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 	@Override
 	public void onMapLongClick(LatLng latLng) {
 		//Store current LatLng
+
 		currentLocation = latLng;
 
 		addMarker();
@@ -401,25 +375,6 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		zoomToCurrentLocation();
 	}
 
-
-
-//	private Address getStreetAddress() throws IOException {
-//
-//		//Get Address of current location
-//		//Address currentAddress = null;
-//		if(Geocoder.isPresent()) {
-//			Geocoder gcd = new Geocoder(getBaseContext());
-//
-//			List<Address> addresses = gcd.getFromLocation(currentLocation.latitude,
-//					currentLocation.longitude,1);
-//
-//			if(addresses.size() > 0)
-//				currentAddress = addresses.get(0);
-//		}
-//
-//		return currentAddress;
-//	}
-
 	private void setStreetAddress() {
 
 		Address address;
@@ -432,7 +387,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 			cityTextView.setText(currentCity);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			addressTextView.setText("Unknown Street Address");
+			addressTextView.setText(getString(R.string.unknown_street_address));
 		}
 	}
 
@@ -442,7 +397,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		//if (location != null) {
 		//LatLng myLocation = new LatLng(location.getLatitude(),
 		//	location.getLongitude());
-		Log.d(TAG,"Zooming to current location");
+		Log.d(TAG,"Zooming to current location " + currentLocation.toString());
 		map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,
 				16));
 		//}
@@ -464,13 +419,19 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 			mProfile.getLocation().setCity(currentCity);
 		}
 
+        if(currentLocation != null) {
+            mProfile.getLocation().setLatLng(currentLocation);
+        }
 		mProfile.getLocation().setFenceRadius(currentRadius);
 
+
 		//ProfileJSONManager.get(this).saveLocationProfiles();
-        ProfileManager.updateProfile(this,mProfile);
+       // ProfileManager.updateProfile(this,mProfile);
+        ProfileManager.updateLocation(this,mProfile.getLocation(),mProfile.getLocationKey());
 		//Create geofence from new location profile
 
         Log.e(TAG,"Saving on map");
+        Log.e(TAG,"Location: " + mProfile.getLocation().getLatLng());
         Log.e(TAG,"Address: " + mProfile.getLocation().getAddress());
         Log.e(TAG,"City: " + mProfile.getLocation().getCity());
         Log.e(TAG,"Radius: " + mProfile.getLocation().getFenceRadius());
@@ -508,8 +469,8 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		}
 		else {
 			//Store current latLng
-			if(currentLocation == null)
-				currentLocation = new LatLng(location.getLatitude(),location.getLongitude());
+		//	if(currentLocation == null)
+			//	currentLocation = new LatLng(location.getLatitude(),location.getLongitude());
 
 
 			handleNewLocation();
@@ -547,9 +508,6 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		}
 
 	}
-
-
-
 
 
 
