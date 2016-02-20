@@ -148,12 +148,12 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 
             //See if we have a Profile object. If so we are editing the Profile.
             //If not, it's a new profile
-            if (intent.hasExtra(EXTRA_PROFILE_ID)) {
+            if (intent.hasExtra(EXTRA_PROFILE)) {
                 Log.e(TAG,"Get uuid");
-                UUID id = (UUID)intent.getSerializableExtra(EXTRA_PROFILE_ID);
+                //UUID id = (UUID)intent.getSerializableExtra(EXTRA_PROFILE_ID);
                 Log.e(TAG,"Get profile");
-                mProfile = ProfileManager.getProfile(getActivity(),id);
-
+               // mProfile = ProfileManager.getProfile(getActivity(),id);
+                mProfile = intent.getParcelableExtra(EXTRA_PROFILE);
                // if(mProfileType == LOCATION_PROFILE_LIST) {
 
                 //    Log.e(TAG,"onCreate() with address " + mProfile.getLocation().getAddress());
@@ -751,6 +751,7 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
             if(mProfile.getLocation() == null) {
                 //We have a new profile. Set it up
                 //Store location into profile
+                Log.e(TAG,"onConnected() Location in Profile is null. Create new Location");
                 latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 mProfile.setLocation(new GeoFenceLocation(latLng));
 
