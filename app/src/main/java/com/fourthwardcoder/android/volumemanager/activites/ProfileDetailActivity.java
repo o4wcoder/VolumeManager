@@ -8,6 +8,7 @@ import android.util.Log;
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.models.GeoFenceLocation;
+import com.fourthwardcoder.android.volumemanager.models.Profile;
 
 /**
  * VolumeManagerActivity

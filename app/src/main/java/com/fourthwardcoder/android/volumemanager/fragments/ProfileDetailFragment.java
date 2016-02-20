@@ -87,6 +87,8 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 	//Constant for request code to Time Picker
 	public static final int REQUEST_START_TIME = 0;
 	public static final int REQUEST_END_TIME = 1;
+    //Request code for MAP Activity Callback
+    public static final int REQUEST_LOCATION_UPDATE = 2;
 
     //Google Static Maps paramters
     private static final String GOOGLE_STAIC_MAPS_URL = "http://maps.google.com/maps/api/staticmap";
@@ -546,6 +548,12 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
             mProfile.setEndDate((Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME));
             Util.setTimeForLargeTextView(getActivity(),mProfile.getEndDate(),endTimeTextView);
 		}
+        else if(requestCode == REQUEST_LOCATION_UPDATE) {
+
+            mProfile = data.getParcelableExtra(EXTRA_PROFILE);
+            Log.e(TAG,"Got request back from Map Activity!!");
+            Log.e(TAG, mProfile.getLocation().toString());
+        }
 
 	}
 
@@ -588,8 +596,8 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
     private void startLocationMapActivity() {
 
         Intent i = new Intent(getActivity(), LocationMapActivity.class);
-        i.putExtra(EXTRA_PROFILE,mProfile);
-        startActivity(i);
+        i.putExtra(EXTRA_PROFILE, mProfile);
+        startActivityForResult(i,REQUEST_LOCATION_UPDATE);
     }
     private Uri getThumbnailUri(LatLng latLng) {
 
@@ -697,9 +705,20 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
         mProfile.setTitle(mTitleTextView.getText().toString());
 
         if(mProfileType == LOCATION_PROFILE_LIST) {
-            //Store location data into table and get key
-            long locationId = ProfileManager.addLocation(getActivity(), mProfile.getLocation());
-            mProfile.setLocationKey(locationId);
+            //Add new location and store key if this is a new location
+            if(mProfile.getLocationKey() == 0) {
+                Log.e(TAG,"saveSettings() Location key is 0");
+                long locationId = ProfileManager.addLocation(getActivity(), mProfile.getLocation());
+                mProfile.setLocationKey(locationId);
+            }
+            else {
+                //Updating existing location
+                Log.e(TAG,"saveSettings() Location key is NOT null");
+                ProfileManager.updateLocation(getActivity(),mProfile.getLocation(),mProfile.getLocationKey());
+            }
+
+
+
         }
 
         //Insert into DB if it's a new profile, otherwise update existing record.
@@ -769,10 +788,12 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
                 //Have existing profile
 
                 //Poll DB incase location has changed
-                mProfile.setLocation(ProfileManager.getLocation(getActivity(), mProfile.getLocationKey()));
-                Log.e(TAG,"Have existing profile with address " + mProfile.getLocation().getFullAddress());
+               // mProfile.setLocation(ProfileManager.getLocation(getActivity(), mProfile.getLocationKey()));
+                Log.e(TAG,"Have existing profile");
+                Log.e(TAG,mProfile.getLocation().toString());
+
                 latLng = mProfile.getLocation().getLatLng();
-                Log.e(TAG,"latLng "+ latLng.toString());
+
                 mAddressTextView.setText(mProfile.getLocation().getFullAddress());
             }
            // Log.e(TAG,"LatLng: " + latLng.toString());

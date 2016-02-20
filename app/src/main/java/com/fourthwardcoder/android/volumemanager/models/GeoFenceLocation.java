@@ -73,6 +73,16 @@ public class GeoFenceLocation implements Constants, Parcelable {
         return this.address + " " + this.city;
     }
 
+    @Override
+    public String toString() {
+
+        return "Location: " + this.latLng + "\n" +
+                "Address: " + this.address + "\n" +
+                "City:    " + this.city + "\n" +
+                "Radius:  " + this.fenceRadius;
+
+    }
+
     public ContentValues getContentValues() {
 
         ContentValues profileValues = new ContentValues();

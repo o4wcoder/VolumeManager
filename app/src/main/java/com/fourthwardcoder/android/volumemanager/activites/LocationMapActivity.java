@@ -92,6 +92,8 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 	private UUID profileId;
 	//private LocationProfile currentProfile;
 	private Profile mProfile;
+
+    private String mProfileTitle;
 	private LatLng currentLocation;
 	private Address currentAddress;
 	private String currentCity;
@@ -142,13 +144,11 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 
         Log.e(TAG,"Check radius");
 
-		if(mProfile != null) {
-            if(mProfile.getLocation() != null) {
+		if(mProfile.getLocation() != null) {
                 currentLocation = mProfile.getLocation().getLatLng();
                 Log.e(TAG,"Location sent to Map " + currentLocation.toString());
                 currentRadius = mProfile.getLocation().getFenceRadius();
                 Log.e(TAG,"Setting currentRadius = " + currentRadius);
-            }
 		}
 
 		MapFragment mapFragment = (MapFragment) getFragmentManager()
@@ -333,13 +333,10 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 	//	Log.e(TAG,"Inside add Marker with title " + currentProfile.getTitle());
 		String markerTitle;
 
-		//if(profile.getTitle() == "")
-		//	markerTitle = "New Location";
-		//	else
-		markerTitle = mProfile.getTitle();
+
 		MarkerOptions options = new MarkerOptions()
 		.position(currentLocation)
-		.title(markerTitle);
+		.title(mProfileTitle);
 		currentMarker = map.addMarker(options);
 
 		drawGeofenceCircle();
@@ -410,31 +407,37 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		//Log.e(TAG,"In save location with currentLocation " + currentLocationData.toString());
 
         //Create Location object if it's empty
-        if(mProfile.getLocation() == null) {
-            mProfile.setLocation(new GeoFenceLocation(currentLocation));
-        }
+//        if(mProfile.getLocation() == null) {
+//            mProfile.setLocation(new GeoFenceLocation(currentLocation));
+//        }
+//
+//		if(currentAddress != null) {
+//			mProfile.getLocation().setAddress(currentAddress.getAddressLine(0));
+//			mProfile.getLocation().setCity(currentCity);
+//		}
+//
+//        if(currentLocation != null) {
+//            mProfile.getLocation().setLatLng(currentLocation);
+//        }
+//		mProfile.getLocation().setFenceRadius(currentRadius);
 
-		if(currentAddress != null) {
-			mProfile.getLocation().setAddress(currentAddress.getAddressLine(0));
-			mProfile.getLocation().setCity(currentCity);
-		}
-
-        if(currentLocation != null) {
-            mProfile.getLocation().setLatLng(currentLocation);
-        }
-		mProfile.getLocation().setFenceRadius(currentRadius);
-
-
+        //Update Location data
+        mProfile.getLocation().setLatLng(currentLocation);
+        mProfile.getLocation().setAddress(currentAddress.getAddressLine(0));
+        mProfile.getLocation().setCity(currentCity);
+        mProfile.getLocation().setFenceRadius(currentRadius);
 		//ProfileJSONManager.get(this).saveLocationProfiles();
        // ProfileManager.updateProfile(this,mProfile);
-        ProfileManager.updateLocation(this,mProfile.getLocation(),mProfile.getLocationKey());
-		//Create geofence from new location profile
+       // ProfileManager.updateLocation(this,mProfile.getLocation(),mProfile.getLocationKey());
+
+        Intent i = getIntent();
+        i.putExtra(EXTRA_PROFILE,mProfile);
+        setResult(RESULT_OK,i);
 
         Log.e(TAG,"Saving on map");
-        Log.e(TAG,"Location: " + mProfile.getLocation().getLatLng());
-        Log.e(TAG,"Address: " + mProfile.getLocation().getAddress());
-        Log.e(TAG,"City: " + mProfile.getLocation().getCity());
-        Log.e(TAG,"Radius: " + mProfile.getLocation().getFenceRadius());
+        Log.e(TAG, mProfile.getLocation().toString());
+
+        //Create geofence for location profile
 		Geofence fence = geofenceManager.createGeofence(mProfile);
 		geofenceManager.addGeofence(fence);
 
@@ -508,6 +511,11 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 		}
 
 	}
+
+    public interface LocationUpdateCallback {
+
+        void onLocationUpdate(Profile profile);
+    }
 
 
 

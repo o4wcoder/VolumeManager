@@ -28,6 +28,8 @@ public interface Constants {
 	String EXTRA_PROFILE = "com.fourthwardcoder.android.volumemanager.extra_profile";
     String EXTRA_PROFILE_TYPE = "com.fourthwardcoder.android.volumemanager.extra_profile_type";
 	String EXTRA_IS_NEW_PROFILE = "com.fourthwardcoder.android.volumemanager.extra_is_new_profile";
+    String EXTRA_LOCATION = "com.fourthwardcoder.android.volumemanager.extra_location";
+    String EXTRA_PROFILE_TITLE = "com.fourthwardcoder.android.volumemanager.extra_profile_title";
 	
 	float PRIMARY_TEXT_DARK = (float) .87;
 	float SECONDARY_TEXT_DARK = (float) .54;
