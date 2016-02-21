@@ -38,6 +38,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import  com.google.android.gms.location.LocationListener;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -88,14 +89,10 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 	//private PendingIntent geofencePendingIntent;
 	GeofenceManager geofenceManager;
 
-	//Current Locations data
-	private UUID profileId;
-	//private LocationProfile currentProfile;
 	private Profile mProfile;
-
-    private String mProfileTitle;
 	private LatLng currentLocation;
-	private Address currentAddress;
+
+    private Address currentAddress;
 	private String currentCity;
 	private float currentRadius;
 
@@ -114,19 +111,6 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 			setSupportActionBar(toolbar);
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
-
-		View mapView = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getView();
-
-		// Get the button view 
-		View locationButton = ((View) mapView.findViewById(1).getParent()).findViewById(2);
-
-		// place button on bottom right
-		RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
-		// position on right bottom
-		rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
-		rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
-		rlp.setMargins(0, 0, 30, 30);
-
 
 		Util.setStatusBarColor(this);
 
@@ -175,35 +159,54 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 
 		geofenceManager = new GeofenceManager(this,mGoogleApiClient);
 
-		radiusTextView = (TextView)findViewById(R.id.radiusTextView);
-		radiusTextView.setText(String.valueOf(currentRadius));
+//		radiusTextView = (TextView)findViewById(R.id.radiusTextView);
+//		radiusTextView.setText(String.valueOf(currentRadius));
+//
+//        //Taking out for now
+//        radiusTextView.setVisibility(View.INVISIBLE);
+//
+//		radiusTextView.addTextChangedListener(new TextWatcher() {
+//
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count,
+//                                          int after) {
+//                // TODO Auto-generated method stub
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before,
+//                                      int count) {
+//                currentRadius = Float.valueOf(s.toString());
+//                drawGeofenceCircle();
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                // TODO Auto-generated method stub
+//
+//            }
+//
+//        });
 
-		radiusTextView.addTextChangedListener(new TextWatcher() {
+        FloatingActionButton zoomPhonePosition = (FloatingActionButton) findViewById(R.id.zoomPhonePositionButton);
+        zoomPhonePosition.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				// TODO Auto-generated method stub
+                if(map != null) {
+                    Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                    if (location != null) {
+                        LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,
+                                16));
+                    }
+                }
+            }
+        });
 
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-				currentRadius = Float.valueOf(s.toString());
-				drawGeofenceCircle();
-
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				// TODO Auto-generated method stub
-
-			}
-
-		});
-
-		Button increaseRadiusButton = (Button)findViewById(R.id.increaseRadiusButton);
+		FloatingActionButton increaseRadiusButton = (FloatingActionButton)findViewById(R.id.increaseRadiusButton);
 
 		increaseRadiusButton.setOnClickListener(new OnClickListener() {
 
@@ -211,7 +214,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 			public void onClick(View v) {
 				//increase the geofence size
 				currentRadius += Constants.GEOFENCE_RADIUS_INC;
-				radiusTextView.setText(String.valueOf(currentRadius));
+			//	radiusTextView.setText(String.valueOf(currentRadius));
 				drawGeofenceCircle();
 
 
@@ -219,7 +222,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 
 		});
 
-		Button decreaseRadiusButton = (Button)findViewById(R.id.decreaseRadiusButton);
+		FloatingActionButton decreaseRadiusButton = (FloatingActionButton)findViewById(R.id.decreaseRadiusButton);
 
 		decreaseRadiusButton.setOnClickListener(new OnClickListener() {
 
@@ -228,7 +231,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 
 				//decrease the geofence size
 				currentRadius -= Constants.GEOFENCE_RADIUS_INC;
-				radiusTextView.setText(String.valueOf(currentRadius));
+			//	radiusTextView.setText(String.valueOf(currentRadius));
 				drawGeofenceCircle();
 			}
 
@@ -304,6 +307,10 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 
 		this.map = map;
 		map.setMyLocationEnabled(true);
+        View mapView = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getView();
+        // Get the button view
+        View locationButton = ((View) mapView.findViewById(1).getParent()).findViewById(2);
+        locationButton.setVisibility(View.GONE);
 		map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 		map.setOnMapLongClickListener(this);
 
@@ -336,7 +343,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 
 		MarkerOptions options = new MarkerOptions()
 		.position(currentLocation)
-		.title(mProfileTitle);
+		.title(mProfile.getTitle());
 		currentMarker = map.addMarker(options);
 
 		drawGeofenceCircle();
@@ -390,45 +397,19 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 
 	private void zoomToCurrentLocation() {
 
-
-		//if (location != null) {
-		//LatLng myLocation = new LatLng(location.getLatitude(),
-		//	location.getLongitude());
 		Log.d(TAG,"Zooming to current location " + currentLocation.toString());
 		map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,
 				16));
-		//}
-		//else
-		//Log.d(TAG,"Location was null!!!");
 	}
 
 	private void saveLocation() {
 
-		//Log.e(TAG,"In save location with currentLocation " + currentLocationData.toString());
-
-        //Create Location object if it's empty
-//        if(mProfile.getLocation() == null) {
-//            mProfile.setLocation(new GeoFenceLocation(currentLocation));
-//        }
-//
-//		if(currentAddress != null) {
-//			mProfile.getLocation().setAddress(currentAddress.getAddressLine(0));
-//			mProfile.getLocation().setCity(currentCity);
-//		}
-//
-//        if(currentLocation != null) {
-//            mProfile.getLocation().setLatLng(currentLocation);
-//        }
-//		mProfile.getLocation().setFenceRadius(currentRadius);
 
         //Update Location data
         mProfile.getLocation().setLatLng(currentLocation);
         mProfile.getLocation().setAddress(currentAddress.getAddressLine(0));
         mProfile.getLocation().setCity(currentCity);
         mProfile.getLocation().setFenceRadius(currentRadius);
-		//ProfileJSONManager.get(this).saveLocationProfiles();
-       // ProfileManager.updateProfile(this,mProfile);
-       // ProfileManager.updateLocation(this,mProfile.getLocation(),mProfile.getLocationKey());
 
         Intent i = getIntent();
         i.putExtra(EXTRA_PROFILE,mProfile);
@@ -471,10 +452,6 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 			LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
 		}
 		else {
-			//Store current latLng
-		//	if(currentLocation == null)
-			//	currentLocation = new LatLng(location.getLatitude(),location.getLongitude());
-
 
 			handleNewLocation();
 		}
