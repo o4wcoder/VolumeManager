@@ -71,7 +71,7 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
 
 
     /***************************************************/
-	/*                 Local Data                      */
+    /*                 Local Data                      */
     /***************************************************/
     private ArrayList<Profile> mProfileList;
     //ProfileListAdapter mProfileAdapter;
@@ -79,6 +79,7 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
     ListView listview;
     int mProfileType;
     GoogleApiClient mGoogleApiClient;
+    GeofenceManager mGeofenceManager;
     /***************************************************/
 	/*                Override Methods                 */
 
@@ -98,9 +99,7 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Log.e(TAG,"Oncreate");
-        //Tell the Fragment Manager that ProfileListFragment needs
-        //to receive options menu callbacks
+
         setHasOptionsMenu(true);
 
         //retain the instance on rotation
@@ -112,8 +111,6 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
             Bundle bundle = getArguments();
             mProfileType = bundle.getInt(EXTRA_PROFILE_TYPE);
         }
-
-        //profileList = ProfileJSONManager.get(getActivity()).getProfiles();
 
         //Init the Profile Loader. Callbacks received in this fragment
         getLoaderManager().initLoader(PROFILE_LOADER, null, this);
@@ -153,9 +150,9 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
 
         listview = (ListView) view.findViewById(android.R.id.list);
         ViewGroup headerView = (ViewGroup) inflater.inflate(R.layout.listview_header, listview, false);
-        TextView headerTextView = (TextView)headerView.findViewById(R.id.profileHeaderTextView);
+        TextView headerTextView = (TextView) headerView.findViewById(R.id.profileHeaderTextView);
 
-        if(mProfileType == TIME_PROFILE_LIST)
+        if (mProfileType == TIME_PROFILE_LIST)
             headerTextView.setText(getString(R.string.profile_header));
         else
             headerTextView.setText(getString(R.string.location_profile_header));
@@ -199,18 +196,15 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
                     switch (item.getItemId()) {
                         case R.id.menu_item_delete_profile:
 
-                            //ProfileJSONManager profileManager = ProfileJSONManager.get(getActivity());
+                            //Delete selected profiles
+                            for (int i = listview.getCount() - 1; i > 0; i--) {
+                                if (listview.isItemChecked(i)) {
 
-                            Log.e(TAG, "in onActionItemClicked with adapter count " + mProfileAdapter.getCount());
-                            Log.e(TAG, "listivew count " + listview.getCount());
-
-                            //Kill alarms for Time Profiles
-                            if (mProfileType == TIME_PROFILE_LIST) {
-                                //Delete selected profiles
-                                for (int i = listview.getCount() - 1; i > 0; i--) {
-                                    if (listview.isItemChecked(i)) {
-                                        ProfileManager.deleteProfile(getActivity(), (Profile) mProfileAdapter.getItem(i - 1));
+                                    if(mProfileType == LOCATION_PROFILE_LIST) {
+                                        deleteGeofence((Profile) mProfileAdapter.getItem(i - 1));
                                     }
+
+                                    ProfileManager.deleteProfile(getActivity(), (Profile) mProfileAdapter.getItem(i - 1));
                                 }
                             }
 
@@ -218,9 +212,6 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
                             mode.finish();
 
                             notifyListViewChanged();
-
-                            if (mProfileType == LOCATION_PROFILE_LIST)
-                                updateGeofences();
 
                             return true;
                         default:
@@ -315,7 +306,6 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
         //Get menu item in context menu. ListView is a subclass of AdapterView
         AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
         int position = info.position;
-        //  Log.d(TAG,"in onContextItemSelected with position: " + );
 
         Profile profile = (Profile) listview.getItemAtPosition(position);
         Log.e(TAG, "Deleting profile " + profile.getTitle());
@@ -323,11 +313,11 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
         switch (item.getItemId()) {
             case R.id.menu_item_delete_profile:
 
-                if (mProfileType == LOCATION_PROFILE_LIST)
-                    updateGeofences();
-                else {
-                    ProfileManager.deleteProfile(getActivity(), profile);
+                if(mProfileType == LOCATION_PROFILE_LIST) {
+                    deleteGeofence(profile);
                 }
+                //Delete the profile from the DB
+                ProfileManager.deleteProfile(getActivity(), profile);
                 notifyListViewChanged();
 
                 return true;
@@ -381,27 +371,24 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
         while (cursor.moveToNext()) {
             Profile profile = new Profile(cursor);
 
-            if(mProfileType == TIME_PROFILE_LIST) {
+            if (mProfileType == TIME_PROFILE_LIST) {
 
-                if(profile.getLocationKey() == 0)
+                if (profile.getLocationKey() == 0)
                     profileList.add(profile);
 
-            }
-            else {
-                    Log.e(TAG,"Profile with location id" + profile.getLocationKey());
+            } else {
+                //Get location profiles
+                if (profile.getLocationKey() > 0) {
 
-                    if(profile.getLocationKey() > 0) {
+                    //Add location table to profile object
+                    GeoFenceLocation location = ProfileManager.getLocation(getActivity(), profile.getLocationKey());
 
-                        Log.e(TAG,"Got a location, query it");
+                    if (location != null) {
 
-                        GeoFenceLocation location = ProfileManager.getLocation(getActivity(),profile.getLocationKey());
-
-                        if(location != null) {
-
-                            profile.setLocation(location);
-                            profileList.add(profile);
-                        }
+                        profile.setLocation(location);
+                        profileList.add(profile);
                     }
+                }
             }
 
 
@@ -430,13 +417,23 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
         ((Callback) getActivity()).onListViewChange();
     }
 
+    private void deleteGeofence(Profile mProfile) {
+        if(mGoogleApiClient.isConnected()) {
+
+            if(mGeofenceManager != null) {
+
+                mGeofenceManager.removeGeofence(this,mProfile);
+            }
+        }
+    }
+
     private void updateGeofences() {
         if (mGoogleApiClient.isConnected()) {
 
-            GeofenceManager geofenceManager = new GeofenceManager(getActivity().getApplicationContext(), mGoogleApiClient);
+            mGeofenceManager = new GeofenceManager(getActivity().getApplicationContext(), mGoogleApiClient);
 
             //Restart geofences now that the state has changed.
-            geofenceManager.startGeofences(this);
+            mGeofenceManager.startGeofences(this);
         } else
             Log.e(TAG, "Connection to Google API is disconnected! Not good!");
     }

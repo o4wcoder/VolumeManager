@@ -1,5 +1,6 @@
 package com.fourthwardcoder.android.volumemanager.location;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
@@ -53,19 +54,19 @@ public class GeofenceManager {
 		
 	}
 
-	public GoogleApiClient getGoogleApiClient() {
-		return mGoogleApiClient;
-	}
-	
-	public static boolean isGooglePlayServicesAvailable(Activity activity) {
-		int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);
-		if (ConnectionResult.SUCCESS == status) {
-			return true;
-		} else {
-			GooglePlayServicesUtil.getErrorDialog(status, (Activity) activity, 0).show();
-			return false;
-		}
-	}
+//	public GoogleApiClient getGoogleApiClient() {
+//		return mGoogleApiClient;
+//	}
+//
+//	public static boolean isGooglePlayServicesAvailable(Activity activity) {
+//		int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);
+//		if (ConnectionResult.SUCCESS == status) {
+//			return true;
+//		} else {
+//			GooglePlayServicesUtil.getErrorDialog(status, (Activity) activity, 0).show();
+//			return false;
+//		}
+//	}
 	
 	
 	public Geofence createGeofence(Profile profile) {
@@ -77,6 +78,33 @@ public class GeofenceManager {
 		.setExpirationDuration(Geofence.NEVER_EXPIRE)
 		.build();
 		
+	}
+
+	public void removeGeofence(ResultCallback<Status> callingActivity, Profile profile) {
+
+		if (!mGoogleApiClient.isConnected()) {
+			//Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		try {
+			//Create list with the one geofence to remove
+			List<String> requestIdList = new ArrayList<>(1);
+			requestIdList.add(profile.getId().toString());
+
+			//Remove geofence
+			LocationServices.GeofencingApi.removeGeofences(
+					mGoogleApiClient,
+					requestIdList
+
+			).setResultCallback(callingActivity);
+
+		} catch (SecurityException securityException) {
+			// Catch exception generated if the app does not use ACCESS_FINE_LOCATION permission.
+			Log.e(TAG, "Security exception when trying to add geofences.");
+			//logSecurityException(securityException);
+		}
+
 	}
 	
 	private void populateGeofenceList() {

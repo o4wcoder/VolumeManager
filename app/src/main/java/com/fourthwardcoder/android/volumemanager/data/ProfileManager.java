@@ -166,7 +166,13 @@ public class ProfileManager implements Constants{
 
 
         if(profile.isLocationProfile()) {
-            //Delete Geofences
+
+            //Need to delete location entry too
+            String locSelection = ProfileContract.LocationEntry._ID +"=?";
+            String[] locSelectionArgs = new String[1];
+            locSelectionArgs[0] = String.valueOf(profile.getLocationKey());
+            context.getContentResolver().delete(ProfileContract.LocationEntry.CONTENT_URI, locSelection, locSelectionArgs);
+
         }
         else {
             //Kill alarms for volume control
