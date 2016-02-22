@@ -159,37 +159,6 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 
 		geofenceManager = new GeofenceManager(this,mGoogleApiClient);
 
-//		radiusTextView = (TextView)findViewById(R.id.radiusTextView);
-//		radiusTextView.setText(String.valueOf(currentRadius));
-//
-//        //Taking out for now
-//        radiusTextView.setVisibility(View.INVISIBLE);
-//
-//		radiusTextView.addTextChangedListener(new TextWatcher() {
-//
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count,
-//                                          int after) {
-//                // TODO Auto-generated method stub
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before,
-//                                      int count) {
-//                currentRadius = Float.valueOf(s.toString());
-//                drawGeofenceCircle();
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                // TODO Auto-generated method stub
-//
-//            }
-//
-//        });
-
         FloatingActionButton zoomPhonePosition = (FloatingActionButton) findViewById(R.id.zoomPhonePositionButton);
         zoomPhonePosition.setOnClickListener(new OnClickListener() {
             @Override
@@ -463,30 +432,12 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 
 	@Override
 	public void onResult(Status status) {
-		if(status.isSuccess()) {
-			Log.i(TAG,"Success creating intents for geofences");
 
-			String msgStr = getString(R.string.geofence_added) + " " + currentAddress.getAddressLine(0);
+        String msgStr = getString(R.string.geofence_added) + " " + currentAddress.getAddressLine(0);
+        GeofenceManager.setGeofenceResult(this,status,msgStr);
 
-			Toast.makeText(
-					this,
-					msgStr,
-					Toast.LENGTH_SHORT
-					).show();
-			finish();
-
-		}
-		else {
-			// Get the status code for the error and log it using a user-friendly message.
-			String errorMessage = GeofenceManager.getGeofenceErrorString(this,
-					status.getStatusCode());
-			Log.e(TAG, errorMessage);
-			Toast toast = Toast.makeText(getApplicationContext(),
-					errorMessage, Toast.LENGTH_SHORT);
-			toast.show();
-
-		}
-
+        //Kill Activity
+        finish();
 	}
 
     public interface LocationUpdateCallback {

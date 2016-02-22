@@ -1,6 +1,7 @@
 package com.fourthwardcoder.android.volumemanager.fragments;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 import android.annotation.SuppressLint;
@@ -196,18 +197,26 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
                     switch (item.getItemId()) {
                         case R.id.menu_item_delete_profile:
 
+                            ArrayList<String> requestIdList = new ArrayList<>();
                             //Delete selected profiles
                             for (int i = listview.getCount() - 1; i > 0; i--) {
                                 if (listview.isItemChecked(i)) {
 
                                     if(mProfileType == LOCATION_PROFILE_LIST) {
-                                        deleteGeofence((Profile) mProfileAdapter.getItem(i - 1));
+                                        requestIdList.add(((Profile)mProfileAdapter.getItem(i - 1)).getId().toString());
                                     }
 
                                     ProfileManager.deleteProfile(getActivity(), (Profile) mProfileAdapter.getItem(i - 1));
                                 }
                             }
 
+                            //Delete geofences in list
+                            if(mProfileType == LOCATION_PROFILE_LIST) {
+                                if(requestIdList.size() > 0) {
+                                    deleteGeofenceList(requestIdList);
+                                }
+
+                            }
                             //Destroy Action mode context menu
                             mode.finish();
 
@@ -314,7 +323,7 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
             case R.id.menu_item_delete_profile:
 
                 if(mProfileType == LOCATION_PROFILE_LIST) {
-                    deleteGeofence(profile);
+                   deleteGeofence(profile.getId().toString());
                 }
                 //Delete the profile from the DB
                 ProfileManager.deleteProfile(getActivity(), profile);
@@ -417,25 +426,32 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
         ((Callback) getActivity()).onListViewChange();
     }
 
-    private void deleteGeofence(Profile mProfile) {
+    private void deleteGeofence(String requestId) {
         if(mGoogleApiClient.isConnected()) {
 
             if(mGeofenceManager != null) {
 
-                mGeofenceManager.removeGeofence(this,mProfile);
+                mGeofenceManager.removeGeofence(this,requestId);
+            }
+        }
+    }
+
+    private void deleteGeofenceList(ArrayList<String> list) {
+        if(mGoogleApiClient.isConnected()) {
+
+            if(mGeofenceManager != null) {
+
+                mGeofenceManager.removeGeofenceList(this, list);
             }
         }
     }
 
     private void updateGeofences() {
-        if (mGoogleApiClient.isConnected()) {
-
-            mGeofenceManager = new GeofenceManager(getActivity().getApplicationContext(), mGoogleApiClient);
-
-            //Restart geofences now that the state has changed.
-            mGeofenceManager.startGeofences(this);
-        } else
-            Log.e(TAG, "Connection to Google API is disconnected! Not good!");
+            if (mGoogleApiClient.isConnected()) {
+                //Restart geofences now that the state has changed.
+                mGeofenceManager.startGeofences(this);
+            } else
+                Log.e(TAG, "Connection to Google API is disconnected! Not good!");
     }
 
     @Override
@@ -446,6 +462,7 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onConnected(Bundle bundle) {
 
+        mGeofenceManager = new GeofenceManager(getActivity().getApplicationContext(), mGoogleApiClient);
     }
 
     @Override
@@ -461,6 +478,7 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onResult(Status status) {
 
+        GeofenceManager.setGeofenceResult(getActivity(),status,getString(R.string.geofence_deleted));
     }
 
     /*******************************************************************/

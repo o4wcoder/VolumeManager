@@ -58,6 +58,8 @@ import com.fourthwardcoder.android.volumemanager.models.Profile;
 import com.fourthwardcoder.android.volumemanager.services.VolumeManagerService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -75,7 +77,7 @@ import com.squareup.picasso.Picasso;
  *
  */
 public class ProfileDetailFragment extends Fragment implements  LocationProfileListAdapter.LocationAdapterCallback, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, ResultCallback<Status>,Constants {
 	
 	/************************************************************************/
 	/*                           Constants                                  */
@@ -123,6 +125,7 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
     TextView mAddressTextView;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
+    GeofenceManager mGeofenceManager;
 	
 	/*******************************************************/
 	/*                  Override Methods                   */
@@ -613,7 +616,7 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
                 .appendQueryParameter(MAPS_PARAM_MARKERS,strLocation)
                 .build();
 
-        Log.e(TAG,"The mapsUri: " + mapsUri);
+        Log.e(TAG, "The mapsUri: " + mapsUri);
 
         return mapsUri;
 
@@ -639,7 +642,12 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
                 .setPositiveButton(getString(R.string.dialog_yes), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                if(mProfileType == LOCATION_PROFILE_LIST) {
+                    if(mGeofenceManager != null)
+                        deleteGeofence(mProfile.getId().toString());
+                }
                 ProfileManager.deleteProfile(getActivity(),mProfile);
+
                 getActivity().finish();
             }
         })
@@ -650,6 +658,16 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
             }
         }).show();
 
+    }
+
+    private void deleteGeofence(String requestId) {
+        if(mGoogleApiClient.isConnected()) {
+
+            if(mGeofenceManager != null) {
+
+                mGeofenceManager.removeGeofence(this,requestId);
+            }
+        }
     }
 
     private int getVolumeIconResource(int volumeType) {
@@ -741,6 +759,9 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
     @Override
     public void onConnected(Bundle bundle) {
         Log.e(TAG,"onConnected()");
+        //Get GeofenceManger object
+        mGeofenceManager = new GeofenceManager(getActivity().getApplicationContext(), mGoogleApiClient);
+
         Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (location == null) {
           //  Log.e(TAG,"Location was null");
@@ -830,4 +851,9 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
     }
 
 
+    @Override
+    public void onResult(Status status) {
+
+        GeofenceManager.setGeofenceResult(getActivity(),status,getString(R.string.geofence_deleted));
+    }
 }

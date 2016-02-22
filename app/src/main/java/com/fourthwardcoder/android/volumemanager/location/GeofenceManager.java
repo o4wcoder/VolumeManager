@@ -24,6 +24,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.util.Log;
+import android.widget.Toast;
 
 
 public class GeofenceManager {
@@ -80,7 +81,7 @@ public class GeofenceManager {
 		
 	}
 
-	public void removeGeofence(ResultCallback<Status> callingActivity, Profile profile) {
+	public void removeGeofence(ResultCallback<Status> callingActivity, String requestId) {
 
 		if (!mGoogleApiClient.isConnected()) {
 			//Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
@@ -90,7 +91,31 @@ public class GeofenceManager {
 		try {
 			//Create list with the one geofence to remove
 			List<String> requestIdList = new ArrayList<>(1);
-			requestIdList.add(profile.getId().toString());
+			requestIdList.add(requestId);
+
+			//Remove geofence
+			LocationServices.GeofencingApi.removeGeofences(
+					mGoogleApiClient,
+					requestIdList
+
+			).setResultCallback(callingActivity);
+
+		} catch (SecurityException securityException) {
+			// Catch exception generated if the app does not use ACCESS_FINE_LOCATION permission.
+			Log.e(TAG, "Security exception when trying to add geofences.");
+			//logSecurityException(securityException);
+		}
+
+	}
+
+	public void removeGeofenceList(ResultCallback<Status> callingActivity, List<String> requestIdList) {
+
+		if (!mGoogleApiClient.isConnected()) {
+			//Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		try {
 
 			//Remove geofence
 			LocationServices.GeofencingApi.removeGeofences(
@@ -201,7 +226,7 @@ public class GeofenceManager {
          //logSecurityException(securityException);
      }
  }
- 
+
  /** 
   * Returns the error string for a geofencing error code. 
   */ 
@@ -217,6 +242,30 @@ public class GeofenceManager {
          default: 
              return mResources.getString(R.string.unknown_geofence_error);
      } 
- } 
+ }
+
+ public static void setGeofenceResult(Context context, Status status,String msgStr) {
+
+        if(status.isSuccess()) {
+
+            Toast.makeText(
+                    context,
+                    msgStr,
+                    Toast.LENGTH_SHORT
+            ).show();
+
+
+        }
+        else {
+            // Get the status code for the error and log it's using a user-friendly message.
+            String errorMessage = GeofenceManager.getGeofenceErrorString(context,
+                    status.getStatusCode());
+            Log.e(TAG, errorMessage);
+            Toast toast = Toast.makeText(context,
+                    errorMessage, Toast.LENGTH_SHORT);
+            toast.show();
+
+        }
+    }
 
 }
