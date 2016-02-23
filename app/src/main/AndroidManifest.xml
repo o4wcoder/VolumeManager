@@ -42,7 +42,7 @@
             android:windowSoftInputMode="stateHidden|adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activites.ProfileTabActivity" />
+                android:value=".activites.ProfileMainActivity" />
             
         </activity>
         <!-- Use singleTop so when navigating back with home button, it keeps extra data from activity that called it -->
@@ -53,7 +53,7 @@
             android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activites.ProfileTabActivity" />
+                android:value=".activites.ProfileMainActivity" />
         </activity>
 
         <activity
@@ -62,13 +62,15 @@
             android:theme="@style/SettingsTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activites.ProfileTabActivity" />
+                android:value=".activites.ProfileMainActivity" />
         </activity>
         <activity
-            android:name=".activites.ProfileTabActivity"
+            android:name=".activites.ProfileMainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.Main"
-            android:configChanges="orientation|screenSize">
+            android:theme="@style/AppTheme.Main">
+            <!--
+android:configChanges="orientation|screenSize">
+-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,7 +1,6 @@
 package com.fourthwardcoder.android.volumemanager.fragments;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 import android.annotation.SuppressLint;
@@ -10,13 +9,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.util.Pair;
-import android.telecom.Call;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -36,7 +32,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.fourthwardcoder.android.volumemanager.activites.LocationMapActivity;
 import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
 import com.fourthwardcoder.android.volumemanager.adapters.LocationProfileListAdapter;
 import com.fourthwardcoder.android.volumemanager.adapters.ProfileListAdapter;
@@ -47,8 +42,6 @@ import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.location.GeofenceManager;
 import com.fourthwardcoder.android.volumemanager.models.GeoFenceLocation;
-import com.fourthwardcoder.android.volumemanager.services.VolumeManagerService;
-import com.fourthwardcoder.android.volumemanager.activites.ProfileDetailActivity;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
 import com.google.android.gms.common.ConnectionResult;
@@ -58,14 +51,14 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationServices;
 
 
-public class ProfileListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
+public class ProfileMainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
         LocationProfileListAdapter.LocationAdapterCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status>, Constants {
 
     /***************************************************/
     /*                  Constants                      */
     /***************************************************/
-    private static final String TAG = "ProfileListFragment";
+    private static final String TAG = "ProfileMainFragment";
 
     //ID for Profile Loader
     private static final int PROFILE_LOADER = 0;
@@ -86,11 +79,11 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
 
     /***************************************************/
 
-    public static ProfileListFragment newInstance(int profileType) {
+    public static ProfileMainFragment newInstance(int profileType) {
 
         Bundle args = new Bundle();
         args.putInt(EXTRA_PROFILE_TYPE, profileType);
-        ProfileListFragment fragment = new ProfileListFragment();
+        ProfileMainFragment fragment = new ProfileMainFragment();
 
         fragment.setArguments(args);
         return fragment;
@@ -100,7 +93,7 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Log.e(TAG, "onCreate()");
         setHasOptionsMenu(true);
 
         //retain the instance on rotation
@@ -113,8 +106,7 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
             mProfileType = bundle.getInt(EXTRA_PROFILE_TYPE);
         }
 
-        //Init the Profile Loader. Callbacks received in this fragment
-        getLoaderManager().initLoader(PROFILE_LOADER, null, this);
+
 
         Util.setStatusBarColor(getActivity());
 
@@ -279,8 +271,16 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
         if (mProfileType == LOCATION_PROFILE_LIST)
             mGoogleApiClient.connect();
 
-        if (mProfileAdapter != null)
+        //Init the Profile Loader. Callbacks received in this fragment
+        //Use forceLoad because on rotation, loader will not load
+        getLoaderManager().initLoader(PROFILE_LOADER, null, this).forceLoad();
+
+        if (mProfileAdapter != null) {
+            Log.e(TAG, "onResume(): notify listview changed");
             notifyListViewChanged();
+        } else {
+            Log.e(TAG,"profile adapter is null!");
+        }
     }
 
     @Override
@@ -403,8 +403,11 @@ public class ProfileListFragment extends Fragment implements LoaderManager.Loade
 
         }
 
-        if (getActivity() != null && listview != null && profileList != null) {
+        if(mProfileType == TIME_PROFILE_LIST)
+            Log.e(TAG, "onLoadFinished: Number of profiles = " + profileList.size());
 
+        if (getActivity() != null && listview != null && profileList != null) {
+            Log.e(TAG,"onLoadFinished: Set adapter");
             //Store global copy
             mProfileList = profileList;
             if (mProfileType == LOCATION_PROFILE_LIST)

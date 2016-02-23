@@ -1,17 +1,15 @@
 package com.fourthwardcoder.android.volumemanager.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.fourthwardcoder.android.volumemanager.R;
-import com.fourthwardcoder.android.volumemanager.fragments.ProfileListFragment;
+import com.fourthwardcoder.android.volumemanager.fragments.ProfileMainFragment;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
@@ -147,7 +145,7 @@ public class ProfileListAdapter extends ArrayAdapter<Profile> implements Constan
 
     private void notifyListViewChanged() {
         notifyDataSetChanged();
-        ((ProfileListFragment.Callback)mContext).onListViewChange();
+        ((ProfileMainFragment.Callback)mContext).onListViewChange();
     }
 //    public interface Callback {
 //

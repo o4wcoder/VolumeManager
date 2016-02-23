@@ -8,7 +8,7 @@ import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.adapters.ProfilePagerAdapter;
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.fragments.ProfileDetailFragment;
-import com.fourthwardcoder.android.volumemanager.fragments.ProfileListFragment;
+import com.fourthwardcoder.android.volumemanager.fragments.ProfileMainFragment;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
@@ -29,32 +29,34 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-public class ProfileTabActivity extends AppCompatActivity implements ProfileListFragment.Callback, Constants {
+public class ProfileMainActivity extends AppCompatActivity implements ProfileMainFragment.Callback, Constants {
 	
 	/*********************************************************************/
 	/*                          Constants                                */
 	/*********************************************************************/
-	private static final String TAG="ProfileTabActivity";
-	
+	private static final String TAG="ProfileMainActivity";
+    private static final String DETAILFRAGMENT_TAG = "DFTAG";
+
 	/*********************************************************************/
 	/*                         Local Data                                */
 	/*********************************************************************/
 	ArrayList<Fragment> fragList = new ArrayList<Fragment>();
 	TabLayout mTabLayout;
     FloatingActionButton mFloatingActionButton;
-	//int mProfileType;
+	boolean mTwoPane;
     
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		Log.e(TAG,"onCreate()");
+		Log.e(TAG, "onCreate()");
 		//Change status bar color
 	    Util.setStatusBarColor(this);
 
 	    //Set layout
-	    setContentView(R.layout.activity_tab);
+	    setContentView(R.layout.activity_main);
+
 
 		//Set toolbar
 		final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -99,6 +101,25 @@ public class ProfileTabActivity extends AppCompatActivity implements ProfileList
 	
 		setFABVisibility();
 
+        Log.e(TAG,"Check if two pane");
+        if((findViewById(R.id.profile_detail_container) != null)) {
+            Log.e(TAG,"Got two pane!");
+            mTwoPane = true;
+
+                //In two-pane mode, show the detail view in this activity by
+                //adding or replacing the detail fragment using a fragment transaction.
+                if (savedInstanceState == null) {
+                    Log.e(TAG,"Setting Detail Fragment");
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.profile_detail_container, new ProfileDetailFragment(),
+                                    DETAILFRAGMENT_TAG)
+                            .commit();
+                }
+
+        } else {
+            mTwoPane = false;
+        }
+
 	}
 	
 	@Override
@@ -114,11 +135,15 @@ public class ProfileTabActivity extends AppCompatActivity implements ProfileList
     }
 
     private void setFABVisibility() {
-		Log.e(TAG,"!!!! The Listview Changed again!!!!, Selected tab: " + mTabLayout.getSelectedTabPosition());
-		if(ProfileManager.isDatabaseEmpty(this,mTabLayout.getSelectedTabPosition()))
-			mFloatingActionButton.setVisibility(View.INVISIBLE);
-		else
-			mFloatingActionButton.setVisibility(View.VISIBLE);
+		//Log.e(TAG,"!!!! The Listview Changed again!!!!, Selected tab: " + mTabLayout.getSelectedTabPosition());
+		if(ProfileManager.isDatabaseEmpty(this,mTabLayout.getSelectedTabPosition())) {
+            mFloatingActionButton.setVisibility(View.INVISIBLE);
+            Log.e(TAG,"FAB invisible");
+        }
+		else {
+            mFloatingActionButton.setVisibility(View.VISIBLE);
+            Log.e(TAG, "FAB visible");
+        }
 	}
 
     @Override
@@ -130,17 +155,31 @@ public class ProfileTabActivity extends AppCompatActivity implements ProfileList
 	@Override
 	public void onItemSelected(Profile profile, int profileType, TextView textView) {
 
-        Intent intent = new Intent(this, ProfileDetailActivity.class);
+        if(mTwoPane) {
 
-		//Tell Volume Manager Fragment which Profile to display by making
-		//giving id as Intent extra
-		intent.putExtra(ProfileDetailFragment.EXTRA_PROFILE, profile);
-        intent.putExtra(EXTRA_PROFILE_TYPE,profileType);
+            Bundle args = new Bundle();
+            args.putInt(EXTRA_PROFILE_TYPE, profileType);
+            args.putParcelable(EXTRA_PROFILE, profile);
 
-        ActivityOptionsCompat activityOptions =
-                ActivityOptionsCompat.makeSceneTransitionAnimation(this,
-                        new Pair<View, String>(textView, getString(R.string.trans_profile_title)));
+            ProfileDetailFragment fragment = new ProfileDetailFragment();
+            fragment.setArguments(args);
 
-		startActivity(intent,activityOptions.toBundle());
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.profile_detail_container, fragment, DETAILFRAGMENT_TAG)
+                    .commit();
+        } else {
+            Intent intent = new Intent(this, ProfileDetailActivity.class);
+
+            //Tell Volume Manager Fragment which Profile to display by making
+            //giving id as Intent extra
+            intent.putExtra(ProfileDetailFragment.EXTRA_PROFILE, profile);
+            intent.putExtra(EXTRA_PROFILE_TYPE, profileType);
+
+            ActivityOptionsCompat activityOptions =
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(this,
+                            new Pair<View, String>(textView, getString(R.string.trans_profile_title)));
+
+            startActivity(intent, activityOptions.toBundle());
+        }
 	}
 }

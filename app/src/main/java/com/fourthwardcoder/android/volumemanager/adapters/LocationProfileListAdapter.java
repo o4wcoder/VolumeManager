@@ -1,21 +1,17 @@
 package com.fourthwardcoder.android.volumemanager.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.fourthwardcoder.android.volumemanager.R;
-import com.fourthwardcoder.android.volumemanager.fragments.ProfileListFragment;
+import com.fourthwardcoder.android.volumemanager.fragments.ProfileMainFragment;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
-import com.fourthwardcoder.android.volumemanager.location.GeofenceManager;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
 
@@ -27,13 +23,13 @@ public class LocationProfileListAdapter extends ArrayAdapter<Profile> implements
     private static final String TAG = LocationProfileListAdapter.class.getSimpleName();
 
     private Context mContext;
-    ProfileListFragment mCallingFragment;
+    ProfileMainFragment mCallingFragment;
 
     private static final int NORMAL_PROFILE = 0;
     private static final int MOVING_PROFILE = 1;
 
     public LocationProfileListAdapter(Context context, ArrayList<Profile> profileList,
-                                      ProfileListFragment callingFragment) {
+                                      ProfileMainFragment callingFragment) {
         super(context, 0, profileList);
 
         this.mContext = context;
@@ -137,7 +133,7 @@ public class LocationProfileListAdapter extends ArrayAdapter<Profile> implements
 
     private void notifyListViewChanged() {
         notifyDataSetChanged();
-        ((ProfileListFragment.Callback)mContext).onListViewChange();
+        ((ProfileMainFragment.Callback)mContext).onListViewChange();
     }
 
 

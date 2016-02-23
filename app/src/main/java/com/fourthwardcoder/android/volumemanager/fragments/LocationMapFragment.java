@@ -46,7 +46,7 @@ public class LocationMapFragment extends SupportMapFragment implements LoaderCal
 		setHasOptionsMenu(true);
 		
 		//Change status bar color
-		ProfileListFragment.setStatusBarColor(getActivity());
+		ProfileMainFragment.setStatusBarColor(getActivity());
 		
 		
 	}
