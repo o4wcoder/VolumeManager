@@ -156,7 +156,7 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
 	public void onItemSelected(Profile profile, int profileType, TextView textView) {
 
         if(mTwoPane) {
-
+           Log.e(TAG,"onItemSelected() Two pane");
             Bundle args = new Bundle();
             args.putInt(EXTRA_PROFILE_TYPE, profileType);
             args.putParcelable(EXTRA_PROFILE, profile);
@@ -168,6 +168,7 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
                     .replace(R.id.profile_detail_container, fragment, DETAILFRAGMENT_TAG)
                     .commit();
         } else {
+            Log.e(TAG,"onItemSelected() 1 pane");
             Intent intent = new Intent(this, ProfileDetailActivity.class);
 
             //Tell Volume Manager Fragment which Profile to display by making

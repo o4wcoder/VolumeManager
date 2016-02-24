@@ -68,6 +68,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
     /*                 Local Data                      */
     /***************************************************/
     private ArrayList<Profile> mProfileList;
+    private boolean mFirstRun = true;
     //ProfileListAdapter mProfileAdapter;
     BaseAdapter mProfileAdapter;
     ListView listview;
@@ -106,8 +107,6 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
             mProfileType = bundle.getInt(EXTRA_PROFILE_TYPE);
         }
 
-
-
         Util.setStatusBarColor(getActivity());
 
         //Get Google Api Client if this is the list of Location Profiles
@@ -122,6 +121,20 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
 
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.e(TAG,"onActivityCreated() with mFristRun = " + mFirstRun);
+
+        //Init the Profile Loader. Callbacks received in this fragment
+        //If this is first time running, initialize the loader. Otherwise
+        //just restart it. This is necessary because the loader won't run
+        //again on rotation.
+        if(mFirstRun)
+           getLoaderManager().initLoader(PROFILE_LOADER, null, this);
+        else
+            getLoaderManager().restartLoader(PROFILE_LOADER,null,this);
+    }
     @SuppressLint("NewApi")
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -259,9 +272,11 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putInt(EXTRA_PROFILE_TYPE, mProfileType);
+        savedInstanceState.putSerializable(EXTRA_PROFILE_LIST,mProfileList);
         super.onSaveInstanceState(savedInstanceState);
 
     }
+
 
     @Override
     public void onResume() {
@@ -271,16 +286,9 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
         if (mProfileType == LOCATION_PROFILE_LIST)
             mGoogleApiClient.connect();
 
-        //Init the Profile Loader. Callbacks received in this fragment
-        //Use forceLoad because on rotation, loader will not load
-        getLoaderManager().initLoader(PROFILE_LOADER, null, this).forceLoad();
-
-        if (mProfileAdapter != null) {
-            Log.e(TAG, "onResume(): notify listview changed");
+        if (mProfileAdapter != null)
             notifyListViewChanged();
-        } else {
-            Log.e(TAG,"profile adapter is null!");
-        }
+
     }
 
     @Override
@@ -356,6 +364,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Log.e(TAG, "Inside onCreateLoader with profile type " + mProfileType);
 
+        mFirstRun = false;
         Uri profileUri = ProfileContract.ProfileEntry.buildProfileUri();
         String selection;
 
