@@ -134,6 +134,15 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
            getLoaderManager().initLoader(PROFILE_LOADER, null, this);
         else
             getLoaderManager().restartLoader(PROFILE_LOADER,null,this);
+
+        //Need to set the details view to the first movie when in 2 pane mode. Hit this
+        //situation when we first come up on a tablet in portrait and rotate to landscape
+//        if(mProfileList != null) {
+//            if (mProfileList.size() > 0) {
+//                Log.e(TAG, "onActivityCreated(): Calling on loadfinished");
+//                ((Callback) getActivity()).onLoadFinished(mProfileList.get(0));
+//            }
+//        }
     }
     @SuppressLint("NewApi")
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -272,7 +281,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putInt(EXTRA_PROFILE_TYPE, mProfileType);
-        savedInstanceState.putSerializable(EXTRA_PROFILE_LIST,mProfileList);
+        //savedInstanceState.putSerializable(EXTRA_PROFILE_LIST,mProfileList);
         super.onSaveInstanceState(savedInstanceState);
 
     }
@@ -425,6 +434,10 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
                 mProfileAdapter = new ProfileListAdapter(getActivity(), profileList);
 
             listview.setAdapter(mProfileAdapter);
+
+            //If in 2 pane mode, set first profile in list to detail pane
+            if(profileList.size() > 0 )
+                ((Callback)getActivity()).onLoadFinished(profileList.get(0));
         }
     }
 
@@ -502,5 +515,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
         void onListViewChange();
 
         void onItemSelected(Profile profile, int profileType, TextView textView);
+
+        void onLoadFinished(Profile profile);
     }
 }

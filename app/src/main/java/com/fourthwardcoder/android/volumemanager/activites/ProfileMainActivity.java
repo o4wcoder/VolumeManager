@@ -173,7 +173,7 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
 
             //Tell Volume Manager Fragment which Profile to display by making
             //giving id as Intent extra
-            intent.putExtra(ProfileDetailFragment.EXTRA_PROFILE, profile);
+            intent.putExtra(EXTRA_PROFILE, profile);
             intent.putExtra(EXTRA_PROFILE_TYPE, profileType);
 
             ActivityOptionsCompat activityOptions =
@@ -183,4 +183,25 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
             startActivity(intent, activityOptions.toBundle());
         }
 	}
+
+    @Override
+    public void onLoadFinished(Profile profile) {
+
+        if(mTwoPane) {
+
+            //Pass profile of first list item
+            Bundle args = new Bundle();
+            args.putParcelable(EXTRA_PROFILE,profile);
+
+            ProfileDetailFragment fragment = new ProfileDetailFragment();
+            fragment.setArguments(args);
+
+            //Set first movie in detail pane. Needed to use "commitAllowingStateLoss"
+            //instead of just "commit" because calling this directly when the loader
+            //was done causes an "illegal state exception"
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.profile_detail_container, fragment, DETAILFRAGMENT_TAG)
+                    .commitAllowingStateLoss();
+        }
+    }
 }

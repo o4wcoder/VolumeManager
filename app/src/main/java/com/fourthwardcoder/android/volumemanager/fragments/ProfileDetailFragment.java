@@ -140,33 +140,33 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 		Util.setStatusBarColor(getActivity());
 		
 		//Get Fragment arguments and pull out ID of profile
-		Intent intent = getActivity().getIntent();
+		//Intent intent = getActivity().getIntent();
 
 
 
         //First check if we have don't have anything in saveInstanceState from a rotation
         if(saveInstanceState == null) {
            Log.e(TAG,"No saved vars");
-            mProfileType = intent.getIntExtra(EXTRA_PROFILE_TYPE,TIME_PROFILE_LIST);
+            Bundle arguments = getArguments();
+            if(arguments != null) {
+                // mProfileType = intent.getIntExtra(EXTRA_PROFILE_TYPE,TIME_PROFILE_LIST);
+                mProfileType = arguments.getInt(EXTRA_PROFILE_TYPE);
+                //See if we have a Profile object. If so we are editing the Profile.
+                //If not, it's a new profile
+                Log.e(TAG,"Got profile type " + mProfileType);
+                if (arguments.containsKey(EXTRA_PROFILE)) {
+                    Log.e(TAG, "Get profile");
 
-            //See if we have a Profile object. If so we are editing the Profile.
-            //If not, it's a new profile
-            if (intent.hasExtra(EXTRA_PROFILE)) {
-                Log.e(TAG,"Get uuid");
-                //UUID id = (UUID)intent.getSerializableExtra(EXTRA_PROFILE_ID);
-                Log.e(TAG,"Get profile");
-               // mProfile = ProfileManager.getProfile(getActivity(),id);
-                mProfile = intent.getParcelableExtra(EXTRA_PROFILE);
-               // if(mProfileType == LOCATION_PROFILE_LIST) {
+                    mProfile = arguments.getParcelable(EXTRA_PROFILE);
 
-                //    Log.e(TAG,"onCreate() with address " + mProfile.getLocation().getAddress());
-               // }
-
-                Log.e(TAG,"Got the profile");
-				mIsNewProfile = false;
+                    Log.e(TAG, "Got the profile");
+                    mIsNewProfile = false;
+                } else {
+                    mProfile = new Profile();
+                    mIsNewProfile = true;
+                }
             } else {
-                mProfile = new Profile();
-				mIsNewProfile = true;
+                Log.e(TAG,"Arguments are null!");
             }
         }
         else {
