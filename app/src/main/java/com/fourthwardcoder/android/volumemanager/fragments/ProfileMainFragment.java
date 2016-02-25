@@ -471,17 +471,22 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
         }
     }
 
-    private void updateGeofences() {
-            if (mGoogleApiClient.isConnected()) {
-                //Restart geofences now that the state has changed.
-                mGeofenceManager.startGeofences(this);
-            } else
-                Log.e(TAG, "Connection to Google API is disconnected! Not good!");
-    }
+//    private void updateGeofences() {
+//            if (mGoogleApiClient.isConnected()) {
+//                //Restart geofences now that the state has changed.
+//                mGeofenceManager.startGeofences(this);
+//            } else
+//                Log.e(TAG, "Connection to Google API is disconnected! Not good!");
+//    }
 
     @Override
     public void onToggleLocationIcon() {
-        updateGeofences();
+        //updateGeofences();
+        if (mGoogleApiClient.isConnected()) {
+            //Restart geofences now that the state has changed.
+            mGeofenceManager.startGeofences(this);
+        } else
+            Log.e(TAG, "Connection to Google API is disconnected! Not good!");
     }
 
     @Override

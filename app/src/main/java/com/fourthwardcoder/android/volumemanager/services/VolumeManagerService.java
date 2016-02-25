@@ -147,8 +147,9 @@ public class VolumeManagerService extends IntentService implements Constants {
                 .setContentText(strTime);
 
         Intent i = new Intent(this,ProfileDetailActivity.class);
-       
-        i.putExtra(EXTRA_PROFILE_ID,profile.getId());
+
+        i.putExtra(EXTRA_PROFILE,profile);
+        i.putExtra(EXTRA_PROFILE_TYPE,TIME_PROFILE_LIST);
         
 	    PendingIntent resultPendingIntent =
 	    	    PendingIntent.getActivity(

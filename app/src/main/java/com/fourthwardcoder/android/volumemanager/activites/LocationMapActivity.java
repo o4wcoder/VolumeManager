@@ -58,7 +58,7 @@ import android.widget.Toast;
 
 public class LocationMapActivity extends AppCompatActivity
 implements OnMapReadyCallback, OnMapLongClickListener, GoogleApiClient.ConnectionCallbacks,
-GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultCallback<Status>{
+GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants {
 
 	/******************************************************************/
 	/*                         Constants                              */
@@ -157,7 +157,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 				.setInterval(10 * 1000)        // 10 seconds, in milliseconds
 				.setFastestInterval(1 * 1000); // 1 second, in milliseconds
 
-		geofenceManager = new GeofenceManager(this,mGoogleApiClient);
+		//geofenceManager = new GeofenceManager(this,mGoogleApiClient);
 
         FloatingActionButton zoomPhonePosition = (FloatingActionButton) findViewById(R.id.zoomPhonePositionButton);
         zoomPhonePosition.setOnClickListener(new OnClickListener() {
@@ -384,15 +384,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
         i.putExtra(EXTRA_PROFILE,mProfile);
         setResult(RESULT_OK,i);
 
-        Log.e(TAG,"Saving on map");
-        Log.e(TAG, mProfile.getLocation().toString());
-
-        //Create geofence for location profile
-		Geofence fence = geofenceManager.createGeofence(mProfile);
-		geofenceManager.addGeofence(fence);
-
-		geofenceManager.startGeofences(this);
-
+        finish();
 	}
 
 	@Override
@@ -430,20 +422,6 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants, ResultC
 	@Override
 	public void onConnectionSuspended(int arg0) {}
 
-	@Override
-	public void onResult(Status status) {
-
-        String msgStr = getString(R.string.geofence_added) + " " + currentAddress.getAddressLine(0);
-        GeofenceManager.setGeofenceResult(this,status,msgStr);
-
-        //Kill Activity
-        finish();
-	}
-
-    public interface LocationUpdateCallback {
-
-        void onLocationUpdate(Profile profile);
-    }
 
 
 

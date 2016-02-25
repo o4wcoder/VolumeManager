@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fourthwardcoder.android.volumemanager.R;
+import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.fragments.ProfileMainFragment;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
@@ -104,11 +105,10 @@ public class ProfileListAdapter extends ArrayAdapter<Profile> implements Constan
                 else {
                     //Turn on alarms for this profile
                     getItem(listPosition).setEnabled(true);
-                    VolumeManagerService.setServiceAlarm(mContext.getApplicationContext(), getItem(listPosition), true);
+                    VolumeManagerService.setServiceAlarm(mContext, getItem(listPosition), true);
                 }
-                //refresh listview
-                //profileAdapter.notifyDataSetChanged();
-
+                //Save Profile change in DB
+                ProfileManager.updateProfile(mContext,getItem(listPosition));
                 notifyListViewChanged();
             }
 

@@ -7,12 +7,14 @@ import java.util.UUID;
 
 import com.fourthwardcoder.android.volumemanager.activites.LocationMapActivity;
 //import com.fourthwardcoder.android.volumemanager.json.ProfileJSONManager;
+import com.fourthwardcoder.android.volumemanager.activites.ProfileDetailActivity;
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 //import com.fourthwardcoder.android.volumemanager.models.LocationProfile;
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.fourthwardcoder.android.volumemanager.location.GeofenceManager;
+import com.fourthwardcoder.android.volumemanager.models.GeoFenceLocation;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
@@ -140,6 +142,9 @@ public class GeofenceService extends IntentService implements Constants {
 			//Get Location Profile, based on id.
 			//LocationProfile triggeredProfile = ProfileJSONManager.get(this).getLocationProfile(profileID);
 			Profile triggeredProfile = ProfileManager.getProfile(this,profileID);
+            //Add location table to profile object
+            GeoFenceLocation location = ProfileManager.getLocation(this, triggeredProfile.getLocationKey());
+            triggeredProfile.setLocation(location);
 			triggeringGeofenceProfileList.add(triggeredProfile);
 		} 
 		//String triggeringGeofencesIdsString = TextUtils.join(", ",  triggeringGeofenceProfileList);
@@ -190,9 +195,10 @@ public class GeofenceService extends IntentService implements Constants {
                 .setGroupSummary(true)
                 .setContentText(profile.getLocation().getAddress());
 
-        Intent i = new Intent(this, LocationMapActivity.class);
+        Intent i = new Intent(this, ProfileDetailActivity.class);
 
-		i.putExtra(EXTRA_PROFILE_ID,profile.getId());
+		i.putExtra(EXTRA_PROFILE,profile);
+        i.putExtra(EXTRA_PROFILE_TYPE,LOCATION_PROFILE_LIST);
 
 		PendingIntent resultPendingIntent =
 				PendingIntent.getActivity(

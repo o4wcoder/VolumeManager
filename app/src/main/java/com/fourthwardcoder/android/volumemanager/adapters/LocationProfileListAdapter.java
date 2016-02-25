@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fourthwardcoder.android.volumemanager.R;
+import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.fragments.ProfileMainFragment;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
@@ -104,11 +105,13 @@ public class LocationProfileListAdapter extends ArrayAdapter<Profile> implements
                     //Turn on geofence for this profile
                     getItem(listPosition).setEnabled(true);
                 }
-                //refresh listview
-                notifyListViewChanged();;
 
-                //Modify geofences
-               // updateGeofences();
+                //Save Profile change in DB
+                ProfileManager.updateProfile(mContext, getItem(listPosition));
+                //refresh listview
+                notifyListViewChanged();
+
+                //Callback to modify the geofence for this profile
                 mCallingFragment.onToggleLocationIcon();
 
             }

@@ -55,24 +55,10 @@ public class GeofenceManager {
 		
 	}
 
-//	public GoogleApiClient getGoogleApiClient() {
-//		return mGoogleApiClient;
-//	}
-//
-//	public static boolean isGooglePlayServicesAvailable(Activity activity) {
-//		int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);
-//		if (ConnectionResult.SUCCESS == status) {
-//			return true;
-//		} else {
-//			GooglePlayServicesUtil.getErrorDialog(status, (Activity) activity, 0).show();
-//			return false;
-//		}
-//	}
-	
-	
 	public Geofence createGeofence(Profile profile) {
-		
-		return new Geofence.Builder()
+
+
+        return new Geofence.Builder()
 		.setRequestId(profile.getId().toString())
 		.setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
 		.setCircularRegion(profile.getLocation().getLatLng().latitude, profile.getLocation().getLatLng().longitude,profile.getLocation().getFenceRadius())
@@ -136,7 +122,7 @@ public class GeofenceManager {
 		
 		//Get all location profiles
 		//ArrayList<LocationProfile> locationProfileList = ProfileJSONManager.get(context).getLocationProfiles();
-		ArrayList<Profile> profileList = ProfileManager.getProfileList(context);
+		ArrayList<Profile> profileList = ProfileManager.getLocationProfileList(context);
 		for(int i = 0; i < profileList.size(); i++ ) {
 			
 			Profile profile = profileList.get(i);
@@ -199,7 +185,7 @@ public class GeofenceManager {
   */
  public void startGeofences(ResultCallback<Status> callingActivity) {
  	
- 	Log.i(TAG,"adding geofences");
+ 	Log.i(TAG, "adding geofences");
  	
      if (!mGoogleApiClient.isConnected()) {
          //Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
@@ -227,6 +213,14 @@ public class GeofenceManager {
      }
  }
 
+ public void saveGeofence(ResultCallback<Status> callingActivity, Profile profile) {
+
+     //Create geofence for location profile
+     Geofence fence = createGeofence(profile);
+     addGeofence(fence);
+
+     startGeofences(callingActivity);
+ }
  /** 
   * Returns the error string for a geofencing error code. 
   */ 

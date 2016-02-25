@@ -60,7 +60,7 @@
     <string name="location_settings">Location Settings</string>
     <string name="location_title_hint">Enter a title for the location.</string>
     <string name="click_help_text">click here to modify volume settings</string>
-    <string name="geofence_added">Goefence added for </string>
+    <string name="geofence_saved">Goefence saved</string>
     <string name="geofence_deleted">Geofence deleted</string>
     <string name="radius_text">radius(m)</string>
     <string name="unknown_street_address">Unknown Street Address</string>
@@ -85,7 +85,7 @@
 
     <string name="pref_notifications_true">Enabled</string>
     <string name="pref_notifications_false">Disabled</string>
-    <string name="pref_notifications_default" translatable="false">false</string>
+    <string name="pref_notifications_default" translatable="false">true</string>
 
     <string name="pref_location_radius_units_label">Location Radius Units</string>
     <string name="pref_location_radius_units_label_meters">Meters</string>

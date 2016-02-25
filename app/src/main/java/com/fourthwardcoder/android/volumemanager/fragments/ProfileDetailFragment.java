@@ -115,6 +115,7 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 	ImageView startVolumeImageView, endVolumeImageView;
 
 	boolean mIsNewProfile = false;
+    boolean mIsSaveGeofence = true;
 
     int mProfileType;
 
@@ -665,6 +666,8 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 
             if(mGeofenceManager != null) {
 
+                //Set geofence flag for result message
+                mIsSaveGeofence = false;
                 mGeofenceManager.removeGeofence(this,requestId);
             }
         }
@@ -734,8 +737,10 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
                 Log.e(TAG,"saveSettings() Location key is NOT null");
                 ProfileManager.updateLocation(getActivity(),mProfile.getLocation(),mProfile.getLocationKey());
             }
-
-
+            //Set flag for geofence result
+            mIsSaveGeofence = true;
+            //Create/Update the Geofence
+            mGeofenceManager.saveGeofence(this,mProfile);
 
         }
 
@@ -854,6 +859,13 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
     @Override
     public void onResult(Status status) {
 
-        GeofenceManager.setGeofenceResult(getActivity(),status,getString(R.string.geofence_deleted));
+        String msg;
+
+        if(mIsSaveGeofence)
+            msg = getString(R.string.geofence_saved);
+        else
+            msg = getString(R.string.geofence_deleted);
+
+        GeofenceManager.setGeofenceResult(getActivity(),status,msg);
     }
 }
