@@ -149,7 +149,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
                              Bundle savedInstanceState) {
         View view;
 
-        view = inflater.inflate(R.layout.fragment_profile_list, container, false);
+        view = inflater.inflate(R.layout.fragment_main, container, false);
 
         //Empty ListView view
         Button newProfileButton = (Button) view.findViewById(R.id.emptyButtonAddProfile);

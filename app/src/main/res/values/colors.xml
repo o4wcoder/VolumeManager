@@ -18,5 +18,8 @@
     <color name="geofence_red_color">#40ff5252</color>
     <color name="text_tab_selected">#FFFFFFFF</color>
     <color name="text_tab_unselected">#AAFFFFFF</color>
+
+    <color name="sound_control_panel_background">#455A64</color>
+    <color name="sound_control_panel_text">#90A4AE</color>
   
 </resources>

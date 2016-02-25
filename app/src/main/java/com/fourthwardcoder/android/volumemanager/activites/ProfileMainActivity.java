@@ -65,8 +65,8 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
 
 		//Create TabLayout for the Profiles (Basic and Location)d
 		mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
-		mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.time_tab)));
-		mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.location_tab)));
+		mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.time_tab)).setIcon(R.drawable.ic_action_alarm_light));
+		mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.location_tab)).setIcon(R.drawable.ic_place_light));
 		mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
 		//Create ViewPager to swipe between the tabs

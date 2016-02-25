@@ -678,14 +678,14 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
         switch(volumeType) {
 
             case VOLUME_OFF:
-                 return R.drawable.ic_volume_off;
+                 return R.drawable.ic_volume_off_white;
             case VOLUME_VIBRATE:
-                 return R.drawable.ic_vibration;
+                 return R.drawable.ic_vibration_white;
             case VOLUME_RING:
-                return R.drawable.ic_volume_up;
+                return R.drawable.ic_volume_up_white;
             default:
             //Something went wrong if we get here.
-            return R.drawable.ic_volume_off;
+            return R.drawable.ic_volume_off_white;
 
         }
     }

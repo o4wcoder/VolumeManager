@@ -50,7 +50,8 @@
             android:name=".activites.LocationMapActivity"
             android:label="@string/location_settings" 
             android:configChanges="orientation|screenSize"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activites.ProfileMainActivity" />
