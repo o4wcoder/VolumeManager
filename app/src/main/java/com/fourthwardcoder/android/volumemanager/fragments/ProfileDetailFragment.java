@@ -271,8 +271,7 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
                  if(setting) {
                 	 //Turn Day off
                 	daysOfTheWeek.add((int) v.getTag(), false);
-
-     	        	textView.setTextColor(Color.parseColor("#000000"));
+                     textView.setTextColor(getResources().getColor(R.color.app_primary_text_dark));
                      v.setBackground(getResources().getDrawable(R.drawable.round_button_off));
                  }
                  else {

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- detail profile dimens -->
     <dimen name="day_button_size">48dp</dimen>
     <dimen name="day_button_text_size">30sp</dimen>
+
+    <dimen name="start_end_time_text_size">80sp</dimen>
 </resources>

@@ -1,11 +1,9 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="${relativePackage}.${activityClass}">
+    android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -41,34 +39,62 @@
                 android:minHeight="?attr/actionBarSize"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-            <View
+            <android.support.v4.widget.Space
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1" />
         </LinearLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
 
+        <!-- This is used as a strut to create two columns in our RelativeLayout -->
+        <android.support.v4.widget.Space
+            android:id="@+id/layout_center"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_centerInParent="true" />
 
         <android.support.v4.view.ViewPager
             android:id="@+id/pager"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_alignEnd="@id/layout_center"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignRight="@id/layout_center"
             android:layout_below="@id/appbar"
-            android:layout_weight="1" />
+            tools:layout="@android:layout/list_content"
+            android:choiceMode="singleChoice" />
 
-        <FrameLayout
-            android:id="@+id/profile_detail_container"
-            android:layout_width="0dp"
+        <!-- This is used to give the card the appropriate margin
+     list_item_extra_padding +
+     abc_list_item_padding_horizontal_material -->
+        <android.support.v4.widget.Space
+            android:id="@+id/cardviewAligner"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1">
-
-        </FrameLayout>
-    </LinearLayout>
+            android:layout_alignLeft="@id/layout_center"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:layout_alignStart="@id/layout_center"
+            android:elevation="@dimen/appbar_elevation"
+            android:layout_marginRight="@dimen/list_item_extra_padding"
+            android:layout_marginEnd="@dimen/list_item_extra_padding"
+            />
+        <android.support.v7.widget.CardView
+            android:id="@+id/profile_detail_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignLeft="@id/cardviewAligner"
+            android:layout_alignRight="@id/cardviewAligner"
+            android:layout_alignTop="@id/cardviewAligner"
+            android:layout_alignBottom="@id/cardviewAligner"
+            android:layout_marginRight="@dimen/abc_list_item_padding_horizontal_material"
+            android:layout_marginEnd="@dimen/abc_list_item_padding_horizontal_material"
+            android:layout_marginBottom="@dimen/detail_container_bottom_margin"
+            app:cardElevation="@dimen/detail_card_elevation"
+            app:cardPreventCornerOverlap="false"/>
 
 
     <FrameLayout
@@ -80,6 +106,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
+            android:layout_a
             android:layout_marginBottom="8dp"
             android:layout_marginRight="16dp"
             android:onClick="clickFAB"
@@ -91,4 +118,4 @@
             app:layout_anchorGravity="bottom|right|end"
             app:pressedTranslationZ="12dp" />
     </FrameLayout>
-</LinearLayout>
+</RelativeLayout>

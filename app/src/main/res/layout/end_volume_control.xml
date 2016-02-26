@@ -12,7 +12,7 @@
 
         android:gravity="center"
         android:padding="4dp"
-        android:textSize="48sp"
+        android:textSize="@dimen/start_end_time_text_size"
         android:text="8:00"
         android:fontFamily="sans-serif-light"
         android:textColor="@color/white"
