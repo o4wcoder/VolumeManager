@@ -6,4 +6,7 @@
     <dimen name="day_button_text_size">30sp</dimen>
 
     <dimen name="start_end_time_text_size">80sp</dimen>
+
+    <dimen name="volume_control_heading_text_size">26sp</dimen>
+    <dimen name="volume_control_top_bottom_margin">8dp</dimen>
 </resources>

@@ -106,15 +106,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
-            android:layout_a
-            android:layout_marginBottom="8dp"
-            android:layout_marginRight="16dp"
+
             android:onClick="clickFAB"
             android:src="@android:drawable/ic_input_add"
             android:tint="@android:color/white"
             app:borderWidth="0dp"
             app:elevation="6dp"
             app:fabSize="normal"
+            app:layout_anchor="@id/profile_detail_container"
             app:layout_anchorGravity="bottom|right|end"
             app:pressedTranslationZ="12dp" />
     </FrameLayout>

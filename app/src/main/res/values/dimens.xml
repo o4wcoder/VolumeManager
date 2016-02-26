@@ -10,12 +10,14 @@
     <!-- detail profile dimens -->
     <dimen name="day_button_size">38dp</dimen>
     <dimen name="day_button_text_size">20sp</dimen>
-
+    <dimen name="volume_control_heading_text_size">16sp</dimen>
     <dimen name="start_end_time_text_size">48sp</dimen>
-
+    <dimen name="volume_control_top_bottom_margin">4dp</dimen>
     <dimen name="appbar_elevation">4dp</dimen>
     <dimen name="list_item_extra_padding">0dp</dimen>
     <dimen name="detail_view_padding">@dimen/abc_list_item_padding_horizontal_material</dimen>
     <dimen name="detail_card_elevation">6dp</dimen>
     <dimen name="detail_container_bottom_margin">@dimen/detail_view_padding</dimen>
+
+
 </resources>

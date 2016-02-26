@@ -21,16 +21,16 @@
         android:id="@+id/start_volume_control_heading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
+        android:layout_marginBottom="@dimen/volume_control_top_bottom_margin"
         android:text="@string/start_volume_settings_time"
         android:textColor="@color/white"
-        android:textSize="16sp" />
+        android:textSize="@dimen/volume_control_heading_text_size" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginBottom="@dimen/volume_control_top_bottom_margin"
+        android:layout_marginTop="@dimen/volume_control_top_bottom_margin"
         android:orientation="horizontal" >
 
         <RadioGroup
@@ -67,8 +67,8 @@
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:layout_gravity="center_vertical"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginBottom="@dimen/volume_control_top_bottom_margin"
+            android:layout_marginTop="@dimen/volume_control_top_bottom_margin"
             android:gravity="center_vertical"
             android:paddingLeft="8dp"
             android:text="(3/7)"
@@ -80,7 +80,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="4dp">
+        android:layout_marginBottom="@dimen/volume_control_top_bottom_margin">
 
         <ImageView
             android:id="@+id/volumeStartImageView"

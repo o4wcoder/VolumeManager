@@ -24,25 +24,24 @@
         android:id="@+id/end_volume_control_heading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginBottom="@dimen/volume_control_top_bottom_margin"
+        android:layout_marginTop="@dimen/volume_control_top_bottom_margin"
         android:padding="4dp"
         android:text="@string/end_volume_settings_time"
-        android:textSize="16sp"
+        android:textSize="@dimen/volume_control_heading_text_size"
         android:textColor="@color/white"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginBottom="@dimen/volume_control_top_bottom_margin"
+        android:layout_marginTop="@dimen/volume_control_top_bottom_margin"
         android:orientation="horizontal" >
 
         <RadioGroup
             android:id="@+id/endVolumeRadioGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:orientation="horizontal" >
 
             <RadioButton
@@ -73,8 +72,8 @@
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:layout_gravity="center_vertical"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginBottom="@dimen/volume_control_top_bottom_margin"
+            android:layout_marginTop="@dimen/volume_control_top_bottom_margin"
             android:gravity="center_vertical"
             android:paddingLeft="8dp"
             android:text="(3/7)"
