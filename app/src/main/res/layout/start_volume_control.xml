@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="16dp"
     android:id="@+id/start_volume_control_pane">
@@ -22,6 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/volume_control_top_bottom_margin"
+        android:padding="4dp"
         android:text="@string/start_volume_settings_time"
         android:textColor="@color/white"
         android:textSize="@dimen/volume_control_heading_text_size" />

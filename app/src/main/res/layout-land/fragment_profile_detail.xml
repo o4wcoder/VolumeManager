@@ -12,39 +12,46 @@
         android:focusableInTouchMode="true"
         android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:minHeight="?attr/actionBarSize">
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:minHeight="?attr/actionBarSize">
+
+            </android.support.v7.widget.Toolbar>
 
             <EditText
                 android:id="@+id/profileTitleTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="?attr/actionBarSize"
-                android:textSize="20sp"
-                android:textColor="@color/app_primary_text_dark"
+                android:layout_marginLeft="40dp"
                 android:gravity="left|bottom"
                 android:hint="@string/title_hint"
                 android:maxLength="20"
                 android:singleLine="true"
+                android:textColor="@color/app_primary_text_dark"
+                android:textSize="20sp"
                 android:transitionName="@string/trans_profile_title"
                 android:background="@null"/>
 
+        </RelativeLayout>
 
-        </android.support.v7.widget.Toolbar>
-
-        <include layout="@layout/profile_detail_top_pane"
+        <include
+            layout="@layout/profile_detail_top_pane"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
-        <include layout="@layout/profile_detail_bottom_pane"
+        <include
+            layout="@layout/profile_detail_bottom_pane"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
     </LinearLayout>
 </ScrollView>
