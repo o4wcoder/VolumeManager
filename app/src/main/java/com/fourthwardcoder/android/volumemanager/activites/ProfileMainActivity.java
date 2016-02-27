@@ -192,6 +192,7 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
             //Pass profile of first list item
             Bundle args = new Bundle();
             args.putParcelable(EXTRA_PROFILE,profile);
+            args.putInt(EXTRA_PROFILE_TYPE, mTabLayout.getSelectedTabPosition());
 
             ProfileDetailFragment fragment = new ProfileDetailFragment();
             fragment.setArguments(args);
