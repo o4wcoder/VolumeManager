@@ -421,7 +421,6 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
 
         }
 
-        if(mProfileType == TIME_PROFILE_LIST)
             Log.e(TAG, "onLoadFinished: Number of profiles = " + profileList.size());
 
         if (getActivity() != null && listview != null && profileList != null) {
@@ -437,7 +436,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
 
             //If in 2 pane mode, set first profile in list to detail pane
             if(profileList.size() > 0 )
-                ((Callback)getActivity()).onLoadFinished(profileList.get(0));
+                ((Callback)getActivity()).onLoadFinished(profileList.get(0),mProfileType);
         }
     }
 
@@ -521,6 +520,6 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
 
         void onItemSelected(Profile profile, int profileType, TextView textView);
 
-        void onLoadFinished(Profile profile);
+        void onLoadFinished(Profile profile, int profileType);
     }
 }

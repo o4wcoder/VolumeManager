@@ -44,6 +44,8 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
 	TabLayout mTabLayout;
     FloatingActionButton mFloatingActionButton;
 	boolean mTwoPane;
+    Profile mFirstTimeProfile = null;
+    Profile mFirstLocationProfile = null;
     
 	
 	@Override
@@ -83,6 +85,12 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
 				//mProfileType = tab.getPosition();
 				Log.e(TAG,"Got tab " + tab.getPosition());
 				setFABVisibility();
+
+                //Change detail fragment to first in list
+                if(tab.getPosition() == TIME_PROFILE_LIST)
+                    setTwoFrameDetailFragment(mFirstTimeProfile,TIME_PROFILE_LIST);
+                else
+                    setTwoFrameDetailFragment(mFirstLocationProfile,LOCATION_PROFILE_LIST);
             }
 
             @Override
@@ -146,6 +154,33 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
         }
 	}
 
+    private void setTwoFrameDetailFragment(Profile profile, int profileType) {
+
+        if(mTwoPane) {
+            if(profileType == mTabLayout.getSelectedTabPosition()) {
+
+                if(profile != null) {
+
+                    //Pass profile of first list item
+                    Bundle args = new Bundle();
+                    args.putParcelable(EXTRA_PROFILE, profile);
+                    //  Log.e(TAG, "onLoadFinished() setting profile " + profile.getTitle() + " at tab pos " + mTabLayout.getSelectedTabPosition());
+                    args.putInt(EXTRA_PROFILE_TYPE, mTabLayout.getSelectedTabPosition());
+
+                    ProfileDetailFragment fragment = new ProfileDetailFragment();
+                    fragment.setArguments(args);
+
+                    //Set first movie in detail pane. Needed to use "commitAllowingStateLoss"
+                    //instead of just "commit" because calling this directly when the loader
+                    //was done causes an "illegal state exception"
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.profile_detail_container, fragment, DETAILFRAGMENT_TAG)
+                            .commitAllowingStateLoss();
+                }
+            }
+        }
+    }
+
     @Override
     public void onListViewChange() {
 
@@ -185,24 +220,14 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
 	}
 
     @Override
-    public void onLoadFinished(Profile profile) {
+    public void onLoadFinished(Profile profile,int profileType) {
+        Log.e(TAG, "onLoadFinished() setting profile " + profile.getTitle() + " at tab pos " + mTabLayout.getSelectedTabPosition() + " on profile type " + profileType);
 
-        if(mTwoPane) {
+        if(profileType == TIME_PROFILE_LIST)
+            mFirstTimeProfile = profile;
+        else
+            mFirstLocationProfile = profile;
 
-            //Pass profile of first list item
-            Bundle args = new Bundle();
-            args.putParcelable(EXTRA_PROFILE,profile);
-            args.putInt(EXTRA_PROFILE_TYPE, mTabLayout.getSelectedTabPosition());
-
-            ProfileDetailFragment fragment = new ProfileDetailFragment();
-            fragment.setArguments(args);
-
-            //Set first movie in detail pane. Needed to use "commitAllowingStateLoss"
-            //instead of just "commit" because calling this directly when the loader
-            //was done causes an "illegal state exception"
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.profile_detail_container, fragment, DETAILFRAGMENT_TAG)
-                    .commitAllowingStateLoss();
-        }
+        setTwoFrameDetailFragment(profile,profileType);
     }
 }
