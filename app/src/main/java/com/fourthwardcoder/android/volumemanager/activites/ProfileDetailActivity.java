@@ -56,6 +56,9 @@ public class ProfileDetailActivity extends AppCompatActivity implements Constant
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.profile_detail_container, fragment)
                         .commit();
+
+                // Being here means we are in animation mode
+                //supportPostponeEnterTransition();
             }
 
 

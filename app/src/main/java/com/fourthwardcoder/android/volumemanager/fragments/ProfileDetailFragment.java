@@ -124,8 +124,13 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
     private LocationRequest mLocationRequest;
     GeofenceManager mGeofenceManager;
 
-    public void ProfileDetailFragment() {
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+
     }
 	/*******************************************************/
 	/*                  Override Methods                   */
@@ -171,6 +176,7 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
             mIsNewProfile = savedInstanceState.getBoolean(EXTRA_IS_NEW_PROFILE);
             Log.e(TAG,"Saved mProfile type " + mProfileType);
         }
+
         //Setup Toolbar
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         final Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
@@ -512,11 +518,10 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 
 		//Inflate menu Items
         if(getActivity() instanceof ProfileDetailActivity) {
-            Log.e(TAG,"onCreateOptionsMenu(): portrait mode");
+            Log.e(TAG, "onCreateOptionsMenu(): portrait mode");
             inflater.inflate(R.menu.fragment_profile_detail_menu, menu);
 
             mToolbarMenu = menu;
-            setSaveMenu();
         }
         else {
             Log.e(TAG,"onCreateOptionsMenu(): In two pane, clean and rebuild fragment menu");
@@ -537,6 +542,8 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 
             }
         }
+
+        setSaveMenu();
 		
 	}
 	
@@ -582,7 +589,9 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
                         R.string.toast_text, Toast.LENGTH_SHORT);
                 toast.show();
 
-                getActivity().finish();
+                //Only kill the activity if we are in portrait mode
+                if(getActivity() instanceof ProfileDetailActivity)
+                   getActivity().finish();
                 return true;
             case R.id.menu_item_delete_profile:
 

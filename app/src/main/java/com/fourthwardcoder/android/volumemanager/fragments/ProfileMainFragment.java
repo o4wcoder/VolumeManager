@@ -95,7 +95,6 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.e(TAG, "onCreate()");
-       // setHasOptionsMenu(true);
 
         //retain the instance on rotation
         setRetainInstance(true);

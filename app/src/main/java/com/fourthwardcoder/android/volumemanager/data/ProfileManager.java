@@ -30,7 +30,7 @@ public class ProfileManager implements Constants{
     {
         Intent i = new Intent(activity,ProfileDetailActivity.class);
         i.putExtra(EXTRA_PROFILE_TYPE,profileType);
-        activity.startActivityForResult(i, 0);
+        activity.startActivityForResult(i,0);
     }
 
 
