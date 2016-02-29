@@ -3,12 +3,9 @@ package com.fourthwardcoder.android.volumemanager.fragments;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.UUID;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -33,7 +30,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TableRow;
@@ -46,9 +42,9 @@ import android.widget.TextView;
 import com.fourthwardcoder.android.volumemanager.R;
 //import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
 import com.fourthwardcoder.android.volumemanager.activites.LocationMapActivity;
+import com.fourthwardcoder.android.volumemanager.activites.ProfileDetailActivity;
 import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
 import com.fourthwardcoder.android.volumemanager.adapters.LocationProfileListAdapter;
-import com.fourthwardcoder.android.volumemanager.data.ProfileContract;
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
@@ -127,27 +123,24 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     GeofenceManager mGeofenceManager;
-	
+
+    public void ProfileDetailFragment() {
+        setHasOptionsMenu(true);
+    }
 	/*******************************************************/
 	/*                  Override Methods                   */
 	/*******************************************************/
-	@Override
-	public void onCreate(Bundle saveInstanceState) {
-		super.onCreate(saveInstanceState);
-		Log.e(TAG,"onCreate");
-		setHasOptionsMenu(true);
-		
-		//Change status bar color
-		Util.setStatusBarColor(getActivity());
-		
-		//Get Fragment arguments and pull out ID of profile
-		//Intent intent = getActivity().getIntent();
+    @SuppressLint("ResourceAsColor")
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 
-
+        View view = inflater.inflate(R.layout.fragment_profile_detail, container, false);
+        Log.e(TAG,"onCreateView()");
 
         //First check if we have don't have anything in saveInstanceState from a rotation
-        if(saveInstanceState == null) {
-           Log.e(TAG,"No saved vars");
+        if(savedInstanceState == null) {
+            Log.e(TAG,"No saved vars");
             Bundle arguments = getArguments();
             if(arguments != null) {
                 // mProfileType = intent.getIntExtra(EXTRA_PROFILE_TYPE,TIME_PROFILE_LIST);
@@ -173,62 +166,26 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
         else {
             Log.e(TAG,"Saved vars");
             //Restore Profile from rotation.
-            mProfile = saveInstanceState.getParcelable(EXTRA_PROFILE);
-            mProfileType = saveInstanceState.getInt(EXTRA_PROFILE_TYPE);
-			mIsNewProfile = saveInstanceState.getBoolean(EXTRA_IS_NEW_PROFILE);
+            mProfile = savedInstanceState.getParcelable(EXTRA_PROFILE);
+            mProfileType = savedInstanceState.getInt(EXTRA_PROFILE_TYPE);
+            mIsNewProfile = savedInstanceState.getBoolean(EXTRA_IS_NEW_PROFILE);
             Log.e(TAG,"Saved mProfile type " + mProfileType);
         }
-
-        //Get Location if this is a location profile
-        if(mProfileType == LOCATION_PROFILE_LIST) {
-
-            //Get current location if there is not location set
-                Log.e(TAG,"Creating Google API and Location requests");
-                //Build Google API Client
-                mGoogleApiClient = new GoogleApiClient.Builder(getActivity().getApplicationContext())
-                        .addConnectionCallbacks(this)
-                        .addOnConnectionFailedListener(this)
-                        .addApi(LocationServices.API)
-                        .build();
-
-                // Create the LocationRequest object
-                mLocationRequest = LocationRequest.create()
-                        .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                        .setInterval(10 * 1000)        // 10 seconds, in milliseconds
-                        .setFastestInterval(1 * 1000); // 1 second, in milliseconds
-        }
-
-	}
-	
-	@SuppressLint("ResourceAsColor")
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, 
-			Bundle savedInstanceState){
-				
-		View view = inflater.inflate(R.layout.fragment_profile_detail, container, false);
-
-		//Enable app icon to work as button and display caret
-//		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-//			if(NavUtils.getParentActivityName(getActivity()) != null) {
-//				getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
-//			}
-//		}
-
         //Setup Toolbar
-        AppCompatActivity activity = (AppCompatActivity)getActivity();
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
         final Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        if(toolbar != null) {
+
+        if (toolbar != null) {
             activity.setSupportActionBar(toolbar);
             activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-		//Get volume icons
-		startVolumeImageView = (ImageView)view.findViewById(R.id.volumeStartImageView);
-		endVolumeImageView = (ImageView)view.findViewById(R.id.volumeEndImageView);
-	    /*
+        //Get volume icons
+        startVolumeImageView = (ImageView) view.findViewById(R.id.volumeStartImageView);
+        endVolumeImageView = (ImageView) view.findViewById(R.id.volumeEndImageView);
+        /*
 	     * Setup TextViews                        
 	     */
-		mTitleTextView = (TextView)view.findViewById(R.id.profileTitleTextView);
-		mTitleTextView.setText(mProfile.getTitle());
+        mTitleTextView = (TextView) view.findViewById(R.id.profileTitleTextView);
         mTitleTextView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -237,7 +194,7 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                 setSaveMenu();
+                setSaveMenu();
             }
 
             @Override
@@ -246,257 +203,284 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
             }
         });
 
-		
-	    startTimeTextView = (TextView)view.findViewById(R.id.startTimeTextView);
+
+        startTimeTextView = (TextView) view.findViewById(R.id.startTimeTextView);
         //Set up Ring Volume TextView
-	    startRingVolumeTextView = (TextView)view.findViewById(R.id.startRingVolumeTextView);
-	    //Set up End Time TextView
-	    endTimeTextView = (TextView)view.findViewById(R.id.endTimeTextView);
-	    //Set up Ring Volume TextView
-	    endRingVolumeTextView = (TextView)view.findViewById(R.id.endRingVolumeTextView);
+        startRingVolumeTextView = (TextView) view.findViewById(R.id.startRingVolumeTextView);
+        //Set up End Time TextView
+        endTimeTextView = (TextView) view.findViewById(R.id.endTimeTextView);
+        //Set up Ring Volume TextView
+        endRingVolumeTextView = (TextView) view.findViewById(R.id.endRingVolumeTextView);
 	    
 	    /*
 	     * Setup Buttons                     
 	     */
-		View.OnClickListener dayButtonListener = new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
+        View.OnClickListener dayButtonListener = new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
                 ArrayList<Boolean> daysOfTheWeek = mProfile.getDaysOfTheWeek();
 
-                 Log.d(TAG,"Button tag: " + v.getTag());
-                 TextView textView = (TextView)v;
-                 boolean setting = daysOfTheWeek.get((int)v.getTag());
+                Log.d(TAG, "Button tag: " + v.getTag());
+                TextView textView = (TextView) v;
+                boolean setting = daysOfTheWeek.get((int) v.getTag());
 
-                 if(setting) {
-                	 //Turn Day off
-                	daysOfTheWeek.add((int) v.getTag(), false);
-                     textView.setTextColor(getResources().getColor(R.color.app_primary_text_dark));
-                     v.setBackground(getResources().getDrawable(R.drawable.round_button_off));
-                 }
-                 else {
-                	 //Turn Day on
-                	 daysOfTheWeek.add((int) v.getTag(), true);
-     	        	 textView.setTextColor(Color.parseColor("#ffffff"));
-                     v.setBackground(getResources().getDrawable(R.drawable.round_button));
-                 }
+                if (setting) {
+                    //Turn Day off
+                    daysOfTheWeek.add((int) v.getTag(), false);
+                    textView.setTextColor(getResources().getColor(R.color.app_primary_text_dark));
+                    v.setBackground(getResources().getDrawable(R.drawable.round_button_off));
+                } else {
+                    //Turn Day on
+                    daysOfTheWeek.add((int) v.getTag(), true);
+                    textView.setTextColor(Color.parseColor("#ffffff"));
+                    v.setBackground(getResources().getDrawable(R.drawable.round_button));
+                }
 
                 //Update days of the week in Profile
                 mProfile.setDaysOfTheWeek(daysOfTheWeek);
-                 
-                 
-			}
-		};
-		
-		TableRow daysRow = (TableRow)view.findViewById(R.id.daysTableRow);
-		for(int i = 0; i < daysRow.getChildCount(); i ++) {
-			Button button = (Button)daysRow.getChildAt(i);
-	        button.setText(Constants.daysButtonNames[i]);
-	        button.setOnClickListener(dayButtonListener);
-	        button.setTag(new Integer(i));
-	        
-	        boolean setting = mProfile.getDaysOfTheWeek().get(i);
-	        if(setting) {
-	        	//Turn Day on
-	        	button.setTextColor(Color.parseColor("#ffffff"));
-              //  button.setBackgroundColor(getResources().getColor(R.color.buttonColor));
-	        }
-	        else {
-	        	//Turn Day off
-	        	//button.setTextColor(R
-				//		.color.primary_material_dark);
-                button.setTextColor(Color.parseColor("#000000"));
-                Log.e(TAG,"turn off day");
-                button.setBackgroundColor(Color.TRANSPARENT);
-	        }
-	        	
-	        
-		}
-	    //Setup start time of volume control
-	  //  startTimeButton = (Button)view.findViewById(R.id.startTimeButton);
-	    startTimeTextView.setOnClickListener(new OnClickListener() {
-	    	@Override
-			public void onClick(View v) {
-				//Start Time Picker Dialog on CrimeFragment after clicking Time Button
-				android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
-				TimePickerFragment dialog = TimePickerFragment.newInstance(mProfile.getStartDate(),getString(R.string.start_time_dialog));
-				//Make VolumeManagerFragment the target fragment of the TimePickerFragment instance
-				dialog.setTargetFragment(ProfileDetailFragment.this, REQUEST_START_TIME);
-				dialog.show(fm, DIALOG_TIME);
-	    		
-	    	}
-	    });
-	    //Setup end time of volume control
-	   // endTimeButton = (Button)view.findViewById(R.id.endTimeButton);
-	    endTimeTextView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Start Time Picker Dialog on CrimeFragment after clicking Time Button
-                android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
-                TimePickerFragment dialog = TimePickerFragment.newInstance(mProfile.getEndDate(), getString(R.string.end_time_dialog));
-                //Make VolumeManagerFragment the target fragment of the TimePickerFragment instance
-                dialog.setTargetFragment(ProfileDetailFragment.this, REQUEST_END_TIME);
-                dialog.show(fm, DIALOG_TIME);
+
 
             }
-        });
+        };
+
+        startVolumeRadioGroup = (RadioGroup) view.findViewById(R.id.startVolumeRadioGroup);
+        endVolumeRadioGroup = (RadioGroup) view.findViewById(R.id.endVolumeRadioGroup);
+        startRingSeekBar = (SeekBar) view.findViewById(R.id.startRingSeekBar);
+        endRingSeekBar = (SeekBar) view.findViewById(R.id.endRingSeekBar);
+
+        //Set data if we have a profile object
+        if (mProfile != null) {
+            //Set Profile title
+            mTitleTextView.setText(mProfile.getTitle());
+
+            TableRow daysRow = (TableRow) view.findViewById(R.id.daysTableRow);
+            for (int i = 0; i < daysRow.getChildCount(); i++) {
+                Button button = (Button) daysRow.getChildAt(i);
+                button.setText(Constants.daysButtonNames[i]);
+                button.setOnClickListener(dayButtonListener);
+                button.setTag(new Integer(i));
+
+                boolean setting = mProfile.getDaysOfTheWeek().get(i);
+                if (setting) {
+                    //Turn Day on
+                    button.setTextColor(Color.parseColor("#ffffff"));
+                    //  button.setBackgroundColor(getResources().getColor(R.color.buttonColor));
+                } else {
+                    //Turn Day off
+                    //button.setTextColor(R
+                    //		.color.primary_material_dark);
+                    button.setTextColor(Color.parseColor("#000000"));
+                    Log.e(TAG, "turn off day");
+                    button.setBackgroundColor(Color.TRANSPARENT);
+                }
+
+
+            }
+            //Setup start time of volume control
+            //  startTimeButton = (Button)view.findViewById(R.id.startTimeButton);
+            startTimeTextView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Start Time Picker Dialog on CrimeFragment after clicking Time Button
+                    android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
+                    TimePickerFragment dialog = TimePickerFragment.newInstance(mProfile.getStartDate(), getString(R.string.start_time_dialog));
+                    //Make VolumeManagerFragment the target fragment of the TimePickerFragment instance
+                    dialog.setTargetFragment(ProfileDetailFragment.this, REQUEST_START_TIME);
+                    dialog.show(fm, DIALOG_TIME);
+
+                }
+            });
+            //Setup end time of volume control
+            // endTimeButton = (Button)view.findViewById(R.id.endTimeButton);
+            endTimeTextView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Start Time Picker Dialog on CrimeFragment after clicking Time Button
+                    android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
+                    TimePickerFragment dialog = TimePickerFragment.newInstance(mProfile.getEndDate(), getString(R.string.end_time_dialog));
+                    //Make VolumeManagerFragment the target fragment of the TimePickerFragment instance
+                    dialog.setTargetFragment(ProfileDetailFragment.this, REQUEST_END_TIME);
+                    dialog.show(fm, DIALOG_TIME);
+
+                }
+            });
 	    
 	    /*
 	     * Setup Radio Buttons                  
 	     */
-	    //Set up Ringer type Radio Buttons
-	    startVolumeRadioGroup = (RadioGroup)view.findViewById(R.id.startVolumeRadioGroup);
-	    startVolumeRadioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-	    
-			@Override
-			public void onCheckedChanged(RadioGroup group, int checkedId) {
-			       
-				if(checkedId == R.id.startOffRadio) {
-					mProfile.setStartVolumeType(VOLUME_OFF);
-					mProfile.setStartRingVolume(0);
-					Util.setSeekBarPosition(startRingSeekBar,startRingVolumeTextView,mProfile.getStartRingVolume(),Util.getMaxRingVolume(getActivity().getApplicationContext()));
-					
-				}
-				else if(checkedId == R.id.startVibrateRadio) {
-					mProfile.setStartVolumeType(VOLUME_VIBRATE);
-					mProfile.setStartRingVolume(0);
-					Util.setSeekBarPosition(startRingSeekBar,startRingVolumeTextView,mProfile.getStartRingVolume(),Util.getMaxRingVolume(getActivity().getApplicationContext()));
-				}
-				else {
-					mProfile.setStartVolumeType(VOLUME_RING);
-				}
+            //Set up Ringer type Radio Buttons
 
-                setVolumeIcon();
-			    
-			}
-	    	
-	    });
-	    //Set up Ringer type Radio Buttons
-	    endVolumeRadioGroup = (RadioGroup)view.findViewById(R.id.endVolumeRadioGroup);
-	    endVolumeRadioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
+            startVolumeRadioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
-                if (checkedId == R.id.endOffRadio) {
-                    mProfile.setEndVolumeType(VOLUME_OFF);
-                    mProfile.setEndRingVolume(0);
-                    Util.setSeekBarPosition(endRingSeekBar, endRingVolumeTextView, mProfile.getEndRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-                } else if (checkedId == R.id.endVibrateRadio) {
-                    mProfile.setEndVolumeType(VOLUME_VIBRATE);
-                    mProfile.setEndRingVolume(0);
-                    Util.setSeekBarPosition(endRingSeekBar, endRingVolumeTextView, mProfile.getEndRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
-                } else {
-                    mProfile.setEndVolumeType(VOLUME_RING);
+                    if (checkedId == R.id.startOffRadio) {
+                        mProfile.setStartVolumeType(VOLUME_OFF);
+                        mProfile.setStartRingVolume(0);
+                        Util.setSeekBarPosition(startRingSeekBar, startRingVolumeTextView, mProfile.getStartRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
+
+                    } else if (checkedId == R.id.startVibrateRadio) {
+                        mProfile.setStartVolumeType(VOLUME_VIBRATE);
+                        mProfile.setStartRingVolume(0);
+                        Util.setSeekBarPosition(startRingSeekBar, startRingVolumeTextView, mProfile.getStartRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
+                    } else {
+                        mProfile.setStartVolumeType(VOLUME_RING);
+                    }
+
+                    setVolumeIcon();
+
                 }
 
-                setVolumeIcon();
-            }
-        });
+            });
+            //Set up Ringer type Radio Buttons
+            endVolumeRadioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                    if (checkedId == R.id.endOffRadio) {
+                        mProfile.setEndVolumeType(VOLUME_OFF);
+                        mProfile.setEndRingVolume(0);
+                        Util.setSeekBarPosition(endRingSeekBar, endRingVolumeTextView, mProfile.getEndRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
+
+                    } else if (checkedId == R.id.endVibrateRadio) {
+                        mProfile.setEndVolumeType(VOLUME_VIBRATE);
+                        mProfile.setEndRingVolume(0);
+                        Util.setSeekBarPosition(endRingSeekBar, endRingVolumeTextView, mProfile.getEndRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
+                    } else {
+                        mProfile.setEndVolumeType(VOLUME_RING);
+                    }
+
+                    setVolumeIcon();
+                }
+            });
 	    
 	    /*
 	     * Setup SeekBars                    
 	     */
-	    //Set up Ringer SeekBar
-	    startRingSeekBar = (SeekBar)view.findViewById(R.id.startRingSeekBar);
-	    startRingSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+            //Set up Ringer SeekBar
+            startRingSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
-			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress,
-                                          boolean fromUser) {
-                Log.d(TAG,"Start Seek Bar progress " + progress);
-				
-				if(progress == 0)
-					 ((RadioButton)startVolumeRadioGroup.getChildAt(VOLUME_OFF)).setChecked(true);
-				else 
-					((RadioButton)startVolumeRadioGroup.getChildAt(VOLUME_RING)).setChecked(true);
-				
-				Util.setRingVolumeText(startRingVolumeTextView,progress,Util.getMaxRingVolume(getActivity().getApplicationContext()));
-				mProfile.setStartRingVolume(progress);
-
-                setVolumeIcon();
-			}
-			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {}
-			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {}
-	    });
-	    
-	    //Set up Ringer SeekBar
-	    endRingSeekBar = (SeekBar)view.findViewById(R.id.endRingSeekBar);
-	    endRingSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress,
-                                          boolean fromUser) {
-                if (progress == 0)
-                    ((RadioButton) endVolumeRadioGroup.getChildAt(VOLUME_OFF)).setChecked(true);
-                else
-                    ((RadioButton) endVolumeRadioGroup.getChildAt(VOLUME_RING)).setChecked(true);
-
-                Util.setRingVolumeText(endRingVolumeTextView, progress, Util.getMaxRingVolume(getActivity().getApplicationContext()));
-                mProfile.setEndRingVolume(progress);
-
-                setVolumeIcon();
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        });
-
-        //Location views
-        if(mProfileType == LOCATION_PROFILE_LIST) {
-
-            OnClickListener locationListener = new OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    startLocationMapActivity();
+                public void onProgressChanged(SeekBar seekBar, int progress,
+                                              boolean fromUser) {
+                    Log.d(TAG, "Start Seek Bar progress " + progress);
+
+                    if (progress == 0)
+                        ((RadioButton) startVolumeRadioGroup.getChildAt(VOLUME_OFF)).setChecked(true);
+                    else
+                        ((RadioButton) startVolumeRadioGroup.getChildAt(VOLUME_RING)).setChecked(true);
+
+                    Util.setRingVolumeText(startRingVolumeTextView, progress, Util.getMaxRingVolume(getActivity().getApplicationContext()));
+                    mProfile.setStartRingVolume(progress);
+
+                    setVolumeIcon();
                 }
-            };
 
-            mThumbnailImageView = (ImageView) view.findViewById(R.id.location_thumbnail);
-            mThumbnailImageView.setOnClickListener(locationListener);
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
 
-            mAddressTextView = (TextView) view.findViewById(R.id.address_textview);
-            mAddressTextView.setOnClickListener(locationListener);
-        }
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
+
+            //Set up Ringer SeekBar
+            endRingSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress,
+                                              boolean fromUser) {
+                    if (progress == 0)
+                        ((RadioButton) endVolumeRadioGroup.getChildAt(VOLUME_OFF)).setChecked(true);
+                    else
+                        ((RadioButton) endVolumeRadioGroup.getChildAt(VOLUME_RING)).setChecked(true);
+
+                    Util.setRingVolumeText(endRingVolumeTextView, progress, Util.getMaxRingVolume(getActivity().getApplicationContext()));
+                    mProfile.setEndRingVolume(progress);
+
+                    setVolumeIcon();
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
+
+            //Location views
+            if (mProfileType == LOCATION_PROFILE_LIST) {
+
+                OnClickListener locationListener = new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startLocationMapActivity();
+                    }
+                };
+
+                mThumbnailImageView = (ImageView) view.findViewById(R.id.location_thumbnail);
+                mThumbnailImageView.setOnClickListener(locationListener);
+
+                mAddressTextView = (TextView) view.findViewById(R.id.address_textview);
+                mAddressTextView.setOnClickListener(locationListener);
+            }
 
 	    /*
 	     * Set Default and Saved Settings
 	     */
-	    //Set default or saved radio button setting
-	    ((RadioButton)startVolumeRadioGroup.getChildAt(mProfile.getStartVolumeType())).setChecked(true);
-	    //Set default or saved radio button setting
-	    ((RadioButton)endVolumeRadioGroup.getChildAt(mProfile.getEndVolumeType())).setChecked(true);
+            //Set default or saved radio button setting
+            ((RadioButton) startVolumeRadioGroup.getChildAt(mProfile.getStartVolumeType())).setChecked(true);
+            //Set default or saved radio button setting
+            ((RadioButton) endVolumeRadioGroup.getChildAt(mProfile.getEndVolumeType())).setChecked(true);
 
 
-	    Util.setTimeForLargeTextView(getActivity(),mProfile.getStartDate(), startTimeTextView);
-	    Util.setTimeForLargeTextView(getActivity(),mProfile.getEndDate(), endTimeTextView);
-	    //Set Seekbar default
-	    Util.setSeekBarPosition(startRingSeekBar,startRingVolumeTextView,mProfile.getStartRingVolume(),Util.getMaxRingVolume(getActivity().getApplicationContext()));
-	    Util.setSeekBarPosition(endRingSeekBar,endRingVolumeTextView,mProfile.getEndRingVolume(),Util.getMaxRingVolume(getActivity().getApplicationContext()));
-	    startRingSeekBar.setMax(Util.getMaxRingVolume(getActivity().getApplicationContext()));
-	    endRingSeekBar.setMax(Util.getMaxRingVolume(getActivity().getApplicationContext()));
+            Util.setTimeForLargeTextView(getActivity(), mProfile.getStartDate(), startTimeTextView);
+            Util.setTimeForLargeTextView(getActivity(), mProfile.getEndDate(), endTimeTextView);
+            //Set Seekbar default
+            Util.setSeekBarPosition(startRingSeekBar, startRingVolumeTextView, mProfile.getStartRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
+            Util.setSeekBarPosition(endRingSeekBar, endRingVolumeTextView, mProfile.getEndRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
+            startRingSeekBar.setMax(Util.getMaxRingVolume(getActivity().getApplicationContext()));
+            endRingSeekBar.setMax(Util.getMaxRingVolume(getActivity().getApplicationContext()));
 
-		//Set Volume Icon
-        setVolumeIcon();
+            //Set Volume Icon
+            setVolumeIcon();
 
-        setLocationLayout(view);
+            setLocationLayout(view);
+        }
 
-		return view;
-	}
+        return view;
+    }
 
     @Override
     public void onStart() {
         super.onStart();
-        Log.e(TAG,"onStart");
+        Log.e(TAG, "onStart");
+
+        //Get Location if this is a location profile
+        if (mProfileType == LOCATION_PROFILE_LIST) {
+
+            //Get current location if there is not location set
+            Log.e(TAG, "Creating Google API and Location requests");
+            //Build Google API Client
+            mGoogleApiClient = new GoogleApiClient.Builder(getActivity().getApplicationContext())
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+
+            // Create the LocationRequest object
+            mLocationRequest = LocationRequest.create()
+                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                    .setInterval(10 * 1000)        // 10 seconds, in milliseconds
+                    .setFastestInterval(1 * 1000); // 1 second, in milliseconds
+        }
         //If the Google Client is null we are either a Time Profile or we already have the location
         //for a location profile
-        if(mGoogleApiClient != null)
+        if (mGoogleApiClient != null)
             mGoogleApiClient.connect();
     }
 
@@ -524,14 +508,35 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		//super.onCreateOptionsMenu(menu, inflater);
 
-		//Pass the resource ID of the menu and populate the Menu 
-		//instance with the items defined in the xml file
-		inflater.inflate(R.menu.toolbar_profile_detail_menu, menu);
 
-        mToolbarMenu = menu;
-        setSaveMenu();
+		//Inflate menu Items
+        if(getActivity() instanceof ProfileDetailActivity) {
+            Log.e(TAG,"onCreateOptionsMenu(): portrait mode");
+            inflater.inflate(R.menu.fragment_profile_detail_menu, menu);
+
+            mToolbarMenu = menu;
+            setSaveMenu();
+        }
+        else {
+            Log.e(TAG,"onCreateOptionsMenu(): In two pane, clean and rebuild fragment menu");
+
+            Toolbar toolbar = (Toolbar)getView().findViewById(R.id.toolbar);
+            if(toolbar != null) {
+                AppCompatActivity activity = (AppCompatActivity)getActivity();
+                activity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
+                //Clear menus
+                Log.e(TAG,"onCreateOptionsMenu(): Clear old menu, rebuild");
+                Menu toolbarMenu= toolbar.getMenu();
+                if(toolbarMenu != null)
+                    toolbarMenu.clear();
+
+                toolbar.inflateMenu(R.menu.fragment_profile_detail_menu);
+
+
+            }
+        }
 		
 	}
 	

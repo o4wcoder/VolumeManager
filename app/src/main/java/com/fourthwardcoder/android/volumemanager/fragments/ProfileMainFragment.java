@@ -95,7 +95,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.e(TAG, "onCreate()");
-        setHasOptionsMenu(true);
+       // setHasOptionsMenu(true);
 
         //retain the instance on rotation
         setRetainInstance(true);
@@ -309,15 +309,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
             mGoogleApiClient.disconnect();
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        //super.onCreateOptionsMenu(menu, inflater);
 
-        //Pass the resource ID of the menu and populate the Menu
-        //instance with the items defined in the xml file
-        inflater.inflate(R.menu.toolbar_profile_list_menu, menu);
-
-    }
 
     //Context Menu
     @Override
@@ -353,20 +345,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
         return super.onContextItemSelected(item);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        //Get menu option by it's ID
-        switch (item.getItemId()) {
 
-            case R.id.menu_item_settings:
-                Intent settingsIntent = new Intent(getActivity(), SettingsActivity.class);
-                startActivity(settingsIntent);
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
 
     @Override

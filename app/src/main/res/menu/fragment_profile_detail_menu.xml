@@ -9,8 +9,6 @@
         android:title="@string/delete_menu"
         app:showAsAction="never" />
 
-    <item android:id="@+id/menu_item_settings"
-        android:title="@string/settings_menu"
-        app:showAsAction="never" />
+ />
 
 </menu>

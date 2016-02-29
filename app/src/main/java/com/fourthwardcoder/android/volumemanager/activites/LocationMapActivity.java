@@ -1,24 +1,16 @@
 package com.fourthwardcoder.android.volumemanager.activites;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
 
-import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
-import com.fourthwardcoder.android.volumemanager.fragments.ProfileDetailFragment;
 //import com.fourthwardcoder.android.volumemanager.models.LocationProfile;
 //import com.fourthwardcoder.android.volumemanager.json.ProfileJSONManager;
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.fourthwardcoder.android.volumemanager.location.GeofenceManager;
-import com.fourthwardcoder.android.volumemanager.models.GeoFenceLocation;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -34,7 +26,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.content.Intent;
 import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import  com.google.android.gms.location.LocationListener;
 import android.os.Bundle;
@@ -42,19 +33,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class LocationMapActivity extends AppCompatActivity
 implements OnMapReadyCallback, OnMapLongClickListener, GoogleApiClient.ConnectionCallbacks,
@@ -222,7 +207,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants {
 		MenuInflater inflater = getMenuInflater();
 		//Pass the resource ID of the menu and populate the Menu 
 		//instance with the items defined in the xml file
-		inflater.inflate(R.menu.toolbar_profile_detail_menu, menu);
+		inflater.inflate(R.menu.fragment_profile_detail_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 
 	}
