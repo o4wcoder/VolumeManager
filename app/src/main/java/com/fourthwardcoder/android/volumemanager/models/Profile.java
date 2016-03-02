@@ -18,6 +18,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * Class Profile
+ * Author: Chris Hare
+ * Create 1/17/16
+ *
+ * Model to hold all data for a Volume Control Profile
+ *
+ */
 public class Profile implements Constants, Parcelable {
 
     /*****************************************************/
@@ -39,12 +47,10 @@ public class Profile implements Constants, Parcelable {
     private Date startDate;
     private Date endDate;
     private int alarmId;
-    //private boolean daysOfTheWeek[] = new boolean[DAYS_OF_THE_WEEK];
     private ArrayList<Boolean> daysOfTheWeek;
     private boolean inAlarm;
     private GeoFenceLocation location;
-    //key to locatoin data
-    private long locationKey;
+    private long locationKey;     //key to location data
 
     public Profile() {
 

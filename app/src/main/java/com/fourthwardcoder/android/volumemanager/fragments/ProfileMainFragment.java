@@ -71,10 +71,11 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
     private boolean mFirstRun = true;
     //ProfileListAdapter mProfileAdapter;
     BaseAdapter mProfileAdapter;
-    ListView listview;
+    ListView mListview;
     int mProfileType;
     GoogleApiClient mGoogleApiClient;
     GeofenceManager mGeofenceManager;
+    int mSelectedListItem = -1;
     /***************************************************/
 	/*                Override Methods                 */
 
@@ -162,8 +163,8 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
 
         });
 
-        listview = (ListView) view.findViewById(android.R.id.list);
-        ViewGroup headerView = (ViewGroup) inflater.inflate(R.layout.listview_header, listview, false);
+        mListview = (ListView) view.findViewById(android.R.id.list);
+        ViewGroup headerView = (ViewGroup) inflater.inflate(R.layout.listview_header, mListview, false);
         TextView headerTextView = (TextView) headerView.findViewById(R.id.profileHeaderTextView);
 
         if (mProfileType == TIME_PROFILE_LIST)
@@ -171,11 +172,11 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
         else
             headerTextView.setText(getString(R.string.location_profile_header));
 
-        listview.addHeaderView(headerView);
+        mListview.addHeaderView(headerView);
 
-        listview.setEmptyView(view.findViewById(android.R.id.empty));
+        mListview.setEmptyView(view.findViewById(android.R.id.empty));
 
-        listview.setOnItemClickListener(new OnItemClickListener() {
+        mListview.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
@@ -185,6 +186,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
 
                 Profile p = (Profile) parent.getItemAtPosition(position);
                 Log.d(TAG, "Got profile " + p.getTitle());
+                mSelectedListItem = position;
 
                 TextView textView = (TextView) view.findViewById(R.id.profileTitleTextView);
 
@@ -195,14 +197,14 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             //Use floating context menues for Froyo and Gingerbread
-            registerForContextMenu(listview);
+            registerForContextMenu(mListview);
         } else {
             //Use contextual action bar on Honeycomb and higher.
             //Setting choice to MULTIPLE_MODAL allows multiselect of items
-            listview.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+            mListview.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 
             //Set listener for context menu in action mode
-            listview.setMultiChoiceModeListener(new MultiChoiceModeListener() {
+            mListview.setMultiChoiceModeListener(new MultiChoiceModeListener() {
 
                 @Override
                 public boolean onActionItemClicked(android.view.ActionMode mode,
@@ -212,8 +214,8 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
 
                             ArrayList<String> requestIdList = new ArrayList<>();
                             //Delete selected profiles
-                            for (int i = listview.getCount() - 1; i > 0; i--) {
-                                if (listview.isItemChecked(i)) {
+                            for (int i = mListview.getCount() - 1; i > 0; i--) {
+                                if (mListview.isItemChecked(i)) {
 
                                     if(mProfileType == LOCATION_PROFILE_LIST) {
                                         requestIdList.add(((Profile)mProfileAdapter.getItem(i - 1)).getId().toString());
@@ -324,7 +326,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
         AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
         int position = info.position;
 
-        Profile profile = (Profile) listview.getItemAtPosition(position);
+        Profile profile = (Profile) mListview.getItemAtPosition(position);
         Log.e(TAG, "Deleting profile " + profile.getTitle());
 
         switch (item.getItemId()) {
@@ -401,7 +403,8 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
 
             Log.e(TAG, "onLoadFinished: Number of profiles = " + profileList.size());
 
-        if (getActivity() != null && listview != null && profileList != null) {
+
+        if (getActivity() != null && mListview != null && profileList != null) {
             Log.e(TAG,"onLoadFinished: Set adapter");
             //Store global copy
             mProfileList = profileList;
@@ -410,10 +413,10 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
             else
                 mProfileAdapter = new ProfileListAdapter(getActivity(), profileList);
 
-            listview.setAdapter(mProfileAdapter);
-
+            mListview.setAdapter(mProfileAdapter);
+            Log.e(TAG,"onLoadFinished(): Selected item index = " + mSelectedListItem);
             //If in 2 pane mode, set first profile in list to detail pane
-            if(profileList.size() > 0 )
+            if(profileList.size() > 0 && mSelectedListItem < 0)
                 ((Callback)getActivity()).onLoadFinished(profileList.get(0),mProfileType);
         }
     }
@@ -447,14 +450,6 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
             }
         }
     }
-
-//    private void updateGeofences() {
-//            if (mGoogleApiClient.isConnected()) {
-//                //Restart geofences now that the state has changed.
-//                mGeofenceManager.startGeofences(this);
-//            } else
-//                Log.e(TAG, "Connection to Google API is disconnected! Not good!");
-//    }
 
     @Override
     public void onToggleLocationIcon() {

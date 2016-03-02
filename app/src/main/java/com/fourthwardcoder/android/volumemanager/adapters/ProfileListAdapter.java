@@ -147,10 +147,6 @@ public class ProfileListAdapter extends ArrayAdapter<Profile> implements Constan
         notifyDataSetChanged();
         ((ProfileMainFragment.Callback)mContext).onListViewChange();
     }
-//    public interface Callback {
-//
-//        void onListViewChange();
-//    }
 
     //Class to hold different views of the listview. This helps
     //it run smoothly when scrolling

@@ -31,6 +31,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+/**
+ * Class: ProfileMainActivity
+ * Author: Chris Hare
+ * Created: 1/17/16
+ *
+ * Main Activity of the App. Contains the list of Time and Location Profiles.
+ *
+  */
 public class ProfileMainActivity extends AppCompatActivity implements ProfileMainFragment.Callback, Constants {
 	
 	/*********************************************************************/
@@ -42,7 +50,6 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
 	/*********************************************************************/
 	/*                         Local Data                                */
 	/*********************************************************************/
-	ArrayList<Fragment> fragList = new ArrayList<Fragment>();
 	TabLayout mTabLayout;
     FloatingActionButton mFloatingActionButton;
 	boolean mTwoPane;
@@ -65,7 +72,6 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
 		//Set toolbar
 		final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
-		//getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		//Create TabLayout for the Profiles (Basic and Location)d
 		mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -88,7 +94,7 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
 				Log.e(TAG,"Got tab " + tab.getPosition());
 				setFABVisibility();
 
-                //Change detail fragment to first in list
+                //Change detail fragment to first in list when changing tabs
                 if(tab.getPosition() == TIME_PROFILE_LIST)
                     setTwoFrameDetailFragment(mFirstTimeProfile,TIME_PROFILE_LIST);
                 else
@@ -107,11 +113,12 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
         });
 		
         mFloatingActionButton = (FloatingActionButton)findViewById(R.id.fab_new_profile);
-        //onListViewChange(mProfileType);
-	
+
+        //Set New Profile Floating Action Button Visibility
 		setFABVisibility();
 
         Log.e(TAG,"Check if two pane");
+        //See if we are in two pane tablet mode.
         if((findViewById(R.id.profile_detail_container) != null)) {
             Log.e(TAG,"Got two pane!");
             mTwoPane = true;
@@ -157,29 +164,39 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
                 Intent settingsIntent = new Intent(this, SettingsActivity.class);
                 startActivity(settingsIntent);
                 return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    public void clickFAB(View view) {
+    /******************************************************************************/
+    /*                             Private Methods                                */
+    /******************************************************************************/
 
-        ProfileManager.newProfile(this,mTabLayout.getSelectedTabPosition());
-    }
-
+    /**
+     * setFABVisibility()
+     *
+     * Sets the visiblility of the New Profile Floating Action button. It is visible if there
+     * are other profiles in the list. If not, the emtpy view is displayed and used to
+     * create a new profile.
+     */
     private void setFABVisibility() {
-		//Log.e(TAG,"!!!! The Listview Changed again!!!!, Selected tab: " + mTabLayout.getSelectedTabPosition());
 		if(ProfileManager.isDatabaseEmpty(this,mTabLayout.getSelectedTabPosition())) {
             mFloatingActionButton.setVisibility(View.INVISIBLE);
-            Log.e(TAG,"FAB invisible");
         }
 		else {
             mFloatingActionButton.setVisibility(View.VISIBLE);
-            Log.e(TAG, "FAB visible");
         }
 	}
 
+    /**
+     * setTwoFrameDetailFragment()
+     *
+     * Sets up the detail profile fragment if in two pane tablet mode
+     *
+     * @param profile Profile object to send to the detail fragment
+     * @param profileType profile type (Time/Location)
+     */
     private void setTwoFrameDetailFragment(Profile profile, int profileType) {
 
         if(mTwoPane) {
@@ -196,7 +213,7 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
                     ProfileDetailFragment fragment = new ProfileDetailFragment();
                     fragment.setArguments(args);
 
-                    //Set first movie in detail pane. Needed to use "commitAllowingStateLoss"
+                    //Set first profile in detail pane. Needed to use "commitAllowingStateLoss"
                     //instead of just "commit" because calling this directly when the loader
                     //was done causes an "illegal state exception"
                     getSupportFragmentManager().beginTransaction()
@@ -207,12 +224,46 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
         }
     }
 
+    /*****************************************************************************/
+    /*                          Public Methods                                   */
+    /*****************************************************************************/
+
+    /**
+     * clickFAB()
+     *
+     * Callback Listener for New Profile Floating Action Button. Creates a new profile
+     * when selected.
+     *
+     * @param view View that was clicked
+     */
+    public void clickFAB(View view) {
+
+        ProfileManager.newProfile(this,mTabLayout.getSelectedTabPosition());
+    }
+
+    /**
+     * onListViewChange()
+     *
+     * Callback from ProfileMainFragment used when there is a data set change in the list of profiles.
+     * Need to check if the New Profile Floating Action button should be hidden or not.
+     */
     @Override
     public void onListViewChange() {
 
            setFABVisibility();
     }
 
+    /**
+     * onItemSelected()
+     *
+     * Callback from ProfileMainFragment used when a profile was selected from the list. If we are
+     * in two pane mode, then set the detail fragment of the profile selected.
+     *
+     * @param profile Profile selected in list
+     * @param profileType Type of profile (Time/Location)
+     * @param textView textView of the title of the profile. This is used for transitions in
+     *                 portrait mode.
+     */
 	@Override
 	public void onItemSelected(Profile profile, int profileType, TextView textView) {
 
@@ -237,6 +288,7 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
             intent.putExtra(EXTRA_PROFILE, profile);
             intent.putExtra(EXTRA_PROFILE_TYPE, profileType);
 
+            //Set transition for the pofile title between the list and the detail.
             ActivityOptionsCompat activityOptions =
                     ActivityOptionsCompat.makeSceneTransitionAnimation(this,
                             new Pair<View, String>(textView, getString(R.string.trans_profile_title)));
@@ -245,10 +297,20 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
         }
 	}
 
+    /**
+     * onLoadFinished()
+     *
+     * Callback from ProfileMainFragment used to let the activity know that the list of profiles
+     * has been loaded from the database.
+     * @param profile Profile to set in the detail fragment when first going into two pane mode. Most
+     *                likely the first profile in the list.
+     * @param profileType Type of profile (Time/Location)
+     */
     @Override
     public void onLoadFinished(Profile profile,int profileType) {
         Log.e(TAG, "onLoadFinished() setting profile " + profile.getTitle() + " at tab pos " + mTabLayout.getSelectedTabPosition() + " on profile type " + profileType);
 
+        //Store the first profile in the list so it can be set when changing tabs
         if(profileType == TIME_PROFILE_LIST)
             mFirstTimeProfile = profile;
         else
