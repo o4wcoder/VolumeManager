@@ -22,6 +22,9 @@ import com.fourthwardcoder.android.volumemanager.models.Profile;
  */
 public class ProfileDetailActivity extends AppCompatActivity implements Constants {
 
+    /*********************************************************************/
+	/*                          Constants                                */
+    /*********************************************************************/
     private final String TAG = ProfileDetailActivity.class.getSimpleName();
 
 	protected void onCreate(Bundle savedInstanceState) {

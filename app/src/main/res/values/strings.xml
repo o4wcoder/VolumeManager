@@ -76,6 +76,8 @@
     <string name="geofence_transition_exited">Exited</string>
     <string name="unknown_geofence_transition">Unknown Transition</string>
 
+    <string name="place_error">Place selection failed:</string>
+
     <!-- Preferences -->
     <string name="pref_time_notifications_label">Time Profile Notifications</string>
     <string name="pref_time_notifications_key" translatable="false">time_notifications</string>

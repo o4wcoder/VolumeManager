@@ -11,8 +11,12 @@ import com.fourthwardcoder.android.volumemanager.location.GeofenceManager;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
@@ -40,14 +44,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Class LocationMapActivity
  * Author: Chris Hare
+ * Created: 1/17/2016
+ *
+ * Activity that holds a Google map that the user can select a location.
  */
 public class LocationMapActivity extends AppCompatActivity
 implements OnMapReadyCallback, OnMapLongClickListener, GoogleApiClient.ConnectionCallbacks,
-GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants {
+GoogleApiClient.OnConnectionFailedListener, LocationListener, PlaceSelectionListener, Constants {
 
 	/******************************************************************/
 	/*                         Constants                              */
@@ -71,12 +79,6 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants {
 	private TextView cityTextView;
 	private Marker currentMarker;
 	private Circle currentCircle;
-	TextView radiusTextView;
-
-	//Geofence data
-	//private ArrayList<Geofence> geofenceList;
-	//private PendingIntent geofencePendingIntent;
-	GeofenceManager geofenceManager;
 
 	private Profile mProfile;
 	private LatLng currentLocation;
@@ -84,8 +86,6 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants {
     private Address currentAddress;
 	private String currentCity;
 	private float currentRadius;
-
-	//private LocationData currentLocationData;
 
 	/******************************************************************/
 	/*                  Activity Override Methods                     */
@@ -124,12 +124,21 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants {
                 Log.e(TAG,"Setting currentRadius = " + currentRadius);
 		}
 
+		//Get map fragment
 		MapFragment mapFragment = (MapFragment) getFragmentManager()
 				.findFragmentById(R.id.map);
 		mapFragment.getMapAsync(this);
 
-		addressTextView = (TextView)findViewById(R.id.mapAddressTextView);
+		// Retrieve the PlaceAutocompleteFragment.
+		PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+				getFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
+		// Register a listener to receive callbacks when a place has been selected or an error has
+		// occurred.
+		autocompleteFragment.setOnPlaceSelectedListener(this);
+
+        //Get Address and city textviews
+		addressTextView = (TextView)findViewById(R.id.mapAddressTextView);
 		cityTextView = (TextView)findViewById(R.id.mapCityTextView);
 
 		//Build Google API Client
@@ -148,6 +157,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants {
 
 		//geofenceManager = new GeofenceManager(this,mGoogleApiClient);
 
+        //Set up zoom to current position button
         FloatingActionButton zoomPhonePosition = (FloatingActionButton) findViewById(R.id.zoomPhonePositionButton);
         zoomPhonePosition.setOnClickListener(new OnClickListener() {
             @Override
@@ -164,8 +174,8 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants {
             }
         });
 
+        //Set up increase geofence radius button
 		FloatingActionButton increaseRadiusButton = (FloatingActionButton)findViewById(R.id.increaseRadiusButton);
-
 		increaseRadiusButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -180,8 +190,8 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants {
 
 		});
 
+        //Set up decrease geofence radius button
 		FloatingActionButton decreaseRadiusButton = (FloatingActionButton)findViewById(R.id.decreaseRadiusButton);
-
 		decreaseRadiusButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -194,7 +204,6 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants {
 			}
 
 		});
-
 
 	}
 
@@ -283,98 +292,9 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants {
 	public void onMapLongClick(LatLng latLng) {
 		//Store current LatLng
 
-		currentLocation = latLng;
-
-		addMarker();
-		setStreetAddress();
-		//zoomToCurrentLocation();
-
+        updateLocation(latLng);
 	}
 
-	private void addMarker() {
-
-		if(currentMarker != null)
-			currentMarker.remove();
-	//	Log.e(TAG,"Inside add Marker with title " + currentProfile.getTitle());
-		String markerTitle;
-
-
-		MarkerOptions options = new MarkerOptions()
-		.position(currentLocation)
-		.title(mProfile.getTitle());
-		currentMarker = map.addMarker(options);
-
-		drawGeofenceCircle();
-	}
-
-	private void drawGeofenceCircle() {
-
-		if(currentCircle != null)
-			currentCircle.remove();
-
-		if(currentLocation == null)
-			Log.i(TAG," current location is null!!!!");
-
-
-		Log.i(TAG," current radius is "+ currentRadius);
-
-		currentCircle = map.addCircle(new CircleOptions()
-		.center(currentLocation)
-		.radius(currentRadius)
-		.strokeColor(GEOFENCE_STROKE_COLOR)
-		.strokeWidth(5)
-		.fillColor(GEOFENCE_FILL_COLOR));
-
-
-	}
-	private void handleNewLocation() {
-
-		setStreetAddress();
-
-		//mMap.addMarker(new MarkerOptions().position(new LatLng(currentLatitude, currentLongitude)).title("Current Location"));
-		addMarker();
-		//map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-		zoomToCurrentLocation();
-	}
-
-	private void setStreetAddress() {
-
-		Address address;
-		try {
-			currentAddress = Util.getStreetAddress(this, currentLocation);
-			addressTextView.setText(currentAddress.getAddressLine(0));
-			Log.e(TAG,"address: " + currentAddress.toString());
-
-			currentCity = currentAddress.getLocality() + ", " + currentAddress.getAdminArea();
-			cityTextView.setText(currentCity);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			addressTextView.setText(getString(R.string.unknown_street_address));
-		}
-	}
-
-	private void zoomToCurrentLocation() {
-
-		Log.d(TAG,"Zooming to current location " + currentLocation.toString());
-		map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,
-				16));
-	}
-
-	private void saveLocation() {
-
-
-        //Update Location data
-        mProfile.getLocation().setLatLng(currentLocation);
-        mProfile.getLocation().setAddress(currentAddress.getAddressLine(0));
-        mProfile.getLocation().setCity(currentCity);
-        mProfile.getLocation().setFenceRadius(currentRadius);
-
-        Intent i = getIntent();
-        i.putExtra(EXTRA_PROFILE,mProfile);
-        setResult(RESULT_OK,i);
-
-        finish();
-	}
 
 	@Override
 	public void onLocationChanged(Location location) {
@@ -384,10 +304,6 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants {
 
 	}
 
-
-	/*************************************************************/
-	/*                GoogleApi Listener Methods                 */
-	/*************************************************************/
 	@Override
 	public void onConnectionFailed(ConnectionResult arg0) {
 		// TODO Auto-generated method stub
@@ -412,7 +328,135 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants {
 	public void onConnectionSuspended(int arg0) {}
 
 
+    @Override
+    public void onPlaceSelected(Place place) {
+
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(),
+                16));
+
+        updateLocation(place.getLatLng());
+    }
+
+    @Override
+    public void onError(Status status) {
+
+        Toast.makeText(this, getString(R.string.place_error) + status.getStatusMessage(),
+                Toast.LENGTH_SHORT).show();
+    }
+
+    /**************************************************************************************/
+    /*                                Private Methods                                     */
+    /**************************************************************************************/
+
+    /**
+     * Make changes to the data when the location has changed
+     * @param latLng new location to set
+     */
+    private void updateLocation(LatLng latLng) {
+        currentLocation = latLng;
+
+        addMarker(); //Add marker to new location
+        setStreetAddress(); //Update the street address
+    }
+
+    /**
+     * Add a marker on the map at selected location
+     */
+    private void addMarker() {
+
+        if(currentMarker != null)
+            currentMarker.remove();
+
+        MarkerOptions options = new MarkerOptions()
+                .position(currentLocation)
+                .title(mProfile.getTitle());
+        currentMarker = map.addMarker(options);
+
+        drawGeofenceCircle();
+    }
+
+    /**
+     * Draw a geofence circle around the lacation base on the radius set
+     */
+    private void drawGeofenceCircle() {
+
+        if(currentCircle != null)
+            currentCircle.remove();
+
+        if(currentLocation == null)
+            Log.i(TAG," current location is null!!!!");
 
 
+        Log.i(TAG, " current radius is " + currentRadius);
 
+        currentCircle = map.addCircle(new CircleOptions()
+                .center(currentLocation)
+                .radius(currentRadius)
+                .strokeColor(GEOFENCE_STROKE_COLOR)
+                .strokeWidth(5)
+                .fillColor(GEOFENCE_FILL_COLOR));
+
+
+    }
+
+    /**
+     * Make changes to data and map when a new location has been set
+     */
+    private void handleNewLocation() {
+
+        setStreetAddress();
+
+        //mMap.addMarker(new MarkerOptions().position(new LatLng(currentLatitude, currentLongitude)).title("Current Location"));
+        addMarker();
+        //map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        zoomToCurrentLocation();
+    }
+
+    /**
+     * Set the street address of the current location
+     */
+    private void setStreetAddress() {
+
+        Address address;
+        try {
+            currentAddress = Util.getStreetAddress(this, currentLocation);
+            addressTextView.setText(currentAddress.getAddressLine(0));
+            Log.e(TAG,"address: " + currentAddress.toString());
+
+            currentCity = currentAddress.getLocality() + ", " + currentAddress.getAdminArea();
+            cityTextView.setText(currentCity);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            addressTextView.setText(getString(R.string.unknown_street_address));
+        }
+    }
+
+    /**
+     * Zoom map camera to current location
+     */
+    private void zoomToCurrentLocation() {
+
+        Log.d(TAG, "Zooming to current location " + currentLocation.toString());
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,
+                16));
+    }
+
+    /**
+     * save any changes to the location or geofence radius
+     */
+    private void saveLocation() {
+
+
+        //Update Location data
+        mProfile.getLocation().setLatLng(currentLocation);
+        mProfile.getLocation().setAddress(currentAddress.getAddressLine(0));
+        mProfile.getLocation().setCity(currentCity);
+        mProfile.getLocation().setFenceRadius(currentRadius);
+
+        Intent i = getIntent();
+        i.putExtra(EXTRA_PROFILE,mProfile);
+        setResult(RESULT_OK,i);
+
+        finish();
+    }
 }
