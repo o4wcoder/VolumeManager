@@ -41,6 +41,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
+/**
+ * Class LocationMapActivity
+ * Author: Chris Hare
+ */
 public class LocationMapActivity extends AppCompatActivity
 implements OnMapReadyCallback, OnMapLongClickListener, GoogleApiClient.ConnectionCallbacks,
 GoogleApiClient.OnConnectionFailedListener, LocationListener, Constants {

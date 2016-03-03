@@ -19,11 +19,12 @@
         android:summaryOn="@string/pref_notifications_true"
         android:defaultValue="@string/pref_notifications_default"
         />
-
+<!--
     <ListPreference
         android:title="@string/pref_location_radius_units_label"
         android:key="@string/pref_location_radius_units_key"
         android:defaultValue="@string/pref_location_radius_units_meters"
         android:entryValues="@array/pref_units_values"
         android:entries="@array/pref_units_options" />
+-->
 </PreferenceScreen>

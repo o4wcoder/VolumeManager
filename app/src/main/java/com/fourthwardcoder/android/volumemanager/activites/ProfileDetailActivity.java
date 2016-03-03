@@ -13,12 +13,11 @@ import com.fourthwardcoder.android.volumemanager.models.GeoFenceLocation;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
 
 /**
- * VolumeManagerActivity
- * 
- * Activity for setting up a volume control
- * 
- * @author Chris Hare
- * 3/13/2015
+ * Class VolumeManagerActivity
+ * Author: Chris Hare
+ * Created: 3/13/2015
+ *
+ * Activity for holding the Fragment of the Profile's details
  *
  */
 public class ProfileDetailActivity extends AppCompatActivity implements Constants {
@@ -33,7 +32,7 @@ public class ProfileDetailActivity extends AppCompatActivity implements Constant
         Log.e(TAG, "onCreate()");
 		setContentView(R.layout.activity_profile_detail);
 
-
+        //If sent data here means we are in portrait mode. Pass along to fragment
         if(savedInstanceState == null) {
 
              Log.e(TAG,"Check for extras");

@@ -25,7 +25,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
 
         // For all preferences, attach an OnPreferenceChangeListener so the UI summary can be
         // updated when the preference changes.
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_location_radius_units_key)));
+       // bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_location_radius_units_key)));
     }
 
     /**
@@ -87,15 +87,6 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
-        if (key.equals(getString(R.string.pref_location_radius_units_key))) {
-
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    @Override
-    public Intent getParentActivityIntent() {
-        return super.getParentActivityIntent().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-    }
+   }
 
 }

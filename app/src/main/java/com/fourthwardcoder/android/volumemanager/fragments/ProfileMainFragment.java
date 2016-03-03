@@ -50,7 +50,13 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationServices;
 
-
+/**
+ * Class ProfileMainFragment
+ * Author: Chris Hare
+ * Created: 1/17/2016
+ *
+ * Fragment that loads the list of Profiles and shows them in a list
+ */
 public class ProfileMainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
         LocationProfileListAdapter.LocationAdapterCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status>, Constants {
@@ -69,18 +75,20 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
     /***************************************************/
     private ArrayList<Profile> mProfileList;
     private boolean mFirstRun = true;
-    //ProfileListAdapter mProfileAdapter;
     BaseAdapter mProfileAdapter;
     ListView mListview;
     int mProfileType;
     GoogleApiClient mGoogleApiClient;
     GeofenceManager mGeofenceManager;
     int mSelectedListItem = -1;
-    /***************************************************/
-	/*                Override Methods                 */
 
-    /***************************************************/
 
+    /**
+     * Create static instance of the main fragment so params can always be passed in when
+     * it is created.
+     * @param profileType Profile type (Time/Locattion)
+     * @return Instance of the ProfileMainFragment
+     */
     public static ProfileMainFragment newInstance(int profileType) {
 
         Bundle args = new Bundle();
@@ -135,15 +143,8 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
         else
             getLoaderManager().restartLoader(PROFILE_LOADER,null,this);
 
-        //Need to set the details view to the first movie when in 2 pane mode. Hit this
-        //situation when we first come up on a tablet in portrait and rotate to landscape
-//        if(mProfileList != null) {
-//            if (mProfileList.size() > 0) {
-//                Log.e(TAG, "onActivityCreated(): Calling on loadfinished");
-//                ((Callback) getActivity()).onLoadFinished(mProfileList.get(0));
-//            }
-//        }
     }
+
     @SuppressLint("NewApi")
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -347,8 +348,6 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
     }
 
 
-
-
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Log.e(TAG, "Inside onCreateLoader with profile type " + mProfileType);
@@ -484,9 +483,14 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
     }
 
     /*******************************************************************/
-	/*                        Public Methods                           */
-
+	/*                        Callback Interface                       */
     /*******************************************************************/
+
+    /**
+     * Interface Callback
+     *
+     * Methods used to callback from this fragment to its hostin Activity
+     */
     public interface Callback {
 
         void onListViewChange();
