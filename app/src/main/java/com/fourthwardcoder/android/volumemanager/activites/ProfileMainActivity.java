@@ -39,7 +39,8 @@ import android.widget.TextView;
  * Main Activity of the App. Contains the list of Time and Location Profiles.
  *
   */
-public class ProfileMainActivity extends AppCompatActivity implements ProfileMainFragment.Callback, Constants {
+public class ProfileMainActivity extends AppCompatActivity implements ProfileMainFragment.Callback,
+         Constants {
 	
 	/*********************************************************************/
 	/*                          Constants                                */
@@ -238,7 +239,7 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
      */
     public void clickFAB(View view) {
 
-        ProfileManager.newProfile(this,mTabLayout.getSelectedTabPosition());
+        newProfile(mTabLayout.getSelectedTabPosition());
     }
 
     /**
@@ -318,4 +319,26 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
 
         setTwoFrameDetailFragment(profile,profileType);
     }
+
+    @Override
+    public void newProfile(int profileType) {
+
+        if(mTwoPane) {
+            Bundle args = new Bundle();
+            args.putInt(EXTRA_PROFILE_TYPE, profileType);
+
+            ProfileDetailFragment fragment = new ProfileDetailFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.profile_detail_container, fragment, DETAILFRAGMENT_TAG)
+                    .commit();
+        }
+        else {
+            Intent i = new Intent(this,ProfileDetailActivity.class);
+            i.putExtra(EXTRA_PROFILE_TYPE,profileType);
+            startActivityForResult(i, 0);
+        }
+    }
+
 }

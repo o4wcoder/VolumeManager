@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- location map dimens -->
+    <dimen name="location_map_address_text_size">34sp</dimen>
+    <dimen name="location_map_city_text_size">20sp</dimen>
+
+</resources>

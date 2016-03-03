@@ -660,9 +660,10 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
                     if(mGeofenceManager != null)
                         deleteGeofence(mProfile.getId().toString());
                 }
-                ProfileManager.deleteProfile(getActivity(),mProfile);
+                ProfileManager.deleteProfile(getActivity(), mProfile);
 
-                getActivity().finish();
+                if(getActivity() instanceof ProfileDetailActivity)
+                   getActivity().finish();
             }
         })
         .setNegativeButton(getString(R.string.dialog_no), new DialogInterface.OnClickListener() {

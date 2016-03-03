@@ -49,4 +49,5 @@ public interface Constants {
 	
     //Notification Group
     String GROUP_NOTIFICATIONS = "group_notifications";
+
 }

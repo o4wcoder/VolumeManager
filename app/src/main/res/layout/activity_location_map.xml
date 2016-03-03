@@ -58,13 +58,14 @@
                     android:layout_height="wrap_content"
                     android:padding="8dp"
                     android:text="Address"
-                    android:textSize="20sp" />
+                    android:textSize="@dimen/location_map_address_text_size" />
 
                 <TextView
                     android:id="@+id/mapCityTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
+                    android:textSize="@dimen/location_map_city_text_size"
                     android:text="City" />
 
             </LinearLayout>
@@ -76,8 +77,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
         android:orientation="vertical"
+        android:layout_margin="16dp"
         app:layout_anchor="@id/addressDetailLayout"
         app:layout_anchorGravity="top|right|end">
 

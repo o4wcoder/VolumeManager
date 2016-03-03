@@ -68,7 +68,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
 
     //ID for Profile Loader
     private static final int PROFILE_LOADER = 0;
-
+    int NO_SELECT = -1;
 
     /***************************************************/
     /*                 Local Data                      */
@@ -80,7 +80,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
     int mProfileType;
     GoogleApiClient mGoogleApiClient;
     GeofenceManager mGeofenceManager;
-    int mSelectedListItem = -1;
+    int mSelectedListItem = NO_SELECT;
 
 
     /**
@@ -159,7 +159,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
             @Override
             public void onClick(View v) {
 
-                ProfileManager.newProfile(getActivity(), mProfileType);
+                ((Callback)getActivity()).newProfile(mProfileType);
             }
 
         });
@@ -223,6 +223,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
                                     }
 
                                     ProfileManager.deleteProfile(getActivity(), (Profile) mProfileAdapter.getItem(i - 1));
+                                    mSelectedListItem = NO_SELECT; //reset selected item
                                 }
                             }
 
@@ -339,6 +340,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
                 //Delete the profile from the DB
                 ProfileManager.deleteProfile(getActivity(), profile);
                 notifyListViewChanged();
+                mSelectedListItem = NO_SELECT; //reset selected item
 
                 return true;
 
@@ -498,5 +500,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
         void onItemSelected(Profile profile, int profileType, TextView textView);
 
         void onLoadFinished(Profile profile, int profileType);
+
+        void newProfile(int profileType);
     }
 }
