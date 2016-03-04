@@ -749,6 +749,7 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
             else {
                 //Updating existing location
                 Log.e(TAG,"saveSettings() Location key is NOT null");
+                Log.e(TAG,"saveSettings() Location latlng is " + mProfile.getLocation().getLatLng().toString());
                 ProfileManager.updateLocation(getActivity(),mProfile.getLocation(),mProfile.getLocationKey());
             }
             //Set flag for geofence result

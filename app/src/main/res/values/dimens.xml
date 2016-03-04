@@ -28,6 +28,7 @@
     <!-- location map dimens -->
     <dimen name="location_map_address_text_size">20sp</dimen>
     <dimen name="location_map_city_text_size">14sp</dimen>
+    <dimen name="location_map_places_top_margin">16dp</dimen>
 
 
 </resources>

@@ -126,6 +126,8 @@ public class ProfileManager implements Constants{
             cursor.moveToFirst();
             while(cursor.moveToNext()) {
                 Profile profile = new Profile(cursor);
+                //Pull Location Object out of DB and store in profile.
+                profile.setLocation(getLocation(context,profile.getLocationKey()));
                 profileList.add(profile);
             }
             return profileList;

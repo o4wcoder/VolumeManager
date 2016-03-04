@@ -46,6 +46,7 @@
         <!-- Use singleTop so when navigating back with home button, it keeps extra data from activity that called it -->
         <activity
             android:name=".activites.LocationMapActivity"
+            android:theme="@style/AppTheme.LocationMap"
             android:configChanges="orientation|screenSize"
             android:label="@string/location_settings"
             android:launchMode="singleTop"
@@ -58,7 +59,7 @@
         <activity
             android:name=".activites.SettingsActivity"
             android:label="@string/settings_menu"
-            android:theme="@style/SettingsTheme">
+            android:theme="@style/AppTheme.Settings">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activites.ProfileMainActivity" />

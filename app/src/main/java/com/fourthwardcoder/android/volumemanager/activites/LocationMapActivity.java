@@ -36,11 +36,9 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
@@ -95,15 +93,10 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, PlaceSelectionList
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_location_map);
 
-		final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		if(toolbar != null) {
-			setSupportActionBar(toolbar);
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		}
-
-		Util.setStatusBarColor(this);
+        Util.setStatusBarColor(this);
 
 		Intent intent = getIntent();
+
 		//First check if we have don't have anything in saveInstanceState from a rotation
 		if(savedInstanceState == null) {
 
@@ -114,14 +107,9 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, PlaceSelectionList
 			mProfile = savedInstanceState.getParcelable(EXTRA_PROFILE);
 		}
 
-
-        Log.e(TAG,"Check radius");
-
 		if(mProfile.getLocation() != null) {
                 currentLocation = mProfile.getLocation().getLatLng();
-                Log.e(TAG,"Location sent to Map " + currentLocation.toString());
                 currentRadius = mProfile.getLocation().getFenceRadius();
-                Log.e(TAG,"Setting currentRadius = " + currentRadius);
 		}
 
 		//Get map fragment
@@ -215,38 +203,6 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, PlaceSelectionList
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-
-		MenuInflater inflater = getMenuInflater();
-		//Pass the resource ID of the menu and populate the Menu 
-		//instance with the items defined in the xml file
-		inflater.inflate(R.menu.fragment_profile_detail_menu, menu);
-		return super.onCreateOptionsMenu(menu);
-
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle presses on the action bar items
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			if(NavUtils.getParentActivityName(this) != null) {
-				NavUtils.navigateUpFromSameTask(this);
-			}
-			return true;
-		case R.id.menu_item_save_profile:
-			saveLocation();
-			return true;
-		case R.id.menu_item_settings:
-			//Intent settingsIntent = new Intent(this,SettingsActivity.class);
-			//startActivity(settingsIntent);
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-
-	@Override
 	protected void onStart() {
 		super.onStart();
 		mGoogleApiClient.connect();
@@ -263,7 +219,13 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, PlaceSelectionList
 		}
 	}
 
+    @Override
+    public void onBackPressed() {
 
+        Log.e(TAG,"onBackPressed()");
+        saveLocation();
+        super.onBackPressed();
+    }
 
 	/*****************************************************************/
 	/*                 GoogleMap Listener Methods                     */
@@ -384,7 +346,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, PlaceSelectionList
             currentCircle.remove();
 
         if(currentLocation == null)
-            Log.i(TAG," current location is null!!!!");
+            Log.i(TAG, " current location is null!!!!");
 
 
         Log.i(TAG, " current radius is " + currentRadius);
@@ -417,7 +379,6 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, PlaceSelectionList
      */
     private void setStreetAddress() {
 
-        Address address;
         try {
             currentAddress = Util.getStreetAddress(this, currentLocation);
             addressTextView.setText(currentAddress.getAddressLine(0));
@@ -446,7 +407,6 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, PlaceSelectionList
      */
     private void saveLocation() {
 
-
         //Update Location data
         mProfile.getLocation().setLatLng(currentLocation);
         mProfile.getLocation().setAddress(currentAddress.getAddressLine(0));
@@ -455,8 +415,8 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, PlaceSelectionList
 
         Intent i = getIntent();
         i.putExtra(EXTRA_PROFILE,mProfile);
-        setResult(RESULT_OK,i);
+        setResult(RESULT_OK, i);
 
-        finish();
+       // finish();
     }
 }

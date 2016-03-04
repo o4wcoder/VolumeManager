@@ -8,6 +8,11 @@
         <item name="colorAccent">@color/app_accent_color</item>
     </style>
 
+    <style name="AppTheme.Main" parent="@style/AppTheme"></style>
+    <style name="AppTheme.Details" parent="@style/AppTheme"></style>
+    <style name="AppTheme.LocationMap" parent="@style/AppTheme"></style>
+    <style name="AppTheme.Settings" parent="@style/AppTheme"></style>
+
     <!-- ActionBar styles -->
     <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@color/indigoPrimary500</item>

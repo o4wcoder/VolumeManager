@@ -2,13 +2,17 @@
 <resources>
 
     <!-- Settings activity theme. -->
-    <style name="SettingsTheme" parent="@android:style/Theme.Material.Light.DarkActionBar">
+    <style name="AppTheme.Settings" parent="@android:style/Theme.Material.Light.DarkActionBar">
         <item name="android:colorPrimary">@color/app_primary_color</item>
         <item name="android:colorPrimaryDark">@color/app_primary_dark_color</item>
     </style>
 
     <style name="AppTheme.Main" parent="@style/AppTheme">
         <item name="android:windowContentTransitions">true</item>
+    </style>
+
+    <style name="AppTheme.LocationMap" parent="@style/AppTheme">
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
     <style name="AppTheme.Details" parent="@style/AppTheme">
