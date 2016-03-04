@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "com.fourthwardcoder.android.volumemanager"
         minSdkVersion 14
-        targetSdkVersion 21
+        targetSdkVersion 23
 
 
     }
@@ -33,7 +33,7 @@ dependencies {
     compile 'com.google.android.gms:play-services:8.4.0'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.android.support:cardview-v7:22.2.0'
-    compile 'com.android.support:gridlayout-v7:22.2.0'
+    compile 'com.android.support:cardview-v7:23.1.1'
+    compile 'com.android.support:gridlayout-v7:23.1.1'
 
 }

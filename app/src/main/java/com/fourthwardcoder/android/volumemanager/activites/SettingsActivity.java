@@ -13,7 +13,13 @@ import android.support.v4.app.Fragment;
 
 import com.fourthwardcoder.android.volumemanager.R;
 
-
+/**
+ * Class SettingsActivity
+ * Author: Chris Hare
+ * Created: 1/17/16
+ *
+ * Creates the Settings Menu fields for shared preferences
+ */
 public class SettingsActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener,
         SharedPreferences.OnSharedPreferenceChangeListener{
 
@@ -44,6 +50,11 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
                         .getString(preference.getKey(), ""));
     }
 
+    /**
+     * Set the summary to be displayed on the preference field
+     * @param preference preference to set
+     * @param value object that contains the summary
+     */
     private void setPreferenceSummary(Preference preference, Object value) {
         String stringValue = value.toString();
 

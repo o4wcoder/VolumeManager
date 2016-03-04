@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.fourthwardcoder.android.volumemanager.data.ProfileContract.ProfileEntry;
 import com.fourthwardcoder.android.volumemanager.data.ProfileContract.LocationEntry;
 /**
- * Created by Chris Hare on 1/17/2016.
+ * Class ProfileDbHelper
+ * Author: Chris Hare
+ * Created: 1/17/2016.
  */
 public class ProfileDbHelper extends SQLiteOpenHelper {
 

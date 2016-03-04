@@ -9,7 +9,11 @@ import com.fourthwardcoder.android.volumemanager.fragments.ProfileMainFragment;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 
 /**
- * Created by Chris Hare on 1/23/2016.
+ * Class ProfilePagerAdapter
+ * Author: Chris Hare
+ * Created: 1/23/2016
+ *
+ * Pager Adapter for the Profile Tabs (Time and Location)
  */
 public class ProfilePagerAdapter extends FragmentStatePagerAdapter implements Constants {
 
@@ -38,7 +42,6 @@ public class ProfilePagerAdapter extends FragmentStatePagerAdapter implements Co
                 ProfileMainFragment tab1 = ProfileMainFragment.newInstance(TIME_PROFILE_LIST);
                 return tab1;
             case 1:
-             //   LocationProfileListFragment tab2 = LocationProfileListFragment.newInstance();
             ProfileMainFragment tab2 = ProfileMainFragment.newInstance(LOCATION_PROFILE_LIST);
                 return tab2;
             default:

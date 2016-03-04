@@ -6,7 +6,11 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
- * Created by Chris Hare on 1/17/2016.
+ * Class ProfileContract
+ * Author: Chris Hare
+ * Created: 1/17/2016
+ *
+ * Contract of Content Provider. Defines column names for the Profile database.
  */
 public class ProfileContract {
 
@@ -35,7 +39,7 @@ public class ProfileContract {
     public static final int COL_LOCATION_RADIUS = 5;
 
 
-    //Content provider authority for Movie DB
+    //Content provider authority for Profile DB
     public static final String CONTENT_AUTHORITY = "com.fourthwardcoder.android.volumemanager";
 
     //Base URI for content provider
@@ -73,11 +77,6 @@ public class ProfileContract {
         public static Uri buildLocationUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI,id);
         }
-
-//        public static Uri buildProfileWithIdUri(int id) {
-//
-//            return ContentUris.withAppendedId(CONTENT_URI, id);
-//        }
     }
 
     /*********************************************************************/
@@ -122,9 +121,5 @@ public class ProfileContract {
             return CONTENT_URI;
         }
 
-        public static Uri buildProfileWithIdUri(int id) {
-
-            return ContentUris.withAppendedId(CONTENT_URI, id);
-        }
     }
 }

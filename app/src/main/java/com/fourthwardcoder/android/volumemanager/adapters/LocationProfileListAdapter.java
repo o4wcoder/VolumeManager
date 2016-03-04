@@ -17,7 +17,9 @@ import com.fourthwardcoder.android.volumemanager.models.Profile;
 import java.util.ArrayList;
 
 /**
- * Created by Chris Hare on 2/7/2016.
+ * Class LocationProfileListAdapter
+ * Author: Chris Hare
+ * Created: 2/7/2016.
  */
 public class LocationProfileListAdapter extends ArrayAdapter<Profile> implements Constants{
 

@@ -20,20 +20,25 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 /**
- * Created by Chris Hare on 1/25/2016.
+ * Class ProfileManager
+ * Author: Chris Hare
+ * Created: 1/25/2016.
+ *
+ * Simple interface for the Profile Database
  */
 public class ProfileManager implements Constants{
 
+    /**************************************************************************/
+    /*                           Constants                                    */
+    /**************************************************************************/
     private static final String TAG = ProfileManager.class.getSimpleName();
 
-//    public static void newProfile(Activity activity, int profileType)
-//    {
-//        Intent i = new Intent(activity,ProfileDetailActivity.class);
-//        i.putExtra(EXTRA_PROFILE_TYPE,profileType);
-//        activity.startActivityForResult(i,0);
-//    }
-
-
+    /**
+     * Get a profile from the Database
+     * @param context context of the calling activity
+     * @param profileId Id of the profile to retrieve
+     * @return profile queried from the database
+     */
     public static Profile getProfile(Context context, UUID profileId) {
 
         //Put togeter SQL selection
@@ -53,12 +58,16 @@ public class ProfileManager implements Constants{
             //Move cursor to the row returned
             cursor.moveToFirst();
 
-         //   Log.e(TAG,"Title: " + cursor.getString(cursor.getColumnIndex(ProfileContract.ProfileEntry.COLUMN_TITLE)));
-         //   Log.e(TAG, "getProfile(): Cursor has title " + cursor.getString(ProfileContract.COL_PROFILE_TITLE));
             return new Profile(cursor);
         }
     }
 
+    /**
+     * Get a location from the database
+     * @param context context of the calling activity
+     * @param profileId Id of the location to retrieve
+     * @return location queried from the database
+     */
     public static GeoFenceLocation getLocation(Context context, long profileId) {
 
         //Put togeter SQL selection
@@ -82,6 +91,11 @@ public class ProfileManager implements Constants{
         }
     }
 
+    /**
+     * Get list of all Time profiles in the database
+     * @param context context of calling activity
+     * @return list of time profiles
+     */
     public static ArrayList<Profile> getProfileList(Context context) {
 
         String selection = getProfileDbSelection();
@@ -109,6 +123,11 @@ public class ProfileManager implements Constants{
 
     }
 
+    /**
+     * Get list of all Location Profiles in the database
+     * @param context context of calling activity
+     * @return list of location profiles
+     */
     public static ArrayList<Profile> getLocationProfileList(Context context) {
 
         String selection = getLocationDbProfileSelection();
@@ -137,6 +156,13 @@ public class ProfileManager implements Constants{
         }
 
     }
+
+    /**
+     * Update and existing profile in the database
+     * @param context context of calling activity
+     * @param profile profile to update
+     * @return success result
+     */
     public static int updateProfile(Context context, Profile profile) {
 
         //Put togeter SQL selection
@@ -151,6 +177,12 @@ public class ProfileManager implements Constants{
 
     }
 
+    /**
+     * Insert a new Profile into the database
+     * @param context context of calling activity
+     * @param profile profile to insert
+     * @return Uri success result
+     */
     public static Uri insertProfile(Context context, Profile profile) {
 
         ContentValues profileValues = profile.getContentValues();
@@ -159,6 +191,12 @@ public class ProfileManager implements Constants{
                 .insert(ProfileContract.ProfileEntry.CONTENT_URI, profileValues);
     }
 
+    /**
+     * Delete a profile from the database
+     * @param context context of calling activity
+     * @param profile profile to delete
+     * @return success result
+     */
     public static int deleteProfile(Context context, Profile profile) {
 
         //Put togeter SQL selection
@@ -186,6 +224,12 @@ public class ProfileManager implements Constants{
 
     }
 
+    /**
+     * Check to see if the database is empty
+     * @param context context of calling activity
+     * @param profileType Which type of profiles to check if empty (Time or Location)
+     * @return
+     */
     public static boolean isDatabaseEmpty(Context context, int profileType) {
 
         String selection;
@@ -193,7 +237,6 @@ public class ProfileManager implements Constants{
             selection = getLocationDbProfileSelection();
         else
             selection = getProfileDbSelection();
-
 
         Cursor cursor = context.getContentResolver().query(ProfileContract.ProfileEntry.CONTENT_URI,
                 null,
@@ -215,16 +258,30 @@ public class ProfileManager implements Constants{
         }
     }
 
+    /**
+     * Get Time profile database selection
+     * @return String selection
+     */
     public static String getProfileDbSelection() {
 
         return ProfileContract.ProfileEntry.COLUMN_LOC_KEY + " IS NULL";
     }
 
+    /**
+     * Get Location profile database selection
+     * @return String selection
+     */
     public static String getLocationDbProfileSelection() {
 
         return ProfileContract.ProfileEntry.COLUMN_LOC_KEY + " IS NOT NULL";
     }
 
+    /**
+     * Add location to database
+     * @param context context of calling activity
+     * @param location location to insert into database
+     * @return
+     */
     public static long addLocation(Context context, GeoFenceLocation location) {
         long locationId;
 
@@ -242,6 +299,13 @@ public class ProfileManager implements Constants{
         return locationId;
     }
 
+    /**
+     * Update existing location in database
+     * @param context context of calling activity
+     * @param location location to update
+     * @param locationId location key mapped to the profile table
+     * @return success result
+     */
     public static int updateLocation(Context context, GeoFenceLocation location, long locationId) {
 
         //Put togeter SQL selection
