@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.location.Address;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
@@ -458,6 +459,8 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
             setLocationLayout(view);
         }
 
+        getActivity().supportStartPostponedEnterTransition();
+
         return view;
     }
 
@@ -590,8 +593,14 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
                 toast.show();
 
                 //Only kill the activity if we are in portrait mode
-                if(getActivity() instanceof ProfileDetailActivity)
-                   getActivity().finish();
+                if(getActivity() instanceof ProfileDetailActivity) {
+
+                    //Do renter transition if we are Lollipop or greater.
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+                       getActivity().finish();
+                    else
+                        getActivity().finishAfterTransition();
+                }
                 return true;
             case R.id.menu_item_delete_profile:
 

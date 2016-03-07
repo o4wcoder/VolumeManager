@@ -60,7 +60,7 @@ public class ProfileDetailActivity extends AppCompatActivity implements Constant
                         .commit();
 
                 // Being here means we are in animation mode
-                //supportPostponeEnterTransition();
+                supportPostponeEnterTransition();
             }
 
 

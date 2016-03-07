@@ -132,8 +132,9 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.e(TAG,"onActivityCreated() with mFristRun = " + mFirstRun);
+        Log.e(TAG, "onActivityCreated() with mFristRun = " + mFirstRun);
 
+        getActivity().supportPostponeEnterTransition();
         //Init the Profile Loader. Callbacks received in this fragment
         //If this is first time running, initialize the loader. Otherwise
         //just restart it. This is necessary because the loader won't run
@@ -402,6 +403,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
 
         }
 
+        getActivity().supportStartPostponedEnterTransition();
             Log.e(TAG, "onLoadFinished: Number of profiles = " + profileList.size());
 
 
