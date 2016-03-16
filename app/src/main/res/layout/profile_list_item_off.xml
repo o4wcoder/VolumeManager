@@ -19,7 +19,7 @@
             android:layout_weight="1"
             android:alpha="@string/hint_disabled_text_alpha_dark"
             android:padding="2dp"
-            android:textSize="@dimen/profile_title_text_size"
+            android:textAppearance="@style/ProfileTitleTextStyle"
             android:transitionName="@string/trans_profile_title"/>
 
         <LinearLayout

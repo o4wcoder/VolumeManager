@@ -21,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.transition.Transition;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -47,6 +48,7 @@ import com.fourthwardcoder.android.volumemanager.activites.ProfileDetailActivity
 import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
 import com.fourthwardcoder.android.volumemanager.adapters.LocationProfileListAdapter;
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
+import com.fourthwardcoder.android.volumemanager.helpers.ImageTransitionListener;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.fourthwardcoder.android.volumemanager.location.GeofenceManager;
@@ -88,6 +90,8 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 	public static final int REQUEST_END_TIME = 1;
     //Request code for MAP Activity Callback
     public static final int REQUEST_LOCATION_UPDATE = 2;
+    //Duration of day button fade in
+    public static int BUTTON_FADE_DURATION = 500;
 
     //Google Static Maps paramters
     private static final String GOOGLE_STAIC_MAPS_URL = "http://maps.google.com/maps/api/staticmap";
@@ -125,6 +129,8 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
     private LocationRequest mLocationRequest;
     GeofenceManager mGeofenceManager;
 
+    View view;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -141,8 +147,9 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_profile_detail, container, false);
-        Log.e(TAG,"onCreateView()");
+        view = inflater.inflate(R.layout.fragment_profile_detail, container, false);
+        Log.e(TAG, "onCreateView()");
+
 
         //First check if we have don't have anything in saveInstanceState from a rotation
         if(savedInstanceState == null) {
@@ -228,7 +235,7 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
             public void onClick(View v) {
                 ArrayList<Boolean> daysOfTheWeek = mProfile.getDaysOfTheWeek();
 
-                Log.d(TAG, "Button tag: " + v.getTag());
+                Log.e(TAG, "Button tag: " + v.getTag());
                 TextView textView = (TextView) v;
                 boolean setting = daysOfTheWeek.get((int) v.getTag());
 
@@ -261,7 +268,7 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
             //Set Profile title
             mTitleTextView.setText(mProfile.getTitle());
 
-            TableRow daysRow = (TableRow) view.findViewById(R.id.daysTableRow);
+            final TableRow daysRow = (TableRow) view.findViewById(R.id.days_table_row);
             for (int i = 0; i < daysRow.getChildCount(); i++) {
                 Button button = (Button) daysRow.getChildAt(i);
                 button.setText(Constants.daysButtonNames[i]);
@@ -282,6 +289,26 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
                     button.setBackgroundColor(Color.TRANSPARENT);
                 }
 
+
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+                getActivity().getWindow().getSharedElementEnterTransition().addListener(new ImageTransitionListener() {
+                    @Override
+                    public void onTransitionEnd(Transition transition) {
+
+                       // view.setBackgroundColor(getResources().getColor(R.color.sound_control_panel_background));
+                        //Fade in title text
+                        daysRow.animate().setDuration(BUTTON_FADE_DURATION).alpha(1f);
+                    }
+
+                    @Override
+                    public void onTransitionStart(Transition transition) {
+                        //Start of transition, make title text invisible
+                        daysRow.setAlpha(0f);
+                    }
+                });
 
             }
             //Setup start time of volume control
@@ -458,6 +485,7 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 
             setLocationLayout(view);
         }
+
 
         getActivity().supportStartPostponedEnterTransition();
 
@@ -778,10 +806,6 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
             //Set Volume Control Alarms
             VolumeManagerService.setServiceAlarm(getActivity(), mProfile, true);
         }
-
-
-
-
     }
 
 

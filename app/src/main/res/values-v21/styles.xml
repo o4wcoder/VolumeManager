@@ -16,8 +16,10 @@
     </style>
 
     <style name="AppTheme.Details" parent="@style/AppTheme">
-    <item name="android:windowContentTransitions">true</item>
-        <item name="android:windowEnterTransition">@transition/profile_details_transition_enter</item>
-        <item name="android:windowReturnTransition">@transition/profile_details_transition_exit</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowEnterTransition">@transition/profile_details_transition_enter
+        </item>
+        <item name="android:windowReturnTransition">@transition/profile_details_transition_exit
+        </item>
     </style>
 </resources>

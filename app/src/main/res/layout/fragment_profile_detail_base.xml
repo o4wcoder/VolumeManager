@@ -47,7 +47,7 @@
     </LinearLayout>
 
 
-    <include layout="@layout/start_volume_control" />
+    <include layout="@layout/start_volume_control"/>
 
     <View
         android:layout_width="match_parent"

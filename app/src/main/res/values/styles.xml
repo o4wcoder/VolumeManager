@@ -9,7 +9,8 @@
     </style>
 
     <style name="AppTheme.Main" parent="@style/AppTheme"></style>
-    <style name="AppTheme.Details" parent="@style/AppTheme"></style>
+    <style name="AppTheme.Details" parent="@style/AppTheme">
+    </style>
     <style name="AppTheme.LocationMap" parent="@style/AppTheme"></style>
     <style name="AppTheme.Settings" parent="@style/AppTheme"></style>
 
@@ -78,4 +79,6 @@
         <item name="pressedTranslationZ">12dp</item>
     </style>
 
+    <style name="ProfileTitleTextStyle" parent="Base.TextAppearance.AppCompat.Title"></style>
+    <style name="ProfileSubheadingTextStyle" parent="Base.TextAppearance.AppCompat.Body1"></style>
 </resources>

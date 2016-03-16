@@ -139,6 +139,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
         //If this is first time running, initialize the loader. Otherwise
         //just restart it. This is necessary because the loader won't run
         //again on rotation.
+
         if(mFirstRun)
            getLoaderManager().initLoader(PROFILE_LOADER, null, this);
         else
