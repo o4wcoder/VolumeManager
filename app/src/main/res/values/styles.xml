@@ -79,6 +79,19 @@
         <item name="pressedTranslationZ">12dp</item>
     </style>
 
-    <style name="ProfileTitleTextStyle" parent="Base.TextAppearance.AppCompat.Title"></style>
-    <style name="ProfileSubheadingTextStyle" parent="Base.TextAppearance.AppCompat.Body1"></style>
+    <style name="ProfileTitleTextStyle" parent="Base.TextAppearance.AppCompat.Title">
+        <item name="android:alpha">@string/primary_text_alpha_dark</item>
+    </style>
+
+    <style name="ProfileSubheadingTextStyle" parent="Base.TextAppearance.AppCompat.Body1">
+        <item name="android:alpha">@string/secondary_text_alpha_dark</item>
+    </style>
+
+    <style name="ProfileTitleTextStyleDisabled" parent="Base.TextAppearance.AppCompat.Title">
+        <item name="android:alpha">@string/hint_disabled_text_alpha_dark</item>
+    </style>
+
+    <style name="ProfileSubheadingTextStyleDisabled" parent="Base.TextAppearance.AppCompat.Body1">
+        <item name="android:alpha">@string/hint_disabled_text_alpha_dark</item>
+    </style>
 </resources>

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="match_parent"
     android:layout_margin="16dp"
     android:id="@+id/end_volume_control_pane">
 
@@ -74,7 +74,6 @@
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="@dimen/volume_control_top_bottom_margin"
             android:layout_marginTop="@dimen/volume_control_top_bottom_margin"
-            android:gravity="center_vertical"
             android:paddingLeft="8dp"
             android:text="(3/7)"
             android:textSize="14sp"

@@ -34,7 +34,7 @@
     <string name="location_tab">Location</string>
     <string name="primary_text_alpha_dark">.87</string>
     <string name="secondary_text_alpha_dark">.54</string>
-    <string name="hint_disabled_text_alpha_dark">.26</string>
+    <string name="hint_disabled_text_alpha_dark">.38</string>
     <string name="previous_volume_setting">Use Previous Volume Setting</string>
     <string name="context_menu_delete_profile">Delete profile</string>
     <!-- Menu Items -->
