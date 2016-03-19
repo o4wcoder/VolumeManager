@@ -1,6 +1,7 @@
 package com.fourthwardcoder.android.volumemanager.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,10 @@ import java.util.ArrayList;
  */
 public class ProfileListAdapter extends ArrayAdapter<Profile> implements Constants {
 
+    private final static String TAG = ProfileListAdapter.class.getSimpleName();
+
     private Context mContext;
+
 
 
     public ProfileListAdapter(Context context,ArrayList<Profile> profiles) {
@@ -124,6 +128,8 @@ public class ProfileListAdapter extends ArrayAdapter<Profile> implements Constan
         holder.timeTextView.setText(Util.getFullTimeForListItem(mContext,getItem(position)));
         //holder.timeTextView.setAlpha(SECONDARY_TEXT_DARK);
         holder.daysTextView = (TextView)convertView.findViewById(R.id.profileDaysTextView);
+
+        //Display string "Daily" if alarm set for every day, otherwise display days set.
         if(checkIfSetDaily(getItem(position).getDaysOfTheWeek()))
             holder.daysTextView.setText(R.string.daily);
         else
@@ -135,9 +141,10 @@ public class ProfileListAdapter extends ArrayAdapter<Profile> implements Constan
 
     private boolean checkIfSetDaily(ArrayList<Boolean> daysOfTheWeek) {
 
-        for(int i = 0; i< daysOfTheWeek.size(); i++) {
-            if(daysOfTheWeek.get(i) == false)
+        for(int i = 0; i< DAYS_OF_THE_WEEK; i++) {
+            if(daysOfTheWeek.get(i) == false) {
                 return false;
+            }
         }
 
         return true;

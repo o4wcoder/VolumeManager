@@ -28,7 +28,6 @@
                 android:textColor="@color/app_primary_text_dark"
                 android:gravity="left|bottom"
                 android:hint="@string/title_hint"
-                android:maxLength="20"
                 android:singleLine="true"
                 android:transitionName="@string/trans_profile_title"
                 android:background="@null"/>

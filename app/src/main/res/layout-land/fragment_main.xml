@@ -9,6 +9,8 @@
     android:layout_height="match_parent"
     android:layout_marginRight="@dimen/landscape_profile_list_view_side_margin"
     android:layout_marginLeft="@dimen/landscape_profile_list_view_side_margin"
+    android:layout_marginStart="@dimen/landscape_profile_list_view_side_margin"
+    android:layout_marginEnd="@dimen/landscape_profile_list_view_side_margin"
     android:layout_centerHorizontal="true"
     android:background="@color/white"></include>
 </FrameLayout>

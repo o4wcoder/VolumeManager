@@ -88,6 +88,8 @@
             android:layout_height="match_parent"
             android:layout_alignLeft="@id/cardviewAligner"
             android:layout_alignRight="@id/cardviewAligner"
+            android:layout_alignStart="@id/cardviewAligner"
+            android:layout_alignEnd="@id/cardviewAligner"
             android:layout_alignTop="@id/cardviewAligner"
             android:layout_alignBottom="@id/cardviewAligner"
             android:layout_marginRight="@dimen/abc_list_item_padding_horizontal_material"

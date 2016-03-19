@@ -280,7 +280,7 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
             intent.putExtra(EXTRA_PROFILE, profile);
             intent.putExtra(EXTRA_PROFILE_TYPE, profileType);
 
-            //Set transition for the pofile title between the list and the detail.
+            //Set transition for the profile title between the list and the detail.
             ActivityOptionsCompat activityOptions =
                     ActivityOptionsCompat.makeSceneTransitionAnimation(this,
                             new Pair<View, String>(textView, getString(R.string.trans_profile_title)));
@@ -329,8 +329,12 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
         }
         else {
             Intent i = new Intent(this,ProfileDetailActivity.class);
-            i.putExtra(EXTRA_PROFILE_TYPE,profileType);
-            startActivityForResult(i, 0);
+            i.putExtra(EXTRA_PROFILE_TYPE, profileType);
+            //startActivityForResult(i,0);
+
+            //Start activity with transition, but no shared Title since it's new
+            startActivity(i,ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle());
+
         }
     }
 

@@ -28,19 +28,16 @@
                 style="@style/ProfileTitleTextStyle"
                 android:gravity="left|bottom"
                 android:hint="@string/title_hint"
-                android:maxLength="20"
                 android:singleLine="true"
                 android:transitionName="@string/trans_profile_title"
                 android:background="@null"/>
 
-
         </android.support.v7.widget.Toolbar>
-
 
         <include layout="@layout/profile_detail_top_pane"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
         <include layout="@layout/profile_detail_bottom_pane"
             android:layout_width="match_parent"

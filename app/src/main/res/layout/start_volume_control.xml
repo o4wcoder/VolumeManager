@@ -73,6 +73,7 @@
             android:layout_marginTop="@dimen/volume_control_top_bottom_margin"
             android:gravity="center_vertical"
             android:paddingLeft="8dp"
+            android:paddingStart="8dp"
             android:text="(3/7)"
             android:textSize="14sp"
             android:textColor="@color/white"/>
