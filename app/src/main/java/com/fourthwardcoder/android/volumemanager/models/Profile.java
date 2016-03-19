@@ -252,6 +252,20 @@ public class Profile implements Constants, Parcelable {
         return strDays;
     }
 
+    public String getDaysOfWeekDebugString() {
+
+        String str;
+
+        str = "Sun = " + daysOfTheWeek.get(0) + "\n" +
+                "Mon = " + daysOfTheWeek.get(1) + "\n" +
+                "Tue = " + daysOfTheWeek.get(2) + "\n" +
+                "Wed = " + daysOfTheWeek.get(3) + "\n" +
+                "Thu = " + daysOfTheWeek.get(4) + "\n" +
+                "Fri = " + daysOfTheWeek.get(5) + "\n" +
+                "Sat = " + daysOfTheWeek.get(6) + "\n";
+
+        return str;
+    }
     public boolean isInAlarm() {
         return inAlarm;
     }

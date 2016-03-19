@@ -296,6 +296,8 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener, PlaceSelectionList
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(),
                 16));
 
+
+		mProfile.setTitle(String.valueOf(place.getName()));
         updateLocation(place.getLatLng());
     }
 

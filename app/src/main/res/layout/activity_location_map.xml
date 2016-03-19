@@ -78,14 +78,14 @@
                     android:layout_height="wrap_content"
                     android:padding="8dp"
                     android:text="Address"
-                    android:textSize="@dimen/location_map_address_text_size" />
+                    style="@style/ProfileTitleTextStyle" />
 
                 <TextView
                     android:id="@+id/mapCityTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
-                    android:textSize="@dimen/location_map_city_text_size"
+                    style="@style/ProfileSubheadingTextStyle"
                     android:text="City" />
 
             </LinearLayout>

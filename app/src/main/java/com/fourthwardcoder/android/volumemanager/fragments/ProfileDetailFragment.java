@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -14,6 +16,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.animation.ValueAnimatorCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
@@ -76,7 +79,7 @@ import com.squareup.picasso.Picasso;
  *
  */
 public class ProfileDetailFragment extends Fragment implements  LocationProfileListAdapter.LocationAdapterCallback, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener, ResultCallback<Status>,Constants {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, ResultCallback<Status>, Constants {
 	
 	/************************************************************************/
 	/*                           Constants                                  */
@@ -92,6 +95,7 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
     public static final int REQUEST_LOCATION_UPDATE = 2;
     //Duration of day button fade in
     public static int BUTTON_FADE_DURATION = 500;
+
 
     //Google Static Maps paramters
     private static final String GOOGLE_STAIC_MAPS_URL = "http://maps.google.com/maps/api/staticmap";
@@ -238,21 +242,34 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
                 Log.e(TAG, "Button tag: " + v.getTag());
                 TextView textView = (TextView) v;
                 boolean setting = daysOfTheWeek.get((int) v.getTag());
+                int index = (int)v.getTag();
 
+                Log.e(TAG, "Days of the week before change");
+                Log.e(TAG,mProfile.getDaysOfWeekDebugString());
                 if (setting) {
                     //Turn Day off
-                    daysOfTheWeek.add((int) v.getTag(), false);
+                    Log.e(TAG, "Turn Day " + daysButtonNames[index] + " off");
+
+                    daysOfTheWeek.set(index, Boolean.FALSE);
                     textView.setTextColor(getResources().getColor(R.color.app_primary_text_dark));
-                    v.setBackground(getResources().getDrawable(R.drawable.round_button_off));
+                    textView.setBackground(getResources().getDrawable(R.drawable.round_button_off));
+                    
+                  //  v.animate().setDuration(BUTTON_FADE_DURATION).alpha(0f);
+
                 } else {
                     //Turn Day on
-                    daysOfTheWeek.add((int) v.getTag(), true);
+                    Log.e(TAG, "Turn day " + daysButtonNames[index] + " on");
+                    daysOfTheWeek.set(index, Boolean.TRUE);
                     textView.setTextColor(Color.parseColor("#ffffff"));
-                    v.setBackground(getResources().getDrawable(R.drawable.round_button));
+                    textView.setBackground(getResources().getDrawable(R.drawable.round_button));
+                  //  v.animate().setDuration(BUTTON_FADE_DURATION).alpha(1f);
                 }
 
                 //Update days of the week in Profile
                 mProfile.setDaysOfTheWeek(daysOfTheWeek);
+
+                Log.e(TAG, "Days of the week after change");
+                Log.e(TAG,mProfile.getDaysOfWeekDebugString());
 
 
             }
@@ -268,6 +285,8 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
             //Set Profile title
             mTitleTextView.setText(mProfile.getTitle());
 
+            Log.e(TAG,"Days of the week loading profile");
+            Log.e(TAG,mProfile.getDaysOfWeekDebugString());
             final TableRow daysRow = (TableRow) view.findViewById(R.id.days_table_row);
             for (int i = 0; i < daysRow.getChildCount(); i++) {
                 Button button = (Button) daysRow.getChildAt(i);
@@ -279,17 +298,12 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
                 if (setting) {
                     //Turn Day on
                     button.setTextColor(Color.parseColor("#ffffff"));
-                    //  button.setBackgroundColor(getResources().getColor(R.color.buttonColor));
+                    button.setBackground(getResources().getDrawable(R.drawable.round_button));
                 } else {
                     //Turn Day off
-                    //button.setTextColor(R
-                    //		.color.primary_material_dark);
-                    button.setTextColor(Color.parseColor("#000000"));
-                    Log.e(TAG, "turn off day");
-                    button.setBackgroundColor(Color.TRANSPARENT);
+                    button.setTextColor(getResources().getColor(R.color.app_primary_text_dark));
+                    button.setBackground(getResources().getDrawable(R.drawable.round_button_off));
                 }
-
-
             }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -356,6 +370,7 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
                         Util.setSeekBarPosition(startRingSeekBar, startRingVolumeTextView, mProfile.getStartRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
 
                     } else if (checkedId == R.id.startVibrateRadio) {
+
                         mProfile.setStartVolumeType(VOLUME_VIBRATE);
                         mProfile.setStartRingVolume(0);
                         Util.setSeekBarPosition(startRingSeekBar, startRingVolumeTextView, mProfile.getStartRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
@@ -466,11 +481,6 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 	    /*
 	     * Set Default and Saved Settings
 	     */
-            //Set default or saved radio button setting
-            ((RadioButton) startVolumeRadioGroup.getChildAt(mProfile.getStartVolumeType())).setChecked(true);
-            //Set default or saved radio button setting
-            ((RadioButton) endVolumeRadioGroup.getChildAt(mProfile.getEndVolumeType())).setChecked(true);
-
 
             Util.setTimeForLargeTextView(getActivity(), mProfile.getStartDate(), startTimeTextView);
             Util.setTimeForLargeTextView(getActivity(), mProfile.getEndDate(), endTimeTextView);
@@ -484,6 +494,11 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
             setVolumeIcon();
 
             setLocationLayout(view);
+
+            //Set default or saved radio button setting
+            ((RadioButton) startVolumeRadioGroup.getChildAt(mProfile.getStartVolumeType())).setChecked(true);
+            //Set default or saved radio button setting
+            ((RadioButton) endVolumeRadioGroup.getChildAt(mProfile.getEndVolumeType())).setChecked(true);
         }
 
 
@@ -598,7 +613,14 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 
             mProfile = data.getParcelableExtra(EXTRA_PROFILE);
             Log.e(TAG,"Got request back from Map Activity!!");
-            Log.e(TAG, mProfile.getLocation().toString());
+            Log.e(TAG,"Title of location = " + mProfile.getTitle());
+
+            //Make the title the name of the place that was searched in the location activity
+            if(mTitleTextView != null) {
+                if(mProfile.getTitle() != null) {
+                    mTitleTextView.setText(mProfile.getTitle());
+                }
+            }
         }
 
 	}
@@ -647,6 +669,18 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 	/*                        Private Methods                          */
 	/*******************************************************************/
 
+    private void animateBackground(final View view, int fromColor, int toColor ) {
+
+        final ValueAnimator colorAnimator = ValueAnimator.ofObject(new ArgbEvaluator(),fromColor,toColor);
+        colorAnimator.setDuration(BUTTON_FADE_DURATION);
+        colorAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                view.setBackgroundColor((int) animation.getAnimatedValue());
+            }
+        });
+        colorAnimator.start();
+    }
     private void startLocationMapActivity() {
 
         Intent i = new Intent(getActivity(), LocationMapActivity.class);

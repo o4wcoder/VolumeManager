@@ -59,7 +59,7 @@
             app:pressedTranslationZ="12dp"
             app:borderWidth="0dp"
             app:layout_anchorGravity="bottom|right|end"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="16dp"
             android:layout_marginRight="16dp"
             android:onClick="clickFAB"/>
     </FrameLayout>
