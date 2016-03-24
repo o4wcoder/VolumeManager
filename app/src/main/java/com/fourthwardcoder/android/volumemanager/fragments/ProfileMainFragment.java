@@ -81,6 +81,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
     GoogleApiClient mGoogleApiClient;
     GeofenceManager mGeofenceManager;
     int mSelectedListItem = NO_SELECT;
+    boolean mIsDeleteGeofence = false;
 
 
     /**
@@ -451,6 +452,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
             if(mGeofenceManager != null) {
 
                 mGeofenceManager.removeGeofenceList(this, list);
+                mIsDeleteGeofence = true;
             }
         }
     }
@@ -461,6 +463,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
         if (mGoogleApiClient.isConnected()) {
             //Restart geofences now that the state has changed.
             mGeofenceManager.startGeofences(this);
+            mIsDeleteGeofence = false;
         } else
             Log.e(TAG, "Connection to Google API is disconnected! Not good!");
     }
@@ -483,8 +486,17 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
 
     @Override
     public void onResult(Status status) {
+        
+        String msg;
 
-        GeofenceManager.setGeofenceResult(getActivity(),status,getString(R.string.geofence_deleted));
+        if(mIsDeleteGeofence)
+            msg = getString(R.string.geofence_deleted);
+        else
+            msg = getString(R.string.geofence_updated);
+
+        GeofenceManager.setGeofenceResult(getActivity(), status, msg);
+
+
     }
 
     /*******************************************************************/

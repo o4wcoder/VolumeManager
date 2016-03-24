@@ -205,7 +205,8 @@ public class GeofenceManager {
                  // pending intent is used to generate an intent when a matched geofence
                  // transition is observed.
                  getGeofencePendingIntent()
-         ).setResultCallback(callingActivity); // Result processed in onResult().
+         ).setResultCallback(callingActivity);
+          // Result processed in onResult().
      } catch (SecurityException securityException) {
          // Catch exception generated if the app does not use ACCESS_FINE_LOCATION permission.
      	Log.e(TAG,"Security exception when trying to add geofences.");

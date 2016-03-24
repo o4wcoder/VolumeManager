@@ -62,6 +62,7 @@
     <string name="click_help_text">click here to modify volume settings</string>
     <string name="geofence_saved">Goefence saved</string>
     <string name="geofence_deleted">Geofence deleted</string>
+    <string name="geofence_updated">Geofence updated</string>
     <string name="radius_text">radius(m)</string>
     <string name="unknown_street_address">Unknown Street Address</string>
     
