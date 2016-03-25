@@ -32,7 +32,8 @@
 
             <ImageView
                 style="@style/ProfileIcon"
-                android:src="@drawable/ic_place" />
+                android:tint="@color/app_primary_color"
+                android:src="@drawable/ic_place_24dp" />
 
             <TextView
                 android:id="@+id/address_textview"

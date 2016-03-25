@@ -23,12 +23,15 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -156,8 +159,12 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
         view = inflater.inflate(R.layout.fragment_main, container, false);
 
         //Empty ListView view
-        Button newProfileButton = (Button) view.findViewById(R.id.emptyButtonAddProfile);
-        newProfileButton.setOnClickListener(new OnClickListener() {
+       ImageButton newProfileImage = (ImageButton) view.findViewById(R.id.profile_image_button);
+       // ViewStub emptyView = (ViewStub)view.findViewById(android.R.id.empty);
+      //  emptyView.inflate();
+       // LinearLayout emptyLayout = (LinearLayout)view.findViewById(android.R.id.empty);
+
+        newProfileImage.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -173,8 +180,11 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
 
         if (mProfileType == TIME_PROFILE_LIST)
             headerTextView.setText(getString(R.string.profile_header));
-        else
+        else {
             headerTextView.setText(getString(R.string.location_profile_header));
+            newProfileImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_place_200dp));
+            ((TextView)view.findViewById(R.id.emptyTextView)).setText(R.string.add_location_profile);
+        }
 
         mListview.addHeaderView(headerView);
 
@@ -458,11 +468,20 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
     }
 
     @Override
-    public void onToggleLocationIcon() {
+    public void onToggleLocationIcon(boolean enabled, String requestId) {
         //updateGeofences();
         if (mGoogleApiClient.isConnected()) {
-            //Restart geofences now that the state has changed.
-            mGeofenceManager.startGeofences(this);
+
+         //   if(enabled) {
+                //Restart geofences now that it's been enabled
+                mGeofenceManager.startGeofences(this);
+         //   }
+         //   else {
+                //Remove geofence now that it's been disabled
+        //        mGeofenceManager.removeGeofence(this,requestId);
+        //    }
+//
+            //Just updating Geofence, not deleting the profile
             mIsDeleteGeofence = false;
         } else
             Log.e(TAG, "Connection to Google API is disconnected! Not good!");
@@ -486,7 +505,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
 
     @Override
     public void onResult(Status status) {
-        
+
         String msg;
 
         if(mIsDeleteGeofence)

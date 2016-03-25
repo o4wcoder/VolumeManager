@@ -685,7 +685,7 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 
         Intent i = new Intent(getActivity(), LocationMapActivity.class);
         i.putExtra(EXTRA_PROFILE, mProfile);
-        startActivityForResult(i,REQUEST_LOCATION_UPDATE);
+        startActivityForResult(i, REQUEST_LOCATION_UPDATE);
     }
     private Uri getThumbnailUri(LatLng latLng) {
 
@@ -850,8 +850,12 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
         mGeofenceManager = new GeofenceManager(getActivity().getApplicationContext(), mGoogleApiClient);
 
         Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
         if (location == null) {
-          //  Log.e(TAG,"Location was null");
+           Log.e(TAG,"Location was null. Can't get location");
+            Toast toast = Toast.makeText(getActivity().getApplicationContext(),
+                    R.string.network_error, Toast.LENGTH_LONG);
+            toast.show();
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
         else {
@@ -922,10 +926,7 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 
     }
 
-    @Override
-    public void onToggleLocationIcon() {
 
-    }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
@@ -949,5 +950,10 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
             msg = getString(R.string.geofence_deleted);
 
         GeofenceManager.setGeofenceResult(getActivity(),status,msg);
+    }
+
+    @Override
+    public void onToggleLocationIcon(boolean enable, String requestId) {
+
     }
 }

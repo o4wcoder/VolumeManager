@@ -9,8 +9,8 @@
     </style>
 
     <style name="AppTheme.Main" parent="@style/AppTheme"></style>
-    <style name="AppTheme.Details" parent="@style/AppTheme">
-    </style>
+
+    <style name="AppTheme.Details" parent="@style/AppTheme"></style>
     <style name="AppTheme.LocationMap" parent="@style/AppTheme"></style>
     <style name="AppTheme.Settings" parent="@style/AppTheme"></style>
 

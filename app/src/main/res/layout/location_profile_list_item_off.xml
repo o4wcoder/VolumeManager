@@ -45,6 +45,8 @@
         android:layout_gravity="right"
         android:layout_weight="0"
         android:padding="16dp"
-        android:src="@drawable/ic_action_place_off_text" />
+        android:alpha="@string/hint_disabled_text_alpha_dark"
+        android:tint="@color/app_primary_color"
+        android:src="@drawable/ic_place_36dp" />
 
 </LinearLayout>

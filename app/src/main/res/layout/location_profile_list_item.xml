@@ -45,6 +45,7 @@
         android:layout_gravity="right"
         android:layout_weight="0"
         android:padding="16dp"
-        android:src="@drawable/ic_action_place_pink_on_text" />
+        android:tint="@color/app_primary_color"
+        android:src="@drawable/ic_place_36dp" />
 
 </LinearLayout>

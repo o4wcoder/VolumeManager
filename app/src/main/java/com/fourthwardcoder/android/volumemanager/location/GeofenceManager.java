@@ -123,6 +123,7 @@ public class GeofenceManager {
 		//Get all location profiles
 		//ArrayList<LocationProfile> locationProfileList = ProfileJSONManager.get(context).getLocationProfiles();
 		ArrayList<Profile> profileList = ProfileManager.getLocationProfileList(context);
+
 		for(int i = 0; i < profileList.size(); i++ ) {
 			
 			Profile profile = profileList.get(i);
@@ -160,6 +161,9 @@ public class GeofenceManager {
   * Also specifies how the geofence notifications are initially triggered.
   */
  private GeofencingRequest getGeofencingRequest() {
+
+	 Log.e(TAG,"Number of geofences in list is " + geofenceList.size());
+
      GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
 
      // The INITIAL_TRIGGER_ENTER flag indicates that geofencing service should trigger a
@@ -169,6 +173,7 @@ public class GeofenceManager {
 
      // Add the geofences to be monitored by geofencing service.
      builder.addGeofences(geofenceList);
+
 
      // Return a GeofencingRequest.
      return builder.build();

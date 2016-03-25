@@ -114,7 +114,7 @@ public class LocationProfileListAdapter extends ArrayAdapter<Profile> implements
                 notifyListViewChanged();
 
                 //Callback to modify the geofence for this profile
-                mCallingFragment.onToggleLocationIcon();
+                mCallingFragment.onToggleLocationIcon(getItem(listPosition).isEnabled(),getItem(listPosition).getId().toString());
 
             }
 
@@ -152,7 +152,7 @@ public class LocationProfileListAdapter extends ArrayAdapter<Profile> implements
 
     public interface LocationAdapterCallback {
 
-        void onToggleLocationIcon();
+        void onToggleLocationIcon(boolean enable, String requestId);
     }
 
 

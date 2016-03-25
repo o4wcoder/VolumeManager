@@ -25,6 +25,8 @@
     <string name="toast_text">Volume Control Set</string>
     <string name="no_profiles">No Profiles</string>
     <string name="new_profile">New Profile</string>
+    <string name="add_time_profile">Add Time Profile</string>
+    <string name="add_location_profile">Add Location Profile</string>
     <string name="title_hint">Enter profile title.</string>
 
     <string name="profile_settings">Profile Settings</string>
@@ -65,6 +67,7 @@
     <string name="geofence_updated">Geofence updated</string>
     <string name="radius_text">radius(m)</string>
     <string name="unknown_street_address">Unknown Street Address</string>
+    <string name="network_error">Could not get location. Please check network connection.</string>
     
     <!-- Geofence strings -->
     <string name="not_connected">GoogleApiClient no yet connected. Try again.</string>
