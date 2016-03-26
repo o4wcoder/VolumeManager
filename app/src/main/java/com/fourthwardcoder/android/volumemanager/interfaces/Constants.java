@@ -37,6 +37,7 @@ public interface Constants {
 	
 	String daysButtonNames[] ={"S","M","T","W","T","F","S"};
 	String daysAbbreviation[]={"Su","Mo","Tu","We","Th","Fr","Sa"};
+
 	
 	int NORMAL_PROFILE = 0;
 	int DISABLED_PROFILE = 1;

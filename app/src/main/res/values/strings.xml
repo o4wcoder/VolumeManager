@@ -104,6 +104,22 @@
     <!-- Animations -->
     <string name="trans_profile_title">trans_profile_title</string>
 
+    <string-array name="days_of_the_week">
+        <item>Sunday</item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+    </string-array>
+
+    <!-- Content Descriptions -->
+    <string name="cont_desc_time_profile">Time Profile</string>
+    <string name="cont_desc_starts">starts</string>
+    <string name="cont_desc_ends">ends</string>
+    <string name="cont_desc_set">set</string>
+
 
 
 </resources>

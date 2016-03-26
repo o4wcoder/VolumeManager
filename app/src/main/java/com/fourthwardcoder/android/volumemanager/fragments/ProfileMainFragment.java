@@ -179,11 +179,14 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
         ViewGroup headerView = (ViewGroup) inflater.inflate(R.layout.listview_header, mListview, false);
         TextView headerTextView = (TextView) headerView.findViewById(R.id.profileHeaderTextView);
 
-        if (mProfileType == TIME_PROFILE_LIST)
+        if (mProfileType == TIME_PROFILE_LIST) {
             headerTextView.setText(getString(R.string.profile_header));
+            newProfileImage.setContentDescription(getString(R.string.add_time_profile));
+        }
         else {
             headerTextView.setText(getString(R.string.location_profile_header));
             newProfileImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_place_200dp));
+            newProfileImage.setContentDescription(getString(R.string.add_location_profile));
             ((TextView)mView.findViewById(R.id.empty_text_view)).setText(R.string.add_location_profile);
         }
 

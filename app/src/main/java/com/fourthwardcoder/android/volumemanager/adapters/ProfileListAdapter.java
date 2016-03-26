@@ -67,6 +67,7 @@ public class ProfileListAdapter extends ArrayAdapter<Profile> implements Constan
         //Log.e(TAG,"VP: " + listView.getFirstVisiblePosition() +": " + getItem(listView.getFirstVisiblePosition()).getHour() + " hp: " + headerPosition);
 
 
+
         //If we weren't given a view, inflate one
         if (convertView == null) {
             holder = new ViewHolder();
@@ -84,7 +85,7 @@ public class ProfileListAdapter extends ArrayAdapter<Profile> implements Constan
         }
         else {
             holder = (ViewHolder)convertView.getTag();
-            //Log.e(TAG,"In getView(!null) with profile " +holder.titleTextView.getText() + " position: " + position);
+
         }
 
         //Set up click listner on volume image button to turn profile on/off
@@ -136,9 +137,45 @@ public class ProfileListAdapter extends ArrayAdapter<Profile> implements Constan
             holder.daysTextView.setText(getItem(position).getDaysOfWeekString());
         //holder.daysTextView.setAlpha(SECONDARY_TEXT_DARK);
 
+        setProfileContentDescription(getItem(position),convertView);
         return convertView;
     }
 
+    private void setProfileContentDescription(Profile profile, View view) {
+
+        String msg = getContext().getString(R.string.cont_desc_time_profile) + profile.getTitle()
+                + getContext().getString(R.string.cont_desc_starts)
+                + Util.formatTime(getContext(), profile.getStartDate())
+                + getContext().getString(R.string.cont_desc_ends)
+                + Util.formatTime(getContext(), profile.getEndDate());
+
+        String daysMsg = getContext().getString(R.string.cont_desc_set) + " ";
+
+        if (checkIfSetDaily(profile.getDaysOfTheWeek()))
+            daysMsg += getContext().getString(R.string.daily);
+        else
+            daysMsg += getDaysOfTheWeekContentDescription(profile);
+
+        msg += daysMsg;
+
+        view.setContentDescription(msg);
+    }
+
+    private String getDaysOfTheWeekContentDescription(Profile profile) {
+
+        String[] daysList = getContext().getResources().getStringArray(R.array.days_of_the_week);
+
+        String daysStr = "";
+
+        for(int i = 0; i < daysList.length; i++) {
+
+            if(profile.getDaysOfTheWeek().get(i)) {
+                daysStr += daysList[i];
+            }
+        }
+
+        return daysStr;
+    }
     private boolean checkIfSetDaily(ArrayList<Boolean> daysOfTheWeek) {
 
         for(int i = 0; i< DAYS_OF_THE_WEEK; i++) {
