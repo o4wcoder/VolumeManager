@@ -53,6 +53,8 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationServices;
 
+import org.w3c.dom.Text;
+
 /**
  * Class ProfileMainFragment
  * Author: Chris Hare
@@ -85,6 +87,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
     GeofenceManager mGeofenceManager;
     int mSelectedListItem = NO_SELECT;
     boolean mIsDeleteGeofence = false;
+    View mView;
 
 
     /**
@@ -154,27 +157,25 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
     @SuppressLint("NewApi")
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view;
+       // View view;
 
-        view = inflater.inflate(R.layout.fragment_main, container, false);
+        mView = inflater.inflate(R.layout.fragment_main, container, false);
 
         //Empty ListView view
-       ImageButton newProfileImage = (ImageButton) view.findViewById(R.id.profile_image_button);
-       // ViewStub emptyView = (ViewStub)view.findViewById(android.R.id.empty);
-      //  emptyView.inflate();
-       // LinearLayout emptyLayout = (LinearLayout)view.findViewById(android.R.id.empty);
+        ImageButton newProfileImage = (ImageButton) mView.findViewById(R.id.profile_image_button);
+        TextView newProfileTextView = (TextView)mView.findViewById(R.id.empty_text_view);
 
-        newProfileImage.setOnClickListener(new OnClickListener() {
-
+        OnClickListener newProfileListener = new OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 ((Callback)getActivity()).newProfile(mProfileType);
             }
+        };
 
-        });
+        newProfileImage.setOnClickListener(newProfileListener);
+        newProfileTextView.setOnClickListener(newProfileListener);
 
-        mListview = (ListView) view.findViewById(android.R.id.list);
+        mListview = (ListView) mView.findViewById(android.R.id.list);
         ViewGroup headerView = (ViewGroup) inflater.inflate(R.layout.listview_header, mListview, false);
         TextView headerTextView = (TextView) headerView.findViewById(R.id.profileHeaderTextView);
 
@@ -183,12 +184,12 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
         else {
             headerTextView.setText(getString(R.string.location_profile_header));
             newProfileImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_place_200dp));
-            ((TextView)view.findViewById(R.id.emptyTextView)).setText(R.string.add_location_profile);
+            ((TextView)mView.findViewById(R.id.empty_text_view)).setText(R.string.add_location_profile);
         }
 
         mListview.addHeaderView(headerView);
+        mListview.setEmptyView(mView.findViewById(android.R.id.empty));
 
-        mListview.setEmptyView(view.findViewById(android.R.id.empty));
 
         mListview.setOnItemClickListener(new OnItemClickListener() {
 
@@ -291,7 +292,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
 
             });
         }
-        return view;
+        return mView;
     }
 
     @Override
@@ -371,6 +372,10 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
         Uri profileUri = ProfileContract.ProfileEntry.buildProfileUri();
         String selection;
 
+        //Remove visibility of emtpy view for list. This is necessary because you will
+        //briefly see the empty view before the data gets loaded into the list.
+        mListview.getEmptyView().setVisibility(ListView.GONE);
+
         if (mProfileType == LOCATION_PROFILE_LIST)
             selection = ProfileManager.getLocationDbProfileSelection();
         else
@@ -415,8 +420,11 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
 
         }
 
+
+
+
         getActivity().supportStartPostponedEnterTransition();
-            Log.e(TAG, "onLoadFinished: Number of profiles = " + profileList.size());
+        Log.e(TAG, "onLoadFinished: Number of profiles = " + profileList.size());
 
 
         if (getActivity() != null && mListview != null && profileList != null) {
@@ -429,11 +437,16 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
                 mProfileAdapter = new ProfileListAdapter(getActivity(), profileList);
 
             mListview.setAdapter(mProfileAdapter);
+
+
+
             Log.e(TAG,"onLoadFinished(): Selected item index = " + mSelectedListItem);
             //If in 2 pane mode, set first profile in list to detail pane
             if(profileList.size() > 0 && mSelectedListItem < 0)
                 ((Callback)getActivity()).onLoadFinished(profileList.get(0),mProfileType);
         }
+
+
     }
 
     @Override

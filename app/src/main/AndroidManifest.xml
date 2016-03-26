@@ -109,6 +109,9 @@ android:configChanges="orientation|screenSize">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/PLACES_API_KEY" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="d7b07e10152213ba68ccb9155de07f4ee46527b0" />
     </application>
 
 </manifest>

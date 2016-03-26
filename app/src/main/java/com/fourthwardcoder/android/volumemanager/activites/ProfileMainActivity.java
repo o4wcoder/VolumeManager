@@ -2,6 +2,8 @@ package com.fourthwardcoder.android.volumemanager.activites;
 
 
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
 
 import com.fourthwardcoder.android.volumemanager.R;
@@ -62,6 +64,7 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Fabric.with(this, new Crashlytics());
 
 		Log.e(TAG, "onCreate()");
 		//Change status bar color

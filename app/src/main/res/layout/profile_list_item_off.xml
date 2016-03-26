@@ -54,6 +54,6 @@
         android:layout_weight="0"
         android:padding="16dp"
         android:alpha="@string/hint_disabled_text_alpha_dark"
-        android:src="@drawable/ic_volume_up_36dp"/>
+        android:src="@drawable/ic_alarm_36dp"/>
 
 </LinearLayout>

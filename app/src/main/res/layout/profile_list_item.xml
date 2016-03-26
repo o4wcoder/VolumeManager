@@ -52,7 +52,7 @@
         android:layout_gravity="right"
         android:layout_weight="0"
         android:padding="16dp"
-        android:src="@drawable/ic_volume_up_36dp"
+        android:src="@drawable/ic_alarm_36dp"
         android:tint="@color/app_primary_color"/>
 
 </LinearLayout>

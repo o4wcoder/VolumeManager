@@ -58,8 +58,8 @@ public class Profile implements Constants, Parcelable {
         enabled = true;
         startVolumeType = VOLUME_OFF;
         endVolumeType = VOLUME_VIBRATE;
-        startRingVolume = 1;
-        endRingVolume = 1;
+        startRingVolume = 0;
+        endRingVolume = 3;
         previousVolumeType = VOLUME_VIBRATE;
         previousRingVolume = 1;
         startDate = new Date();

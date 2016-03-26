@@ -35,7 +35,7 @@
                 android:tint="@color/app_accent_color" />
 
             <TextView
-                android:id="@+id/emptyTextView"
+                android:id="@+id/empty_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
