@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
@@ -13,6 +14,7 @@ import com.google.android.gms.maps.model.LatLng;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.media.AudioManager;
@@ -25,6 +27,7 @@ import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
@@ -155,7 +158,25 @@ public class Util implements Constants {
 	}
 	
 
-    
+    public static void setListIconColor(Context context, ImageView image, boolean inAlarm) {
+
+        if(inAlarm) {
+            image.setColorFilter(context.getResources().getColor(R.color.app_in_alarm_color));
+        }
+        else {
+            image.setColorFilter(context.getResources().getColor(R.color.app_primary_color));
+        }
+
+    }
+
+    public static void updateWidget(Context context, UUID profileId, int profileType) {
+
+        Intent alarmUpdateIntent = new Intent(ACTION_ALARM_UPDATED)
+                .setPackage(context.getPackageName());
+        alarmUpdateIntent.putExtra(EXTRA_PROFILE_ID,profileId);
+        alarmUpdateIntent.putExtra(EXTRA_PROFILE_TYPE,profileType);
+        context.sendBroadcast(alarmUpdateIntent);
+    }
     public static void setAudioManager(Context context, int ringType, int ringVolume) {
     	
     	

@@ -88,12 +88,14 @@ public class GeofenceService extends IntentService implements Constants {
 					if(geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
 						ringType = profile.getStartVolumeType();
 						ringVolume = profile.getStartRingVolume();
+						profile.setInAlarm(true);
 					}
 					else {
 						ringType = profile.getEndVolumeType();
-						ringVolume = profile.getEndRingVolume();	
+						ringVolume = profile.getEndRingVolume();
+						profile.setInAlarm(false);
 					}
-
+                    ProfileManager.updateProfile(getApplicationContext(),profile);
 					Util.setAudioManager(getApplicationContext(), ringType, ringVolume);
 
 					//Send notification if they are turned on
@@ -102,6 +104,9 @@ public class GeofenceService extends IntentService implements Constants {
 
 					boolean displayNotifications = prefs.getBoolean(notificationKey, Boolean.parseBoolean(getApplicationContext().
 							getString(R.string.pref_notifications_default)));
+
+                    //updateWidget
+                    Util.updateWidget(getApplicationContext(),profile.getId(),LOCATION_PROFILE_LIST);
 
 					if(displayNotifications)
 						showNotification(geofenceTransition,profile);

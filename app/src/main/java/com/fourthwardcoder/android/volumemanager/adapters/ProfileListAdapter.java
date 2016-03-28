@@ -91,6 +91,10 @@ public class ProfileListAdapter extends ArrayAdapter<Profile> implements Constan
         //Set up click listner on volume image button to turn profile on/off
         ImageView volumeImage = (ImageView)convertView.findViewById(R.id.volumeStartImageView);
 
+        //Change color of icon if we are currently in an active volume control
+        if(getItem(position).isEnabled())
+            Util.setListIconColor(getContext(),volumeImage,getItem(position).isInAlarm());
+
         volumeImage.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -123,11 +127,10 @@ public class ProfileListAdapter extends ArrayAdapter<Profile> implements Constan
 
         holder.titleTextView = (TextView)convertView.findViewById(R.id.profileTitleTextView);
         holder.titleTextView.setText(getItem(position).getTitle());
-        //holder.titleTextView.setAlpha(PRIMARY_TEXT_DARK);
 
         holder.timeTextView = (TextView)convertView.findViewById(R.id.timeTextView);
         holder.timeTextView.setText(Util.getFullTimeForListItem(mContext,getItem(position)));
-        //holder.timeTextView.setAlpha(SECONDARY_TEXT_DARK);
+
         holder.daysTextView = (TextView)convertView.findViewById(R.id.profileDaysTextView);
 
         //Display string "Daily" if alarm set for every day, otherwise display days set.

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -182,6 +184,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
         if (mProfileType == TIME_PROFILE_LIST) {
             headerTextView.setText(getString(R.string.profile_header));
             newProfileImage.setContentDescription(getString(R.string.add_time_profile));
+
         }
         else {
             headerTextView.setText(getString(R.string.location_profile_header));
@@ -203,12 +206,14 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
                 // TODO Auto-generated method stub
 
                 Profile p = (Profile) parent.getItemAtPosition(position);
-                Log.d(TAG, "Got profile " + p.getTitle());
-                mSelectedListItem = position;
+                if(p != null) {
 
-                TextView textView = (TextView) view.findViewById(R.id.profileTitleTextView);
+                    mSelectedListItem = position;
 
-                ((Callback) getActivity()).onItemSelected(p, mProfileType, textView);
+                    TextView textView = (TextView) view.findViewById(R.id.profileTitleTextView);
+
+                    ((Callback) getActivity()).onItemSelected(p, mProfileType, textView);
+                }
             }
 
         });
@@ -427,11 +432,11 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
 
 
         getActivity().supportStartPostponedEnterTransition();
-        Log.e(TAG, "onLoadFinished: Number of profiles = " + profileList.size());
+      //  Log.e(TAG, "onLoadFinished: Number of profiles = " + profileList.size());
 
 
         if (getActivity() != null && mListview != null && profileList != null) {
-            Log.e(TAG,"onLoadFinished: Set adapter");
+          //  Log.e(TAG,"onLoadFinished: Set adapter");
             //Store global copy
             mProfileList = profileList;
             if (mProfileType == LOCATION_PROFILE_LIST)
@@ -443,7 +448,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
 
 
 
-            Log.e(TAG,"onLoadFinished(): Selected item index = " + mSelectedListItem);
+          //  Log.e(TAG,"onLoadFinished(): Selected item index = " + mSelectedListItem);
             //If in 2 pane mode, set first profile in list to detail pane
             if(profileList.size() > 0 && mSelectedListItem < 0)
                 ((Callback)getActivity()).onLoadFinished(profileList.get(0),mProfileType);

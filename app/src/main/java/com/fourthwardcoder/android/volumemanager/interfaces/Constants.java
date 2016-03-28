@@ -31,6 +31,9 @@ public interface Constants {
     String EXTRA_LOCATION = "com.fourthwardcoder.android.volumemanager.extra_location";
     String EXTRA_PROFILE_TITLE = "com.fourthwardcoder.android.volumemanager.extra_profile_title";
     String EXTRA_PROFILE_LIST = "com.fourthwardcoder.android.volumemanager.extra_profile_list";
+
+	//Broadcast Actions
+	String ACTION_ALARM_UPDATED = "com.fourthwardcoder.android.volumemanager.action_alarm_update";
 	
 	float PRIMARY_TEXT_DARK = (float) .87;
 	float SECONDARY_TEXT_DARK = (float) .54;

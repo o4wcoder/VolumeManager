@@ -57,14 +57,8 @@ public class VolumeManagerService extends IntentService implements Constants {
 		int ringType = VOLUME_OFF;
 		int ringVolume = 1;
 
-		Log.e(TAG,"In onHandleIntent(). Get Profile ID");
-		
-		//SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
 		UUID profileId = (UUID)intent.getSerializableExtra(EXTRA_PROFILE_ID);
-		//profile = ProfileJSONManager.get(getApplicationContext()).getProfile(profileId);
         profile = ProfileManager.getProfile(this,profileId);
-
 
 		if(profile != null) {
 
@@ -94,7 +88,11 @@ public class VolumeManagerService extends IntentService implements Constants {
 					//Alarm period has ended, turn off flag
 					profile.setInAlarm(false);
 				}
-				
+
+				Log.e(TAG,"Sending broadcast that the alarm state has changed for id = " + profileId);
+				//Let UI know we have changes states on alarm status
+                Util.updateWidget(getApplicationContext(),profileId,TIME_PROFILE_LIST);
+
 				//Save profile updates to to alarm flag
 				//ProfileJSONManager.get(getApplicationContext()).saveProfiles();
 				ProfileManager.updateProfile(getApplicationContext(), profile);

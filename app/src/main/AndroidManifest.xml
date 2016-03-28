@@ -92,11 +92,28 @@ android:configChanges="orientation|screenSize">
             android:name=".services.GeofenceService"
             android:exported="false"></service>
 
+        <!-- Startup Receiver -->
         <receiver android:name=".services.StartupReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <!-- Profile Status Widget Provider-->
+        <receiver android:name=".widget.ProfileStatusWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.fourthwardcoder.android.volumemanager.action_alarm_update"/>
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_status" />
+        </receiver>
+
+        <!-- Profile Status Widget Service -->
+        <service android:name=".widget.ProfileStatusIntentService"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <meta-data
             android:name="com.google.android.gms.version"

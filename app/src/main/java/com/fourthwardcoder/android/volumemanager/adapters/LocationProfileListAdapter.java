@@ -1,6 +1,7 @@
 package com.fourthwardcoder.android.volumemanager.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.fragments.ProfileMainFragment;
+import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
 
@@ -88,6 +90,9 @@ public class LocationProfileListAdapter extends ArrayAdapter<Profile> implements
 
         //Set up click listner on volume image button to turn profile on/off
         ImageView volumeImage = (ImageView)convertView.findViewById(R.id.volumeStartImageView);
+
+        if(getItem(position).isEnabled())
+            Util.setListIconColor(getContext(), volumeImage, getItem(position).isInAlarm());
 
         volumeImage.setOnClickListener(new View.OnClickListener() {
 

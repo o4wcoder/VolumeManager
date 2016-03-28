@@ -8,6 +8,7 @@
     <color name="app_divider_color">#B6B6B6</color>
     <color name="app_primary_text_dark">#212121</color>
     <color name="app_secondary_text_dark">#727272</color>
+    <color name="app_in_alarm_color">@color/teal_accent_color</color>
 
     <color name="lightBlueColor">#E2F4FB</color>
     <color name="indigoPrimaryDark700">#303f9f</color>
@@ -15,6 +16,8 @@
     <color name="buttonColor">@color/app_primary_color</color>
     <color name="textColor">#7986cb</color>
     <color name="white">#ffffff</color>
+    <color name="wiget_background">#1E000000</color>
+    <color name="widget_title">#1E607D8B</color>
 
     <color name="bluegrey_dark_primary">#455A64</color>
     <color name="bluegrey_primary">#607D8B</color>
@@ -22,10 +25,10 @@
 
 
     <!-- Accent Colors -->
-    <color name ="green_accent_color">#009688</color>
     <color name="lime_accent_color">#CDDC39</color>
     <color name="amber_accent_color">#FFC107</color>
     <color name="blue_accent_color">#448AFF</color>
+    <color name="teal_accent_color">#009688</color>
 
 
     <color name="geofence_blue_color">#20536dfe</color>
