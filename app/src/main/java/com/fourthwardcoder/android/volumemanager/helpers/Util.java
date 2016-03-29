@@ -11,6 +11,9 @@ import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
 import com.google.android.gms.maps.model.LatLng;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -64,7 +67,7 @@ public class Util implements Constants {
             strMin = "0" + strMin;
 
         if(!DateFormat.is24HourFormat(context)) {
-            Log.e(TAG, "Hours in date: " + date.getHours());
+           // Log.e(TAG, "Hours in date: " + date.getHours());
             String am_or_pm = (date.getHours() < 12) ? "AM" : "PM";
 
             hour = calendar.get(Calendar.HOUR);
@@ -156,14 +159,31 @@ public class Util implements Constants {
 //
 //	    }
 	}
-	
 
-    public static void setListIconColor(Context context, ImageView image, boolean inAlarm) {
+    public static ValueAnimator getIconAnimator(Context context, ImageView image) {
 
-        if(inAlarm) {
-            image.setColorFilter(context.getResources().getColor(R.color.app_in_alarm_color));
-        }
-        else {
+        final int startColor = context.getResources().getColor(R.color.app_primary_color);
+        final int endColor = context.getResources().getColor(R.color.green_accent_color);
+
+        ValueAnimator valueAnimator = ObjectAnimator.ofInt(image, "colorFilter", startColor, endColor);
+        valueAnimator.setDuration(1000);
+        valueAnimator.setEvaluator(new ArgbEvaluator());
+        valueAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        valueAnimator.setRepeatMode(ValueAnimator.REVERSE);
+
+        return valueAnimator;
+    }
+
+    public static void setListIconColor(Context context, ValueAnimator va, ImageView image, boolean inAlarm) {
+
+        if (inAlarm) {
+            // image.setColorFilter(context.getResources().getColor(R.color.app_in_alarm_color));
+            Log.e(TAG, "Got in alarm, starting animation");
+            va.start();
+        } else {
+            if (va.isRunning())
+                va.cancel();
+
             image.setColorFilter(context.getResources().getColor(R.color.app_primary_color));
         }
 

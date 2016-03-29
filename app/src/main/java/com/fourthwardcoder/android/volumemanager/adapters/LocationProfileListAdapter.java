@@ -1,5 +1,6 @@
 package com.fourthwardcoder.android.volumemanager.adapters;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ public class LocationProfileListAdapter extends ArrayAdapter<Profile> implements
 
     private Context mContext;
     ProfileMainFragment mCallingFragment;
+    ValueAnimator mValueAnimator;
 
     private static final int NORMAL_PROFILE = 0;
     private static final int MOVING_PROFILE = 1;
@@ -81,6 +83,18 @@ public class LocationProfileListAdapter extends ArrayAdapter<Profile> implements
                 //Set up disabled profile
                 convertView = inflater.inflate(R.layout.location_profile_list_item_off,null);
             }
+
+            holder.titleTextView = (TextView)convertView.findViewById(R.id.profileTitleTextView);
+            holder.addressTextView = (TextView)convertView.findViewById(R.id.addressTextView);
+            holder.cityTextView = (TextView)convertView.findViewById(R.id.cityTextView);
+            holder.iconImageView = (ImageView)convertView.findViewById(R.id.volumeStartImageView);
+
+            //Change color of icon if we are currently in an active volume control
+            if(getItem(position).isEnabled()) {
+                mValueAnimator = Util.getIconAnimator(getContext(),holder.iconImageView);
+                Util.setListIconColor(getContext(),mValueAnimator, holder.iconImageView, getItem(position).isInAlarm());
+            }
+
             convertView.setTag(holder);
         }
         else {
@@ -89,26 +103,20 @@ public class LocationProfileListAdapter extends ArrayAdapter<Profile> implements
         }
 
         //Set up click listner on volume image button to turn profile on/off
-        ImageView volumeImage = (ImageView)convertView.findViewById(R.id.volumeStartImageView);
-
-        if(getItem(position).isEnabled())
-            Util.setListIconColor(getContext(), volumeImage, getItem(position).isInAlarm());
-
-        volumeImage.setOnClickListener(new View.OnClickListener() {
+        holder.iconImageView.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 //get the position from the view's tag
 
-                Integer listPosition = (Integer)v.getTag();
+                Integer listPosition = (Integer) v.getTag();
 
                 //Toggle Porfile's enabled state
-                if(getItem(listPosition).isEnabled()) {
+                if (getItem(listPosition).isEnabled()) {
 
                     //Turn off geofence for this profile
                     getItem(listPosition).setEnabled(false);
-                }
-                else {
+                } else {
                     //Turn on geofence for this profile
                     getItem(listPosition).setEnabled(true);
                 }
@@ -119,24 +127,17 @@ public class LocationProfileListAdapter extends ArrayAdapter<Profile> implements
                 notifyListViewChanged();
 
                 //Callback to modify the geofence for this profile
-                mCallingFragment.onToggleLocationIcon(getItem(listPosition).isEnabled(),getItem(listPosition).getId().toString());
+                mCallingFragment.onToggleLocationIcon(getItem(listPosition).isEnabled(), getItem(listPosition).getId().toString());
 
             }
 
         });
 
-        volumeImage.setTag(new Integer(position));
-        //Set title
-        holder.titleTextView = (TextView)convertView.findViewById(R.id.profileTitleTextView);
+        //Set view's data
+        holder.iconImageView.setTag(new Integer(position));
         holder.titleTextView.setText(getItem(position).getTitle());
-        //Set address
-        holder.addressTextView = (TextView)convertView.findViewById(R.id.addressTextView);
         holder.addressTextView.setText(getItem(position).getLocation().getAddress());
-        //Set city
-        holder.cityTextView = (TextView)convertView.findViewById(R.id.cityTextView);
         holder.cityTextView.setText(getItem(position).getLocation().getCity());
-
-
 
         return convertView;
     }
@@ -153,6 +154,7 @@ public class LocationProfileListAdapter extends ArrayAdapter<Profile> implements
         public TextView addressTextView;
         public TextView cityTextView;
         public TextView radiusTextView;
+        public ImageView iconImageView;
     }
 
     public interface LocationAdapterCallback {

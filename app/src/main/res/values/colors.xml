@@ -29,6 +29,7 @@
     <color name="amber_accent_color">#FFC107</color>
     <color name="blue_accent_color">#448AFF</color>
     <color name="teal_accent_color">#009688</color>
+    <color name="green_accent_color">#4CAF50</color>
 
 
     <color name="geofence_blue_color">#20536dfe</color>

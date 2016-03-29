@@ -1,5 +1,6 @@
 package com.fourthwardcoder.android.volumemanager.adapters;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ public class ProfileListAdapter extends ArrayAdapter<Profile> implements Constan
     private final static String TAG = ProfileListAdapter.class.getSimpleName();
 
     private Context mContext;
+    ValueAnimator mValueAnimator;
 
 
 
@@ -64,13 +66,12 @@ public class ProfileListAdapter extends ArrayAdapter<Profile> implements Constan
         int rowType = getItemViewType(position);
 
 
-        //Log.e(TAG,"VP: " + listView.getFirstVisiblePosition() +": " + getItem(listView.getFirstVisiblePosition()).getHour() + " hp: " + headerPosition);
-
-
-
         //If we weren't given a view, inflate one
         if (convertView == null) {
+
+            //Create ViewHolder and populate fields
             holder = new ViewHolder();
+
             LayoutInflater inflater = (LayoutInflater) mContext
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             if(rowType == NORMAL_PROFILE) {
@@ -81,6 +82,17 @@ public class ProfileListAdapter extends ArrayAdapter<Profile> implements Constan
                 //Set up disabled profile
                 convertView = inflater.inflate(R.layout.profile_list_item_off,null);
             }
+
+            //Get views of list item
+            holder.titleTextView = (TextView)convertView.findViewById(R.id.profileTitleTextView);
+            holder.timeTextView = (TextView)convertView.findViewById(R.id.timeTextView);
+            holder.daysTextView = (TextView)convertView.findViewById(R.id.profileDaysTextView);
+            holder.iconImageView = (ImageView)convertView.findViewById(R.id.volumeStartImageView);
+            //Change color of icon if we are currently in an active volume control
+            if(getItem(position).isEnabled()) {
+                mValueAnimator = Util.getIconAnimator(getContext(),holder.iconImageView);
+                Util.setListIconColor(getContext(),mValueAnimator, holder.iconImageView, getItem(position).isInAlarm());
+            }
             convertView.setTag(holder);
         }
         else {
@@ -88,50 +100,37 @@ public class ProfileListAdapter extends ArrayAdapter<Profile> implements Constan
 
         }
 
-        //Set up click listner on volume image button to turn profile on/off
-        ImageView volumeImage = (ImageView)convertView.findViewById(R.id.volumeStartImageView);
-
-        //Change color of icon if we are currently in an active volume control
-        if(getItem(position).isEnabled())
-            Util.setListIconColor(getContext(),volumeImage,getItem(position).isInAlarm());
-
-        volumeImage.setOnClickListener(new View.OnClickListener() {
+        holder.iconImageView.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 //get the position from the view's tag
 
-                Integer listPosition = (Integer)v.getTag();
-               // Log.e(TAG, "Click image at position " + v.getTag().toString());
+                Integer listPosition = (Integer) v.getTag();
+                // Log.e(TAG, "Click image at position " + v.getTag().toString());
 
                 //Toggle Porfile's enabled state
-                if(getItem(listPosition).isEnabled()) {
+                if (getItem(listPosition).isEnabled()) {
 
                     //Turn off alarms for this profile
                     getItem(listPosition).setEnabled(false);
                     VolumeManagerService.setServiceAlarm(mContext, getItem(listPosition), false);
-                }
-                else {
+                } else {
                     //Turn on alarms for this profile
                     getItem(listPosition).setEnabled(true);
                     VolumeManagerService.setServiceAlarm(mContext, getItem(listPosition), true);
                 }
                 //Save Profile change in DB
-                ProfileManager.updateProfile(mContext,getItem(listPosition));
+                ProfileManager.updateProfile(mContext, getItem(listPosition));
                 notifyListViewChanged();
             }
 
         });
 
-        volumeImage.setTag(new Integer(position));
-
-        holder.titleTextView = (TextView)convertView.findViewById(R.id.profileTitleTextView);
+        //Set view's data
+        holder.iconImageView.setTag(new Integer(position));
         holder.titleTextView.setText(getItem(position).getTitle());
-
-        holder.timeTextView = (TextView)convertView.findViewById(R.id.timeTextView);
         holder.timeTextView.setText(Util.getFullTimeForListItem(mContext,getItem(position)));
-
-        holder.daysTextView = (TextView)convertView.findViewById(R.id.profileDaysTextView);
 
         //Display string "Daily" if alarm set for every day, otherwise display days set.
         if(checkIfSetDaily(getItem(position).getDaysOfTheWeek()))
@@ -202,6 +201,9 @@ public class ProfileListAdapter extends ArrayAdapter<Profile> implements Constan
         public TextView titleTextView;
         public TextView timeTextView;
         public TextView daysTextView;
+        public ImageView iconImageView;
+
+
     }
 
 }
