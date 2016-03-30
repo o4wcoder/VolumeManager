@@ -6,10 +6,15 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.fourthwardcoder.android.volumemanager.data.ProfileContract.ProfileEntry;
 import com.fourthwardcoder.android.volumemanager.data.ProfileContract.LocationEntry;
+
 /**
- * Class ProfileDbHelper
- * Author: Chris Hare
+ * SQL Database Helper
+ * <p>
+ * Used for access into the Content Provider DB
+ * <p>
  * Created: 1/17/2016.
+ *
+ * @author Chris Hare
  */
 public class ProfileDbHelper extends SQLiteOpenHelper {
 
@@ -21,9 +26,10 @@ public class ProfileDbHelper extends SQLiteOpenHelper {
 
     /********************************************************************/
     /*                          Constructors                            */
+
     /********************************************************************/
     public ProfileDbHelper(Context context) {
-        super(context,DATABASE_NAME,null,DATABASE_VERSION);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
@@ -73,13 +79,12 @@ public class ProfileDbHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL(SQL_CREATE_LOCATION_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_PROFILE_TABLE);
-
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         //!!! May need to use ALTER TABLE here.
         //sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ProfileEntry.TABLE_NAME);
-       // onCreate(sqLiteDatabase);
+        // onCreate(sqLiteDatabase);
     }
 }

@@ -36,20 +36,29 @@ import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+/**
+ * Utility Helper
+ * <p>
+ * Class that defines static helper methods that are used throughout the app
+ * <p>
+ * Created 2/15/2016
+ *
+ * @author Chris Hare
+ */
 public class Util implements Constants {
-	
-	/***********************************************************************/
-	/*                           Constants                                 */
-	/***********************************************************************/
+
+    /***********************************************************************/
+    /*                           Constants                                 */
+    /***********************************************************************/
     private final static String TAG = "Util";
 
-	/**
-	 * Modify the format of the time of the alarms. Changes hour from
-	 * military time to standard. Also make sure the minute is two digits.
-	 *
-	 * @param date Stores the time of the alarm
-	 */
-	public static String formatTime(Context context, Date date) {
+    /**
+     * Modify the format of the time of the alarms. Changes hour from
+     * military time to standard. Also make sure the minute is two digits.
+     *
+     * @param date Stores the time of the alarm
+     */
+    public static String formatTime(Context context, Date date) {
 
         String time;
         int hour;
@@ -66,8 +75,8 @@ public class Util implements Constants {
         if (min < 10)
             strMin = "0" + strMin;
 
-        if(!DateFormat.is24HourFormat(context)) {
-           // Log.e(TAG, "Hours in date: " + date.getHours());
+        if (!DateFormat.is24HourFormat(context)) {
+            // Log.e(TAG, "Hours in date: " + date.getHours());
             String am_or_pm = (date.getHours() < 12) ? "AM" : "PM";
 
             hour = calendar.get(Calendar.HOUR);
@@ -77,78 +86,86 @@ public class Util implements Constants {
                 strHour = "12";
 
             time = strHour + ":" + strMin + " " + am_or_pm;
-        }
-        else {
+        } else {
             hour = calendar.get(Calendar.HOUR_OF_DAY);
             time = String.valueOf(hour) + ":" + strMin;
         }
 
-		return time;
-	}
+        return time;
+    }
 
-	public static String getFullTimeForListItem(Context context, Profile profile) {
+    /**
+     * Get Time String used as list item
+     *
+     * @param context context of calling activity
+     * @param profile data to set
+     * @return time string
+     */
+    public static String getFullTimeForListItem(Context context, Profile profile) {
 
-		return Util.formatTime(context, profile.getStartDate()) + " - " + Util.formatTime(context, profile.getEndDate());
-	}
+        return Util.formatTime(context, profile.getStartDate()) + " - " + Util.formatTime(context, profile.getEndDate());
+    }
 
-	/**
-	 * Modify the format of the time of the alarms. Changes hour from 
-	 * military time to standard. Also make sure the minute is two digits.
-	 * 
-	 * @param date Stores the time of the alarm
-	 */
-	public static void setTimeForLargeTextView(Context context, Date date, TextView textView) {
+    /**
+     * Modify the format of the time of the alarms. Changes hour from
+     * military time to standard. Also make sure the minute is two digits.
+     *
+     * @param date Stores the time of the alarm
+     */
+    public static void setTimeForLargeTextView(Context context, Date date, TextView textView) {
 
         //Make the AM or PM half the size of the time
-        String time = formatTime(context,date);
+        String time = formatTime(context, date);
 
-        if(!DateFormat.is24HourFormat(context)) {
+        if (!DateFormat.is24HourFormat(context)) {
             SpannableString ss1 = new SpannableString(time);
             ss1.setSpan(new RelativeSizeSpan(.5f), time.length() - 3, time.length(), 0);
 
             textView.setText(ss1);
-        }
-        else {
+        } else {
             textView.setText(time);
         }
-	}
-	
-	/**
-	 * Set the text on ring volume level
-	 * @param textView TextView to set the ring volume level
-	 * @param pos position of the seekbar
-	 */
-	public static void setRingVolumeText(TextView textView, int pos, int maxVolume) {
-		
-		textView.setText("(" + pos + "/" + maxVolume + ")");
-	}
-	
-	/**
-	 * Set the visibility of the RadioGroups. This is set by the on/off toggle switch
-	 * @param radioGroup RadioGroup to set the visibility on
-	 * @param set setting of the toggle switch
-	 */
-	public static void setRadioGroupVisibility(RadioGroup radioGroup, boolean set) {
-		
-		//Set visibility on each RadioButton in the Group
-		for(int i = 0; i <radioGroup.getChildCount(); i++)
-			((RadioButton)radioGroup.getChildAt(i)).setEnabled(set);
-	}
-	
-	/**
-	 * Set the ring volume seek bar at a specific position
-	 * @param alarmType which alarm (start or end) to set
-	 * @param pos seekbar position
-	 */
-	public static void setSeekBarPosition(SeekBar seekBar, TextView textView, int pos,int maxVolume) {
+    }
 
-		seekBar.setProgress(pos);
-		setRingVolumeText(textView,pos,maxVolume);
+    /**
+     * Set the text on ring volume level
+     *
+     * @param textView TextView to set the ring volume level
+     * @param pos      position of the seekbar
+     */
+    public static void setRingVolumeText(TextView textView, int pos, int maxVolume) {
 
-	}
-	
-	@SuppressLint("NewApi")
-	public static void setStatusBarColor(Activity activity) {
+        textView.setText("(" + pos + "/" + maxVolume + ")");
+    }
+
+    /**
+     * Set the visibility of the RadioGroups. This is set by the on/off toggle switch
+     *
+     * @param radioGroup RadioGroup to set the visibility on
+     * @param set        setting of the toggle switch
+     */
+    public static void setRadioGroupVisibility(RadioGroup radioGroup, boolean set) {
+
+        //Set visibility on each RadioButton in the Group
+        for (int i = 0; i < radioGroup.getChildCount(); i++)
+            ((RadioButton) radioGroup.getChildAt(i)).setEnabled(set);
+    }
+
+    /**
+     * Set the ring volume seek bar at a specific position
+     *
+     * @param alarmType which alarm (start or end) to set
+     * @param pos       seekbar position
+     */
+    public static void setSeekBarPosition(SeekBar seekBar, TextView textView, int pos, int maxVolume) {
+
+        seekBar.setProgress(pos);
+        setRingVolumeText(textView, pos, maxVolume);
+
+    }
+
+    @SuppressLint("NewApi")
+    public static void setStatusBarColor(Activity activity) {
 
 
 //	    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
@@ -158,8 +175,15 @@ public class Util implements Constants {
 //			window.setStatusBarColor(activity.getResources().getColor(R.color.app_primary_dark_color));
 //
 //	    }
-	}
+    }
 
+    /**
+     * Returns an instance of a Value Animator. This is used to animat the icon on the lists item
+     *
+     * @param context context of calling activity
+     * @param image   image to animate
+     * @return instance of value animator
+     */
     public static ValueAnimator getIconAnimator(Context context, ImageView image) {
 
         final int startColor = context.getResources().getColor(R.color.app_primary_color);
@@ -174,13 +198,24 @@ public class Util implements Constants {
         return valueAnimator;
     }
 
+    /**
+     * Set the color of the icon on the profile's list item. If a profile's volume control is active,
+     * it will display an pulsating animation. If not, it is set to the primary color.
+     *
+     * @param context context of calling activity
+     * @param va      value animator used to animate icon
+     * @param image   image to set the color
+     * @param inAlarm status of the profile
+     */
     public static void setListIconColor(Context context, ValueAnimator va, ImageView image, boolean inAlarm) {
 
+        //if profile is currently active, set the animation
         if (inAlarm) {
             // image.setColorFilter(context.getResources().getColor(R.color.app_in_alarm_color));
             Log.e(TAG, "Got in alarm, starting animation");
             va.start();
         } else {
+            //If the profile is not currently active, kill aimation if running and set primary color
             if (va.isRunning())
                 va.cancel();
 
@@ -189,61 +224,87 @@ public class Util implements Constants {
 
     }
 
+    /**
+     * Update the widget that data has changed
+     *
+     * @param context     context of calling app
+     * @param profileId   profile id
+     * @param profileType type of profile (Time/Location)
+     */
     public static void updateWidget(Context context, UUID profileId, int profileType) {
 
         Intent alarmUpdateIntent = new Intent(ACTION_ALARM_UPDATED)
                 .setPackage(context.getPackageName());
-        alarmUpdateIntent.putExtra(EXTRA_PROFILE_ID,profileId);
-        alarmUpdateIntent.putExtra(EXTRA_PROFILE_TYPE,profileType);
+        alarmUpdateIntent.putExtra(EXTRA_PROFILE_ID, profileId);
+        alarmUpdateIntent.putExtra(EXTRA_PROFILE_TYPE, profileType);
         context.sendBroadcast(alarmUpdateIntent);
     }
+
+    /**
+     * Use the Audio Manager to set the ring volume
+     *
+     * @param context    context of calling app
+     * @param ringType   ring type to set
+     * @param ringVolume ring volume to set
+     */
     public static void setAudioManager(Context context, int ringType, int ringVolume) {
-    	
-    	
-		AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
-		Log.e(TAG,"Max stream audio is " + audioManager.getStreamMaxVolume(AudioManager.STREAM_RING));
-		
-		if(ringType == VOLUME_OFF)
-			audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-		else if(ringType == VOLUME_VIBRATE)
-			audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-		else {
-			audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
 
-			if(ringVolume > 0 && ringVolume <= audioManager.getStreamMaxVolume(AudioManager.STREAM_RING))
-				audioManager.setStreamVolume(AudioManager.STREAM_RING, ringVolume, AudioManager.FLAG_PLAY_SOUND);
-		}
+        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+
+        Log.e(TAG, "Max stream audio is " + audioManager.getStreamMaxVolume(AudioManager.STREAM_RING));
+
+        if (ringType == VOLUME_OFF)
+            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+        else if (ringType == VOLUME_VIBRATE)
+            audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+        else {
+            audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+
+            if (ringVolume > 0 && ringVolume <= audioManager.getStreamMaxVolume(AudioManager.STREAM_RING))
+                audioManager.setStreamVolume(AudioManager.STREAM_RING, ringVolume, AudioManager.FLAG_PLAY_SOUND);
+        }
     }
-    
+
+    /**
+     * Get the max ring volume for this device. This can be different depending on the device
+     *
+     * @param context context of calling app
+     * @return return max ring volume
+     */
     public static int getMaxRingVolume(Context context) {
-    	AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-    	
-    	return audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
-    	
+        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+
+        return audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
     }
 
     /*****************************************************************************/
     /*                       Location/Maps Helpers                               */
     /*****************************************************************************/
+
+    /**
+     * Get the street address of latitude/longitude
+     *
+     * @param context context of calling app
+     * @param latLng  latitude/longitude
+     * @return street address of latitude/longitude
+     * @throws IOException
+     */
     public static Address getStreetAddress(Context context, LatLng latLng) throws IOException {
 
         //Get Address of current location
         Address currentAddress = null;
 
-        if(Geocoder.isPresent()) {
+        if (Geocoder.isPresent()) {
             Geocoder gcd = new Geocoder(context);
 
             List<Address> addresses = gcd.getFromLocation(latLng.latitude,
-                    latLng.longitude,1);
+                    latLng.longitude, 1);
 
-            if(addresses.size() > 0)
+            if (addresses.size() > 0)
                 currentAddress = addresses.get(0);
         }
 
         return currentAddress;
     }
-
-
-
 }

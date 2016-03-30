@@ -20,13 +20,15 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 /**
- * Class ProfileManager
- * Author: Chris Hare
+ * Profile Manager
+ * <p>
+ * Defines simple methods used to access the Content Provider's Database
+ * <p>
  * Created: 1/25/2016.
  *
- * Simple interface for the Profile Database
+ * @author Chris Hare
  */
-public class ProfileManager implements Constants{
+public class ProfileManager implements Constants {
 
     /**************************************************************************/
     /*                           Constants                                    */
@@ -35,7 +37,8 @@ public class ProfileManager implements Constants{
 
     /**
      * Get a profile from the Database
-     * @param context context of the calling activity
+     *
+     * @param context   context of the calling activity
      * @param profileId Id of the profile to retrieve
      * @return profile queried from the database
      */
@@ -52,7 +55,7 @@ public class ProfileManager implements Constants{
                 selectionArgs,
                 null);
 
-        if(cursor == null)
+        if (cursor == null)
             return null;
         else {
             //Move cursor to the row returned
@@ -64,7 +67,8 @@ public class ProfileManager implements Constants{
 
     /**
      * Get a location from the database
-     * @param context context of the calling activity
+     *
+     * @param context   context of the calling activity
      * @param profileId Id of the location to retrieve
      * @return location queried from the database
      */
@@ -81,7 +85,7 @@ public class ProfileManager implements Constants{
                 selectionArgs,
                 null);
 
-        if(cursor == null)
+        if (cursor == null)
             return null;
         else {
             //Move cursor to the row returned
@@ -93,6 +97,7 @@ public class ProfileManager implements Constants{
 
     /**
      * Get list of all Time profiles in the database
+     *
      * @param context context of calling activity
      * @return list of time profiles
      */
@@ -106,18 +111,17 @@ public class ProfileManager implements Constants{
                 null,
                 null);
 
-        if(cursor != null) {
+        if (cursor != null) {
 
             ArrayList<Profile> profileList = new ArrayList<>(cursor.getCount());
 
             cursor.moveToFirst();
-            while(cursor.moveToNext()) {
+            while (cursor.moveToNext()) {
                 Profile profile = new Profile(cursor);
                 profileList.add(profile);
             }
             return profileList;
-        }
-        else {
+        } else {
             return null;
         }
 
@@ -125,6 +129,7 @@ public class ProfileManager implements Constants{
 
     /**
      * Get list of all Location Profiles in the database
+     *
      * @param context context of calling activity
      * @return list of location profiles
      */
@@ -138,20 +143,19 @@ public class ProfileManager implements Constants{
                 null,
                 null);
 
-        if(cursor != null) {
+        if (cursor != null) {
 
             ArrayList<Profile> profileList = new ArrayList<>(cursor.getCount());
 
             cursor.moveToFirst();
-            while(cursor.moveToNext()) {
+            while (cursor.moveToNext()) {
                 Profile profile = new Profile(cursor);
                 //Pull Location Object out of DB and store in profile.
-                profile.setLocation(getLocation(context,profile.getLocationKey()));
+                profile.setLocation(getLocation(context, profile.getLocationKey()));
                 profileList.add(profile);
             }
             return profileList;
-        }
-        else {
+        } else {
             return null;
         }
 
@@ -159,6 +163,7 @@ public class ProfileManager implements Constants{
 
     /**
      * Update and existing profile in the database
+     *
      * @param context context of calling activity
      * @param profile profile to update
      * @return success result
@@ -179,6 +184,7 @@ public class ProfileManager implements Constants{
 
     /**
      * Insert a new Profile into the database
+     *
      * @param context context of calling activity
      * @param profile profile to insert
      * @return Uri success result
@@ -193,6 +199,7 @@ public class ProfileManager implements Constants{
 
     /**
      * Delete a profile from the database
+     *
      * @param context context of calling activity
      * @param profile profile to delete
      * @return success result
@@ -205,16 +212,15 @@ public class ProfileManager implements Constants{
         selectionArgs[0] = String.valueOf(profile.getId());
 
 
-        if(profile.isLocationProfile()) {
+        if (profile.isLocationProfile()) {
 
             //Need to delete location entry too
-            String locSelection = ProfileContract.LocationEntry._ID +"=?";
+            String locSelection = ProfileContract.LocationEntry._ID + "=?";
             String[] locSelectionArgs = new String[1];
             locSelectionArgs[0] = String.valueOf(profile.getLocationKey());
             context.getContentResolver().delete(ProfileContract.LocationEntry.CONTENT_URI, locSelection, locSelectionArgs);
 
-        }
-        else {
+        } else {
             //Kill alarms for volume control
             VolumeManagerService.setServiceAlarm(context.getApplicationContext(), profile, false);
         }
@@ -226,14 +232,15 @@ public class ProfileManager implements Constants{
 
     /**
      * Check to see if the database is empty
-     * @param context context of calling activity
+     *
+     * @param context     context of calling activity
      * @param profileType Which type of profiles to check if empty (Time or Location)
      * @return
      */
     public static boolean isDatabaseEmpty(Context context, int profileType) {
 
         String selection;
-        if(profileType == LOCATION_PROFILE_LIST)
+        if (profileType == LOCATION_PROFILE_LIST)
             selection = getLocationDbProfileSelection();
         else
             selection = getProfileDbSelection();
@@ -244,15 +251,14 @@ public class ProfileManager implements Constants{
                 null,
                 null);
 
-        if(cursor != null) {
+        if (cursor != null) {
 
             if (cursor.getCount() > 0) {
                 return false;
             } else {
                 return true;
             }
-        }
-        else {
+        } else {
             //Null cursor, return empty
             return true;
         }
@@ -260,6 +266,7 @@ public class ProfileManager implements Constants{
 
     /**
      * Get Time profile database selection
+     *
      * @return String selection
      */
     public static String getProfileDbSelection() {
@@ -269,6 +276,7 @@ public class ProfileManager implements Constants{
 
     /**
      * Get Location profile database selection
+     *
      * @return String selection
      */
     public static String getLocationDbProfileSelection() {
@@ -278,7 +286,8 @@ public class ProfileManager implements Constants{
 
     /**
      * Add location to database
-     * @param context context of calling activity
+     *
+     * @param context  context of calling activity
      * @param location location to insert into database
      * @return
      */
@@ -301,8 +310,9 @@ public class ProfileManager implements Constants{
 
     /**
      * Update existing location in database
-     * @param context context of calling activity
-     * @param location location to update
+     *
+     * @param context    context of calling activity
+     * @param location   location to update
      * @param locationId location key mapped to the profile table
      * @return success result
      */

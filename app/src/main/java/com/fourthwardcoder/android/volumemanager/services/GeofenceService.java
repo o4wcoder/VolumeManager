@@ -29,170 +29,174 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+/**
+ * Geofence Service
+ * <p>
+ * Handles all changes to the state of a Geofence. Particularly it listens for it's Enter and Exit
+ * triggers for each Location Profile.
+ * <p>
+ * Created 2/15/2016
+ *
+ * @author Chris Hare
+ */
 public class GeofenceService extends IntentService implements Constants {
 
-	/*************************************************************/
-	/*                       Constants                           */
-	/*************************************************************/
-	private final static String TAG = "GeofenceServce";
+    /*************************************************************/
+    /*                       Constants                           */
+    /*************************************************************/
+    private final static String TAG = "GeofenceServce";
 
-	public GeofenceService() {
-		super(TAG);
-		// TODO Auto-generated constructor stub
-	}
+    public GeofenceService() {
+        super(TAG);
+        // TODO Auto-generated constructor stub
+    }
 
-	@Override
-	protected void onHandleIntent(Intent intent) {
-		int ringType = VOLUME_OFF;
-		int ringVolume = 1;
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        int ringType = VOLUME_OFF;
+        int ringVolume = 1;
 
-		Log.e(TAG,"Inside GeofenceService onHandleIntent!!");
+        Log.e(TAG, "Inside GeofenceService onHandleIntent!!");
 
-		GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
-		if (geofencingEvent.hasError()) {
-			String errorMessage = GeofenceManager.getGeofenceErrorString(this,
-					geofencingEvent.getErrorCode());
-			Log.e(TAG, errorMessage);
-			return; 
-		} 
+        GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
+        if (geofencingEvent.hasError()) {
+            String errorMessage = GeofenceManager.getGeofenceErrorString(this,
+                    geofencingEvent.getErrorCode());
+            Log.e(TAG, errorMessage);
+            return;
+        }
 
-		// Get the transition type. 
-		int geofenceTransition = geofencingEvent.getGeofenceTransition();
-
-
-		// Test that the reported transition was of interest. 
-		if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ||
-				geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
+        // Get the transition type.
+        int geofenceTransition = geofencingEvent.getGeofenceTransition();
 
 
-			// Get the geofences that were triggered. A single event can trigger multiple geofences. 
-			List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
+        // Test that the reported transition was of interest.
+        if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ||
+                geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
 
-			// Get the transition details as a String. 
-			ArrayList<Profile> transitionProfileList = getGeofenceTransitionProfiles(
-					this,
-					geofenceTransition,
-					triggeringGeofences
-					); 
 
-			// Send notification and log the transition details. 
-			//sendNotification(geofenceTransitionDetails);
-			//Log.i(TAG, geofenceTransitionDetails);
+            // Get the geofences that were triggered. A single event can trigger multiple geofences.
+            List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
 
-			for(int i = 0; i < transitionProfileList.size(); i++) {
+            // Get the transition details as a String.
+            ArrayList<Profile> transitionProfileList = getGeofenceTransitionProfiles(
+                    this,
+                    geofenceTransition,
+                    triggeringGeofences
+            );
 
-				Profile profile = transitionProfileList.get(i);
+            for (int i = 0; i < transitionProfileList.size(); i++) {
 
-				if(profile != null) {
-					Log.i(TAG,"In geofence " + profile.getTitle());
-					if(geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
-						ringType = profile.getStartVolumeType();
-						ringVolume = profile.getStartRingVolume();
-						profile.setInAlarm(true);
-					}
-					else {
-						ringType = profile.getEndVolumeType();
-						ringVolume = profile.getEndRingVolume();
-						profile.setInAlarm(false);
-					}
-                    ProfileManager.updateProfile(getApplicationContext(),profile);
-					Util.setAudioManager(getApplicationContext(), ringType, ringVolume);
+                Profile profile = transitionProfileList.get(i);
 
-					//Send notification if they are turned on
-					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-					String notificationKey = getApplicationContext().getString(R.string.pref_location_notifications_key);
+                if (profile != null) {
+                    Log.i(TAG, "In geofence " + profile.getTitle());
+                    if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
+                        ringType = profile.getStartVolumeType();
+                        ringVolume = profile.getStartRingVolume();
+                        profile.setInAlarm(true);
+                    } else {
+                        ringType = profile.getEndVolumeType();
+                        ringVolume = profile.getEndRingVolume();
+                        profile.setInAlarm(false);
+                    }
+                    ProfileManager.updateProfile(getApplicationContext(), profile);
+                    Util.setAudioManager(getApplicationContext(), ringType, ringVolume);
 
-					boolean displayNotifications = prefs.getBoolean(notificationKey, Boolean.parseBoolean(getApplicationContext().
-							getString(R.string.pref_notifications_default)));
+                    //Send notification if they are turned on
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    String notificationKey = getApplicationContext().getString(R.string.pref_location_notifications_key);
+
+                    boolean displayNotifications = prefs.getBoolean(notificationKey, Boolean.parseBoolean(getApplicationContext().
+                            getString(R.string.pref_notifications_default)));
 
                     //updateWidget
-                    Util.updateWidget(getApplicationContext(),profile.getId(),LOCATION_PROFILE_LIST);
+                    Util.updateWidget(getApplicationContext(), profile.getId(), LOCATION_PROFILE_LIST);
 
-					if(displayNotifications)
-						showNotification(geofenceTransition,profile);
+                    // Send notification and log the transition details.
+                    if (displayNotifications)
+                        showNotification(geofenceTransition, profile);
 
-				}
-			}
-		} else { 
-			// Log the error. 
-			Log.e(TAG, getString(R.string.geofence_transition_invalid_type, geofenceTransition));
-		} 
-
-
-	}
-
-	/** 
-	 * Gets list of profiles that have triggered a transition. 
-	 * 
-	 * @param context               The app context. 
-	 * @param geofenceTransition    The ID of the geofence transition. 
-	 * @param triggeringGeofences   The geofence(s) triggered. 
-	 * @return                      List of Profiles that have transitioned. 
-	 */ 
-	private ArrayList<Profile> getGeofenceTransitionProfiles(
-			Context context,
-			int geofenceTransition,
-			List<Geofence> triggeringGeofences) {
+                }
+            }
+        } else {
+            // Log the error.
+            Log.e(TAG, getString(R.string.geofence_transition_invalid_type, geofenceTransition));
+        }
 
 
-		String geofenceTransitionString = getTransitionString(geofenceTransition);
+    }
 
+    /**
+     * Gets list of profiles that have triggered a transition.
+     *
+     * @param context             The app context.
+     * @param geofenceTransition  The ID of the geofence transition.
+     * @param triggeringGeofences The geofence(s) triggered.
+     * @return List of Profiles that have transitioned.
+     */
+    private ArrayList<Profile> getGeofenceTransitionProfiles(
+            Context context,
+            int geofenceTransition,
+            List<Geofence> triggeringGeofences) {
 
-		// Get the Ids of each geofence that was triggered. 
-		ArrayList<Profile> triggeringGeofenceProfileList = new ArrayList<>();
-		for (Geofence geofence : triggeringGeofences) {
+        String geofenceTransitionString = getTransitionString(geofenceTransition);
 
-			//Get Id of geofence. Turn from string to UUID
-			UUID profileID = UUID.fromString(geofence.getRequestId());
-			//Get Location Profile, based on id.
-			//LocationProfile triggeredProfile = ProfileJSONManager.get(this).getLocationProfile(profileID);
-			Profile triggeredProfile = ProfileManager.getProfile(this,profileID);
+        // Get the Ids of each geofence that was triggered.
+        ArrayList<Profile> triggeringGeofenceProfileList = new ArrayList<>();
+        for (Geofence geofence : triggeringGeofences) {
+
+            //Get Id of geofence. Turn from string to UUID
+            UUID profileID = UUID.fromString(geofence.getRequestId());
+            //Get Location Profile, based on id.
+            Profile triggeredProfile = ProfileManager.getProfile(this, profileID);
             //Add location table to profile object
             GeoFenceLocation location = ProfileManager.getLocation(this, triggeredProfile.getLocationKey());
             triggeredProfile.setLocation(location);
-			triggeringGeofenceProfileList.add(triggeredProfile);
-		} 
-		//String triggeringGeofencesIdsString = TextUtils.join(", ",  triggeringGeofenceProfileList);
+            triggeringGeofenceProfileList.add(triggeredProfile);
+        }
 
+        return triggeringGeofenceProfileList;
+    }
 
-		//return geofenceTransitionString + ": " + triggeringGeofencesIdsString;
-		return triggeringGeofenceProfileList;
-	} 
+    /**
+     * Maps geofence transition types to their human-readable equivalents.
+     *
+     * @param transitionType A transition type constant defined in Geofence
+     * @return A String indicating the type of transition
+     */
+    private String getTransitionString(int transitionType) {
+        switch (transitionType) {
+            case Geofence.GEOFENCE_TRANSITION_ENTER:
+                return getString(R.string.geofence_transition_entered);
+            case Geofence.GEOFENCE_TRANSITION_EXIT:
+                return getString(R.string.geofence_transition_exited);
+            default:
+                return getString(R.string.unknown_geofence_transition);
+        }
+    }
 
-	/** 
-	 * Maps geofence transition types to their human-readable equivalents. 
-	 * 
-	 * @param transitionType    A transition type constant defined in Geofence 
-	 * @return                  A String indicating the type of transition 
-	 */ 
-	private String getTransitionString(int transitionType) {
-		switch (transitionType) {
-		case Geofence.GEOFENCE_TRANSITION_ENTER:
-			return getString(R.string.geofence_transition_entered);
-		case Geofence.GEOFENCE_TRANSITION_EXIT:
-			return getString(R.string.geofence_transition_exited);
-		default: 
-			return getString(R.string.unknown_geofence_transition);
-		} 
-	} 
+    /**
+     * Show notification of Geofence transition
+     *
+     * @param transitionType type of Geofence transition
+     * @param profile        profile belonging to this Geofence
+     */
+    private void showNotification(int transitionType, Profile profile) {
 
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
 
-	private void showNotification(int transitionType, Profile profile) {
-
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTimeInMillis(System.currentTimeMillis());
-
-		//String strTime = Util.formatTime(this,calendar.getTime());
-		String strTitle;
-		int id;
-		if(transitionType == Geofence.GEOFENCE_TRANSITION_ENTER) {
-			strTitle = getString(R.string.geofence_transition_entered) + " " + profile.getTitle();
-			id = 1;
-		}
-		else {
-			strTitle = getString(R.string.geofence_transition_exited) + " " + profile.getTitle();
-			id = 2;
-		}
+        //String strTime = Util.formatTime(this,calendar.getTime());
+        String strTitle;
+        int id;
+        if (transitionType == Geofence.GEOFENCE_TRANSITION_ENTER) {
+            strTitle = getString(R.string.geofence_transition_entered) + " " + profile.getTitle();
+            id = 1;
+        } else {
+            strTitle = getString(R.string.geofence_transition_exited) + " " + profile.getTitle();
+            id = 2;
+        }
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_action_place_light)
                 .setContentTitle(strTitle)
@@ -202,20 +206,20 @@ public class GeofenceService extends IntentService implements Constants {
 
         Intent i = new Intent(this, ProfileDetailActivity.class);
 
-		i.putExtra(EXTRA_PROFILE,profile);
-        i.putExtra(EXTRA_PROFILE_TYPE,LOCATION_PROFILE_LIST);
+        i.putExtra(EXTRA_PROFILE, profile);
+        i.putExtra(EXTRA_PROFILE_TYPE, LOCATION_PROFILE_LIST);
 
-		PendingIntent resultPendingIntent =
-				PendingIntent.getActivity(
-						this,
-						0,
-						i,
-						PendingIntent.FLAG_UPDATE_CURRENT
-						);
-		mBuilder.setContentIntent(resultPendingIntent);
+        PendingIntent resultPendingIntent =
+                PendingIntent.getActivity(
+                        this,
+                        0,
+                        i,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
 
-		NotificationManager mNotifyMgr = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-		mNotifyMgr.notify(id,mBuilder.build());
-	}
+        NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotifyMgr.notify(id, mBuilder.build());
+    }
 
 }

@@ -26,116 +26,118 @@ import com.fourthwardcoder.android.volumemanager.models.Profile;
 
 /**
  * VolumeManagerService
- * 
- * Service that will fire off the start and end alarms for the volume 
+ * <p>
+ * Service that will fire off the start and end alarms for the volume
  * control. Each control has a start time and and end time.
- * 
- * @author Chris Hare
- * 3/13/15
+ * <p>
+ * Created: 3/13/15
  *
+ * @author Chris Hare
  */
 public class VolumeManagerService extends IntentService implements Constants {
 
-	/*********************************************************************/
-	/*                           Constants                               */
-	/*********************************************************************/
-	private static final int POLL_INTERVAL = 1000 * 5; //15 seconds
-	private static final String TAG = VolumeManagerService.class.getSimpleName();
+    /*********************************************************************/
+    /*                           Constants                               */
+    /*********************************************************************/
+    private static final int POLL_INTERVAL = 1000 * 5; //15 seconds
+    private static final String TAG = VolumeManagerService.class.getSimpleName();
 
-	/*********************************************************************/
-	/*                          Local Data                               */
-	/*********************************************************************/
-	Profile profile;
+    /*********************************************************************/
+    /*                          Local Data                               */
+    /*********************************************************************/
+    Profile profile;
 
-	public VolumeManagerService() {
-		super(TAG);
-		// TODO Auto-generated constructor stub
-	}
+    public VolumeManagerService() {
+        super(TAG);
+        // TODO Auto-generated constructor stub
+    }
 
-	@Override
-	protected void onHandleIntent(Intent intent) {
-		int ringType = VOLUME_OFF;
-		int ringVolume = 1;
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        int ringType = VOLUME_OFF;
+        int ringVolume = 1;
 
-		UUID profileId = (UUID)intent.getSerializableExtra(EXTRA_PROFILE_ID);
-        profile = ProfileManager.getProfile(this,profileId);
+        UUID profileId = (UUID) intent.getSerializableExtra(EXTRA_PROFILE_ID);
+        profile = ProfileManager.getProfile(this, profileId);
 
-		if(profile != null) {
+        if (profile != null) {
 
-            profile = ProfileManager.getProfile(getApplicationContext(),profileId);
-			//Only fire off volume change if it is set to start for that day, or is
-			//currently in the alarm period and waiting for it to end. It period may end on the next day
-			if(isAlarmSetForToday(profile) || (profile.isInAlarm() == true)) {
-				//See if this is a start or end alarm intent
-				boolean isStartAlarm = intent.getBooleanExtra(EXTRA_START_ALARM, true);
-				
-				//Special case when alarm has just been put in, we don't want the end alarm to just go off after 
-				//the alarm period has passed. So if we are at the end alarm and the profile is not in the 
-				//alarm period (Meaning the start alarm has not fired), then just return and do nothing.
-				if(!isStartAlarm && (profile.isInAlarm() == false)) {
-					return;
-			    }
-				
-				if(isStartAlarm) {
-					ringType = profile.getStartVolumeType();
-					ringVolume = profile.getStartRingVolume();
-					//Set flag saying that start alarm has been set and currently in alarm period
-					profile.setInAlarm(true);
-				}
-				else {
-					ringType = profile.getEndVolumeType();
-					ringVolume = profile.getEndRingVolume();
-					//Alarm period has ended, turn off flag
-					profile.setInAlarm(false);
-				}
+            profile = ProfileManager.getProfile(getApplicationContext(), profileId);
+            //Only fire off volume change if it is set to start for that day, or is
+            //currently in the alarm period and waiting for it to end. It period may end on the next day
+            if (isAlarmSetForToday(profile) || (profile.isInAlarm() == true)) {
+                //See if this is a start or end alarm intent
+                boolean isStartAlarm = intent.getBooleanExtra(EXTRA_START_ALARM, true);
 
-				Log.e(TAG,"Sending broadcast that the alarm state has changed for id = " + profileId);
-				//Let UI know we have changes states on alarm status
-                Util.updateWidget(getApplicationContext(),profileId,TIME_PROFILE_LIST);
+                //Special case when alarm has just been put in, we don't want the end alarm to just go off after
+                //the alarm period has passed. So if we are at the end alarm and the profile is not in the
+                //alarm period (Meaning the start alarm has not fired), then just return and do nothing.
+                if (!isStartAlarm && (profile.isInAlarm() == false)) {
+                    return;
+                }
 
-				//Save profile updates to to alarm flag
-				//ProfileJSONManager.get(getApplicationContext()).saveProfiles();
-				ProfileManager.updateProfile(getApplicationContext(), profile);
-				Log.d(TAG, "Inside onHandleIntent with start alarm with ring type " + ringType);
+                if (isStartAlarm) {
+                    ringType = profile.getStartVolumeType();
+                    ringVolume = profile.getStartRingVolume();
+                    //Set flag saying that start alarm has been set and currently in alarm period
+                    profile.setInAlarm(true);
+                } else {
+                    ringType = profile.getEndVolumeType();
+                    ringVolume = profile.getEndRingVolume();
+                    //Alarm period has ended, turn off flag
+                    profile.setInAlarm(false);
+                }
 
-				//Get access to system audio manager and set volume
-				Util.setAudioManager(getApplicationContext(), ringType, ringVolume);
+                Log.e(TAG, "Sending broadcast that the alarm state has changed for id = " + profileId);
+                //Let UI know we have changes states on alarm status
+                Util.updateWidget(getApplicationContext(), profileId, TIME_PROFILE_LIST);
 
-				//Send notification if they are turned on
-				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                //Save profile updates to to alarm flag
+                //ProfileJSONManager.get(getApplicationContext()).saveProfiles();
+                ProfileManager.updateProfile(getApplicationContext(), profile);
+                Log.d(TAG, "Inside onHandleIntent with start alarm with ring type " + ringType);
 
-				//Get Time notification setting
-			    String notificationKey = getApplicationContext().getString(R.string.pref_time_notifications_key);
+                //Get access to system audio manager and set volume
+                Util.setAudioManager(getApplicationContext(), ringType, ringVolume);
 
-				boolean displayNotifications = prefs.getBoolean(notificationKey,Boolean.parseBoolean(getApplicationContext().
+                //Send notification if they are turned on
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+                //Get Time notification setting
+                String notificationKey = getApplicationContext().getString(R.string.pref_time_notifications_key);
+
+                boolean displayNotifications = prefs.getBoolean(notificationKey, Boolean.parseBoolean(getApplicationContext().
                         getString(R.string.pref_notifications_default)));
 
-				if(displayNotifications)
-					showNotification(isStartAlarm);
+                if (displayNotifications)
+                    showNotification(isStartAlarm);
 
-			}
-		}
-		else
-			Log.d(TAG,"In onHandleIntent with null profile!!");
+            }
+        } else
+            Log.d(TAG, "In onHandleIntent with null profile!!");
 
-	}
+    }
 
-	private void showNotification(boolean isStartAlarm) {
+    /**
+     * Show notification of Volume Control state change
+     *
+     * @param isStartAlarm if this change is the start of the control
+     */
+    private void showNotification(boolean isStartAlarm) {
 
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTimeInMillis(System.currentTimeMillis());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
 
-		String strTime = Util.formatTime(this,calendar.getTime());
-		String strTitle;
-		int id;
-		if(isStartAlarm) {
-			strTitle = "Start Alarm: " + profile.getTitle();
-			id = 1;
-		}
-		else {
-			strTitle = "End Alarm: " + profile.getTitle();
-			id = 2;
-		}
+        String strTime = Util.formatTime(this, calendar.getTime());
+        String strTitle;
+        int id;
+        if (isStartAlarm) {
+            strTitle = "Start Alarm: " + profile.getTitle();
+            id = 1;
+        } else {
+            strTitle = "End Alarm: " + profile.getTitle();
+            id = 2;
+        }
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_action_volume_on_light)
@@ -144,135 +146,140 @@ public class VolumeManagerService extends IntentService implements Constants {
                 .setGroupSummary(true)
                 .setContentText(strTime);
 
-        Intent i = new Intent(this,ProfileDetailActivity.class);
+        Intent i = new Intent(this, ProfileDetailActivity.class);
 
-        i.putExtra(EXTRA_PROFILE,profile);
-        i.putExtra(EXTRA_PROFILE_TYPE,TIME_PROFILE_LIST);
-        
-	    PendingIntent resultPendingIntent =
-	    	    PendingIntent.getActivity(
-	    	    this,
-	    	    0,
-	    	    i,
-	    	    PendingIntent.FLAG_UPDATE_CURRENT
-	    	);
-	    mBuilder.setContentIntent(resultPendingIntent);
-	    
-		NotificationManager mNotifyMgr = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-		mNotifyMgr.notify(id,mBuilder.build());
-	}
+        i.putExtra(EXTRA_PROFILE, profile);
+        i.putExtra(EXTRA_PROFILE_TYPE, TIME_PROFILE_LIST);
 
-	/**
-	 * 
-	 * @param profile
-	 * @return
-	 */
-	private boolean isAlarmSetForToday(Profile profile) {
+        PendingIntent resultPendingIntent =
+                PendingIntent.getActivity(
+                        this,
+                        0,
+                        i,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
 
-		Calendar calendar = Calendar.getInstance();
-		int day = calendar.get(Calendar.DAY_OF_WEEK);
+        NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotifyMgr.notify(id, mBuilder.build());
+    }
 
-		ArrayList<Boolean> dayArray = profile.getDaysOfTheWeek();
+    /**********************************************************************************/
+    /*                                Private Methods                                 */
+    /**********************************************************************************/
+    /**
+     * Checks if the volume control alarm is set for current day of the week
+     *
+     * @param profile profile to check
+     * @return if alarm set for today
+     */
+    private boolean isAlarmSetForToday(Profile profile) {
 
-		if(dayArray.get(day-1))
-			return true;
-		else
-			return false;
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+
+        ArrayList<Boolean> dayArray = profile.getDaysOfTheWeek();
+
+        if (dayArray.get(day - 1))
+            return true;
+        else
+            return false;
 
 
-	}
-	/*********************************************************************/
+    }
+
+    /**
+     * Get an instance of a calendar from a specific hour and minute
+     *
+     * @param date Date object to convert to Calendar.
+     * @return
+     */
+    private static Calendar getCalendar(Date date) {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, date.getHours());
+        calendar.set(Calendar.MINUTE, date.getMinutes());
+
+        return calendar;
+    }
+
+    /*********************************************************************/
 	/*                          Public Methods                           */
-	/*********************************************************************/
-	/**
-	 * Used to setup an alarm at a specific time. The two start/end 
-	 * alarms will call this PendingIntent to modify the volume as
-	 * indicated
-	 * 
-	 * @param context the context of calling fragment
-	 * @param isOn flag to turn the alarm on/off
-	 */
-	public static void setServiceAlarm(Context context, Profile profile, boolean isOn) {
+    /*********************************************************************/
+    /**
+     * Used to setup an alarm at a specific time. The two start/end
+     * alarms will call this PendingIntent to modify the volume as
+     * indicated
+     *
+     * @param context the context of calling fragment
+     * @param isOn    flag to turn the alarm on/off
+     */
+    public static void setServiceAlarm(Context context, Profile profile, boolean isOn) {
 
-		//Construct pending intent that will start PollService
-		Log.e(TAG,"Setting Service (start/end) Alarm for profile " + profile.getTitle());
-		//Create start alarm intent
-
-
-		Intent startIntent = new Intent(context, VolumeManagerService.class);
-		startIntent.putExtra(EXTRA_START_ALARM,true);
-		startIntent.putExtra(EXTRA_PROFILE_ID, profile.getId());
-
-		PendingIntent startPi = PendingIntent.getService(context, profile.getStartAlarmId(), startIntent, 0);
-
-		//Create end alarm intent
-		Intent endIntent = new Intent(context, VolumeManagerService.class);
-		endIntent.putExtra(EXTRA_START_ALARM,false);
-		endIntent.putExtra(EXTRA_PROFILE_ID, profile.getId());
-
-		PendingIntent endPi = PendingIntent.getService(context, profile.getEndAlarmId(), endIntent, 0);
+        //Construct pending intent that will start PollService
+        Log.e(TAG, "Setting Service (start/end) Alarm for profile " + profile.getTitle());
+        //Create start alarm intent
 
 
-		//Set up alarm
-		AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        Intent startIntent = new Intent(context, VolumeManagerService.class);
+        startIntent.putExtra(EXTRA_START_ALARM, true);
+        startIntent.putExtra(EXTRA_PROFILE_ID, profile.getId());
 
-		if(isOn) {
+        PendingIntent startPi = PendingIntent.getService(context, profile.getStartAlarmId(), startIntent, 0);
 
-			//Get start time
-			Calendar startCalendar = getCalendar(profile.getStartDate());
-			//Start the alarm. Fire the Pending Intent "pi" when the alarm goes off
-			alarmManager.setRepeating(AlarmManager.RTC, startCalendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, startPi);
-			//Get End Time
-			Calendar endCalendar = getCalendar(profile.getEndDate());
-			//Start the alarm. Fire the Pending Intent "pi" when the alarm goes off
-			alarmManager.setRepeating(AlarmManager.RTC, endCalendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, endPi);
+        //Create end alarm intent
+        Intent endIntent = new Intent(context, VolumeManagerService.class);
+        endIntent.putExtra(EXTRA_START_ALARM, false);
+        endIntent.putExtra(EXTRA_PROFILE_ID, profile.getId());
 
-		}
-		else {
-			//Cancel the alarm
-			Log.e(TAG,"Volume Service Stopped");
-			alarmManager.cancel(startPi);
-			alarmManager.cancel(endPi);
-			startPi.cancel();
-			endPi.cancel();
-		}
+        PendingIntent endPi = PendingIntent.getService(context, profile.getEndAlarmId(), endIntent, 0);
 
-		//Store if alarm is on or off so StartupReceiver can use it to turn
-		//it on at bootup
-		//	PreferenceManager.getDefaultSharedPreferences(context)
-		//	.edit().putBoolean(PREF_IS_ALARM_ON, isOn).commit();
-	}
 
-	/**
-	 * Get an instance of a calendar from a specific hour and minute
-	 * @param date Date object to convert to Calendar.
-	 * @return
-	 */
-	private static Calendar getCalendar(Date date) {
+        //Set up alarm
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTimeInMillis(System.currentTimeMillis());
-		calendar.set(Calendar.HOUR_OF_DAY, date.getHours());
-		calendar.set(Calendar.MINUTE, date.getMinutes());
+        if (isOn) {
 
-		return calendar;
-	}
+            //Get start time
+            Calendar startCalendar = getCalendar(profile.getStartDate());
+            //Start the alarm. Fire the Pending Intent "pi" when the alarm goes off
+            alarmManager.setRepeating(AlarmManager.RTC, startCalendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, startPi);
+            //Get End Time
+            Calendar endCalendar = getCalendar(profile.getEndDate());
+            //Start the alarm. Fire the Pending Intent "pi" when the alarm goes off
+            alarmManager.setRepeating(AlarmManager.RTC, endCalendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, endPi);
 
-	/**
-	 * Check if the alarm is on or not
-	 * @param context the context of the calling fragment
-	 * @return
-	 */
-	public static boolean isServiceAlarmOn(Context context) {
-		Intent i = new Intent(context, VolumeManagerService.class);
+        } else {
+            //Cancel the alarm
+            Log.e(TAG, "Volume Service Stopped");
+            alarmManager.cancel(startPi);
+            alarmManager.cancel(endPi);
+            startPi.cancel();
+            endPi.cancel();
+        }
 
-		//Use "FLAG_NO_CREATE" to just tell if the alarm is
-		//on or not and don't start the PendingIntent
-		PendingIntent pi = PendingIntent.getService(context, 0, i,
-				PendingIntent.FLAG_NO_CREATE);
+        //Store if alarm is on or off so StartupReceiver can use it to turn
+        //it on at bootup
+        //	PreferenceManager.getDefaultSharedPreferences(context)
+        //	.edit().putBoolean(PREF_IS_ALARM_ON, isOn).commit();
+    }
 
-		//Null pending intent means that the alarm is not set
-		return pi != null;
-	}
+    /**
+     * Check if the alarm is on or not
+     *
+     * @param context the context of the calling fragment
+     * @return if alarm is on
+     */
+    public static boolean isServiceAlarmOn(Context context) {
+        Intent i = new Intent(context, VolumeManagerService.class);
 
+        //Use "FLAG_NO_CREATE" to just tell if the alarm is
+        //on or not and don't start the PendingIntent
+        PendingIntent pi = PendingIntent.getService(context, 0, i,
+                PendingIntent.FLAG_NO_CREATE);
+
+        //Null pending intent means that the alarm is not set
+        return pi != null;
+    }
 }

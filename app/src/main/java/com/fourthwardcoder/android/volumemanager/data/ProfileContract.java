@@ -6,11 +6,13 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
- * Class ProfileContract
- * Author: Chris Hare
+ * Profile Contract for Content Provider
+ * <p>
+ * Contract of Content Provider. Defines column names for the Profile database.
+ * <p>
  * Created: 1/17/2016
  *
- * Contract of Content Provider. Defines column names for the Profile database.
+ * @author Chris Hare
  */
 public class ProfileContract {
 
@@ -51,6 +53,7 @@ public class ProfileContract {
 
     /*********************************************************************/
     /*                       Location Table Entry                        */
+
     /*********************************************************************/
     public static class LocationEntry implements BaseColumns {
 
@@ -75,12 +78,13 @@ public class ProfileContract {
         public static final String COLUMN_RADIUS = "location_radius";
 
         public static Uri buildLocationUri(long id) {
-            return ContentUris.withAppendedId(CONTENT_URI,id);
+            return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
 
     /*********************************************************************/
     /*                        Profile Table Entry                        */
+
     /*********************************************************************/
     public static class ProfileEntry implements BaseColumns {
 

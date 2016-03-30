@@ -11,11 +11,13 @@ import android.net.Uri;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
 
 /**
- * Class ProfileProvider
- * Author: Chris Hare
+ * Profile Provider
+ *
+ * Content Provider defining entry points into the Databae
+ *
  * Created: 1/17/2016.
- * <p/>
- * Content Provider
+ *
+ * @author Chris Hare
  */
 public class ProfileProvider extends ContentProvider{
 

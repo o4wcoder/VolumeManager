@@ -69,35 +69,35 @@ import com.google.android.gms.maps.model.LatLng;
 import com.squareup.picasso.Picasso;
 
 /**
- * Class ProfileDetailFragment
- *
- * @author Chris Hare
+ * Profile Detail Fragment
+ * <p>
+ * Fragment of the Profile Detail's. Here is where all settings of a profile are made
+ * <p>
  * Created: 3/13/2015
  *
- * Fragment of the Profile Detail's. Here is where all settings of a profile are made
+ * @author Chris Hare
  */
-public class ProfileDetailFragment extends Fragment implements  LocationProfileListAdapter.LocationAdapterCallback, GoogleApiClient.ConnectionCallbacks,
+public class ProfileDetailFragment extends Fragment implements LocationProfileListAdapter.LocationAdapterCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, ResultCallback<Status>, Constants {
-	
-	/************************************************************************/
-	/*                           Constants                                  */
-	/************************************************************************/
-	private final static String TAG = ProfileDetailFragment.class.getSimpleName();
-	//Tag for the time piker Dialog
-	private static final String DIALOG_TIME = "time";
-	
-	//Constant for request code to Time Picker
-	public static final int REQUEST_START_TIME = 0;
-	public static final int REQUEST_END_TIME = 1;
+
+    /************************************************************************/
+    /*                           Constants                                  */
+    /************************************************************************/
+    private final static String TAG = ProfileDetailFragment.class.getSimpleName();
+    //Tag for the time piker Dialog
+    private static final String DIALOG_TIME = "time";
+
+    //Constant for request code to Time Picker
+    public static final int REQUEST_START_TIME = 0;
+    public static final int REQUEST_END_TIME = 1;
     //Request code for MAP Activity Callback
     public static final int REQUEST_LOCATION_UPDATE = 2;
     //Duration of day button fade in
     public static int BUTTON_FADE_DURATION = 500;
 
-
     //Google Static Maps paramters
     private static final String GOOGLE_STAIC_MAPS_URL = "http://maps.google.com/maps/api/staticmap";
-	private static final String MAPS_PARAM_CENTER = "center";
+    private static final String MAPS_PARAM_CENTER = "center";
     private static final String MAPS_PARAM_SIZE = "size";
     private static final String MAPS_PARAM_ZOOM = "zoom";
     private static final String MAPS_PARAM_SENSOR = "sensor";
@@ -106,18 +106,18 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
     private static final String MAPS_SIZE_SMALL = "400x200";
     private static final String MAPS_ZOOM_VAL = "15";
     private static final String MAPS_SENSOR_VAL = "false";
-	/************************************************************************/
+    /************************************************************************/
 	/*                          Local Data                                  */
-	/************************************************************************/
-	Profile mProfile;
-	TextView mTitleTextView, startTimeTextView, endTimeTextView;
-	RadioGroup startVolumeRadioGroup;
-	RadioGroup endVolumeRadioGroup;
-	SeekBar startRingSeekBar, endRingSeekBar;
-	TextView startRingVolumeTextView, endRingVolumeTextView;
-	ImageView startVolumeImageView, endVolumeImageView;
+    /************************************************************************/
+    Profile mProfile;
+    TextView mTitleTextView, startTimeTextView, endTimeTextView;
+    RadioGroup startVolumeRadioGroup;
+    RadioGroup endVolumeRadioGroup;
+    SeekBar startRingSeekBar, endRingSeekBar;
+    TextView startRingVolumeTextView, endRingVolumeTextView;
+    ImageView startVolumeImageView, endVolumeImageView;
 
-	boolean mIsNewProfile = false;
+    boolean mIsNewProfile = false;
     boolean mIsSaveGeofence = true;
 
     int mProfileType;
@@ -141,9 +141,10 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 
 
     }
-	/*******************************************************/
+    /*******************************************************/
 	/*                  Override Methods                   */
-	/*******************************************************/
+
+    /*******************************************************/
     @SuppressLint("ResourceAsColor")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -152,10 +153,10 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
         view = inflater.inflate(R.layout.fragment_profile_detail, container, false);
 
         //First check if we have don't have anything in saveInstanceState from a rotation
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
 
             Bundle arguments = getArguments();
-            if(arguments != null) {
+            if (arguments != null) {
                 // mProfileType = intent.getIntExtra(EXTRA_PROFILE_TYPE,TIME_PROFILE_LIST);
                 mProfileType = arguments.getInt(EXTRA_PROFILE_TYPE);
                 //See if we have a Profile object. If so we are editing the Profile.
@@ -170,16 +171,15 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
                     mIsNewProfile = true;
                 }
             } else {
-                Log.e(TAG,"Arguments are null!");
+                Log.e(TAG, "Arguments are null!");
             }
-        }
-        else {
-            Log.e(TAG,"Saved vars");
+        } else {
+            Log.e(TAG, "Saved vars");
             //Restore Profile from rotation.
             mProfile = savedInstanceState.getParcelable(EXTRA_PROFILE);
             mProfileType = savedInstanceState.getInt(EXTRA_PROFILE_TYPE);
             mIsNewProfile = savedInstanceState.getBoolean(EXTRA_IS_NEW_PROFILE);
-            Log.e(TAG,"Saved mProfile type " + mProfileType);
+            Log.e(TAG, "Saved mProfile type " + mProfileType);
         }
 
         //Setup Toolbar
@@ -235,10 +235,10 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
                 Log.e(TAG, "Button tag: " + v.getTag());
                 TextView textView = (TextView) v;
                 boolean setting = daysOfTheWeek.get((int) v.getTag());
-                int index = (int)v.getTag();
+                int index = (int) v.getTag();
 
                 Log.e(TAG, "Days of the week before change");
-                Log.e(TAG,mProfile.getDaysOfWeekDebugString());
+                Log.e(TAG, mProfile.getDaysOfWeekDebugString());
                 if (setting) {
                     //Turn Day off
                     Log.e(TAG, "Turn Day " + daysButtonNames[index] + " off");
@@ -246,8 +246,8 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
                     daysOfTheWeek.set(index, Boolean.FALSE);
                     textView.setTextColor(getResources().getColor(R.color.app_primary_text_dark));
                     textView.setBackground(getResources().getDrawable(R.drawable.round_button_off));
-                    
-                  //  v.animate().setDuration(BUTTON_FADE_DURATION).alpha(0f);
+
+                    //  v.animate().setDuration(BUTTON_FADE_DURATION).alpha(0f);
 
                 } else {
                     //Turn Day on
@@ -255,14 +255,14 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
                     daysOfTheWeek.set(index, Boolean.TRUE);
                     textView.setTextColor(Color.parseColor("#ffffff"));
                     textView.setBackground(getResources().getDrawable(R.drawable.round_button));
-                  //  v.animate().setDuration(BUTTON_FADE_DURATION).alpha(1f);
+                    //  v.animate().setDuration(BUTTON_FADE_DURATION).alpha(1f);
                 }
 
                 //Update days of the week in Profile
                 mProfile.setDaysOfTheWeek(daysOfTheWeek);
 
                 Log.e(TAG, "Days of the week after change");
-                Log.e(TAG,mProfile.getDaysOfWeekDebugString());
+                Log.e(TAG, mProfile.getDaysOfWeekDebugString());
 
 
             }
@@ -278,8 +278,8 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
             //Set Profile title
             mTitleTextView.setText(mProfile.getTitle());
 
-            Log.e(TAG,"Days of the week loading profile");
-            Log.e(TAG,mProfile.getDaysOfWeekDebugString());
+            Log.e(TAG, "Days of the week loading profile");
+            Log.e(TAG, mProfile.getDaysOfWeekDebugString());
             final TableRow daysRow = (TableRow) view.findViewById(R.id.days_table_row);
             for (int i = 0; i < daysRow.getChildCount(); i++) {
                 Button button = (Button) daysRow.getChildAt(i);
@@ -305,7 +305,7 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
                     @Override
                     public void onTransitionEnd(Transition transition) {
 
-                       // view.setBackgroundColor(getResources().getColor(R.color.sound_control_panel_background));
+                        // view.setBackgroundColor(getResources().getColor(R.color.sound_control_panel_background));
                         //Fade in days of week row
                         daysRow.animate().setDuration(BUTTON_FADE_DURATION).alpha(1f);
                     }
@@ -534,7 +534,7 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
     public void onStop() {
         super.onStop();
 
-        if(mGoogleApiClient != null) {
+        if (mGoogleApiClient != null) {
             if (mGoogleApiClient.isConnected()) {
                 LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
                 mGoogleApiClient.disconnect();
@@ -546,34 +546,33 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
     public void onSaveInstanceState(Bundle savedInstanceState) {
 
         savedInstanceState.putParcelable(EXTRA_PROFILE, mProfile);
-		savedInstanceState.putBoolean(EXTRA_IS_NEW_PROFILE,mIsNewProfile);
-        savedInstanceState.putInt(EXTRA_PROFILE_TYPE,mProfileType);
+        savedInstanceState.putBoolean(EXTRA_IS_NEW_PROFILE, mIsNewProfile);
+        savedInstanceState.putInt(EXTRA_PROFILE_TYPE, mProfileType);
         super.onSaveInstanceState(savedInstanceState);
     }
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
 
-		//Inflate menu Items
-        if(getActivity() instanceof ProfileDetailActivity) {
+        //Inflate menu Items
+        if (getActivity() instanceof ProfileDetailActivity) {
             Log.e(TAG, "onCreateOptionsMenu(): portrait mode");
             inflater.inflate(R.menu.fragment_profile_detail_menu, menu);
 
             mToolbarMenu = menu;
-        }
-        else {
-            Log.e(TAG,"onCreateOptionsMenu(): In two pane, clean and rebuild fragment menu");
+        } else {
+            Log.e(TAG, "onCreateOptionsMenu(): In two pane, clean and rebuild fragment menu");
 
-            Toolbar toolbar = (Toolbar)getView().findViewById(R.id.toolbar);
-            if(toolbar != null) {
-                AppCompatActivity activity = (AppCompatActivity)getActivity();
+            Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                AppCompatActivity activity = (AppCompatActivity) getActivity();
                 activity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
                 //Clear menus
-                Log.e(TAG,"onCreateOptionsMenu(): Clear old menu, rebuild");
-                Menu toolbarMenu= toolbar.getMenu();
-                if(toolbarMenu != null)
+                Log.e(TAG, "onCreateOptionsMenu(): Clear old menu, rebuild");
+                Menu toolbarMenu = toolbar.getMenu();
+                if (toolbarMenu != null)
                     toolbarMenu.clear();
 
                 toolbar.inflateMenu(R.menu.fragment_profile_detail_menu);
@@ -583,40 +582,38 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
         }
 
         setSaveMenu();
-		
-	}
-	
-	//Get results from Dialog boxes and other Activities
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		
-		Log.e(TAG,"In onActivityResult with requestCode " + String.valueOf(requestCode));
-		if(resultCode != Activity.RESULT_OK)
-			return;
-		
-		if(requestCode == REQUEST_START_TIME) {
+
+    }
+
+    //Get results from Dialog boxes and other Activities
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        Log.e(TAG, "In onActivityResult with requestCode " + String.valueOf(requestCode));
+        if (resultCode != Activity.RESULT_OK)
+            return;
+
+        if (requestCode == REQUEST_START_TIME) {
             mProfile.setStartDate((Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME));
-			Util.setTimeForLargeTextView(getActivity(),mProfile.getStartDate(), startTimeTextView);
-		}
-		else if(requestCode == REQUEST_END_TIME) {
+            Util.setTimeForLargeTextView(getActivity(), mProfile.getStartDate(), startTimeTextView);
+        } else if (requestCode == REQUEST_END_TIME) {
             mProfile.setEndDate((Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME));
-            Util.setTimeForLargeTextView(getActivity(),mProfile.getEndDate(),endTimeTextView);
-		}
-        else if(requestCode == REQUEST_LOCATION_UPDATE) {
+            Util.setTimeForLargeTextView(getActivity(), mProfile.getEndDate(), endTimeTextView);
+        } else if (requestCode == REQUEST_LOCATION_UPDATE) {
 
             mProfile = data.getParcelableExtra(EXTRA_PROFILE);
-            Log.e(TAG,"Got request back from Map Activity!!");
-            Log.e(TAG,"Title of location = " + mProfile.getTitle());
+            Log.e(TAG, "Got request back from Map Activity!!");
+            Log.e(TAG, "Title of location = " + mProfile.getTitle());
 
             //Make the title the name of the place that was searched in the location activity
-            if(mTitleTextView != null) {
-                if(mProfile.getTitle() != null) {
+            if (mTitleTextView != null) {
+                if (mProfile.getTitle() != null) {
                     mTitleTextView.setText(mProfile.getTitle());
                 }
             }
         }
 
-	}
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -636,11 +633,11 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
                 toast.show();
 
                 //Only kill the activity if we are in portrait mode
-                if(getActivity() instanceof ProfileDetailActivity) {
+                if (getActivity() instanceof ProfileDetailActivity) {
 
                     //Do renter transition if we are Lollipop or greater.
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-                       getActivity().finish();
+                        getActivity().finish();
                     else
                         getActivity().finishAfterTransition();
                 }
@@ -660,11 +657,12 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
     }
     /*******************************************************************/
 	/*                        Private Methods                          */
-	/*******************************************************************/
 
-    private void animateBackground(final View view, int fromColor, int toColor ) {
+    /*******************************************************************/
 
-        final ValueAnimator colorAnimator = ValueAnimator.ofObject(new ArgbEvaluator(),fromColor,toColor);
+    private void animateBackground(final View view, int fromColor, int toColor) {
+
+        final ValueAnimator colorAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), fromColor, toColor);
         colorAnimator.setDuration(BUTTON_FADE_DURATION);
         colorAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -674,24 +672,26 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
         });
         colorAnimator.start();
     }
+
     private void startLocationMapActivity() {
 
         Intent i = new Intent(getActivity(), LocationMapActivity.class);
         i.putExtra(EXTRA_PROFILE, mProfile);
         startActivityForResult(i, REQUEST_LOCATION_UPDATE);
     }
+
     private Uri getThumbnailUri(LatLng latLng) {
 
         String strLocation = String.valueOf(latLng.latitude) + "," + String.valueOf(latLng.longitude);
         Log.e(TAG, "strLocation: " + strLocation);
 
-       // String strMarkers = "color:red|" + strLocation
+        // String strMarkers = "color:red|" + strLocation
         Uri mapsUri = Uri.parse(GOOGLE_STAIC_MAPS_URL).buildUpon()
-                .appendQueryParameter(MAPS_PARAM_CENTER,strLocation)
-                .appendQueryParameter(MAPS_PARAM_ZOOM,MAPS_ZOOM_VAL)
-                .appendQueryParameter(MAPS_PARAM_SIZE,MAPS_SIZE_SMALL)
+                .appendQueryParameter(MAPS_PARAM_CENTER, strLocation)
+                .appendQueryParameter(MAPS_PARAM_ZOOM, MAPS_ZOOM_VAL)
+                .appendQueryParameter(MAPS_PARAM_SIZE, MAPS_SIZE_SMALL)
                 .appendQueryParameter(MAPS_PARAM_SENSOR, MAPS_SENSOR_VAL)
-                .appendQueryParameter(MAPS_PARAM_MARKERS,strLocation)
+                .appendQueryParameter(MAPS_PARAM_MARKERS, strLocation)
                 .build();
 
         Log.e(TAG, "The mapsUri: " + mapsUri);
@@ -699,75 +699,77 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
         return mapsUri;
 
     }
+
     private void setLocationLayout(View view) {
 
-        if(mProfileType == LOCATION_PROFILE_LIST) {
-           (view.findViewById(R.id.location_layout)).setVisibility(View.VISIBLE);
+        if (mProfileType == LOCATION_PROFILE_LIST) {
+            (view.findViewById(R.id.location_layout)).setVisibility(View.VISIBLE);
             (view.findViewById(R.id.startTimeTextView)).setVisibility(View.GONE);
             (view.findViewById(R.id.endTimeTextView)).setVisibility(View.GONE);
-        }
-        else {
+        } else {
             (view.findViewById(R.id.location_layout)).setVisibility(View.GONE);
             (view.findViewById(R.id.startTimeTextView)).setVisibility(View.VISIBLE);
             (view.findViewById(R.id.startTimeTextView)).setVisibility(View.VISIBLE);
         }
     }
+
     private void confirmDeleteDialog() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        builder.setMessage(getString(R.string.dialog_delete_profile,mProfile.getTitle()))
+        builder.setMessage(getString(R.string.dialog_delete_profile, mProfile.getTitle()))
                 .setPositiveButton(getString(R.string.dialog_yes), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if(mProfileType == LOCATION_PROFILE_LIST) {
-                    if(mGeofenceManager != null)
-                        deleteGeofence(mProfile.getId().toString());
-                }
-                ProfileManager.deleteProfile(getActivity(), mProfile);
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (mProfileType == LOCATION_PROFILE_LIST) {
+                            if (mGeofenceManager != null)
+                                deleteGeofence(mProfile.getId().toString());
+                        }
+                        ProfileManager.deleteProfile(getActivity(), mProfile);
 
-                if(getActivity() instanceof ProfileDetailActivity)
-                   getActivity().finish();
-            }
-        })
-        .setNegativeButton(getString(R.string.dialog_no), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        }).show();
+                        if (getActivity() instanceof ProfileDetailActivity)
+                            getActivity().finish();
+                    }
+                })
+                .setNegativeButton(getString(R.string.dialog_no), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                }).show();
 
     }
 
     private void deleteGeofence(String requestId) {
-        if(mGoogleApiClient.isConnected()) {
+        if (mGoogleApiClient.isConnected()) {
 
-            if(mGeofenceManager != null) {
+            if (mGeofenceManager != null) {
 
                 //Set geofence flag for result message
                 mIsSaveGeofence = false;
-                mGeofenceManager.removeGeofence(this,requestId);
+                mGeofenceManager.removeGeofence(this, requestId);
             }
         }
     }
 
     private int getVolumeIconResource(int volumeType) {
 
-        switch(volumeType) {
+        switch (volumeType) {
 
             case VOLUME_OFF:
-                 return R.drawable.ic_volume_off_white;
+                return R.drawable.ic_volume_off_white;
             case VOLUME_VIBRATE:
-                 return R.drawable.ic_vibration_white;
+                return R.drawable.ic_vibration_white;
             case VOLUME_RING:
                 return R.drawable.ic_volume_up_white;
             default:
-            //Something went wrong if we get here.
-            return R.drawable.ic_volume_off_white;
+                //Something went wrong if we get here.
+                return R.drawable.ic_volume_off_white;
 
         }
     }
-	private void setVolumeIcon() {
+
+    private void setVolumeIcon() {
 
         int volumeIconRes = 0;
         //Set Start Volume Icon
@@ -778,12 +780,12 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
         volumeIconRes = getVolumeIconResource(mProfile.getEndVolumeType());
         endVolumeImageView.setImageResource(volumeIconRes);
 
-	}
+    }
 
 
-	private void setSaveMenu() {
+    private void setSaveMenu() {
 
-        if(mToolbarMenu != null) {
+        if (mToolbarMenu != null) {
 
             MenuItem saveMenuItem = mToolbarMenu.findItem(R.id.menu_item_save_profile);
 
@@ -794,8 +796,8 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
         }
     }
 
-	/**
-	 * Save all settings of the alarms to SharedPreferences 
+    /**
+     * Save all settings of the alarms to SharedPreferences
      */
     private void saveSettings() {
 
@@ -803,33 +805,32 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 
         mProfile.setTitle(mTitleTextView.getText().toString());
 
-        if(mProfileType == LOCATION_PROFILE_LIST) {
+        if (mProfileType == LOCATION_PROFILE_LIST) {
             //Add new location and store key if this is a new location
-            if(mProfile.getLocationKey() == 0) {
-                Log.e(TAG,"saveSettings() Location key is 0");
+            if (mProfile.getLocationKey() == 0) {
+                Log.e(TAG, "saveSettings() Location key is 0");
                 long locationId = ProfileManager.addLocation(getActivity(), mProfile.getLocation());
                 mProfile.setLocationKey(locationId);
-            }
-            else {
+            } else {
                 //Updating existing location
-                Log.e(TAG,"saveSettings() Location key is NOT null");
-                Log.e(TAG,"saveSettings() Location latlng is " + mProfile.getLocation().getLatLng().toString());
-                ProfileManager.updateLocation(getActivity(),mProfile.getLocation(),mProfile.getLocationKey());
+                Log.e(TAG, "saveSettings() Location key is NOT null");
+                Log.e(TAG, "saveSettings() Location latlng is " + mProfile.getLocation().getLatLng().toString());
+                ProfileManager.updateLocation(getActivity(), mProfile.getLocation(), mProfile.getLocationKey());
             }
             //Set flag for geofence result
             mIsSaveGeofence = true;
             //Create/Update the Geofence
-            mGeofenceManager.saveGeofence(this,mProfile);
+            mGeofenceManager.saveGeofence(this, mProfile);
 
         }
 
         //Insert into DB if it's a new profile, otherwise update existing record.
-		if(mIsNewProfile)
+        if (mIsNewProfile)
             ProfileManager.insertProfile(getActivity(), mProfile);
-		else
-		    ProfileManager.updateProfile(getActivity(),mProfile);
+        else
+            ProfileManager.updateProfile(getActivity(), mProfile);
 
-        if(mProfileType == TIME_PROFILE_LIST) {
+        if (mProfileType == TIME_PROFILE_LIST) {
             //Set Volume Control Alarms
             VolumeManagerService.setServiceAlarm(getActivity(), mProfile, true);
         }
@@ -838,30 +839,29 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 
     @Override
     public void onConnected(Bundle bundle) {
-        Log.e(TAG,"onConnected()");
+        Log.e(TAG, "onConnected()");
         //Get GeofenceManger object
         mGeofenceManager = new GeofenceManager(getActivity().getApplicationContext(), mGoogleApiClient);
 
         Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
         if (location == null) {
-           Log.e(TAG,"Location was null. Can't get location");
+            Log.e(TAG, "Location was null. Can't get location");
             Toast toast = Toast.makeText(getActivity().getApplicationContext(),
                     R.string.network_error, Toast.LENGTH_LONG);
             toast.show();
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-        }
-        else {
+        } else {
             LatLng latLng;
-            if(mProfile.getLocation() == null) {
+            if (mProfile.getLocation() == null) {
                 //We have a new profile. Set it up
                 //Store location into profile
-                Log.e(TAG,"onConnected() Location in Profile is null. Create new Location");
+                Log.e(TAG, "onConnected() Location in Profile is null. Create new Location");
                 latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 mProfile.setLocation(new GeoFenceLocation(latLng));
 
                 //Finally set street address of location
-                if(latLng != null) {
+                if (latLng != null) {
 
                     String strFullAddress;
 
@@ -873,12 +873,12 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
                         mProfile.getLocation().setAddress(strStreetAddress);
 
                         //Get and store city
-                        String strCity =  address.getLocality() + ", " + address.getAdminArea();
+                        String strCity = address.getLocality() + ", " + address.getAdminArea();
                         mProfile.getLocation().setCity(strCity);
 
                         strFullAddress = strStreetAddress + " " + strCity;
 
-                    } catch(IOException e) {
+                    } catch (IOException e) {
                         //Could not get address
                         strFullAddress = getString(R.string.unknown_street_address);
 
@@ -889,29 +889,27 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
                     //Set Street TextView
                     mAddressTextView.setText(strFullAddress);
                 }
-            }
-            else {
+            } else {
                 //Have existing profile
 
                 //Poll DB incase location has changed
-               // mProfile.setLocation(ProfileManager.getLocation(getActivity(), mProfile.getLocationKey()));
-                Log.e(TAG,"Have existing profile");
-                Log.e(TAG,mProfile.getLocation().toString());
+                // mProfile.setLocation(ProfileManager.getLocation(getActivity(), mProfile.getLocationKey()));
+                Log.e(TAG, "Have existing profile");
+                Log.e(TAG, mProfile.getLocation().toString());
 
                 latLng = mProfile.getLocation().getLatLng();
 
                 mAddressTextView.setText(mProfile.getLocation().getFullAddress());
             }
-           // Log.e(TAG,"LatLng: " + latLng.toString());
+            // Log.e(TAG,"LatLng: " + latLng.toString());
 
-            if(mThumbnailImageView != null) {
+            if (mThumbnailImageView != null) {
 
-             //   Log.e(TAG, "Loading image....");
+                //   Log.e(TAG, "Loading image....");
                 Picasso.with(getActivity()).load(getThumbnailUri(latLng)).into(mThumbnailImageView);
             }
         }
     }
-
 
 
     @Override
@@ -920,15 +918,14 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
     }
 
 
-
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-          Log.e(TAG,"onConnectionFailed(): " + connectionResult.toString());
+        Log.e(TAG, "onConnectionFailed(): " + connectionResult.toString());
     }
 
     @Override
     public void onLocationChanged(Location location) {
-          Log.e(TAG, "onLocationChanged(): " + location.toString());
+        Log.e(TAG, "onLocationChanged(): " + location.toString());
     }
 
 
@@ -937,12 +934,12 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
 
         String msg;
 
-        if(mIsSaveGeofence)
+        if (mIsSaveGeofence)
             msg = getString(R.string.geofence_saved);
         else
             msg = getString(R.string.geofence_deleted);
 
-        GeofenceManager.setGeofenceResult(getActivity(),status,msg);
+        GeofenceManager.setGeofenceResult(getActivity(), status, msg);
     }
 
     @Override

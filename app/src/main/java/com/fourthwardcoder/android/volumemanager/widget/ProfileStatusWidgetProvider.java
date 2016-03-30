@@ -11,14 +11,16 @@ import android.util.Log;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 
 /**
- * Class ProfileStatusWidgetProvider
- * Author: Chris Hare
+ * Widget Provider
+ * <p>
+ * Receives messages from the app to update the widget. Passes the data
+ * to the widget's Intent Service.
+ * <p>
  * Created: 3/28/2016
  *
- * Widget Provider. Recieves messages from the app to update the widget. Passes the data
- * to the widget's Intent Service.
+ * @author Chris Hare
  */
-public class ProfileStatusWidgetProvider extends AppWidgetProvider implements Constants{
+public class ProfileStatusWidgetProvider extends AppWidgetProvider implements Constants {
 
     private static final String TAG = ProfileStatusWidgetProvider.class.getSimpleName();
 

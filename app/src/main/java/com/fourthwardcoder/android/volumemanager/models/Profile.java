@@ -19,17 +19,19 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * Class Profile
- * Author: Chris Hare
- * Create 1/17/16
+ * Profile Model
+ * <p>
+ * Model Object that stores all the data of a volume control profile. This data is stored in the
+ * database.
+ * <p>
+ * Created: 1/17/16
  *
- * Model to hold all data for a Volume Control Profile
- *
+ * @author Chris Hare
  */
 public class Profile implements Constants, Parcelable {
 
     /*****************************************************/
-	/*                    Constants                      */
+    /*                    Constants                      */
     /*****************************************************/
     private static final String TAG = Profile.class.getSimpleName();
     /*****************************************************/
@@ -78,7 +80,7 @@ public class Profile implements Constants, Parcelable {
 
         this.id = UUID.fromString(cursor.getString(ProfileContract.COL_PROFILE_ID));
         this.title = cursor.getString(ProfileContract.COL_PROFILE_TITLE);
-        this.enabled= (cursor.getInt(ProfileContract.COL_PROFILE_ENABLED)) > 0 ? true : false;
+        this.enabled = (cursor.getInt(ProfileContract.COL_PROFILE_ENABLED)) > 0 ? true : false;
         this.startVolumeType = cursor.getInt(ProfileContract.COL_PROFILE_START_VOLUME_TYPE);
         this.endVolumeType = cursor.getInt(ProfileContract.COL_PROFILE_END_VOLUME_TYPE);
         this.startRingVolume = cursor.getInt(ProfileContract.COL_PROFILE_START_RING_VOLUME);
@@ -89,33 +91,34 @@ public class Profile implements Constants, Parcelable {
         this.startDate = new Date(cursor.getLong(ProfileContract.COL_PROFILE_START_DATE));
         this.endDate = new Date(cursor.getLong(ProfileContract.COL_PROFILE_END_DATE));
 
-        Type booleanType = new TypeToken<ArrayList<Boolean>>(){}.getType();
-        this.daysOfTheWeek = new Gson().fromJson(cursor.getString(ProfileContract.COL_PROFILE_DAYS_OF_THE_WEEK),booleanType);
-        this.inAlarm = (cursor.getInt(ProfileContract.COL_PROFILE_IN_ALARM))  > 0 ? true : false;
+        Type booleanType = new TypeToken<ArrayList<Boolean>>() {
+        }.getType();
+        this.daysOfTheWeek = new Gson().fromJson(cursor.getString(ProfileContract.COL_PROFILE_DAYS_OF_THE_WEEK), booleanType);
+        this.inAlarm = (cursor.getInt(ProfileContract.COL_PROFILE_IN_ALARM)) > 0 ? true : false;
         this.locationKey = cursor.getLong(ProfileContract.COL_PROFILE_LOCATION_KEY);
     }
 
     public ContentValues getContentValues() {
 
         ContentValues profileValues = new ContentValues();
-        profileValues.put(ProfileContract.ProfileEntry.COLUMN_ID,this.id.toString());
-        profileValues.put(ProfileContract.ProfileEntry.COLUMN_TITLE,this.title);
-        profileValues.put(ProfileContract.ProfileEntry.COLUMN_ENABLED,this.enabled);
-        profileValues.put(ProfileContract.ProfileEntry.COLUMN_START_VOLUME_TYPE,this.startVolumeType);
-        profileValues.put(ProfileContract.ProfileEntry.COLUMN_END_VOLUME_TYPE,this.endVolumeType);
-        profileValues.put(ProfileContract.ProfileEntry.COLUMN_START_RING_VOLUME,this.startRingVolume);
-        profileValues.put(ProfileContract.ProfileEntry.COLUMN_END_RING_VOLUME,this.endRingVolume);
-        profileValues.put(ProfileContract.ProfileEntry.COLUMN_PREVIOUS_VOLUME_TYPE,this.previousVolumeType);
-        profileValues.put(ProfileContract.ProfileEntry.COLUMN_PREVIOUS_RING_VOLUME,this.previousRingVolume);
-        profileValues.put(ProfileContract.ProfileEntry.COLUMN_ALARM_ID,this.alarmId);
-        profileValues.put(ProfileContract.ProfileEntry.COLUMN_START_DATE,this.startDate.getTime());
-        profileValues.put(ProfileContract.ProfileEntry.COLUMN_END_DATE,this.endDate.getTime());
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_ID, this.id.toString());
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_TITLE, this.title);
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_ENABLED, this.enabled);
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_START_VOLUME_TYPE, this.startVolumeType);
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_END_VOLUME_TYPE, this.endVolumeType);
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_START_RING_VOLUME, this.startRingVolume);
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_END_RING_VOLUME, this.endRingVolume);
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_PREVIOUS_VOLUME_TYPE, this.previousVolumeType);
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_PREVIOUS_RING_VOLUME, this.previousRingVolume);
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_ALARM_ID, this.alarmId);
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_START_DATE, this.startDate.getTime());
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_END_DATE, this.endDate.getTime());
         profileValues.put(ProfileContract.ProfileEntry.COLUMN_DAYS_OF_THE_WEEK, new Gson().toJson(this.daysOfTheWeek));
         profileValues.put(ProfileContract.ProfileEntry.COLUMN_IN_ALARM, this.inAlarm);
 
         //Put key of the location data
-        if(location != null)
-            profileValues.put(ProfileContract.ProfileEntry.COLUMN_LOC_KEY,this.locationKey);
+        if (location != null)
+            profileValues.put(ProfileContract.ProfileEntry.COLUMN_LOC_KEY, this.locationKey);
 
         return profileValues;
     }
@@ -232,21 +235,20 @@ public class Profile implements Constants, Parcelable {
     }
 
 
-
     public String getDaysOfWeekString() {
 
         String strDays = "";
 
-        for(int i=0; i< DAYS_OF_THE_WEEK; i++) {
+        for (int i = 0; i < DAYS_OF_THE_WEEK; i++) {
 
-            if(daysOfTheWeek.get(i)) {
+            if (daysOfTheWeek.get(i)) {
                 strDays += daysAbbreviation[i];
                 strDays += ",";
             }
         }
 
         //remove last comma from string
-        if(strDays.length() > 0)
+        if (strDays.length() > 0)
             strDays = strDays.substring(0, strDays.length() - 1);
 
         return strDays;
@@ -266,6 +268,7 @@ public class Profile implements Constants, Parcelable {
 
         return str;
     }
+
     public boolean isInAlarm() {
         return inAlarm;
     }
@@ -292,7 +295,7 @@ public class Profile implements Constants, Parcelable {
 
     public boolean isLocationProfile() {
 
-        if(location != null)
+        if (location != null)
             return true;
         else
             return false;
@@ -300,18 +303,20 @@ public class Profile implements Constants, Parcelable {
 
     /*****************************************************/
 	/*                   Private Methods                 */
+
     /*****************************************************/
     private void initDaysOfWeek() {
 
-        for(int i = 0; i < 7; i++)
-            daysOfTheWeek.add(i,true);
+        for (int i = 0; i < 7; i++)
+            daysOfTheWeek.add(i, true);
     }
+
     private void calculateAlarmId() {
 
-        String str=""+ this.id;
-        int uid=str.hashCode();
-        String filterStr=""+uid;
-        str=filterStr.replaceAll("-", "");
+        String str = "" + this.id;
+        int uid = str.hashCode();
+        String filterStr = "" + uid;
+        str = filterStr.replaceAll("-", "");
         alarmId = Integer.parseInt(str);
 
     }

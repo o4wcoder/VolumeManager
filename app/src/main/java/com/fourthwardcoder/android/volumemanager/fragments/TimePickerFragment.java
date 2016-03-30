@@ -20,13 +20,14 @@ import android.text.format.DateFormat;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 
 /**
- * Class TimePickerFragment
+ * Time Picker Fragment
+ * <p>
+ * DialogFragment that contains a TimePicker user to select the time to fire the volume
+ * control alarms.
+ * <p>
+ * Created: 3/13/15
  *
  * @author Chris Hare
- *         Created: 3/13/15
- *         <p>
- *         DialogFragment that contains a TimePicker user to select the time to fire
- *         the volume control alarms
  */
 public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener, Constants {
 
@@ -59,7 +60,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
     }
 
     /************************************************************/
-	/*                  Override Methods                        */
+    /*                  Override Methods                        */
 
     /************************************************************/
 

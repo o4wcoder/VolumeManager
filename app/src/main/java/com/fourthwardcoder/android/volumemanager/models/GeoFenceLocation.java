@@ -11,7 +11,14 @@ import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.google.android.gms.maps.model.LatLng;
 
 /**
- * Created by Chris Hare on 2/6/2016.
+ * Geofence Location Model
+ * <p>
+ * Model Object to store the location data it a Profile contains it. This data is stored in a
+ * separate table than the other Profile data.
+ * <p>
+ * Created: 2/6/2016.
+ *
+ * @author Chris Hare
  */
 public class GeoFenceLocation implements Constants, Parcelable {
 
@@ -30,7 +37,7 @@ public class GeoFenceLocation implements Constants, Parcelable {
 
         double lat = cursor.getDouble(ProfileContract.COL_LOCATION_LATITUDE);
         double lng = cursor.getDouble(ProfileContract.COL_LOCATION_LONGITUDE);
-        this.latLng = new LatLng(lat,lng);
+        this.latLng = new LatLng(lat, lng);
         this.address = cursor.getString(ProfileContract.COL_LOCATION_ADDRESS);
         this.city = cursor.getString(ProfileContract.COL_LOCATION_CITY);
         this.fenceRadius = cursor.getFloat(ProfileContract.COL_LOCATION_RADIUS);
@@ -86,14 +93,15 @@ public class GeoFenceLocation implements Constants, Parcelable {
     public ContentValues getContentValues() {
 
         ContentValues profileValues = new ContentValues();
-        profileValues.put(ProfileContract.LocationEntry.COLUMN_LONGITUDE,this.latLng.longitude);
-        profileValues.put(ProfileContract.LocationEntry.COLUMN_LATITUDE,this.latLng.latitude);
-        profileValues.put(ProfileContract.LocationEntry.COLUMN_ADDRESS,this.address);
-        profileValues.put(ProfileContract.LocationEntry.COLUMN_CITY,this.city);
-        profileValues.put(ProfileContract.LocationEntry.COLUMN_RADIUS,this.fenceRadius);
+        profileValues.put(ProfileContract.LocationEntry.COLUMN_LONGITUDE, this.latLng.longitude);
+        profileValues.put(ProfileContract.LocationEntry.COLUMN_LATITUDE, this.latLng.latitude);
+        profileValues.put(ProfileContract.LocationEntry.COLUMN_ADDRESS, this.address);
+        profileValues.put(ProfileContract.LocationEntry.COLUMN_CITY, this.city);
+        profileValues.put(ProfileContract.LocationEntry.COLUMN_RADIUS, this.fenceRadius);
 
         return profileValues;
     }
+
     protected GeoFenceLocation(Parcel in) {
         latLng = (LatLng) in.readValue(LatLng.class.getClassLoader());
         address = in.readString();
