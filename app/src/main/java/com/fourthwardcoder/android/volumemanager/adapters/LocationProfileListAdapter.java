@@ -20,9 +20,13 @@ import com.fourthwardcoder.android.volumemanager.models.Profile;
 import java.util.ArrayList;
 
 /**
- * Class LocationProfileListAdapter
- * Author: Chris Hare
+ * Location List's Adapter
+ * <p>
+ * Adapter for the List of Location Profiles
+ * <p>
  * Created: 2/7/2016.
+ *
+ * @author Chris Hare
  */
 public class LocationProfileListAdapter extends ArrayAdapter<Profile> implements Constants{
 
@@ -142,12 +146,23 @@ public class LocationProfileListAdapter extends ArrayAdapter<Profile> implements
         return convertView;
     }
 
+    /*************************************************************************/
+    /*                           Private Methods                             */
+    /*************************************************************************/
+    /**
+     * Notify main fragment that the listview has changed.
+     */
     private void notifyListViewChanged() {
         notifyDataSetChanged();
         ((ProfileMainFragment.Callback)mContext).onListViewChange();
     }
 
-
+    /*************************************************************************/
+    /*                           Inner Classes                               */
+    /*************************************************************************/
+    /**
+     * ListView adapter ViewHolder class
+     */
     private static class ViewHolder {
 
         public TextView titleTextView;
@@ -157,8 +172,21 @@ public class LocationProfileListAdapter extends ArrayAdapter<Profile> implements
         public ImageView iconImageView;
     }
 
+    /*************************************************************************/
+    /*                           Interfaces                                  */
+    /*************************************************************************/
+
+    /**
+     * Interface LocationAdapterCallback
+     */
     public interface LocationAdapterCallback {
 
+        /**
+         * Notify the main fragment that the location icon of the profile has been toggles. Geofences
+         * will be modified accordingly
+         * @param enable statue of the toggle
+         * @param requestId id of the profile that was modified.
+         */
         void onToggleLocationIcon(boolean enable, String requestId);
     }
 

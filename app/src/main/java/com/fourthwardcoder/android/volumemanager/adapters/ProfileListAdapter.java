@@ -21,7 +21,13 @@ import com.fourthwardcoder.android.volumemanager.services.VolumeManagerService;
 import java.util.ArrayList;
 
 /**
- * Created by Chris Hare on 2/7/2016.
+ * Time Profile's List Adapter
+ * <p>
+ * Adapter for the List of Time Profiles
+ * <p>
+ * Created: 2/7/2016.
+ *
+ * @author Chris Hare
  */
 public class ProfileListAdapter extends ArrayAdapter<Profile> implements Constants {
 
@@ -29,8 +35,6 @@ public class ProfileListAdapter extends ArrayAdapter<Profile> implements Constan
 
     private Context mContext;
     ValueAnimator mValueAnimator;
-
-
 
     public ProfileListAdapter(Context context,ArrayList<Profile> profiles) {
         super(context, 0, profiles);
@@ -143,6 +147,15 @@ public class ProfileListAdapter extends ArrayAdapter<Profile> implements Constan
         return convertView;
     }
 
+    /******************************************************************************/
+    /*                              Private Methods                               */
+    /******************************************************************************/
+
+    /**
+     * Set the Content Descriptions on a view in the list
+     * @param profile data of the list item
+     * @param view view to set the content description
+     */
     private void setProfileContentDescription(Profile profile, View view) {
 
         String msg = getContext().getString(R.string.cont_desc_time_profile) + profile.getTitle()
@@ -163,6 +176,11 @@ public class ProfileListAdapter extends ArrayAdapter<Profile> implements Constan
         view.setContentDescription(msg);
     }
 
+    /**
+     * Get the Content Description for the days of the week the profile is set
+     * @param profile data of the list item
+     * @return content description of the days of the week
+     */
     private String getDaysOfTheWeekContentDescription(Profile profile) {
 
         String[] daysList = getContext().getResources().getStringArray(R.array.days_of_the_week);
@@ -178,6 +196,12 @@ public class ProfileListAdapter extends ArrayAdapter<Profile> implements Constan
 
         return daysStr;
     }
+
+    /**
+     * Check if the profile is set every day of the week
+     * @param daysOfTheWeek list of days the profile is set
+     * @return if set daily or not
+     */
     private boolean checkIfSetDaily(ArrayList<Boolean> daysOfTheWeek) {
 
         for(int i = 0; i< DAYS_OF_THE_WEEK; i++) {
@@ -189,13 +213,20 @@ public class ProfileListAdapter extends ArrayAdapter<Profile> implements Constan
         return true;
     }
 
+    /**
+     * Notify main fragment that the listview has changed.
+     */
     private void notifyListViewChanged() {
         notifyDataSetChanged();
         ((ProfileMainFragment.Callback)mContext).onListViewChange();
     }
 
-    //Class to hold different views of the listview. This helps
-    //it run smoothly when scrolling
+    /*************************************************************************/
+    /*                           Inner Classes                               */
+    /*************************************************************************/
+    /**
+     * ListView adapter ViewHolder class
+     */
     private static class ViewHolder {
 
         public TextView titleTextView;

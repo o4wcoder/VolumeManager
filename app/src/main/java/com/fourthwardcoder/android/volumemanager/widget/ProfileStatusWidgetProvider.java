@@ -11,7 +11,12 @@ import android.util.Log;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 
 /**
- * Created by Chris Hare on 3/28/2016.
+ * Class ProfileStatusWidgetProvider
+ * Author: Chris Hare
+ * Created: 3/28/2016
+ *
+ * Widget Provider. Recieves messages from the app to update the widget. Passes the data
+ * to the widget's Intent Service.
  */
 public class ProfileStatusWidgetProvider extends AppWidgetProvider implements Constants{
 
@@ -30,17 +35,10 @@ public class ProfileStatusWidgetProvider extends AppWidgetProvider implements Co
     @Override
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
         super.onReceive(context, intent);
-        Log.e(TAG, "onReceive(). Inside with action = " + intent.getAction());
-        if (intent.getAction().equals(ACTION_ALARM_UPDATED)) {
-            Log.e(TAG,"Start up ProfileStatusInentService");
-            if(intent.hasExtra(EXTRA_PROFILE_TYPE)) {
-                Log.e(TAG,"I have profile type");
-            }
-            else {
-                Log.e(TAG,"Don't have profile type");
-            }
-            Log.e(TAG,"Got profile type = " + intent.getIntExtra(EXTRA_PROFILE_TYPE,TIME_PROFILE_LIST));
 
+        if (intent.getAction().equals(ACTION_ALARM_UPDATED)) {
+
+            //Send Intent with it's extra's to the widget's Intent Service
             context.startService(new Intent(context, ProfileStatusIntentService.class).putExtras(intent.getExtras()));
         }
     }

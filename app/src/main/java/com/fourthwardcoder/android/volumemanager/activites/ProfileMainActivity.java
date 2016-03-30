@@ -1,9 +1,10 @@
 package com.fourthwardcoder.android.volumemanager.activites;
 
 
-
 import com.crashlytics.android.Crashlytics;
+
 import io.fabric.sdk.android.Fabric;
+
 import java.util.ArrayList;
 
 import com.fourthwardcoder.android.volumemanager.R;
@@ -35,67 +36,70 @@ import android.view.View;
 import android.widget.TextView;
 
 /**
- * Class: ProfileMainActivity
- * Author: Chris Hare
+ * Main App Activity
+ * <p>
+ * Launcher Activity for the app. Holds a page viewer for the different types of volume control
+ * profiles
+ * <p>
  * Created: 1/17/16
  *
- * Main Activity of the App. Contains the list of Time and Location Profiles.
- *
-  */
+ * @author Chris Hare
+ */
 public class ProfileMainActivity extends AppCompatActivity implements ProfileMainFragment.Callback,
-         Constants {
+        Constants {
 
-	/*********************************************************************/
-	/*                          Constants                                */
-	/*********************************************************************/
-	private static final String TAG="ProfileMainActivity";
+    /*********************************************************************/
+    /*                          Constants                                */
+    /*********************************************************************/
+    private static final String TAG = "ProfileMainActivity";
     private static final String DETAILFRAGMENT_TAG = "DFTAG";
 
-	/*********************************************************************/
+    /*********************************************************************/
 	/*                         Local Data                                */
-	/*********************************************************************/
-	TabLayout mTabLayout;
+    /*********************************************************************/
+    TabLayout mTabLayout;
     FloatingActionButton mFloatingActionButton;
-	boolean mTwoPane;
+    boolean mTwoPane;
     Profile mFirstTimeProfile = null;
     Profile mFirstLocationProfile = null;
 
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		Fabric.with(this, new Crashlytics());
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
 
-		Log.e(TAG, "onCreate()");
-		//Change status bar color
-	    Util.setStatusBarColor(this);
+        Log.e(TAG, "onCreate()");
+        //Change status bar color
+        Util.setStatusBarColor(this);
 
-	    //Set layout
-	    setContentView(R.layout.activity_main);
+        //Set layout
+        setContentView(R.layout.activity_main);
 
-		//Set toolbar
-		final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
+        //Set toolbar
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-		//Create TabLayout for the Profiles (Basic and Location)d
-		mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
-		mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.time_tab)).setIcon(R.drawable.ic_action_alarm_light));
-		mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.location_tab)).setIcon(R.drawable.ic_place_light));
-		mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        //Create TabLayout for the Profiles (Basic and Location)d
+        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.time_tab)).setIcon(R.drawable.ic_action_alarm_light));
+        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.location_tab)).setIcon(R.drawable.ic_place_light));
+        mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-		//Create ViewPager to swipe between the tabs
-		final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-		final PagerAdapter adapter = new ProfilePagerAdapter(getSupportFragmentManager(),
-				mTabLayout.getTabCount());
-		viewPager.setAdapter(adapter);
-		viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
-		mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        //Create ViewPager to swipe between the tabs
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        final PagerAdapter adapter = new ProfilePagerAdapter(getSupportFragmentManager(),
+                mTabLayout.getTabCount());
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                //mProfileType = tab.getPosition();
-                Log.e(TAG, "Got tab " + tab.getPosition());
+
+                //Check if Floating Action Button should be shown/hidden based on if the tab's
+                //ListView is empty or not
                 setFABVisibility();
 
                 //Change detail fragment to first in list when changing tabs
@@ -116,40 +120,36 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
             }
         });
 
-        mFloatingActionButton = (FloatingActionButton)findViewById(R.id.fab_new_profile);
+        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.fab_new_profile);
 
         //Set New Profile Floating Action Button Visibility
-		setFABVisibility();
-
-        Log.e(TAG,"Check if two pane");
+        setFABVisibility();
         //See if we are in two pane tablet mode.
-        if((findViewById(R.id.profile_detail_container) != null)) {
-            Log.e(TAG,"Got two pane!");
-            mTwoPane = true;
+        if ((findViewById(R.id.profile_detail_container) != null)) {
 
-                //In two-pane mode, show the detail view in this activity by
-                //adding or replacing the detail fragment using a fragment transaction.
-                if (savedInstanceState == null) {
-                    Log.e(TAG,"Setting Detail Fragment");
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.profile_detail_container, new ProfileDetailFragment(),
-                                    DETAILFRAGMENT_TAG)
-                            .commit();
-                }
+            mTwoPane = true;
+            //In two-pane mode, show the detail view in this activity by
+            //adding or replacing the detail fragment using a fragment transaction.
+            if (savedInstanceState == null) {
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.profile_detail_container, new ProfileDetailFragment(),
+                                DETAILFRAGMENT_TAG)
+                        .commit();
+            }
 
         } else {
-            Log.e(TAG,"Portrait mode");
             mTwoPane = false;
         }
 
-	}
+    }
 
-	@Override
-	public void onRestoreInstanceState(Bundle savedInstanceState) {
-	    // Always call the superclass so it can restore the view hierarchy
-	    super.onRestoreInstanceState(savedInstanceState);
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        // Always call the superclass so it can restore the view hierarchy
+        super.onRestoreInstanceState(savedInstanceState);
 
-	}
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -184,26 +184,25 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
      * create a new profile.
      */
     private void setFABVisibility() {
-		if(ProfileManager.isDatabaseEmpty(this,mTabLayout.getSelectedTabPosition())) {
+        if (ProfileManager.isDatabaseEmpty(this, mTabLayout.getSelectedTabPosition())) {
             mFloatingActionButton.setVisibility(View.INVISIBLE);
-        }
-		else {
+        } else {
             mFloatingActionButton.setVisibility(View.VISIBLE);
         }
-	}
+    }
 
     /**
      * Sets up the detail profile fragment if in two pane tablet mode
      *
-     * @param profile Profile object to send to the detail fragment
+     * @param profile     Profile object to send to the detail fragment
      * @param profileType profile type (Time/Location)
      */
     private void setTwoFrameDetailFragment(Profile profile, int profileType) {
 
-        if(mTwoPane) {
-            if(profileType == mTabLayout.getSelectedTabPosition()) {
+        if (mTwoPane) {
+            if (profileType == mTabLayout.getSelectedTabPosition()) {
 
-                if(profile != null) {
+                if (profile != null) {
 
                     //Pass profile of first list item
                     Bundle args = new Bundle();
@@ -247,23 +246,23 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
     @Override
     public void onListViewChange() {
 
-           setFABVisibility();
+        setFABVisibility();
     }
 
     /**
      * Callback from ProfileMainFragment used when a profile was selected from the list. If we are
      * in two pane mode, then set the detail fragment of the profile selected.
      *
-     * @param profile Profile selected in list
+     * @param profile     Profile selected in list
      * @param profileType Type of profile (Time/Location)
-     * @param textView textView of the title of the profile. This is used for transitions in
-     *                 portrait mode.
+     * @param textView    textView of the title of the profile. This is used for transitions in
+     *                    portrait mode.
      */
-	@Override
-	public void onItemSelected(Profile profile, int profileType, TextView textView) {
+    @Override
+    public void onItemSelected(Profile profile, int profileType, TextView textView) {
 
-        if(mTwoPane) {
-           Log.e(TAG,"onItemSelected() Two pane");
+        if (mTwoPane) {
+
             Bundle args = new Bundle();
             args.putInt(EXTRA_PROFILE_TYPE, profileType);
             args.putParcelable(EXTRA_PROFILE, profile);
@@ -275,7 +274,7 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
                     .replace(R.id.profile_detail_container, fragment, DETAILFRAGMENT_TAG)
                     .commit();
         } else {
-            Log.e(TAG,"onItemSelected() 1 pane");
+
             Intent intent = new Intent(this, ProfileDetailActivity.class);
 
             //Tell Volume Manager Fragment which Profile to display by making
@@ -288,23 +287,23 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
                     ActivityOptionsCompat.makeSceneTransitionAnimation(this,
                             new Pair<View, String>(textView, getString(R.string.trans_profile_title)));
 
-            ActivityCompat.startActivity(this,intent, activityOptions.toBundle());
+            ActivityCompat.startActivity(this, intent, activityOptions.toBundle());
         }
-	}
+    }
 
     /**
      * Callback from ProfileMainFragment used to let the activity know that the list of profiles
      * has been loaded from the database.
-     * @param profile profile to set in the detail fragment when first going into two pane mode. Most
-     *                likely the first profile in the list.
+     *
+     * @param profile     profile to set in the detail fragment when first going into two pane mode. Most
+     *                    likely the first profile in the list.
      * @param profileType type of profile (Time/Location)
      */
     @Override
-    public void onLoadFinished(Profile profile,int profileType) {
-        Log.e(TAG, "onLoadFinished() setting profile " + profile.getTitle() + " at tab pos " + mTabLayout.getSelectedTabPosition() + " on profile type " + profileType);
+    public void onLoadFinished(Profile profile, int profileType) {
 
         //Store the first profile in the list so it can be set when changing tabs
-        if(profileType == TIME_PROFILE_LIST)
+        if (profileType == TIME_PROFILE_LIST)
             mFirstTimeProfile = profile;
         else
             mFirstLocationProfile = profile;
@@ -314,12 +313,13 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
 
     /**
      * Callback from ProfileMainFragment used to create a new Profile
+     *
      * @param profileType
      */
     @Override
     public void newProfile(int profileType) {
 
-        if(mTwoPane) {
+        if (mTwoPane) {
             Bundle args = new Bundle();
             args.putInt(EXTRA_PROFILE_TYPE, profileType);
 
@@ -329,14 +329,13 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.profile_detail_container, fragment, DETAILFRAGMENT_TAG)
                     .commit();
-        }
-        else {
-            Intent i = new Intent(this,ProfileDetailActivity.class);
+        } else {
+            Intent i = new Intent(this, ProfileDetailActivity.class);
             i.putExtra(EXTRA_PROFILE_TYPE, profileType);
             //startActivityForResult(i,0);
 
             //Start activity with transition, but no shared Title since it's new
-            startActivity(i,ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle());
+            startActivity(i, ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle());
 
         }
     }

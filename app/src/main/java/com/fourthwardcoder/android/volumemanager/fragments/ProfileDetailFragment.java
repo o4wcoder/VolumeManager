@@ -69,14 +69,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.squareup.picasso.Picasso;
 
 /**
- * VolumeManagerFragment
- * 
- * Main fragment of the VolumeManagerActivity. Contains all the components to 
- * set start and end alarms of the specific alarm control.
- * 
- * @author Chris Hare
- * 3/13/2015
+ * Class ProfileDetailFragment
  *
+ * @author Chris Hare
+ * Created: 3/13/2015
+ *
+ * Fragment of the Profile Detail's. Here is where all settings of a profile are made
  */
 public class ProfileDetailFragment extends Fragment implements  LocationProfileListAdapter.LocationAdapterCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, ResultCallback<Status>, Constants {
@@ -152,25 +150,20 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_profile_detail, container, false);
-        Log.e(TAG, "onCreateView()");
-
 
         //First check if we have don't have anything in saveInstanceState from a rotation
         if(savedInstanceState == null) {
-            Log.e(TAG,"No saved vars");
+
             Bundle arguments = getArguments();
             if(arguments != null) {
                 // mProfileType = intent.getIntExtra(EXTRA_PROFILE_TYPE,TIME_PROFILE_LIST);
                 mProfileType = arguments.getInt(EXTRA_PROFILE_TYPE);
                 //See if we have a Profile object. If so we are editing the Profile.
                 //If not, it's a new profile
-                Log.e(TAG,"Got profile type " + mProfileType);
                 if (arguments.containsKey(EXTRA_PROFILE)) {
-                    Log.e(TAG, "Get profile");
-
+                    //Get profile object sent in as argument
                     mProfile = arguments.getParcelable(EXTRA_PROFILE);
 
-                    Log.e(TAG, "Got the profile");
                     mIsNewProfile = false;
                 } else {
                     mProfile = new Profile();
@@ -313,13 +306,13 @@ public class ProfileDetailFragment extends Fragment implements  LocationProfileL
                     public void onTransitionEnd(Transition transition) {
 
                        // view.setBackgroundColor(getResources().getColor(R.color.sound_control_panel_background));
-                        //Fade in title text
+                        //Fade in days of week row
                         daysRow.animate().setDuration(BUTTON_FADE_DURATION).alpha(1f);
                     }
 
                     @Override
                     public void onTransitionStart(Transition transition) {
-                        //Start of transition, make title text invisible
+                        //Start of transition, make days of week row invisible
                         daysRow.setAlpha(0f);
                     }
                 });

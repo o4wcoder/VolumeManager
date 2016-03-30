@@ -19,7 +19,11 @@ import com.fourthwardcoder.android.volumemanager.models.Profile;
 import java.util.UUID;
 
 /**
- * Created by Chris Hare on 3/28/2016.
+ * Class ProfileStatusIntentService
+ * Author: Chris Hare
+ * Created: 3/28/2016
+ *
+ * Widget Service to handle incoming changes that nee to be sent to the widget views
  */
 public class ProfileStatusIntentService extends IntentService implements Constants{
 

@@ -9,11 +9,13 @@ import com.fourthwardcoder.android.volumemanager.fragments.ProfileMainFragment;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 
 /**
- * Class ProfilePagerAdapter
- * Author: Chris Hare
+ * Pager Adapter
+ * <p>
+ * Pager Adapter for the Profile Tabs (Time and Location)
+ * <p>
  * Created: 1/23/2016
  *
- * Pager Adapter for the Profile Tabs (Time and Location)
+ * @author Chris Hare
  */
 public class ProfilePagerAdapter extends FragmentStatePagerAdapter implements Constants {
 

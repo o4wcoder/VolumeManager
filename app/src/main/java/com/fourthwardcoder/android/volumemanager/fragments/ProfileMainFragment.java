@@ -59,7 +59,7 @@ import org.w3c.dom.Text;
 
 /**
  * Class ProfileMainFragment
- * Author: Chris Hare
+ * @author Chris Hare
  * Created: 1/17/2016
  *
  * Fragment that loads the list of Profiles and shows them in a list
@@ -428,12 +428,8 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
 
         }
 
-
-
-
+        //Start postponed shared element transition
         getActivity().supportStartPostponedEnterTransition();
-      //  Log.e(TAG, "onLoadFinished: Number of profiles = " + profileList.size());
-
 
         if (getActivity() != null && mListview != null && profileList != null) {
           //  Log.e(TAG,"onLoadFinished: Set adapter");
@@ -446,9 +442,6 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
 
             mListview.setAdapter(mProfileAdapter);
 
-
-
-          //  Log.e(TAG,"onLoadFinished(): Selected item index = " + mSelectedListItem);
             //If in 2 pane mode, set first profile in list to detail pane
             if(profileList.size() > 0 && mSelectedListItem < 0)
                 ((Callback)getActivity()).onLoadFinished(profileList.get(0),mProfileType);
@@ -462,11 +455,22 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
 
     }
 
+    /***************************************************************************/
+    /*                             Private Methods                             */
+    /***************************************************************************/
+
+    /**
+     * Notify activity that the listview has changed
+     */
     private void notifyListViewChanged() {
         mProfileAdapter.notifyDataSetChanged();
         ((Callback) getActivity()).onListViewChange();
     }
 
+    /**
+     * Delete a geofence
+     * @param requestId id of the profile that's been deleted
+     */
     private void deleteGeofence(String requestId) {
         if(mGoogleApiClient.isConnected()) {
 
@@ -477,6 +481,10 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
         }
     }
 
+    /**
+     * Delete a list of geofences
+     * @param list
+     */
     private void deleteGeofenceList(ArrayList<String> list) {
         if(mGoogleApiClient.isConnected()) {
 

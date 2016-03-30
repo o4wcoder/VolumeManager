@@ -13,41 +13,41 @@ import com.fourthwardcoder.android.volumemanager.models.GeoFenceLocation;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
 
 /**
- * Class VolumeManagerActivity
- * Author: Chris Hare
+ * Profile Detail Activity
+ * <p>
+ * Activity for holding the Fragment of the Profile's details. Most changes to a Volume Control
+ * profile are made here on the UI.
+ * <p>
  * Created: 3/13/2015
  *
- * Activity for holding the Fragment of the Profile's details
- *
+ * @author Chris Hare
  */
 public class ProfileDetailActivity extends AppCompatActivity implements Constants {
 
     /*********************************************************************/
-	/*                          Constants                                */
+    /*                          Constants                                */
     /*********************************************************************/
     private final String TAG = ProfileDetailActivity.class.getSimpleName();
 
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		//Change status bar color
-		Util.setStatusBarColor(this);
+        //Change status bar color
+        Util.setStatusBarColor(this);
         Log.e(TAG, "onCreate()");
-		setContentView(R.layout.activity_profile_detail);
+        setContentView(R.layout.activity_profile_detail);
 
         //If sent data here means we are in portrait mode. Pass along to fragment
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
 
-             Log.e(TAG,"Check for extras");
             //Get profile type
-            if(getIntent().getExtras().containsKey(EXTRA_PROFILE_TYPE)) {
-                Log.e(TAG, "Got extras. Put into arguments");
+            if (getIntent().getExtras().containsKey(EXTRA_PROFILE_TYPE)) {
 
                 Bundle arguments = new Bundle();
                 int profileType = getIntent().getIntExtra(EXTRA_PROFILE_TYPE, 0);
-                arguments.putInt(EXTRA_PROFILE_TYPE,profileType);
+                arguments.putInt(EXTRA_PROFILE_TYPE, profileType);
 
-                if(getIntent().getExtras().containsKey(EXTRA_PROFILE)) {
+                if (getIntent().getExtras().containsKey(EXTRA_PROFILE)) {
                     Profile profile = getIntent().getParcelableExtra(EXTRA_PROFILE);
                     arguments.putParcelable(EXTRA_PROFILE, profile);
                 }
@@ -63,8 +63,6 @@ public class ProfileDetailActivity extends AppCompatActivity implements Constant
                 supportPostponeEnterTransition();
             }
 
-
         }
-	}
-
+    }
 }

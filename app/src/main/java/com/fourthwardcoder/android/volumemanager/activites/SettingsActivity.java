@@ -14,14 +14,16 @@ import android.support.v4.app.Fragment;
 import com.fourthwardcoder.android.volumemanager.R;
 
 /**
- * Class SettingsActivity
- * Author: Chris Hare
+ * Preference Settings Activity
+ *
+ * All preference settings for the app set in the Settings Menu
+ *
  * Created: 1/17/16
  *
- * Creates the Settings Menu fields for shared preferences
+ * @author Chris Hare
  */
 public class SettingsActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener,
-        SharedPreferences.OnSharedPreferenceChangeListener{
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,7 +33,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
 
         // For all preferences, attach an OnPreferenceChangeListener so the UI summary can be
         // updated when the preference changes.
-       // bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_location_radius_units_key)));
+        // bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_location_radius_units_key)));
     }
 
     /**
@@ -52,8 +54,9 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
 
     /**
      * Set the summary to be displayed on the preference field
+     *
      * @param preference preference to set
-     * @param value object that contains the summary
+     * @param value      object that contains the summary
      */
     private void setPreferenceSummary(Preference preference, Object value) {
         String stringValue = value.toString();
@@ -98,6 +101,6 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
-   }
+    }
 
 }
