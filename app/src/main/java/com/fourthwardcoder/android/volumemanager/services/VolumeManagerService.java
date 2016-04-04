@@ -133,24 +133,28 @@ public class VolumeManagerService extends IntentService implements Constants {
         String strTime = Util.formatTime(this, calendar.getTime());
         String strTitle;
         int id;
+        int iconRes;
         if (isStartAlarm) {
             strTitle = "Start Alarm: " + profile.getTitle();
             id = 1;
+            iconRes = getVolumeIconResource(profile.getStartVolumeType());
         } else {
             strTitle = "End Alarm: " + profile.getTitle();
             id = 2;
+            iconRes = getVolumeIconResource(profile.getEndVolumeType());
         }
 
         //Get large icon for Notification
-        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher);
+        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),iconRes);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-               // .setSmallIcon(R.drawable.ic_action_volume_on_light)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_volume_up_white)
+              //  .setSmallIcon(R.mipmap.ic_launcher_notify_small)
                 .setLargeIcon(largeIcon)
                 .setContentTitle(strTitle)
                 .setGroup(GROUP_NOTIFICATIONS)
                 .setGroupSummary(true)
                 .setContentText(strTime);
+
 
         Intent i = new Intent(this, ProfileDetailActivity.class);
 
@@ -173,6 +177,22 @@ public class VolumeManagerService extends IntentService implements Constants {
     /**********************************************************************************/
     /*                                Private Methods                                 */
     /**********************************************************************************/
+    private int getVolumeIconResource(int volumeType) {
+
+        switch (volumeType) {
+
+            case VOLUME_OFF:
+                return R.mipmap.ic_launcher_notify_large_volume_off;
+            case VOLUME_VIBRATE:
+                return R.mipmap.ic_launcher_notify_large_vibration;
+            case VOLUME_RING:
+                return R.mipmap.ic_launcher_notify_large_volume_up;
+            default:
+                //Something went wrong if we get here.
+                return R.mipmap.ic_launcher_notify_large_volume_up;
+
+        }
+    }
     /**
      * Checks if the volume control alarm is set for current day of the week
      *

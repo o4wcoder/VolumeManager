@@ -25,6 +25,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -197,12 +199,17 @@ public class GeofenceService extends IntentService implements Constants {
             strTitle = getString(R.string.geofence_transition_exited) + " " + profile.getTitle();
             id = 2;
         }
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_action_place_light)
-                .setContentTitle(strTitle)
-                .setGroup(GROUP_NOTIFICATIONS)
-                .setGroupSummary(true)
-                .setContentText(profile.getLocation().getAddress());
+
+        //Get large icon for Notification
+        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher_notify_large_place);
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                       // .setSmallIcon(R.drawable.ic_action_place_light)
+                        .setSmallIcon(R.drawable.ic_volume_up_white)
+                        .setLargeIcon(largeIcon)
+                        .setContentTitle(strTitle)
+                        .setGroup(GROUP_NOTIFICATIONS)
+                        .setGroupSummary(true)
+                        .setContentText(profile.getLocation().getAddress());
 
         Intent i = new Intent(this, ProfileDetailActivity.class);
 
