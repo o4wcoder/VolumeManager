@@ -133,6 +133,7 @@ public class ProfileListAdapter extends ArrayAdapter<Profile> implements Constan
 
         //Set view's data
         holder.iconImageView.setTag(new Integer(position));
+        holder.iconImageView.setContentDescription(getContext().getString(R.string.cont_desc_toggle_icon));
         holder.titleTextView.setText(getItem(position).getTitle());
         holder.timeTextView.setText(Util.getFullTimeForListItem(mContext,getItem(position)));
 
@@ -158,11 +159,11 @@ public class ProfileListAdapter extends ArrayAdapter<Profile> implements Constan
      */
     private void setProfileContentDescription(Profile profile, View view) {
 
-        String msg = getContext().getString(R.string.cont_desc_time_profile) + profile.getTitle()
-                + getContext().getString(R.string.cont_desc_starts)
-                + Util.formatTime(getContext(), profile.getStartDate())
-                + getContext().getString(R.string.cont_desc_ends)
-                + Util.formatTime(getContext(), profile.getEndDate());
+        String msg = getContext().getString(R.string.cont_desc_time_profile) + " " + profile.getTitle()
+                + " " + getContext().getString(R.string.cont_desc_starts)
+                + " " + Util.formatTime(getContext(), profile.getStartDate())
+                + " " + getContext().getString(R.string.cont_desc_ends)
+                + " " + Util.formatTime(getContext(), profile.getEndDate());
 
         String daysMsg = getContext().getString(R.string.cont_desc_set) + " ";
 
@@ -171,7 +172,16 @@ public class ProfileListAdapter extends ArrayAdapter<Profile> implements Constan
         else
             daysMsg += getDaysOfTheWeekContentDescription(profile);
 
-        msg += daysMsg;
+        msg += " " + daysMsg + " ";
+
+        //Get status of the Profile (enabled/disabled)
+        String setting = (profile.isEnabled()) ? getContext().getString(R.string.cont_desc_enabled) :
+                getContext().getString(R.string.cont_desc_disabled);
+
+        msg += getContext().getString(R.string.cont_desc_profile_status) + " " + setting;
+
+        if(profile.isInAlarm())
+            msg += " " + getContext().getString(R.string.cont_desc_profile_active);
 
         view.setContentDescription(msg);
     }

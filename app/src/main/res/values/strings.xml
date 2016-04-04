@@ -9,6 +9,10 @@
     <string name="vibrate">Vibrate</string>
     <string name="ring">Ring</string>
 
+    <!--General Strings-->
+    <string name="enabled">Enabled</string>
+    <string name="disabled">Disabled</string>
+
     <!-- Volume Control Headings -->
     <string name="start_volume_settings_time">Start Volume Control</string>
     <string name="end_volume_settings_time">End Volume Control</string>
@@ -89,8 +93,8 @@
     <string name="pref_location_notifications_label">Location Profile Notifications</string>
     <string name="pref_location_notifications_key" translatable="false">location_notifications</string>
 
-    <string name="pref_notifications_true">Enabled</string>
-    <string name="pref_notifications_false">Disabled</string>
+    <string name="pref_notifications_true">@string/enabled</string>
+    <string name="pref_notifications_false">@string/disabled</string>
     <string name="pref_notifications_default" translatable="false">true</string>
 
     <!-- Widget -->
@@ -111,9 +115,27 @@
 
     <!-- Content Descriptions -->
     <string name="cont_desc_time_profile">Time Profile</string>
+    <string name="cont_desc_time_profile_tab">Time Profile Tab</string>
+    <string name="cont_desc_location_profile">Location Profile</string>
+    <string name="cont_desc_location_profile_tab">Location Profile Tab</string>
+    <string name="cont_desc_new_profile">New Profile</string>
     <string name="cont_desc_starts">starts</string>
     <string name="cont_desc_ends">ends</string>
     <string name="cont_desc_set">set</string>
+    <string name="cont_desc_toggle_icon">Profile toggle switch</string>
+    <string name="cont_desc_enabled">@string/enabled</string>
+    <string name="cont_desc_disabled">@string/disabled</string>
+    <string name="cont_desc_profile_status">Profile is </string>
+    <string name="cont_desc_profile_active">and currently active</string>
+    <string name="cont_desc_detail_title">title</string>
+    <string name="cont_desc_detail_start_seek_bar">start volume ring setting</string>
+    <string name="cont_desc_detail_end_seek_bar">end volume ring setting</string>
+    <string name="cont_desc_detail_start_time">start time</string>
+    <string name="cont_desc_detail_end_time">end time</string>
+    <string name="cont_desc_detail_location_map_thumbnail">Location Map Thumbnail. Select to edit map detail</string>
+    <string name="cont_desc_map_current_location_button">Zoom to current location</string>
+    <string name="cont_desc_map_increase_geofence_button">increase geofence radius</string>
+    <string name="cont_desc_map_decrease_geofence_button">decrease geofence radius</string>
 
 
 

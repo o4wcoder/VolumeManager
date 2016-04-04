@@ -115,7 +115,7 @@ public class LocationProfileListAdapter extends ArrayAdapter<Profile> implements
 
                 Integer listPosition = (Integer) v.getTag();
 
-                //Toggle Porfile's enabled state
+                //Toggle Profile's enabled state
                 if (getItem(listPosition).isEnabled()) {
 
                     //Turn off geofence for this profile
@@ -132,16 +132,18 @@ public class LocationProfileListAdapter extends ArrayAdapter<Profile> implements
 
                 //Callback to modify the geofence for this profile
                 mCallingFragment.onToggleLocationIcon(getItem(listPosition).isEnabled(), getItem(listPosition).getId().toString());
-
             }
 
         });
 
         //Set view's data
         holder.iconImageView.setTag(new Integer(position));
+        holder.iconImageView.setContentDescription(getContext().getString(R.string.cont_desc_toggle_icon));
         holder.titleTextView.setText(getItem(position).getTitle());
         holder.addressTextView.setText(getItem(position).getLocation().getAddress());
         holder.cityTextView.setText(getItem(position).getLocation().getCity());
+
+        setProfileContentDescription(getItem(position),convertView);
 
         return convertView;
     }
@@ -149,6 +151,30 @@ public class LocationProfileListAdapter extends ArrayAdapter<Profile> implements
     /*************************************************************************/
     /*                           Private Methods                             */
     /*************************************************************************/
+
+    /**
+     * Set the Content Descriptions on a view in the list
+     * @param profile data of the list item
+     * @param view view to set the content description
+     */
+    private void setProfileContentDescription(Profile profile, View view) {
+
+        String msg = getContext().getString(R.string.cont_desc_location_profile) + " " + profile.getTitle()
+                + " " + profile.getLocation().getAddress()
+                + " " + profile.getLocation().getCity();
+
+        //Get status of the Profile (enabled/disabled)
+        String setting = (profile.isEnabled()) ? getContext().getString(R.string.cont_desc_enabled) :
+                getContext().getString(R.string.cont_desc_disabled);
+
+        msg += " " + getContext().getString(R.string.cont_desc_profile_status) + " " + setting;
+
+        if(profile.isInAlarm())
+            msg += " " + getContext().getString(R.string.cont_desc_profile_active);
+
+        view.setContentDescription(msg);
+    }
+
     /**
      * Notify main fragment that the listview has changed.
      */

@@ -30,7 +30,8 @@
                 android:hint="@string/title_hint"
                 android:singleLine="true"
                 android:transitionName="@string/trans_profile_title"
-                android:background="@null"/>
+                android:background="@null"
+                android:contentDescription="@string/cont_desc_detail_title"/>
 
         </android.support.v7.widget.Toolbar>
 

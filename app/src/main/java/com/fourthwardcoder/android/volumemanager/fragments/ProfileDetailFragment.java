@@ -131,6 +131,8 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
     private LocationRequest mLocationRequest;
     GeofenceManager mGeofenceManager;
 
+    String[] mDaysList;
+
     View view;
 
 
@@ -190,6 +192,10 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
             activity.setSupportActionBar(toolbar);
             activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        //Get days of the week
+         mDaysList = getContext().getResources().getStringArray(R.array.days_of_the_week);
+
         //Get volume icons
         startVolumeImageView = (ImageView) view.findViewById(R.id.volumeStartImageView);
         endVolumeImageView = (ImageView) view.findViewById(R.id.volumeEndImageView);
@@ -197,6 +203,7 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
 	     * Setup TextViews                        
 	     */
         mTitleTextView = (TextView) view.findViewById(R.id.profileTitleTextView);
+        mTitleTextView.setContentDescription(getString(R.string.cont_desc_detail_title));
         mTitleTextView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -246,6 +253,7 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
                     daysOfTheWeek.set(index, Boolean.FALSE);
                     textView.setTextColor(getResources().getColor(R.color.app_primary_text_dark));
                     textView.setBackground(getResources().getDrawable(R.drawable.round_button_off));
+                    textView.setContentDescription(mDaysList[index] + " " + getString(R.string.cont_desc_disabled));
 
                     //  v.animate().setDuration(BUTTON_FADE_DURATION).alpha(0f);
 
@@ -256,6 +264,8 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
                     textView.setTextColor(Color.parseColor("#ffffff"));
                     textView.setBackground(getResources().getDrawable(R.drawable.round_button));
                     //  v.animate().setDuration(BUTTON_FADE_DURATION).alpha(1f);
+                    textView.setContentDescription(mDaysList[index] + " " + getString(R.string.cont_desc_enabled));
+
                 }
 
                 //Update days of the week in Profile
@@ -281,6 +291,7 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
             Log.e(TAG, "Days of the week loading profile");
             Log.e(TAG, mProfile.getDaysOfWeekDebugString());
             final TableRow daysRow = (TableRow) view.findViewById(R.id.days_table_row);
+
             for (int i = 0; i < daysRow.getChildCount(); i++) {
                 Button button = (Button) daysRow.getChildAt(i);
                 button.setText(Constants.daysButtonNames[i]);
@@ -292,10 +303,12 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
                     //Turn Day on
                     button.setTextColor(Color.parseColor("#ffffff"));
                     button.setBackground(getResources().getDrawable(R.drawable.round_button));
+                    button.setContentDescription(mDaysList[i] + " " + getString(R.string.cont_desc_enabled));
                 } else {
                     //Turn Day off
                     button.setTextColor(getResources().getColor(R.color.app_primary_text_dark));
                     button.setBackground(getResources().getDrawable(R.drawable.round_button_off));
+                    button.setContentDescription(mDaysList[i] + " " + getString(R.string.cont_desc_disabled));
                 }
             }
 
@@ -460,7 +473,9 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
                 OnClickListener locationListener = new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startLocationMapActivity();
+                        Intent i = new Intent(getActivity(), LocationMapActivity.class);
+                        i.putExtra(EXTRA_PROFILE, mProfile);
+                        startActivityForResult(i, REQUEST_LOCATION_UPDATE);
                     }
                 };
 
@@ -474,9 +489,10 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
 	    /*
 	     * Set Default and Saved Settings
 	     */
-
             Util.setTimeForLargeTextView(getActivity(), mProfile.getStartDate(), startTimeTextView);
+            startTimeTextView.setContentDescription(getString(R.string.cont_desc_detail_start_time) + " " + Util.formatTime(getContext(), mProfile.getStartDate()));
             Util.setTimeForLargeTextView(getActivity(), mProfile.getEndDate(), endTimeTextView);
+            endTimeTextView.setContentDescription(getString(R.string.cont_desc_detail_end_time) + " " + Util.formatTime(getContext(), mProfile.getEndDate()));
             //Set Seekbar default
             Util.setSeekBarPosition(startRingSeekBar, startRingVolumeTextView, mProfile.getStartRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
             Util.setSeekBarPosition(endRingSeekBar, endRingVolumeTextView, mProfile.getEndRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
@@ -596,9 +612,12 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
         if (requestCode == REQUEST_START_TIME) {
             mProfile.setStartDate((Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME));
             Util.setTimeForLargeTextView(getActivity(), mProfile.getStartDate(), startTimeTextView);
+            startTimeTextView.setContentDescription(getString(R.string.cont_desc_detail_start_time) + " " + Util.formatTime(getContext(), mProfile.getStartDate()));
+
         } else if (requestCode == REQUEST_END_TIME) {
             mProfile.setEndDate((Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME));
             Util.setTimeForLargeTextView(getActivity(), mProfile.getEndDate(), endTimeTextView);
+            endTimeTextView.setContentDescription(getString(R.string.cont_desc_detail_end_time) + " " + Util.formatTime(getContext(), mProfile.getEndDate()));
         } else if (requestCode == REQUEST_LOCATION_UPDATE) {
 
             mProfile = data.getParcelableExtra(EXTRA_PROFILE);
@@ -660,26 +679,11 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
 
     /*******************************************************************/
 
-    private void animateBackground(final View view, int fromColor, int toColor) {
-
-        final ValueAnimator colorAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), fromColor, toColor);
-        colorAnimator.setDuration(BUTTON_FADE_DURATION);
-        colorAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                view.setBackgroundColor((int) animation.getAnimatedValue());
-            }
-        });
-        colorAnimator.start();
-    }
-
-    private void startLocationMapActivity() {
-
-        Intent i = new Intent(getActivity(), LocationMapActivity.class);
-        i.putExtra(EXTRA_PROFILE, mProfile);
-        startActivityForResult(i, REQUEST_LOCATION_UPDATE);
-    }
-
+    /**
+     * Pull the static Google map image for the location in the profile
+     * @param latLng latitude and longitude of the loaction
+     * @return path to the map image
+     */
     private Uri getThumbnailUri(LatLng latLng) {
 
         String strLocation = String.valueOf(latLng.latitude) + "," + String.valueOf(latLng.longitude);
@@ -700,6 +704,10 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
 
     }
 
+    /**
+     * Set the location part of the layout if this is a location profile. Otherwise hide it.
+     * @param view root view of the fragment
+     */
     private void setLocationLayout(View view) {
 
         if (mProfileType == LOCATION_PROFILE_LIST) {
@@ -713,6 +721,9 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
         }
     }
 
+    /**
+     * After delete of profile, show a confirmation dialog
+     */
     private void confirmDeleteDialog() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -725,8 +736,10 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
                             if (mGeofenceManager != null)
                                 deleteGeofence(mProfile.getId().toString());
                         }
+                        //delete the profile
                         ProfileManager.deleteProfile(getActivity(), mProfile);
 
+                        //close the activity
                         if (getActivity() instanceof ProfileDetailActivity)
                             getActivity().finish();
                     }
@@ -740,6 +753,10 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
 
     }
 
+    /**
+     * delete a geofence
+     * @param requestId id of geofence to delete
+     */
     private void deleteGeofence(String requestId) {
         if (mGoogleApiClient.isConnected()) {
 
@@ -752,6 +769,11 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
         }
     }
 
+    /**
+     * Get the icon resource number based on volume type
+     * @param volumeType volume type of the control
+     * @return icon resource
+     */
     private int getVolumeIconResource(int volumeType) {
 
         switch (volumeType) {
@@ -769,6 +791,9 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
         }
     }
 
+    /**
+     * Set the type of icon on the ring seek bar based on the type of the volume control
+     */
     private void setVolumeIcon() {
 
         int volumeIconRes = 0;
@@ -783,6 +808,9 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
     }
 
 
+    /**
+     * Sets visibility of the SAVE menu. Only show the menu if there has been a title entered.
+     */
     private void setSaveMenu() {
 
         if (mToolbarMenu != null) {

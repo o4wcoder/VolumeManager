@@ -122,6 +122,7 @@ public class Util implements Constants {
             ss1.setSpan(new RelativeSizeSpan(.5f), time.length() - 3, time.length(), 0);
 
             textView.setText(ss1);
+
         } else {
             textView.setText(time);
         }

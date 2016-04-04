@@ -94,7 +94,8 @@
             android:id="@+id/startRingSeekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:contentDescription="@string/cont_desc_detail_start_seek_bar"/>
 
     </LinearLayout>
 </LinearLayout>

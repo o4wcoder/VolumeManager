@@ -86,17 +86,20 @@
             android:alpha="@string/primary_text_alpha_dark"
             app:backgroundTint="@color/white"
             android:tint="@android:color/darker_gray"
-            android:src="@drawable/ic_my_location" />
+            android:src="@drawable/ic_my_location"
+            android:contentDescription="@string/cont_desc_map_current_location_button"/>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/increaseRadiusButton"
             style="@style/LocationMapFAB"
-            android:src="@drawable/ic_add" />
+            android:src="@drawable/ic_add"
+            android:contentDescription="@string/cont_desc_map_increase_geofence_button"/>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/decreaseRadiusButton"
             style="@style/LocationMapFAB"
-            android:src="@drawable/ic_remove" />
+            android:src="@drawable/ic_remove"
+            android:contentDescription="@string/cont_desc_map_decrease_geofence_button"/>
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>
