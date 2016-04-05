@@ -29,10 +29,11 @@
             android:textColor="@color/white"
             android:id="@+id/widget_view_no_control"
             android:padding="23dp"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:contentDescription="@string/cont_desc_widget_default"/>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:id="@+id/widget_view_under_control"

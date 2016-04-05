@@ -136,6 +136,8 @@
     <string name="cont_desc_map_current_location_button">Zoom to current location</string>
     <string name="cont_desc_map_increase_geofence_button">increase geofence radius</string>
     <string name="cont_desc_map_decrease_geofence_button">decrease geofence radius</string>
+    <string name="cont_desc_widget_currently_set_to">currently under</string>
+    <string name="cont_desc_widget_default">Volume Manager not currently under a profiles volume control</string>
 
 
 

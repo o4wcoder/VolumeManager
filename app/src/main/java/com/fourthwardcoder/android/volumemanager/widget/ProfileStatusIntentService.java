@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -65,6 +66,7 @@ public class ProfileStatusIntentService extends IntentService implements Constan
 
                     Log.e(TAG, "Profile type = " + profileType);
 
+                    String profileTypeStr = "";
                     //Show view for current alarm control and set data
                     if (profile.isInAlarm()) {
                         views.setViewVisibility(R.id.widget_view_no_control, View.GONE);
@@ -72,13 +74,22 @@ public class ProfileStatusIntentService extends IntentService implements Constan
 
                         if (profileType == TIME_PROFILE_LIST) {
                             views.setImageViewResource(R.id.widget_icon, R.drawable.ic_alarm_48dp);
+                            profileTypeStr = getBaseContext().getString(R.string.cont_desc_time_profile);
 
                         } else {
                             views.setImageViewResource(R.id.widget_icon, R.drawable.ic_place_48dp);
+                            profileTypeStr = getBaseContext().getString(R.string.cont_desc_location_profile);
                         }
 
                         views.setTextViewText(R.id.widget_profile_title, profile.getTitle());
 
+                        //Set content description
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+                            String msg = getBaseContext().getString(R.string.app_name)
+                                    + " " + getBaseContext().getString(R.string.cont_desc_widget_currently_set_to)
+                                    + " " + profileTypeStr + " " + profile.getTitle();
+                                    views.setContentDescription(R.id.widget_view_under_control, msg);
+                        }
                         //Create Intent to launch ProfileDetailActivity
                         Intent launchIntent = new Intent(this, ProfileDetailActivity.class);
                         launchIntent.putExtra(EXTRA_PROFILE, profile);
@@ -89,6 +100,12 @@ public class ProfileStatusIntentService extends IntentService implements Constan
                         //End alarm control, switch views.
                         views.setViewVisibility(R.id.widget_view_no_control, View.VISIBLE);
                         views.setViewVisibility(R.id.widget_view_under_control, View.GONE);
+
+                        //Set content description
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+                            views.setContentDescription(R.id.widget_view_no_control,
+                                    getBaseContext().getString(R.string.cont_desc_widget_default));
+                        }
                     }
 
                     // Tell the AppWidgetManager to perform an update on the current app widget
