@@ -20,7 +20,7 @@
     <string name="emd_volume_control_settings_location">Exit Volume Control</string>
 
     <!-- List Headering -->
-    <string name="profile_header">Profiles</string>
+    <string name="profile_header">Time Profiles</string>
     <string name="location_profile_header">Location Profiles</string>
 
     <string name="start_time_dialog">Volume control start time:</string>

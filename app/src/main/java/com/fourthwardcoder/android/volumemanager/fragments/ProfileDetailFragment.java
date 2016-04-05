@@ -191,6 +191,7 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
         if (toolbar != null) {
             activity.setSupportActionBar(toolbar);
             activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            activity.getSupportActionBar().setTitle(null);
         }
 
         //Get days of the week

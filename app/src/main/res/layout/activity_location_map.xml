@@ -75,31 +75,34 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_margin="16dp"
+        android:orientation="vertical"
         app:layout_anchor="@id/addressDetailLayout"
         app:layout_anchorGravity="top|right|end">
+
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/zoomPhonePositionButton"
             style="@style/LocationMapFAB"
             android:alpha="@string/primary_text_alpha_dark"
-            app:backgroundTint="@color/white"
-            android:tint="@android:color/darker_gray"
+            android:contentDescription="@string/cont_desc_map_current_location_button"
             android:src="@drawable/ic_my_location"
-            android:contentDescription="@string/cont_desc_map_current_location_button"/>
+            android:tint="@android:color/darker_gray"
+            app:backgroundTint="@color/white" />
+
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/increaseRadiusButton"
             style="@style/LocationMapFAB"
-            android:src="@drawable/ic_add"
-            android:contentDescription="@string/cont_desc_map_increase_geofence_button"/>
+            android:contentDescription="@string/cont_desc_map_increase_geofence_button"
+            android:src="@drawable/ic_add" />
+
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/decreaseRadiusButton"
             style="@style/LocationMapFAB"
-            android:src="@drawable/ic_remove"
-            android:contentDescription="@string/cont_desc_map_decrease_geofence_button"/>
+            android:contentDescription="@string/cont_desc_map_decrease_geofence_button"
+            android:src="@drawable/ic_remove" />
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

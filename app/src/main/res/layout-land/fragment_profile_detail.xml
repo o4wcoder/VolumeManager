@@ -27,17 +27,16 @@
 
             <EditText
                 android:id="@+id/profileTitleTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
+                android:layout_marginLeft="44dp"
                 android:layout_marginStart="40dp"
                 android:gravity="left|bottom"
                 android:hint="@string/title_hint"
                 android:singleLine="true"
-                android:textColor="@color/app_primary_text_dark"
-                android:textSize="20sp"
+                style="@style/ProfileTitleTextStyle"
                 android:transitionName="@string/trans_profile_title"
-                android:background="@null"/>
+                android:background="@null"
+                android:layout_marginTop="10dp"
+                android:contentDescription="@string/cont_desc_detail_title"/>
 
         </RelativeLayout>
 
