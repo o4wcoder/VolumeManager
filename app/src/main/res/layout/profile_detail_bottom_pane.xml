@@ -9,14 +9,20 @@
     android:background="@color/sound_control_panel_background"
     android:layout_gravity="fill">
 
-    <include layout="@layout/start_volume_control"/>
+    <include layout="@layout/start_volume_control"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="?android:attr/listDivider" />
 
-    <include layout="@layout/end_volume_control"/>
+    <include layout="@layout/end_volume_control"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
 
 
