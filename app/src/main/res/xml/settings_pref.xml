@@ -1,30 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <CheckBoxPreference
-        android:title="@string/pref_time_notifications_label"
-        android:key="@string/pref_time_notifications_key"
-        android:summaryOff="@string/pref_notifications_false"
-        android:summaryOn="@string/pref_notifications_true"
-        android:defaultValue="@string/pref_notifications_default"
-        />
+    <PreferenceCategory
+        android:key="@string/pref_notification_header_key"
+        android:title="@string/pref_notification_header">
+        <CheckBoxPreference
+            android:defaultValue="@string/pref_notifications_default"
+            android:key="@string/pref_time_notifications_key"
+            android:summaryOff="@string/pref_notifications_false"
+            android:summaryOn="@string/pref_notifications_true"
+            android:title="@string/pref_time_notifications_label" />
 
-    <CheckBoxPreference
-        android:title="@string/pref_location_notifications_label"
-        android:key="@string/pref_location_notifications_key"
-        android:summaryOff="@string/pref_notifications_false"
-        android:summaryOn="@string/pref_notifications_true"
-        android:defaultValue="@string/pref_notifications_default"
-        />
-<!--
-    <ListPreference
-        android:title="@string/pref_location_radius_units_label"
-        android:key="@string/pref_location_radius_units_key"
-        android:defaultValue="@string/pref_location_radius_units_meters"
-        android:entryValues="@array/pref_units_values"
-        android:entries="@array/pref_units_options" />
--->
+        <CheckBoxPreference
+            android:defaultValue="@string/pref_notifications_default"
+            android:key="@string/pref_location_notifications_key"
+            android:summaryOff="@string/pref_notifications_false"
+            android:summaryOn="@string/pref_notifications_true"
+            android:title="@string/pref_location_notifications_label" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="@string/pref_default_volume_header_key"
+        android:title="@string/pref_default_volume_header">
+        <ListPreference
+            android:defaultValue="@string/pref_default_ring_type_key_ring"
+            android:entries="@array/pref_default_ring_types"
+            android:entryValues="@array/pref_default_ring_type_keys"
+            android:key="@string/pref_default_volume_type_setting_key"
+            android:title="@string/pref_default_volume_type_setting" />
+
+        <com.fourthwardcoder.android.volumemanager.helpers.SeekbarPreference
+            android:key="@string/pref_default_ring_volume_setting_key"
+            android:defaultValue="@string/pref_default_ring_volume_default"/>
+
+    </PreferenceCategory>
 </PreferenceScreen>

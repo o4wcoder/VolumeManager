@@ -279,6 +279,41 @@ public class Util implements Constants {
         return audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
     }
 
+    /**
+     * Gets the current ring volume of the phone
+     * @param context of calling app
+     * @return current ring volume
+     */
+    public static int getRingVolume(Context context) {
+        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+
+        return audioManager.getStreamVolume(AudioManager.STREAM_RING);
+
+
+    }
+
+    /**
+     * Set the ring volume. It does not change the mode
+     * @param context context of calling app
+     * @param ringVolume ring volume to set
+     */
+    public static void setRingVolume(Context context,int ringVolume, boolean fromUser) {
+
+        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+
+        if (ringVolume > 0 && ringVolume <= audioManager.getStreamMaxVolume(AudioManager.STREAM_RING)) {
+
+            int ringerMode = audioManager.getRingerMode();
+            if(fromUser)
+                audioManager.setStreamVolume(AudioManager.STREAM_RING, ringVolume, AudioManager.FLAG_PLAY_SOUND);
+            else
+                audioManager.setStreamVolume(AudioManager.STREAM_RING, ringVolume,0);
+                    //Reset audio mode. We just want to change the volume settings. Don't change the mode.
+                    audioManager.setRingerMode(ringerMode);
+
+        }
+    }
+
     /*****************************************************************************/
     /*                       Location/Maps Helpers                               */
     /*****************************************************************************/

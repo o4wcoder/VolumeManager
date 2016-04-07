@@ -53,6 +53,8 @@
     <string name="dialog_delete_profile">Delete profile <xliff:g id="high">%1$s</xliff:g>?</string>
     <string name="dialog_yes">Yes</string>
     <string name="dialog_no">No</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_ok">Ok</string>
 
     <string name="daily">Daily</string>
     <!-- Time Profile -->
@@ -87,6 +89,11 @@
     <string name="place_error">Place selection failed:</string>
 
     <!-- Preferences -->
+    <string name="pref_notification_header">Notifications</string>
+    <string name="pref_notification_header_key">notifications_header_key</string>
+    <string name="pref_default_volume_header">Default Volume</string>
+    <string name="pref_default_volume_header_key">default_header_key</string>
+
     <string name="pref_time_notifications_label">Time Profile Notifications</string>
     <string name="pref_time_notifications_key" translatable="false">time_notifications</string>
 
@@ -96,6 +103,32 @@
     <string name="pref_notifications_true">@string/enabled</string>
     <string name="pref_notifications_false">@string/disabled</string>
     <string name="pref_notifications_default" translatable="false">true</string>
+
+    <string name="pref_default_volume_type_setting">Default Volume Type</string>
+    <string name="pref_default_volume_type_setting_summary">Set normal volume type when ending/exiting a volume control</string>
+    <string name="pref_default_volume_type_setting_key">default_volume_type</string>
+
+    <string name="pref_default_ring_volume_setting">Default Ring Volume Setting</string>
+    <string name="pref_default_ring_volume_setting_summary">Set normal ring volume setting when ending/exiting a volume control</string>
+    <string name="pref_default_ring_volume_setting_key">default_ring_volume</string>
+    <string name="pref_default_ring_volume_setting_dialog_message">Set the default ring volume for end/exit controls</string>
+    <string name="pref_default_ring_volume_default">3</string>
+
+    <string name="pref_default_ring_type_key_off" translatable="false">@string/off</string>
+    <string name="pref_default_ring_type_key_vibrate" translatable="false">@string/vibrate</string>
+    <string name="pref_default_ring_type_key_ring" translatable="false">@string/ring</string>
+
+    <string-array name="pref_default_ring_types">
+        <item>@string/off</item>
+        <item>@string/vibrate</item>
+        <item>@string/ring</item>
+    </string-array>
+
+    <string-array name="pref_default_ring_type_keys">
+        <item>@string/pref_default_ring_type_key_off</item>
+        <item>@string/pref_default_ring_type_key_vibrate</item>
+        <item>@string/pref_default_ring_type_key_ring</item>
+    </string-array>
 
     <!-- Widget -->
     <string name="widget_status_title">Volume Manager Current Control</string>

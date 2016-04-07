@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/end_volume_control_pane">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:text="@string/pref_default_ring_volume_setting"
+        style="@android:style/TextAppearance.DeviceDefault.SearchResult.Title"
+        android:textSize="16dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="20dp">
+
+        <ImageView
+            android:id="@+id/volumeEndImageView"
+            style="@style/ProfileIcon"
+            android:src="@drawable/ic_volume_up"/>
+
+        <SeekBar
+            android:id="@+id/seekbar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:layout_gravity="center"
+            android:contentDescription="@string/cont_desc_detail_end_seek_bar"/>
+
+        <TextView
+            android:id="@+id/ring_volume_textview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_gravity="center"
+            android:text="(12/15)"
+            android:gravity="right"
+            style="@android:style/TextAppearance.DeviceDefault.SearchResult.Subtitle" />
+
+    </LinearLayout>
+</LinearLayout>

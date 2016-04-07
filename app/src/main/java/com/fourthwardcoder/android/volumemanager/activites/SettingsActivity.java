@@ -1,15 +1,12 @@
 package com.fourthwardcoder.android.volumemanager.activites;
 
-import android.annotation.TargetApi;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import com.fourthwardcoder.android.volumemanager.R;
 
@@ -25,7 +22,8 @@ import com.fourthwardcoder.android.volumemanager.R;
 public class SettingsActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener,
         SharedPreferences.OnSharedPreferenceChangeListener {
 
-    @Override
+    private static final String TAG = SettingsActivity.class.getSimpleName();
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -33,7 +31,9 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
 
         // For all preferences, attach an OnPreferenceChangeListener so the UI summary can be
         // updated when the preference changes.
-        // bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_location_radius_units_key)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_default_volume_type_setting_key)));
+
+
     }
 
     /**
@@ -61,12 +61,15 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     private void setPreferenceSummary(Preference preference, Object value) {
         String stringValue = value.toString();
 
+        Log.e(TAG, "setPreferenceSummary with pref = " +preference.getTitle());
         if (preference instanceof ListPreference) {
+            Log.e(TAG,"got listpref with value = " + stringValue);
             // For list preferences, look up the correct display value in
             // the preference's 'entries' list (since they have separate labels/values).
             ListPreference listPreference = (ListPreference) preference;
             int prefIndex = listPreference.findIndexOfValue(stringValue);
             if (prefIndex >= 0) {
+                Log.e(TAG,"set summary for list");
                 preference.setSummary(listPreference.getEntries()[prefIndex]);
             }
         } else {
@@ -101,6 +104,11 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
+        if(key.equals(getString(R.string.pref_default_volume_type_setting_key)) ||
+                key.equals(getString(R.string.pref_default_ring_volume_setting_key))) {
+
+            // TODO: Need to update all profiles that are using the default with new setting
+        }
     }
 
 }
