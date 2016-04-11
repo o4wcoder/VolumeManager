@@ -53,6 +53,8 @@ public class Profile implements Constants, Parcelable {
     private boolean inAlarm;
     private GeoFenceLocation location;
     private long locationKey;     //key to location data
+    private boolean useStartDefault;
+    private boolean useEndDefault;
 
     public Profile() {
 
@@ -67,6 +69,9 @@ public class Profile implements Constants, Parcelable {
         startDate = new Date();
         endDate = new Date();
         inAlarm = false;
+        useStartDefault = true;
+        useEndDefault = true;
+
 
         calculateAlarmId();
         daysOfTheWeek = new ArrayList<>(DAYS_OF_THE_WEEK);
@@ -96,6 +101,8 @@ public class Profile implements Constants, Parcelable {
         this.daysOfTheWeek = new Gson().fromJson(cursor.getString(ProfileContract.COL_PROFILE_DAYS_OF_THE_WEEK), booleanType);
         this.inAlarm = (cursor.getInt(ProfileContract.COL_PROFILE_IN_ALARM)) > 0 ? true : false;
         this.locationKey = cursor.getLong(ProfileContract.COL_PROFILE_LOCATION_KEY);
+        this.useStartDefault = (cursor.getInt(ProfileContract.COL_PROFILE_USE_START_DEFAULT)) > 0 ? true : false;
+        this.useEndDefault = (cursor.getInt(ProfileContract.COL_PROFILE_USE_END_DEFAULT)) > 0 ? true : false;
     }
 
     public ContentValues getContentValues() {
@@ -119,6 +126,9 @@ public class Profile implements Constants, Parcelable {
         //Put key of the location data
         if (location != null)
             profileValues.put(ProfileContract.ProfileEntry.COLUMN_LOC_KEY, this.locationKey);
+
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_USE_START_DEFAULT,this.useStartDefault);
+        profileValues.put(ProfileContract.ProfileEntry.COLUMN_USE_END_DEFAULT,this.useEndDefault);
 
         return profileValues;
     }
@@ -301,6 +311,21 @@ public class Profile implements Constants, Parcelable {
             return false;
     }
 
+    public boolean isUseStartDefault() {
+        return useStartDefault;
+    }
+
+    public void setUseStartDefault(boolean useStartDefault) {
+        this.useStartDefault = useStartDefault;
+    }
+
+    public boolean isUseEndDefault() {
+        return useEndDefault;
+    }
+
+    public void setUseEndDefault(boolean useEndDefault) {
+        this.useEndDefault = useEndDefault;
+    }
     /*****************************************************/
 	/*                   Private Methods                 */
 
@@ -345,6 +370,8 @@ public class Profile implements Constants, Parcelable {
         inAlarm = in.readByte() != 0x00;
         location = (GeoFenceLocation) in.readValue(GeoFenceLocation.class.getClassLoader());
         locationKey = in.readLong();
+        useStartDefault = in.readByte() != 0x00;
+        useEndDefault = in.readByte() != 0x00;
     }
 
     @Override
@@ -375,6 +402,8 @@ public class Profile implements Constants, Parcelable {
         dest.writeByte((byte) (inAlarm ? 0x01 : 0x00));
         dest.writeValue(location);
         dest.writeLong(locationKey);
+        dest.writeByte((byte) (useStartDefault ? 0x01 : 0x00));
+        dest.writeByte((byte) (useEndDefault ? 0x01 : 0x00));
     }
 
     @SuppressWarnings("unused")

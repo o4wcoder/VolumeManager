@@ -32,6 +32,8 @@ public class ProfileContract {
     public static final int COL_PROFILE_DAYS_OF_THE_WEEK = 13;
     public static final int COL_PROFILE_IN_ALARM = 14;
     public static final int COL_PROFILE_LOCATION_KEY = 15;
+    public static final int COL_PROFILE_USE_START_DEFAULT = 16;
+    public static final int COL_PROFILE_USE_END_DEFAULT = 17;
 
     public static final int COL_LOCATION = 0;
     public static final int COL_LOCATION_LATITUDE = 1;
@@ -84,7 +86,6 @@ public class ProfileContract {
 
     /*********************************************************************/
     /*                        Profile Table Entry                        */
-
     /*********************************************************************/
     public static class ProfileEntry implements BaseColumns {
 
@@ -120,6 +121,8 @@ public class ProfileContract {
         public static final String COLUMN_IN_ALARM = "profile_in_alarm";
         // Column with the foreign key into the location table.
         public static final String COLUMN_LOC_KEY = "location_id";
+        public static final String COLUMN_USE_START_DEFAULT = "profile_use_start_default";
+        public static final String COLUMN_USE_END_DEFAULT = "profile_use_end_default";
 
         public static Uri buildProfileUri() {
             return CONTENT_URI;

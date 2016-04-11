@@ -20,6 +20,7 @@ import com.fourthwardcoder.android.volumemanager.models.Profile;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -79,6 +80,9 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
         //Set toolbar
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //Set Defaults for Shared Preferences
+        PreferenceManager.setDefaultValues(this,R.xml.settings_pref,false);
 
         //Create TabLayout for the Profiles (Basic and Location)d
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);

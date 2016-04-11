@@ -5,7 +5,7 @@
     <integer name="custom_match_parent">-1</integer>
     <dimen name="am_or_pm_font_size">24sp</dimen>
 
-    <dimen name="heading_text_size">24sp</dimen>
+    <dimen name="heading_text_size">20sp</dimen>
 
     <!-- landscape dimens -->
     <dimen name="landscape_profile_list_view_width">360dp</dimen>

@@ -34,6 +34,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -78,7 +80,7 @@ import com.squareup.picasso.Picasso;
  * @author Chris Hare
  */
 public class ProfileDetailFragment extends Fragment implements LocationProfileListAdapter.LocationAdapterCallback, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener, ResultCallback<Status>, Constants {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, ResultCallback<Status>, CheckBox.OnCheckedChangeListener, Constants {
 
     /************************************************************************/
     /*                           Constants                                  */
@@ -111,11 +113,13 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
     /************************************************************************/
     Profile mProfile;
     TextView mTitleTextView, startTimeTextView, endTimeTextView;
-    RadioGroup startVolumeRadioGroup;
-    RadioGroup endVolumeRadioGroup;
-    SeekBar startRingSeekBar, endRingSeekBar;
-    TextView startRingVolumeTextView, endRingVolumeTextView;
-    ImageView startVolumeImageView, endVolumeImageView;
+    RadioGroup mStartVolumeRadioGroup;
+    RadioGroup mEndVolumeRadioGroup;
+    SeekBar mStartRingSeekBar, mEndRingSeekBar;
+    TextView mStartRingVolumeTextView, mEndRingVolumeTextView;
+    ImageView mStartVolumeImageView, mEndVolumeImageView;
+    CheckBox mUseStartVolumeDefaultCheckBox;
+    CheckBox mUseEndVolumeDefaultCheckBox;
 
     boolean mIsNewProfile = false;
     boolean mIsSaveGeofence = true;
@@ -198,8 +202,8 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
          mDaysList = getContext().getResources().getStringArray(R.array.days_of_the_week);
 
         //Get volume icons
-        startVolumeImageView = (ImageView) view.findViewById(R.id.volumeStartImageView);
-        endVolumeImageView = (ImageView) view.findViewById(R.id.volumeEndImageView);
+        mStartVolumeImageView = (ImageView) view.findViewById(R.id.volumeStartImageView);
+        mEndVolumeImageView = (ImageView) view.findViewById(R.id.volumeEndImageView);
         /*
 	     * Setup TextViews                        
 	     */
@@ -225,11 +229,11 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
 
         startTimeTextView = (TextView) view.findViewById(R.id.startTimeTextView);
         //Set up Ring Volume TextView
-        startRingVolumeTextView = (TextView) view.findViewById(R.id.startRingVolumeTextView);
+        mStartRingVolumeTextView = (TextView) view.findViewById(R.id.startRingVolumeTextView);
         //Set up End Time TextView
         endTimeTextView = (TextView) view.findViewById(R.id.endTimeTextView);
         //Set up Ring Volume TextView
-        endRingVolumeTextView = (TextView) view.findViewById(R.id.endRingVolumeTextView);
+        mEndRingVolumeTextView = (TextView) view.findViewById(R.id.endRingVolumeTextView);
 	    
 	    /*
 	     * Setup Buttons                     
@@ -279,10 +283,17 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
             }
         };
 
-        startVolumeRadioGroup = (RadioGroup) view.findViewById(R.id.startVolumeRadioGroup);
-        endVolumeRadioGroup = (RadioGroup) view.findViewById(R.id.endVolumeRadioGroup);
-        startRingSeekBar = (SeekBar) view.findViewById(R.id.startRingSeekBar);
-        endRingSeekBar = (SeekBar) view.findViewById(R.id.endRingSeekBar);
+        mStartVolumeRadioGroup = (RadioGroup) view.findViewById(R.id.startVolumeRadioGroup);
+        mEndVolumeRadioGroup = (RadioGroup) view.findViewById(R.id.endVolumeRadioGroup);
+        mStartRingSeekBar = (SeekBar) view.findViewById(R.id.startRingSeekBar);
+        mEndRingSeekBar = (SeekBar) view.findViewById(R.id.endRingSeekBar);
+        mUseStartVolumeDefaultCheckBox = (CheckBox)view.findViewById(R.id.start_volume_use_default_checkbox);
+        mUseStartVolumeDefaultCheckBox.setOnCheckedChangeListener(this);
+        mUseEndVolumeDefaultCheckBox = (CheckBox)view.findViewById(R.id.end_volume_use_default_checkbox);
+        mUseEndVolumeDefaultCheckBox.setOnCheckedChangeListener(this);
+        //Set access to volume controls
+        setVolumeControlAccess();
+
 
         //Set data if we have a profile object
         if (mProfile != null) {
@@ -366,7 +377,7 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
 	     */
             //Set up Ringer type Radio Buttons
 
-            startVolumeRadioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            mStartVolumeRadioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -374,13 +385,13 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
                     if (checkedId == R.id.startOffRadio) {
                         mProfile.setStartVolumeType(VOLUME_OFF);
                         mProfile.setStartRingVolume(0);
-                        Util.setSeekBarPosition(startRingSeekBar, startRingVolumeTextView, mProfile.getStartRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
+                        Util.setSeekBarPosition(mStartRingSeekBar, mStartRingVolumeTextView, mProfile.getStartRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
 
                     } else if (checkedId == R.id.startVibrateRadio) {
 
                         mProfile.setStartVolumeType(VOLUME_VIBRATE);
                         mProfile.setStartRingVolume(0);
-                        Util.setSeekBarPosition(startRingSeekBar, startRingVolumeTextView, mProfile.getStartRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
+                        Util.setSeekBarPosition(mStartRingSeekBar, mStartRingVolumeTextView, mProfile.getStartRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
                     } else {
                         mProfile.setStartVolumeType(VOLUME_RING);
                     }
@@ -391,19 +402,19 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
 
             });
             //Set up Ringer type Radio Buttons
-            endVolumeRadioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            mEndVolumeRadioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
 
                     if (checkedId == R.id.endOffRadio) {
                         mProfile.setEndVolumeType(VOLUME_OFF);
                         mProfile.setEndRingVolume(0);
-                        Util.setSeekBarPosition(endRingSeekBar, endRingVolumeTextView, mProfile.getEndRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
+                        Util.setSeekBarPosition(mEndRingSeekBar, mEndRingVolumeTextView, mProfile.getEndRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
 
                     } else if (checkedId == R.id.endVibrateRadio) {
                         mProfile.setEndVolumeType(VOLUME_VIBRATE);
                         mProfile.setEndRingVolume(0);
-                        Util.setSeekBarPosition(endRingSeekBar, endRingVolumeTextView, mProfile.getEndRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
+                        Util.setSeekBarPosition(mEndRingSeekBar, mEndRingVolumeTextView, mProfile.getEndRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
                     } else {
                         mProfile.setEndVolumeType(VOLUME_RING);
                     }
@@ -416,7 +427,7 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
 	     * Setup SeekBars                    
 	     */
             //Set up Ringer SeekBar
-            startRingSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+            mStartRingSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress,
@@ -424,11 +435,11 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
                     Log.d(TAG, "Start Seek Bar progress " + progress);
 
                     if (progress == 0)
-                        ((RadioButton) startVolumeRadioGroup.getChildAt(VOLUME_OFF)).setChecked(true);
+                        ((RadioButton) mStartVolumeRadioGroup.getChildAt(VOLUME_OFF)).setChecked(true);
                     else
-                        ((RadioButton) startVolumeRadioGroup.getChildAt(VOLUME_RING)).setChecked(true);
+                        ((RadioButton) mStartVolumeRadioGroup.getChildAt(VOLUME_RING)).setChecked(true);
 
-                    Util.setRingVolumeText(startRingVolumeTextView, progress, Util.getMaxRingVolume(getActivity().getApplicationContext()));
+                    Util.setRingVolumeText(mStartRingVolumeTextView, progress, Util.getMaxRingVolume(getActivity().getApplicationContext()));
                     mProfile.setStartRingVolume(progress);
 
                     setVolumeIcon();
@@ -444,16 +455,16 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
             });
 
             //Set up Ringer SeekBar
-            endRingSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+            mEndRingSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress,
                                               boolean fromUser) {
                     if (progress == 0)
-                        ((RadioButton) endVolumeRadioGroup.getChildAt(VOLUME_OFF)).setChecked(true);
+                        ((RadioButton) mEndVolumeRadioGroup.getChildAt(VOLUME_OFF)).setChecked(true);
                     else
-                        ((RadioButton) endVolumeRadioGroup.getChildAt(VOLUME_RING)).setChecked(true);
+                        ((RadioButton) mEndVolumeRadioGroup.getChildAt(VOLUME_RING)).setChecked(true);
 
-                    Util.setRingVolumeText(endRingVolumeTextView, progress, Util.getMaxRingVolume(getActivity().getApplicationContext()));
+                    Util.setRingVolumeText(mEndRingVolumeTextView, progress, Util.getMaxRingVolume(getActivity().getApplicationContext()));
                     mProfile.setEndRingVolume(progress);
 
                     setVolumeIcon();
@@ -495,10 +506,10 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
             Util.setTimeForLargeTextView(getActivity(), mProfile.getEndDate(), endTimeTextView);
             endTimeTextView.setContentDescription(getString(R.string.cont_desc_detail_end_time) + " " + Util.formatTime(getContext(), mProfile.getEndDate()));
             //Set Seekbar default
-            Util.setSeekBarPosition(startRingSeekBar, startRingVolumeTextView, mProfile.getStartRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
-            Util.setSeekBarPosition(endRingSeekBar, endRingVolumeTextView, mProfile.getEndRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
-            startRingSeekBar.setMax(Util.getMaxRingVolume(getActivity().getApplicationContext()));
-            endRingSeekBar.setMax(Util.getMaxRingVolume(getActivity().getApplicationContext()));
+            Util.setSeekBarPosition(mStartRingSeekBar, mStartRingVolumeTextView, mProfile.getStartRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
+            Util.setSeekBarPosition(mEndRingSeekBar, mEndRingVolumeTextView, mProfile.getEndRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
+            mStartRingSeekBar.setMax(Util.getMaxRingVolume(getActivity().getApplicationContext()));
+            mEndRingSeekBar.setMax(Util.getMaxRingVolume(getActivity().getApplicationContext()));
 
             //Set Volume Icon
             setVolumeIcon();
@@ -506,9 +517,9 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
             setLocationLayout(view);
 
             //Set default or saved radio button setting
-            ((RadioButton) startVolumeRadioGroup.getChildAt(mProfile.getStartVolumeType())).setChecked(true);
+            ((RadioButton) mStartVolumeRadioGroup.getChildAt(mProfile.getStartVolumeType())).setChecked(true);
             //Set default or saved radio button setting
-            ((RadioButton) endVolumeRadioGroup.getChildAt(mProfile.getEndVolumeType())).setChecked(true);
+            ((RadioButton) mEndVolumeRadioGroup.getChildAt(mProfile.getEndVolumeType())).setChecked(true);
         }
 
 
@@ -680,6 +691,39 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
 
     /*******************************************************************/
 
+    private void setVolumeControlAccess() {
+        
+        if(mUseStartVolumeDefaultCheckBox != null) {
+            
+            if(mUseStartVolumeDefaultCheckBox.isChecked()) {
+                setRadioGroupAccess(mStartVolumeRadioGroup,false);
+                mStartRingSeekBar.setEnabled(false);
+            }
+            else {
+                setRadioGroupAccess(mStartVolumeRadioGroup,true);
+                mStartRingSeekBar.setEnabled(true);
+            }
+        }
+        
+        if(mUseEndVolumeDefaultCheckBox != null) {
+
+            if(mUseEndVolumeDefaultCheckBox.isChecked()) {
+                setRadioGroupAccess(mEndVolumeRadioGroup,false);
+                mEndRingSeekBar.setEnabled(false);
+            }
+            else {
+                setRadioGroupAccess(mEndVolumeRadioGroup,true);
+                mEndRingSeekBar.setEnabled(true);
+            }
+            
+        }
+    }
+
+    private void setRadioGroupAccess(RadioGroup rg, boolean access) {
+
+        for (int i = 0; i< rg.getChildCount(); i++ )
+            rg.getChildAt(i).setEnabled(access);
+    }
     /**
      * Pull the static Google map image for the location in the profile
      * @param latLng latitude and longitude of the loaction
@@ -800,11 +844,11 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
         int volumeIconRes = 0;
         //Set Start Volume Icon
         volumeIconRes = getVolumeIconResource(mProfile.getStartVolumeType());
-        startVolumeImageView.setImageResource(volumeIconRes);
+        mStartVolumeImageView.setImageResource(volumeIconRes);
 
         //Set End Volume Icon
         volumeIconRes = getVolumeIconResource(mProfile.getEndVolumeType());
-        endVolumeImageView.setImageResource(volumeIconRes);
+        mEndVolumeImageView.setImageResource(volumeIconRes);
 
     }
 
@@ -974,5 +1018,11 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
     @Override
     public void onToggleLocationIcon(boolean enable, String requestId) {
 
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+        setVolumeControlAccess();
     }
 }

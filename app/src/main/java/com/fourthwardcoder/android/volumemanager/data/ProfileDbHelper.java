@@ -21,7 +21,7 @@ public class ProfileDbHelper extends SQLiteOpenHelper {
     /********************************************************************/
     /*                           Constants                              */
     /********************************************************************/
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
     public static final String DATABASE_NAME = "profiles.db";
 
     /********************************************************************/
@@ -67,6 +67,8 @@ public class ProfileDbHelper extends SQLiteOpenHelper {
                 ProfileEntry.COLUMN_DAYS_OF_THE_WEEK + " INTEGER," +
                 ProfileEntry.COLUMN_IN_ALARM + " BIT NOT NULL, " +
                 ProfileEntry.COLUMN_LOC_KEY + " INTEGER, " +
+                ProfileEntry.COLUMN_USE_START_DEFAULT + " BIT NOT NULL, " +
+                ProfileEntry.COLUMN_USE_END_DEFAULT + " BIT NOT NULL, " +
 
                 // Set up the location column as a foreign key to location table.
                 " FOREIGN KEY (" + ProfileEntry.COLUMN_LOC_KEY + ") REFERENCES " +

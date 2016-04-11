@@ -1,6 +1,9 @@
 package com.fourthwardcoder.android.volumemanager.activites;
 
+import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -12,9 +15,9 @@ import com.fourthwardcoder.android.volumemanager.R;
 
 /**
  * Preference Settings Activity
- *
+ * <p/>
  * All preference settings for the app set in the Settings Menu
- *
+ * <p/>
  * Created: 1/17/16
  *
  * @author Chris Hare
@@ -31,7 +34,8 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
 
         // For all preferences, attach an OnPreferenceChangeListener so the UI summary can be
         // updated when the preference changes.
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_default_volume_type_setting_key)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_default_start_volume_type_setting_key)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_default_end_volume_type_setting_key)));
 
 
     }
@@ -61,15 +65,15 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     private void setPreferenceSummary(Preference preference, Object value) {
         String stringValue = value.toString();
 
-        Log.e(TAG, "setPreferenceSummary with pref = " +preference.getTitle());
+        Log.e(TAG, "setPreferenceSummary with pref = " + preference.getTitle());
         if (preference instanceof ListPreference) {
-            Log.e(TAG,"got listpref with value = " + stringValue);
+            Log.e(TAG, "got listpref with value = " + stringValue);
             // For list preferences, look up the correct display value in
             // the preference's 'entries' list (since they have separate labels/values).
             ListPreference listPreference = (ListPreference) preference;
             int prefIndex = listPreference.findIndexOfValue(stringValue);
             if (prefIndex >= 0) {
-                Log.e(TAG,"set summary for list");
+                Log.e(TAG, "set summary for list");
                 preference.setSummary(listPreference.getEntries()[prefIndex]);
             }
         } else {
@@ -79,7 +83,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
 
     }
 
-    // Registers a shared preference change listener that gets notified when preferences change
+     //Registers a shared preference change listener that gets notified when preferences change
     @Override
     protected void onResume() {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -98,17 +102,22 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         setPreferenceSummary(preference, newValue);
-        return false;
+        return true;
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
-        if(key.equals(getString(R.string.pref_default_volume_type_setting_key)) ||
-                key.equals(getString(R.string.pref_default_ring_volume_setting_key))) {
-
-            // TODO: Need to update all profiles that are using the default with new setting
-        }
+//        if (key.equals(getString(R.string.pref_default_volume_type_setting_key)) ||
+//                key.equals(getString(R.string.pref_default_ring_volume_setting_key))) {
+//
+//            // TODO: Need to update all profiles that are using the default with new setting
+//        }
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    public Intent getParentActivityIntent() {
+        return super.getParentActivityIntent().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    }
 }

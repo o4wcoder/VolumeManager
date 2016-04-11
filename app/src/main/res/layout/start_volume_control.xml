@@ -19,16 +19,29 @@
         android:fontFamily="sans-serif-light" />
 
 
-    <TextView
-        android:id="@+id/start_volume_control_heading"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/volume_control_top_bottom_margin"
-        android:padding="4dp"
-        android:text="@string/start_volume_settings_time"
-        android:textColor="@color/white"
-        android:textSize="@dimen/volume_control_heading_text_size" />
+        android:orientation="horizontal">
 
+        <TextView
+            android:id="@+id/start_volume_control_heading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="@string/start_volume_settings_time"
+            android:textColor="@color/white"
+            android:textSize="@dimen/volume_control_heading_text_size" />
+
+        <CheckBox
+            android:id="@+id/start_volume_use_default_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/use_default_check_box"
+            android:textColor="@color/white"
+            android:checked="true" />
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

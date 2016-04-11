@@ -15,7 +15,7 @@ import org.w3c.dom.Text;
 /**
  * Created by Chris Hare on 4/7/2016.
  */
-public class SeekbarPreference extends Preference implements SeekBar.OnSeekBarChangeListener{
+public class SeekbarPreference extends Preference implements SeekBar.OnSeekBarChangeListener {
 
     private static final String TAG = SeekbarPreference.class.getSimpleName();
 
@@ -27,15 +27,16 @@ public class SeekbarPreference extends Preference implements SeekBar.OnSeekBarCh
         super(context, attrs);
 
         setLayoutResource(R.layout.default_ring_volume_setting);
+
     }
 
     @Override
     protected void onBindView(View view) {
 
         //Get textview that displays the current ring volume
-        mRingVolumeTextView = (TextView)view.findViewById(R.id.ring_volume_textview);
+        mRingVolumeTextView = (TextView) view.findViewById(R.id.ring_volume_textview);
 
-        mSeekBar = (SeekBar)view.findViewById(R.id.seekbar);
+        mSeekBar = (SeekBar) view.findViewById(R.id.seekbar);
         mSeekBar.setProgress(mProgress);
         mSeekBar.setOnSeekBarChangeListener(this);
 
@@ -49,26 +50,26 @@ public class SeekbarPreference extends Preference implements SeekBar.OnSeekBarCh
 
         Log.e(TAG, "onSetInitialValue with restore value = " + restoreValue + ". Default value = " + defaultValue);
 
-        if(restoreValue) {
+        if (restoreValue) {
             setValue(getPersistedInt(mProgress));
-        }
-        else {
-            Log.e(TAG,"No value, set from current ring volume");
-            //Not currently set. Get current phone ring volume
-            setValue(Util.getRingVolume(getContext()));
+        } else {
+            Log.e(TAG, "No value, set from current ring volume");
+            //Not currently set. Get current phone ring volume if this is the end/exit control
+            if (getKey().equals(R.string.pref_default_end_volume_type_setting_key))
+                setValue(Util.getRingVolume(getContext()));
         }
     }
 
     private void setValue(int value) {
         if (shouldPersist()) {
-          //  int currentPhoneVolume = Util.getRingVolume(getContext());
+            //  int currentPhoneVolume = Util.getRingVolume(getContext());
 
-          //  if(value == currentPhoneVolume)
-               persistInt(value);
-          //  else {
-         //       persistInt(currentPhoneVolume);
-        //        value = currentPhoneVolume;
-        //    }
+            //  if(value == currentPhoneVolume)
+            persistInt(value);
+            //  else {
+            //       persistInt(currentPhoneVolume);
+            //        value = currentPhoneVolume;
+            //    }
         }
 
         if (value != mProgress) {
@@ -76,15 +77,17 @@ public class SeekbarPreference extends Preference implements SeekBar.OnSeekBarCh
             notifyChanged();
         }
     }
+
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
-        Log.e(TAG,"onProgressChanged with fromUser=" + fromUser);
+        Log.e(TAG, "onProgressChanged with fromUser=" + fromUser);
         Util.setRingVolumeText(mRingVolumeTextView, progress, Util.getMaxRingVolume(getContext()));
 
-        if(shouldPersist()) {
+        if (shouldPersist()) {
             persistInt(progress);
-            Util.setRingVolume(getContext(), progress, fromUser);
+            if (getKey().equals(R.string.pref_default_end_volume_type_setting_key))
+                Util.setRingVolume(getContext(), progress, fromUser);
         }
     }
 
