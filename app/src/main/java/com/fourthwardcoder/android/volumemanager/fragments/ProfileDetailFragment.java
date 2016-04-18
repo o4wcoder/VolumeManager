@@ -7,18 +7,22 @@ import java.util.Date;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.animation.ValueAnimatorCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -46,6 +50,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
+import com.fourthwardcoder.android.volumemanager.Manifest;
 import com.fourthwardcoder.android.volumemanager.R;
 //import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
 import com.fourthwardcoder.android.volumemanager.activites.LocationMapActivity;
@@ -108,6 +113,10 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
     private static final String MAPS_SIZE_SMALL = "400x200";
     private static final String MAPS_ZOOM_VAL = "15";
     private static final String MAPS_SENSOR_VAL = "false";
+
+    //Identifier for the permission request
+    private static final int ACCESS_FINE_LOCATION_PERMISSION_REQUEST = 1;
+
     /************************************************************************/
 	/*                          Local Data                                  */
     /************************************************************************/
@@ -144,7 +153,6 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
 
     }
     /*******************************************************/
@@ -536,6 +544,9 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
         //Get Location if this is a location profile
         if (mProfileType == LOCATION_PROFILE_LIST) {
 
+            //Check for permissions for API 23 (Marshmallow)
+            getPermissionAccessFineLocation();
+
             //Get current location if there is not location set
             Log.e(TAG, "Creating Google API and Location requests");
             //Build Google API Client
@@ -550,6 +561,9 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
                     .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                     .setInterval(10 * 1000)        // 10 seconds, in milliseconds
                     .setFastestInterval(1 * 1000); // 1 second, in milliseconds
+
+            //For Marshmallow and above, get Location Permissions
+         //   getPermissionAccessFineLocation();
         }
         //If the Google Client is null we are either a Time Profile or we already have the location
         //for a location profile
@@ -909,21 +923,71 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
         }
     }
 
+    private void getPermissionAccessFineLocation() {
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //Check if we have permission to access Location Services using FINE LOCATION
+            if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+                requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                        ACCESS_FINE_LOCATION_PERMISSION_REQUEST);
+
+            }
+        }
+    }
+
+    private boolean haveLocationPermission() {
+
+        //Check if we have permission to access Location Services using FINE LOCATION
+        if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            //Have Location permission
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private void getCurrentLocation() {
+
+    }
     @Override
     public void onConnected(Bundle bundle) {
         Log.e(TAG, "onConnected()");
         //Get GeofenceManger object
         mGeofenceManager = new GeofenceManager(getActivity().getApplicationContext(), mGoogleApiClient);
 
-        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        Location location = null;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //Check if we have permission to access Location Services using FINE LOCATION
+            if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+                requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                        ACCESS_FINE_LOCATION_PERMISSION_REQUEST);
+
+            }
+            else {
+                location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            }
+        }
+        else {
+            //Pre-Marshmellow. Will already have permission
+            location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        }
 
         if (location == null) {
             Log.e(TAG, "Location was null. Can't get location");
             Toast toast = Toast.makeText(getActivity().getApplicationContext(),
                     R.string.network_error, Toast.LENGTH_LONG);
             toast.show();
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+
+            if(haveLocationPermission())
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+
         } else {
             LatLng latLng;
             if (mProfile.getLocation() == null) {
@@ -994,6 +1058,19 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.e(TAG, "onConnectionFailed(): " + connectionResult.toString());
+
+
+        Log.e(TAG,"status code = " + connectionResult.getErrorCode());
+
+        if(connectionResult.getErrorCode() == ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED) {
+            Toast.makeText(getActivity(), getString(R.string.google_play_service_out_of_date_error),Toast.LENGTH_LONG).show();
+        }
+        else {
+            Toast.makeText(getActivity(),getString(R.string.google_play_service_connection_failed),Toast.LENGTH_LONG).show();
+        }
+
+        //Disable the title TextView so it can not be changed and the profile can not be saved
+        mTitleTextView.setEnabled(false);
     }
 
     @Override
@@ -1024,5 +1101,25 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
         setVolumeControlAccess();
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+
+        if(requestCode == ACCESS_FINE_LOCATION_PERMISSION_REQUEST) {
+            if(grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(getActivity(),getString(R.string.permission_fine_location_granted),Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(getActivity(),getString(R.string.permission_fine_location_denied),Toast.LENGTH_SHORT).show();
+            }
+
+        }
+        else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 }

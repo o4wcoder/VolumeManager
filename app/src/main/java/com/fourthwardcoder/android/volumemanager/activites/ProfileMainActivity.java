@@ -7,6 +7,7 @@ import io.fabric.sdk.android.Fabric;
 
 import java.util.ArrayList;
 
+import com.fourthwardcoder.android.volumemanager.Manifest;
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.adapters.ProfilePagerAdapter;
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
@@ -17,13 +18,18 @@ import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
 
 
+import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -35,6 +41,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Main App Activity
@@ -54,6 +61,9 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
     /*********************************************************************/
     private static final String TAG = "ProfileMainActivity";
     private static final String DETAILFRAGMENT_TAG = "DFTAG";
+
+    //Identifier for the permission request
+    private static final int ACCESS_FINE_LOCATION_PERMISSION_REQUEST = 1;
 
     /*********************************************************************/
 	/*                         Local Data                                */
@@ -187,6 +197,7 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
     /******************************************************************************/
     /*                             Private Methods                                */
     /******************************************************************************/
+
 
     /**
      * Sets the visibility of the New Profile Floating Action button. It is visible if there
@@ -349,5 +360,6 @@ public class ProfileMainActivity extends AppCompatActivity implements ProfileMai
 
         }
     }
+
 
 }

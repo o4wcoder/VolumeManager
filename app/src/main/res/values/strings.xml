@@ -75,7 +75,9 @@
     <string name="radius_text">radius(m)</string>
     <string name="unknown_street_address">Unknown Street Address</string>
     <string name="network_error">Could not get location. Please check network connection.</string>
-    
+    <string name="google_play_service_out_of_date_error">Google Play Services is out of date on this device. Can not get location. Please upgrade Google Play Services</string>
+    <string name="google_play_service_connection_failed">Connection to Google Play Services Failed</string>
+
     <!-- Geofence strings -->
     <string name="not_connected">GoogleApiClient no yet connected. Try again.</string>
     <string name="geofence_not_available">Geofence service is not available now</string>
@@ -156,6 +158,7 @@
     <string name="cont_desc_widget_currently_set_to">currently under</string>
     <string name="cont_desc_widget_default">Volume Manager not currently under a profiles volume control</string>
 
-
-
+    <!-- Permissions -->
+    <string name="permission_fine_location_granted">Fine location permission granted</string>
+    <string name="permission_fine_location_denied">Fine location permission denied</string>
 </resources>
