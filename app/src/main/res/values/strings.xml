@@ -17,7 +17,7 @@
     <string name="start_volume_settings_time">Start Volume Control</string>
     <string name="end_volume_settings_time">End Volume Control</string>
     <string name="start_volume_control_settings_location">Enter Volume Control</string>
-    <string name="emd_volume_control_settings_location">Exit Volume Control</string>
+    <string name="end_volume_control_settings_location">Exit Volume Control</string>
     <string name="use_default_check_box">Use Default</string>
 
     <!-- List Headering -->

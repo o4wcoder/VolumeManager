@@ -505,6 +505,12 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
 
                 mAddressTextView = (TextView) view.findViewById(R.id.address_textview);
                 mAddressTextView.setOnClickListener(locationListener);
+
+                //Modify text if control headings
+                TextView startHeadingTextView = (TextView)view.findViewById(R.id.start_volume_control_heading);
+                startHeadingTextView.setText(getString(R.string.start_volume_control_settings_location));
+                TextView endHeadingTextView = (TextView)view.findViewById(R.id.end_volume_control_heading);
+                endHeadingTextView.setText(getString(R.string.end_volume_control_settings_location));
             }
 
 	    /*
