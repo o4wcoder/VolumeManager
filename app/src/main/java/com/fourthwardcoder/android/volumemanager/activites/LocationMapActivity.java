@@ -417,15 +417,22 @@ public class LocationMapActivity extends AppCompatActivity
 	private void saveLocation() {
 
 		//Update Location data
-		mProfile.getLocation().setLatLng(currentLocation);
-		mProfile.getLocation().setAddress(currentAddress.getAddressLine(0));
-		mProfile.getLocation().setCity(currentCity);
-		mProfile.getLocation().setFenceRadius(currentRadius);
+		if (mProfile != null) {
+			if (currentLocation != null)
+				mProfile.getLocation().setLatLng(currentLocation);
 
-		Intent i = getIntent();
-		i.putExtra(EXTRA_PROFILE, mProfile);
-		setResult(RESULT_OK, i);
+			if (currentAddress != null)
+				mProfile.getLocation().setAddress(currentAddress.getAddressLine(0));
 
-		// finish();
+			if (currentCity != null)
+				mProfile.getLocation().setCity(currentCity);
+
+			mProfile.getLocation().setFenceRadius(currentRadius);
+
+			Intent i = getIntent();
+			i.putExtra(EXTRA_PROFILE, mProfile);
+			setResult(RESULT_OK, i);
+		}
+
 	}
 }

@@ -20,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.animation.ValueAnimatorCompat;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
@@ -952,100 +953,105 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
 
     private void getCurrentLocation() {
 
+        Location location = null;
+
+        if(haveLocationPermission()) {
+            location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+            if (location == null) {
+                Log.e(TAG, "Location was null. Can't get location");
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(),
+                        R.string.network_error, Toast.LENGTH_LONG);
+                toast.show();
+
+
+            } else {
+                LatLng latLng;
+                if (mProfile.getLocation() == null) {
+                    //We have a new profile. Set it up
+                    //Store location into profile
+                    Log.e(TAG, "onConnected() Location in Profile is null. Create new Location");
+                    latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    mProfile.setLocation(new GeoFenceLocation(latLng));
+
+                    //Finally set street address of location
+                    if (latLng != null) {
+
+                        String strFullAddress;
+
+                        try {
+                            Address address = Util.getStreetAddress(getActivity(), latLng);
+
+                            //Get and store street address
+                            String strStreetAddress = address.getAddressLine(0);
+                            mProfile.getLocation().setAddress(strStreetAddress);
+
+                            //Get and store city
+                            String strCity = address.getLocality() + ", " + address.getAdminArea();
+                            mProfile.getLocation().setCity(strCity);
+
+                            strFullAddress = strStreetAddress + " " + strCity;
+
+                        } catch (IOException e) {
+                            //Could not get address
+                            strFullAddress = getString(R.string.unknown_street_address);
+
+                            mProfile.getLocation().setAddress(strFullAddress);
+                            mProfile.getLocation().setCity("");
+                        }
+
+                        //Set Street TextView
+                        mAddressTextView.setText(strFullAddress);
+                    }
+                } else {
+                    //Have existing profile
+
+                    //Poll DB incase location has changed
+                    // mProfile.setLocation(ProfileManager.getLocation(getActivity(), mProfile.getLocationKey()));
+                    Log.e(TAG, "Have existing profile");
+                    Log.e(TAG, mProfile.getLocation().toString());
+
+                    latLng = mProfile.getLocation().getLatLng();
+
+                    mAddressTextView.setText(mProfile.getLocation().getFullAddress());
+                }
+                // Log.e(TAG,"LatLng: " + latLng.toString());
+
+                if (mThumbnailImageView != null) {
+
+                    //   Log.e(TAG, "Loading image....");
+                    Picasso.with(getActivity()).load(getThumbnailUri(latLng)).into(mThumbnailImageView);
+                }
+            }
+
+        }
     }
+
     @Override
     public void onConnected(Bundle bundle) {
         Log.e(TAG, "onConnected()");
         //Get GeofenceManger object
         mGeofenceManager = new GeofenceManager(getActivity().getApplicationContext(), mGoogleApiClient);
 
-        Location location = null;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //Check if we have permission to access Location Services using FINE LOCATION
             if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
 
-                requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                ActivityCompat.requestPermissions(getActivity(),new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                         ACCESS_FINE_LOCATION_PERMISSION_REQUEST);
 
             }
             else {
-                location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                getCurrentLocation();
             }
         }
         else {
             //Pre-Marshmellow. Will already have permission
-            location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            getCurrentLocation();
         }
 
-        if (location == null) {
-            Log.e(TAG, "Location was null. Can't get location");
-            Toast toast = Toast.makeText(getActivity().getApplicationContext(),
-                    R.string.network_error, Toast.LENGTH_LONG);
-            toast.show();
-
-            if(haveLocationPermission())
-                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-
-        } else {
-            LatLng latLng;
-            if (mProfile.getLocation() == null) {
-                //We have a new profile. Set it up
-                //Store location into profile
-                Log.e(TAG, "onConnected() Location in Profile is null. Create new Location");
-                latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                mProfile.setLocation(new GeoFenceLocation(latLng));
-
-                //Finally set street address of location
-                if (latLng != null) {
-
-                    String strFullAddress;
-
-                    try {
-                        Address address = Util.getStreetAddress(getActivity(), latLng);
-
-                        //Get and store street address
-                        String strStreetAddress = address.getAddressLine(0);
-                        mProfile.getLocation().setAddress(strStreetAddress);
-
-                        //Get and store city
-                        String strCity = address.getLocality() + ", " + address.getAdminArea();
-                        mProfile.getLocation().setCity(strCity);
-
-                        strFullAddress = strStreetAddress + " " + strCity;
-
-                    } catch (IOException e) {
-                        //Could not get address
-                        strFullAddress = getString(R.string.unknown_street_address);
-
-                        mProfile.getLocation().setAddress(strFullAddress);
-                        mProfile.getLocation().setCity("");
-                    }
-
-                    //Set Street TextView
-                    mAddressTextView.setText(strFullAddress);
-                }
-            } else {
-                //Have existing profile
-
-                //Poll DB incase location has changed
-                // mProfile.setLocation(ProfileManager.getLocation(getActivity(), mProfile.getLocationKey()));
-                Log.e(TAG, "Have existing profile");
-                Log.e(TAG, mProfile.getLocation().toString());
-
-                latLng = mProfile.getLocation().getLatLng();
-
-                mAddressTextView.setText(mProfile.getLocation().getFullAddress());
-            }
-            // Log.e(TAG,"LatLng: " + latLng.toString());
-
-            if (mThumbnailImageView != null) {
-
-                //   Log.e(TAG, "Loading image....");
-                Picasso.with(getActivity()).load(getThumbnailUri(latLng)).into(mThumbnailImageView);
-            }
-        }
     }
 
 
@@ -1061,6 +1067,7 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
 
 
         Log.e(TAG,"status code = " + connectionResult.getErrorCode());
+
 
         if(connectionResult.getErrorCode() == ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED) {
             Toast.makeText(getActivity(), getString(R.string.google_play_service_out_of_date_error),Toast.LENGTH_LONG).show();
@@ -1109,9 +1116,11 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
 
+        Log.e(TAG,"onRequestPermissionResult() with requestCoode="+requestCode);
         if(requestCode == ACCESS_FINE_LOCATION_PERMISSION_REQUEST) {
             if(grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(getActivity(),getString(R.string.permission_fine_location_granted),Toast.LENGTH_SHORT).show();
+                getCurrentLocation();
             }
             else {
                 Toast.makeText(getActivity(),getString(R.string.permission_fine_location_denied),Toast.LENGTH_SHORT).show();
