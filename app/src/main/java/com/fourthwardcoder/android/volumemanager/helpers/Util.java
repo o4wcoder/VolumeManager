@@ -133,6 +133,23 @@ public class Util implements Constants {
     }
 
     /**
+     * Converts shared perference string into
+     * @param str shared pref string
+     * @return integer of the volume type
+     */
+    public static int getIntVolumeType(Context context, String str) {
+
+        if (str.equals(context.getString(R.string.pref_default_ring_type_key_off)))
+            return VOLUME_OFF;
+        else if (str.equals(context.getString(R.string.pref_default_ring_type_key_vibrate)))
+            return VOLUME_VIBRATE;
+        else if (str.equals(context.getString(R.string.pref_default_ring_type_key_ring)))
+            return VOLUME_RING;
+        else
+            return -1;
+    }
+
+    /**
      * Set the text on ring volume level
      *
      * @param textView TextView to set the ring volume level
@@ -149,12 +166,12 @@ public class Util implements Constants {
      * @param radioGroup RadioGroup to set the visibility on
      * @param set        setting of the toggle switch
      */
-    public static void setRadioGroupVisibility(RadioGroup radioGroup, boolean set) {
-
-        //Set visibility on each RadioButton in the Group
-        for (int i = 0; i < radioGroup.getChildCount(); i++)
-            ((RadioButton) radioGroup.getChildAt(i)).setEnabled(set);
-    }
+//    public static void setRadioGroupVisibility(RadioGroup radioGroup, boolean set) {
+//
+//        //Set visibility on each RadioButton in the Group
+//        for (int i = 0; i < radioGroup.getChildCount(); i++)
+//            ((RadioButton) radioGroup.getChildAt(i)).setEnabled(set);
+//    }
 
     /**
      * Set the ring volume seek bar at a specific position

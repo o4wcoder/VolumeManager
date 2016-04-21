@@ -68,6 +68,8 @@ public class VolumeManagerService extends IntentService implements Constants {
             //Only fire off volume change if it is set to start for that day, or is
             //currently in the alarm period and waiting for it to end. It period may end on the next day
             if (isAlarmSetForToday(profile) || (profile.isInAlarm() == true)) {
+                //Get access to shared prefs
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 //See if this is a start or end alarm intent
                 boolean isStartAlarm = intent.getBooleanExtra(EXTRA_START_ALARM, true);
 
@@ -79,13 +81,36 @@ public class VolumeManagerService extends IntentService implements Constants {
                 }
 
                 if (isStartAlarm) {
-                    ringType = profile.getStartVolumeType();
-                    ringVolume = profile.getStartRingVolume();
+                    //Use settings default if it's set
+                    if(profile.isUseStartDefault()) {
+                        String strRingType = prefs.getString(getString(R.string.pref_default_start_volume_type_setting_key),
+                                getString(R.string.pref_default_ring_type_key_ring));
+                        ringType = Util.getIntVolumeType(getApplicationContext(),strRingType);
+                        ringVolume = prefs.getInt(getString(R.string.pref_default_start_ring_volume_setting_key),
+                                Integer.parseInt(getString(R.string.pref_default_ring_volume_default)));
+                    }
+                    else {
+                        //Use user modified settings
+                        ringType = profile.getStartVolumeType();
+                        ringVolume = profile.getStartRingVolume();
+                    }
+
                     //Set flag saying that start alarm has been set and currently in alarm period
                     profile.setInAlarm(true);
                 } else {
-                    ringType = profile.getEndVolumeType();
-                    ringVolume = profile.getEndRingVolume();
+                    //Use settings default if it's set
+                    if(profile.isUseEndDefault()) {
+                        String strRingType = prefs.getString(getString(R.string.pref_default_end_volume_type_setting_key),
+                                getString(R.string.pref_default_ring_type_key_ring));
+                        ringType = Util.getIntVolumeType(getApplicationContext(),strRingType);
+                        ringVolume = prefs.getInt(getString(R.string.pref_default_end_ring_volume_setting_key),
+                                Integer.parseInt(getString(R.string.pref_default_ring_volume_default)));
+                    }
+                    else {
+                        //Use user modified settings
+                        ringType = profile.getEndVolumeType();
+                        ringVolume = profile.getEndRingVolume();
+                    }
                     //Alarm period has ended, turn off flag
                     profile.setInAlarm(false);
                 }
@@ -103,8 +128,6 @@ public class VolumeManagerService extends IntentService implements Constants {
                 Util.setAudioManager(getApplicationContext(), ringType, ringVolume);
 
                 //Send notification if they are turned on
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
                 //Get Time notification setting
                 String notificationKey = getApplicationContext().getString(R.string.pref_time_notifications_key);
 

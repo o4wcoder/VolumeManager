@@ -58,7 +58,8 @@ public class GeofenceService extends IntentService implements Constants {
         int ringType = VOLUME_OFF;
         int ringVolume = 1;
 
-        Log.e(TAG, "Inside GeofenceService onHandleIntent!!");
+        //Get shared prefs
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
         if (geofencingEvent.hasError()) {
@@ -94,19 +95,41 @@ public class GeofenceService extends IntentService implements Constants {
                 if (profile != null) {
                     Log.i(TAG, "In geofence " + profile.getTitle());
                     if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
-                        ringType = profile.getStartVolumeType();
-                        ringVolume = profile.getStartRingVolume();
+
+                        //Use settings default if it's set
+                        if(profile.isUseStartDefault()) {
+                            String strRingType = prefs.getString(getString(R.string.pref_default_start_volume_type_setting_key),
+                                    getString(R.string.pref_default_ring_type_key_ring));
+                            ringType = Util.getIntVolumeType(getApplicationContext(),strRingType);
+                            ringVolume = prefs.getInt(getString(R.string.pref_default_start_ring_volume_setting_key),
+                                    Integer.parseInt(getString(R.string.pref_default_ring_volume_default)));
+                        }
+                        else {
+                            //Use user modified settings
+                            ringType = profile.getStartVolumeType();
+                            ringVolume = profile.getStartRingVolume();
+                        }
                         profile.setInAlarm(true);
                     } else {
-                        ringType = profile.getEndVolumeType();
-                        ringVolume = profile.getEndRingVolume();
+                        //Use settings default if it's set
+                        if(profile.isUseEndDefault()) {
+                            String strRingType = prefs.getString(getString(R.string.pref_default_end_volume_type_setting_key),
+                                    getString(R.string.pref_default_ring_type_key_ring));
+                            ringType = Util.getIntVolumeType(getApplicationContext(),strRingType);
+                            ringVolume = prefs.getInt(getString(R.string.pref_default_end_ring_volume_setting_key),
+                                    Integer.parseInt(getString(R.string.pref_default_ring_volume_default)));
+                        }
+                        else {
+                            //Use user modified settings
+                            ringType = profile.getEndVolumeType();
+                            ringVolume = profile.getEndRingVolume();
+                        }
                         profile.setInAlarm(false);
                     }
                     ProfileManager.updateProfile(getApplicationContext(), profile);
                     Util.setAudioManager(getApplicationContext(), ringType, ringVolume);
 
                     //Send notification if they are turned on
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                     String notificationKey = getApplicationContext().getString(R.string.pref_location_notifications_key);
 
                     boolean displayNotifications = prefs.getBoolean(notificationKey, Boolean.parseBoolean(getApplicationContext().
