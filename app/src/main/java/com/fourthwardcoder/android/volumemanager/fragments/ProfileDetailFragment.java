@@ -638,20 +638,22 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
         } else {
             Log.e(TAG, "onCreateOptionsMenu(): In two pane, clean and rebuild fragment menu");
 
-            Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolbar);
-            if (toolbar != null) {
-                AppCompatActivity activity = (AppCompatActivity) getActivity();
-                activity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            if(getView() != null) {
+                Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolbar);
+                if (toolbar != null) {
+                    AppCompatActivity activity = (AppCompatActivity) getActivity();
+                    activity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-                //Clear menus
-                Log.e(TAG, "onCreateOptionsMenu(): Clear old menu, rebuild");
-                Menu toolbarMenu = toolbar.getMenu();
-                if (toolbarMenu != null)
-                    toolbarMenu.clear();
+                    //Clear menus
+                    Log.e(TAG, "onCreateOptionsMenu(): Clear old menu, rebuild");
+                    Menu toolbarMenu = toolbar.getMenu();
+                    if (toolbarMenu != null)
+                        toolbarMenu.clear();
 
-                toolbar.inflateMenu(R.menu.fragment_profile_detail_menu);
+                    toolbar.inflateMenu(R.menu.fragment_profile_detail_menu);
 
 
+                }
             }
         }
 
@@ -1074,7 +1076,7 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
             String strRingType = prefs.getString(getString(R.string.pref_default_start_volume_type_setting_key),
                     getString(R.string.pref_default_ring_type_key_vibrate));
             Log.e(TAG,"setVolmeControls() set start volume defaults with ring type " + strRingType);
-            int ringType = Util.getIntVolumeType(getContext(),strRingType);
+            int ringType = Util.getIntVolumeType(getContext(), strRingType);
             Log.e(TAG,"ring type="+ringType);
             int ringVolume = prefs.getInt(getString(R.string.pref_default_start_ring_volume_setting_key),
                     Integer.parseInt(getString(R.string.pref_default_ring_volume_default)));
@@ -1094,7 +1096,7 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
             String strRingType = prefs.getString(getString(R.string.pref_default_end_volume_type_setting_key),
                     getString(R.string.pref_default_ring_type_key_ring));
             Log.e(TAG,"setVolmeControls() set end volume defaults with ring type " + strRingType);
-            int ringType = Util.getIntVolumeType(getContext(),strRingType);
+            int ringType = Util.getIntVolumeType(getContext(), strRingType);
             int ringVolume = prefs.getInt(getString(R.string.pref_default_end_ring_volume_setting_key),
                     Integer.parseInt(getString(R.string.pref_default_ring_volume_default)));
 

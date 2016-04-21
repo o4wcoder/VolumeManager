@@ -17,8 +17,7 @@
         android:textSize="@dimen/start_end_time_text_size"
         android:text="8:00"
         android:fontFamily="sans-serif-light"
-        android:textColor="@color/white"
-        android:layout_margin="4dp" />
+        android:textColor="@color/white" />
 
 
     <LinearLayout
@@ -87,6 +86,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="@dimen/volume_control_top_bottom_margin"
             android:layout_marginTop="@dimen/volume_control_top_bottom_margin"
+            android:gravity="center_vertical"
             android:paddingLeft="8dp"
             android:paddingStart="8dp"
             android:text="(3/7)"
@@ -97,7 +97,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:layout_marginBottom="4dp">
 
         <ImageView
             android:id="@+id/volumeEndImageView"
