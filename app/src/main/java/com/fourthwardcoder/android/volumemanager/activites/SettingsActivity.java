@@ -133,6 +133,9 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
        }
        else if(key.equals(getString(R.string.pref_default_end_volume_type_setting_key))) {
            Log.e(TAG,"onSharedPreferenceChanged() End volume type changed");
+           String strVolumeType = sharedPreferences.getString(getString(R.string.pref_default_end_volume_type_setting_key),
+                   getString(R.string.pref_default_end_volume_type_setting_key));
+           mEndSeekBarPreference.updateVolumeIcon(strVolumeType);
        }
     }
 

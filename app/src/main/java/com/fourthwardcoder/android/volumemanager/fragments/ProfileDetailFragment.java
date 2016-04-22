@@ -393,19 +393,21 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
 
                     if (checkedId == R.id.startOffRadio) {
-                        Log.e(TAG,"!!! Check change lisenter with off");
                         mProfile.setStartVolumeType(VOLUME_OFF);
                         mProfile.setStartRingVolume(0);
-                        Util.setSeekBarPosition(mStartRingSeekBar, mStartRingVolumeTextView, mProfile.getStartRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
+                        Util.setSeekBarPosition(mStartRingSeekBar, mStartRingVolumeTextView,
+                                mProfile.getStartRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
 
                     } else if (checkedId == R.id.startVibrateRadio) {
-                        Log.e(TAG,"!!! Check change lisenter with vibrate");
                         mProfile.setStartVolumeType(VOLUME_VIBRATE);
                         mProfile.setStartRingVolume(0);
-                        Util.setSeekBarPosition(mStartRingSeekBar, mStartRingVolumeTextView, mProfile.getStartRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
+                        Util.setSeekBarPosition(mStartRingSeekBar, mStartRingVolumeTextView,
+                                mProfile.getStartRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
                     } else {
-                        Log.e(TAG,"!!! Check change lisenter with ring");
                         mProfile.setStartVolumeType(VOLUME_RING);
+                        Util.setSeekBarPosition(mStartRingSeekBar,mStartRingVolumeTextView,
+                                Integer.parseInt(getContext().getString(R.string.pref_default_ring_volume_default)),
+                                Util.getMaxRingVolume(getActivity().getApplicationContext()));
                     }
 
                     setVolumeIcon();
@@ -428,6 +430,9 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
                         Util.setSeekBarPosition(mEndRingSeekBar, mEndRingVolumeTextView, mProfile.getEndRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
                     } else {
                         mProfile.setEndVolumeType(VOLUME_RING);
+                        Util.setSeekBarPosition(mEndRingSeekBar, mEndRingVolumeTextView,
+                                Integer.parseInt(getContext().getString(R.string.pref_default_ring_volume_default)),
+                                Util.getMaxRingVolume(getActivity().getApplicationContext()));
                     }
 
                     setVolumeIcon();
@@ -1080,7 +1085,7 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
             Log.e(TAG,"ring type="+ringType);
             int ringVolume = prefs.getInt(getString(R.string.pref_default_start_ring_volume_setting_key),
                     Integer.parseInt(getString(R.string.pref_default_ring_volume_default)));
-
+            Log.e(TAG,"setVolumeControls(): got start pref ring volume = " + ringVolume);
             //Set start controls from defaults
             Util.setSeekBarPosition(mStartRingSeekBar, mStartRingVolumeTextView, ringVolume, Util.getMaxRingVolume(getActivity().getApplicationContext()));
             ((RadioButton) mStartVolumeRadioGroup.getChildAt(ringType)).setChecked(true);

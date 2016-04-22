@@ -93,6 +93,7 @@ public class SeekbarPreference extends Preference implements SeekBar.OnSeekBarCh
         Util.setRingVolumeText(mRingVolumeTextView, progress, Util.getMaxRingVolume(getContext()));
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         SharedPreferences.Editor editor = prefs.edit();
+        ListPreference listPreference = null;
 
         if (shouldPersist()) {
 
@@ -102,17 +103,25 @@ public class SeekbarPreference extends Preference implements SeekBar.OnSeekBarCh
                     Log.e(TAG,"onProgressChanged(): Have progress > 0 updating type to Ring");
                     editor.putString(getContext().getString(R.string.pref_default_start_volume_type_setting_key),
                             getContext().getString(R.string.pref_default_ring_type_key_ring)).apply();
-                    ListPreference listPreference = (ListPreference)findPreferenceInHierarchy(getContext().getString(R.string.pref_default_start_volume_type_setting_key));
-                   // Log.e(TAG,"Setting list pref to " + listPreference.getEntries()[Constants.VOLUME_RING]);
-                    listPreference.setSummary(listPreference.getEntries()[Constants.VOLUME_RING]);
-                    listPreference.setValue(listPreference.getEntryValues()[Constants.VOLUME_RING].toString());
-
+                    listPreference = (ListPreference)findPreferenceInHierarchy(getContext().getString(R.string.pref_default_start_volume_type_setting_key));
 
                 }
             }
             if (getKey().equals(getContext().getString(R.string.pref_default_end_ring_volume_setting_key))) {
                 Log.e(TAG,"Got end volume seekbar");
                 Util.setRingVolume(getContext(), progress, fromUser);
+
+                if(progress > 0) {
+                    Log.e(TAG,"onProgressChanged(): Have progress > 0 updating type to Ring");
+                    editor.putString(getContext().getString(R.string.pref_default_end_volume_type_setting_key),
+                            getContext().getString(R.string.pref_default_ring_type_key_ring)).apply();
+                    listPreference = (ListPreference)findPreferenceInHierarchy(getContext().getString(R.string.pref_default_end_volume_type_setting_key));
+                }
+            }
+
+            if(listPreference != null) {
+                listPreference.setSummary(listPreference.getEntries()[Constants.VOLUME_RING]);
+                listPreference.setValue(listPreference.getEntryValues()[Constants.VOLUME_RING].toString());
             }
 
             setValue(progress);
@@ -134,24 +143,28 @@ public class SeekbarPreference extends Preference implements SeekBar.OnSeekBarCh
     /**************************************************************************************/
     public void updateVolumeIcon(String value) {
 
-        Log.e(TAG,"updateVolumeIcon() with ring type = " + value);
+        Log.e(TAG, "updateVolumeIcon() with ring type = " + value);
 
 
         if(value.equals(getContext().getString(R.string.pref_default_ring_type_key_off))) {
-            Log.e(TAG,"change to OFF icon");
-            mImageView.setImageResource(R.drawable.ic_volume_off);
+            Log.e(TAG, "change to OFF icon");
             updateSeekBarPosition(0);
+            mImageView.setImageResource(R.drawable.ic_volume_off);
+
         }
         else if(value.equals(getContext().getString(R.string.pref_default_ring_type_key_vibrate))) {
-            Log.e(TAG,"change to VIBRATE icon");
-            mImageView.setImageResource(R.drawable.ic_vibration);
+            Log.e(TAG, "change to VIBRATE icon");
             updateSeekBarPosition(0);
+            mImageView.setImageResource(R.drawable.ic_vibration);
+
         }
         else if(value.equals(getContext().getString(R.string.pref_default_ring_type_key_ring))) {
             Log.e(TAG,"change to RING icon");
-            mImageView.setImageResource(R.drawable.ic_volume_up);
             updateSeekBarPosition(Integer.parseInt(getContext().getString(R.string.pref_default_ring_volume_default)));
+            mImageView.setImageResource(R.drawable.ic_volume_up);
+
         }
+
 
     }
 
