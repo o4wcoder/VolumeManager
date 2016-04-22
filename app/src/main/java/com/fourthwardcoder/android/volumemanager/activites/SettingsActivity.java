@@ -10,8 +10,11 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.fourthwardcoder.android.volumemanager.R;
+import com.fourthwardcoder.android.volumemanager.helpers.SeekbarPreference;
 
 /**
  * Preference Settings Activity
@@ -25,7 +28,16 @@ import com.fourthwardcoder.android.volumemanager.R;
 public class SettingsActivity extends PreferenceActivity implements Preference.OnPreferenceChangeListener,
         SharedPreferences.OnSharedPreferenceChangeListener {
 
+    /***************************************************************************************/
+    /*                                   Constants                                         */
+    /***************************************************************************************/
     private static final String TAG = SettingsActivity.class.getSimpleName();
+
+    /***************************************************************************************/
+    /*                                  Local Data                                         */
+    /***************************************************************************************/
+    SeekbarPreference mStartSeekBarPreference;
+    SeekbarPreference mEndSeekBarPreference;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +48,10 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         // updated when the preference changes.
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_default_start_volume_type_setting_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_default_end_volume_type_setting_key)));
+
+        mStartSeekBarPreference = (SeekbarPreference) findPreference(getString(R.string.pref_default_start_ring_volume_setting_key));
+        mEndSeekBarPreference = (SeekbarPreference) findPreference(getString(R.string.pref_default_end_ring_volume_setting_key));
+
 
 
     }
@@ -108,11 +124,16 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
-//        if (key.equals(getString(R.string.pref_default_volume_type_setting_key)) ||
-//                key.equals(getString(R.string.pref_default_ring_volume_setting_key))) {
-//
-//            // TODO: Need to update all profiles that are using the default with new setting
-//        }
+
+       if (key.equals(getString(R.string.pref_default_start_volume_type_setting_key))) {
+           Log.e(TAG,"onSharedPreferenceChanged() Start volume type changed");
+           String strVolumeType = sharedPreferences.getString(getString(R.string.pref_default_start_volume_type_setting_key),
+                   getString(R.string.pref_default_start_volume_type_setting_key));
+           mStartSeekBarPreference.updateVolumeIcon(strVolumeType);
+       }
+       else if(key.equals(getString(R.string.pref_default_end_volume_type_setting_key))) {
+           Log.e(TAG,"onSharedPreferenceChanged() End volume type changed");
+       }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
