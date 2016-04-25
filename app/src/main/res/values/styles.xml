@@ -72,12 +72,12 @@
     <style name="LocationMapFAB">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">2dp</item>
+        <item name="android:layout_margin">@dimen/location_fab_layout_margin</item>
         <item name="android:tint">@android:color/white</item>
         <item name="borderWidth">0dp</item>
         <item name="fabSize">mini</item>
-        <item name="elevation">6dp</item>
-        <item name="pressedTranslationZ">12dp</item>
+        <item name="elevation">@dimen/location_fab_elevation</item>
+        <item name="pressedTranslationZ">@dimen/location_fab_translation_z</item>
     </style>
 
     <style name="ProfileTitleTextStyle" parent="Base.TextAppearance.AppCompat.Title">

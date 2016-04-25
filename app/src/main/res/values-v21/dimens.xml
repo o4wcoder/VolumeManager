@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- location map dimens -->
     <dimen name="location_map_places_top_margin">32dp</dimen>
+    <dimen name="location_fab_layout_margin">2dp</dimen>
+    <dimen name="location_fab_elevation">6dp</dimen>
+    <dimen name="location_fab_translation_z">12dp</dimen>
 </resources>

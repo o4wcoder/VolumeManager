@@ -32,6 +32,9 @@
     <dimen name="location_map_address_text_size">20sp</dimen>
     <dimen name="location_map_city_text_size">14sp</dimen>
     <dimen name="location_map_places_top_margin">16dp</dimen>
+    <dimen name="location_fab_layout_margin">0dp</dimen>
+    <dimen name="location_fab_elevation">2dp</dimen>
+    <dimen name="location_fab_translation_z">0dp</dimen>
 
     <!-- Widget dimens -->
     <dimen name="widget_status_width">180dp</dimen>
