@@ -22,6 +22,7 @@ import com.google.android.gms.location.GeofencingEvent;
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -41,29 +42,35 @@ import android.util.Log;
  *
  * @author Chris Hare
  */
-public class GeofenceService extends IntentService implements Constants {
+public class GeofenceReceiver extends BroadcastReceiver implements Constants {
 
     /*************************************************************/
     /*                       Constants                           */
     /*************************************************************/
     private final static String TAG = "GeofenceServce";
 
-    public GeofenceService() {
-        super(TAG);
-        // TODO Auto-generated constructor stub
-    }
+    /*************************************************************/
+    /*                      Local Data                           */
+    /*************************************************************/
+    Context mContext;
+
+//    public GeofenceReceiver() {
+//        super(TAG);
+//        // TODO Auto-generated constructor stub
+//    }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    public void onReceive(Context context, Intent intent) {
         int ringType = VOLUME_OFF;
         int ringVolume = 1;
 
+        this.mContext = context;
         //Get shared prefs
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
         if (geofencingEvent.hasError()) {
-            String errorMessage = GeofenceManager.getGeofenceErrorString(this,
+            String errorMessage = GeofenceManager.getGeofenceErrorString(context,
                     geofencingEvent.getErrorCode());
             Log.e(TAG, errorMessage);
             return;
@@ -83,7 +90,7 @@ public class GeofenceService extends IntentService implements Constants {
 
             // Get the transition details as a String.
             ArrayList<Profile> transitionProfileList = getGeofenceTransitionProfiles(
-                    this,
+                    context,
                     geofenceTransition,
                     triggeringGeofences
             );
@@ -98,8 +105,8 @@ public class GeofenceService extends IntentService implements Constants {
 
                         //Use settings default if it's set
                         if(profile.isUseStartDefault()) {
-                            ringType = Util.getDefaultStartVolumeType(getApplicationContext());
-                            ringVolume = Util.getDefaultStartRingVolume(getApplicationContext());
+                            ringType = Util.getDefaultStartVolumeType(context);
+                            ringVolume = Util.getDefaultStartRingVolume(context);
                         }
                         else {
                             //Use user modified settings
@@ -110,8 +117,8 @@ public class GeofenceService extends IntentService implements Constants {
                     } else {
                         //Use settings default if it's set
                         if(profile.isUseEndDefault()) {
-                            ringType = Util.getDefaultEndVolumeType(getApplicationContext());
-                            ringVolume = Util.getDefaultEndRingVolume(getApplicationContext());
+                            ringType = Util.getDefaultEndVolumeType(context);
+                            ringVolume = Util.getDefaultEndRingVolume(context);
                         }
                         else {
                             //Use user modified settings
@@ -120,17 +127,17 @@ public class GeofenceService extends IntentService implements Constants {
                         }
                         profile.setInAlarm(false);
                     }
-                    ProfileManager.updateProfile(getApplicationContext(), profile);
-                    Util.setAudioManager(getApplicationContext(), ringType, ringVolume);
+                    ProfileManager.updateProfile(context, profile);
+                    Util.setAudioManager(context, ringType, ringVolume);
 
                     //Send notification if they are turned on
-                    String notificationKey = getApplicationContext().getString(R.string.pref_location_notifications_key);
+                    String notificationKey = context.getString(R.string.pref_location_notifications_key);
 
-                    boolean displayNotifications = prefs.getBoolean(notificationKey, Boolean.parseBoolean(getApplicationContext().
+                    boolean displayNotifications = prefs.getBoolean(notificationKey, Boolean.parseBoolean(context.
                             getString(R.string.pref_notifications_default)));
 
                     //updateWidget
-                    Util.updateWidget(getApplicationContext(), profile.getId(), LOCATION_PROFILE_LIST);
+                    Util.updateWidget(context, profile.getId(), LOCATION_PROFILE_LIST);
 
                     // Send notification and log the transition details.
                     if (displayNotifications)
@@ -140,7 +147,7 @@ public class GeofenceService extends IntentService implements Constants {
             }
         } else {
             // Log the error.
-            Log.e(TAG, getString(R.string.geofence_transition_invalid_type, geofenceTransition));
+            Log.e(TAG, context.getString(R.string.geofence_transition_invalid_type, geofenceTransition));
         }
 
 
@@ -168,9 +175,9 @@ public class GeofenceService extends IntentService implements Constants {
             //Get Id of geofence. Turn from string to UUID
             UUID profileID = UUID.fromString(geofence.getRequestId());
             //Get Location Profile, based on id.
-            Profile triggeredProfile = ProfileManager.getProfile(this, profileID);
+            Profile triggeredProfile = ProfileManager.getProfile(context, profileID);
             //Add location table to profile object
-            GeoFenceLocation location = ProfileManager.getLocation(this, triggeredProfile.getLocationKey());
+            GeoFenceLocation location = ProfileManager.getLocation(context, triggeredProfile.getLocationKey());
             triggeredProfile.setLocation(location);
             triggeringGeofenceProfileList.add(triggeredProfile);
         }
@@ -187,11 +194,11 @@ public class GeofenceService extends IntentService implements Constants {
     private String getTransitionString(int transitionType) {
         switch (transitionType) {
             case Geofence.GEOFENCE_TRANSITION_ENTER:
-                return getString(R.string.geofence_transition_entered);
+                return mContext.getString(R.string.geofence_transition_entered);
             case Geofence.GEOFENCE_TRANSITION_EXIT:
-                return getString(R.string.geofence_transition_exited);
+                return mContext.getString(R.string.geofence_transition_exited);
             default:
-                return getString(R.string.unknown_geofence_transition);
+                return mContext.getString(R.string.unknown_geofence_transition);
         }
     }
 
@@ -210,16 +217,16 @@ public class GeofenceService extends IntentService implements Constants {
         String strTitle;
         int id;
         if (transitionType == Geofence.GEOFENCE_TRANSITION_ENTER) {
-            strTitle = getString(R.string.geofence_transition_entered) + " " + profile.getTitle();
+            strTitle = mContext.getString(R.string.geofence_transition_entered) + " " + profile.getTitle();
             id = 1;
         } else {
-            strTitle = getString(R.string.geofence_transition_exited) + " " + profile.getTitle();
+            strTitle = mContext.getString(R.string.geofence_transition_exited) + " " + profile.getTitle();
             id = 2;
         }
 
         //Get large icon for Notification
-        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher_notify_large_place);
-                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+        Bitmap largeIcon = BitmapFactory.decodeResource(mContext.getResources(),R.mipmap.ic_launcher_notify_large_place);
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext)
                        // .setSmallIcon(R.drawable.ic_action_place_light)
                         .setSmallIcon(R.drawable.ic_volume_up_white)
                         .setLargeIcon(largeIcon)
@@ -228,21 +235,21 @@ public class GeofenceService extends IntentService implements Constants {
                         .setGroupSummary(true)
                         .setContentText(profile.getLocation().getAddress());
 
-        Intent i = new Intent(this, ProfileDetailActivity.class);
+        Intent i = new Intent(mContext, ProfileDetailActivity.class);
 
         i.putExtra(EXTRA_PROFILE, profile);
         i.putExtra(EXTRA_PROFILE_TYPE, LOCATION_PROFILE_LIST);
 
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(
-                        this,
+                        mContext,
                         0,
                         i,
                         PendingIntent.FLAG_UPDATE_CURRENT
                 );
         mBuilder.setContentIntent(resultPendingIntent);
 
-        NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        NotificationManager mNotifyMgr = (NotificationManager) mContext.getSystemService(mContext.NOTIFICATION_SERVICE);
         mNotifyMgr.notify(id, mBuilder.build());
     }
 

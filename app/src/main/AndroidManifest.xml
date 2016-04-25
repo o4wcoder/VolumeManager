@@ -86,9 +86,11 @@
             android:name=".services.VolumeManagerService"
             android:exported="false"></service>
 
-        <service
-            android:name=".services.GeofenceService"
-            android:exported="false"></service>
+        <receiver android:name=".services.GeofenceReceiver">
+        <intent-filter>
+            <action android:name="com.fourthwardcoder.android.volumemanager.ACTION_RECEIVER_GEOFENCE" />
+        </intent-filter>
+    </receiver>
 
         <!-- Startup Receiver -->
         <receiver android:name=".services.StartupReceiver">
@@ -106,6 +108,8 @@
             <meta-data android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info_status" />
         </receiver>
+
+        <!-- Geofence Receiver -->
 
         <!-- Profile Status Widget Service -->
         <service android:name=".widget.ProfileStatusIntentService"

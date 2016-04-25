@@ -5,12 +5,10 @@ import java.util.List;
 
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
 import com.fourthwardcoder.android.volumemanager.models.Profile;
-import com.fourthwardcoder.android.volumemanager.services.GeofenceService;
+import com.fourthwardcoder.android.volumemanager.services.GeofenceReceiver;
 //import com.fourthwardcoder.android.volumemanager.models.LocationProfile;
 //import com.fourthwardcoder.android.volumemanager.json.ProfileJSONManager;
 import com.fourthwardcoder.android.volumemanager.R;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
@@ -19,7 +17,6 @@ import com.google.android.gms.location.GeofenceStatusCodes;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 
-import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -183,10 +180,11 @@ public class GeofenceManager {
             return geofencePendingIntent;
         }
 
-        Intent intent = new Intent(context, GeofenceService.class);
+        Intent intent = new Intent("com.fourthwardcoder.android.volumemanager.ACTION_RECEIVER_GEOFENCE");
+
         // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when calling
         // addGeofences() and removeGeofences().
-        return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     /**
