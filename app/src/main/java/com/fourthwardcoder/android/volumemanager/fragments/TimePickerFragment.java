@@ -81,6 +81,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
         TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), this, hour, min,
                 DateFormat.is24HourFormat(getActivity()));
 
+        Log.e(TAG,"onCreateDialog() with title = " + mDialogTitle);
         timePickerDialog.setTitle(mDialogTitle);
         return timePickerDialog;
 

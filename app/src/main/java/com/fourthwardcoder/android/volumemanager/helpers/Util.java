@@ -135,7 +135,7 @@ public class Util implements Constants {
     }
 
     /**
-     * Converts shared perference string into integer 
+     * Converts shared perference string into integer
      * @param str shared pref string
      * @return integer of the volume type
      */

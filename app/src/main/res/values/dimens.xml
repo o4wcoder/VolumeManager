@@ -2,7 +2,10 @@
 <resources>
 
     <!-- Integers -->
-    <integer name="custom_match_parent">-1</integer>
+
+    <item name="custom_match_parent" format="integer" type="dimen">-1</item>
+
+
     <dimen name="am_or_pm_font_size">24sp</dimen>
 
     <dimen name="heading_text_size">20sp</dimen>
@@ -27,7 +30,7 @@
     <dimen name="detail_card_elevation">6dp</dimen>
     <dimen name="detail_container_bottom_margin">@dimen/detail_view_padding</dimen>
     <dimen name="detail_address_text_size">14sp</dimen>
-    <dimen name="detail_title_width">@integer/custom_match_parent</dimen>
+    <dimen name="detail_title_width">@dimen/custom_match_parent</dimen>
     <!-- location map dimens -->
     <dimen name="location_map_address_text_size">20sp</dimen>
     <dimen name="location_map_city_text_size">14sp</dimen>
