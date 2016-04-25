@@ -190,8 +190,9 @@ public class LocationMapActivity extends AppCompatActivity
 			@Override
 			public void onClick(View v) {
 
-				//decrease the geofence size
-				currentRadius -= Constants.GEOFENCE_RADIUS_INC;
+				//decrease the geofence size. Don't go below 30 m
+				if(currentRadius > 30)
+				   currentRadius -= Constants.GEOFENCE_RADIUS_INC;
 				//	radiusTextView.setText(String.valueOf(currentRadius));
 				drawGeofenceCircle();
 			}
