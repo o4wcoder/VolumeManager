@@ -40,7 +40,8 @@
             android:layout_height="wrap_content"
             android:text="@string/use_default_check_box"
             android:textColor="@color/white"
-            android:checked="true" />
+            android:checked="true"
+            android:contentDescription="@string/cont_desc_default_start_check_box"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

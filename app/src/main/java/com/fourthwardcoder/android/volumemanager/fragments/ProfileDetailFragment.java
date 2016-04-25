@@ -11,7 +11,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -386,7 +385,7 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
 	     */
             //Set volume controls initial settings
             setVolumeControls();
-            
+
             //Set up Ringer type Radio Buttons
             mStartVolumeRadioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
@@ -453,23 +452,34 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
                                               boolean fromUser) {
                     Log.e(TAG, "!!!!!Start Seek Bar progress " + progress + " fromUser=" + fromUser);
 
-                    if (progress == 0)
-                        //If this was changed from the radio buttons, we may have it set to vibrate
-                        if(!fromUser) {
-                            if(mProfile.getStartVolumeType() == VOLUME_OFF)
+                        if (progress == 0)
+                            //If this was changed from the radio buttons, we may have it set to vibrate
+                            if (!fromUser) {
+
+                                int volumeType;
+
+                                //See if we need to get volume type from defaults or profile
+                                if(mProfile.isUseStartDefault())
+                                    volumeType = Util.getDefaultStartVolumeType(getContext()) ;
+                                else
+                                    volumeType = mProfile.getStartVolumeType();
+
+                                //Set radio button
+                                if (volumeType == VOLUME_OFF)
+                                    ((RadioButton) mStartVolumeRadioGroup.getChildAt(VOLUME_OFF)).setChecked(true);
+                                else if (volumeType == VOLUME_VIBRATE)
+                                    ((RadioButton) mStartVolumeRadioGroup.getChildAt(VOLUME_VIBRATE)).setChecked(true);
+                            } else {
                                 ((RadioButton) mStartVolumeRadioGroup.getChildAt(VOLUME_OFF)).setChecked(true);
-                            else if(mProfile.getStartVolumeType() == VOLUME_VIBRATE)
-                                ((RadioButton) mStartVolumeRadioGroup.getChildAt(VOLUME_VIBRATE)).setChecked(true);
-                        } else {
-                            ((RadioButton) mStartVolumeRadioGroup.getChildAt(VOLUME_OFF)).setChecked(true);
-                        }
-                    else
-                        ((RadioButton) mStartVolumeRadioGroup.getChildAt(VOLUME_RING)).setChecked(true);
+                            }
+                        else
+                            ((RadioButton) mStartVolumeRadioGroup.getChildAt(VOLUME_RING)).setChecked(true);
 
-                    Util.setRingVolumeText(mStartRingVolumeTextView, progress, Util.getMaxRingVolume(getActivity().getApplicationContext()));
-                    mProfile.setStartRingVolume(progress);
+                        Util.setRingVolumeText(mStartRingVolumeTextView, progress, Util.getMaxRingVolume(getActivity().getApplicationContext()));
+                        mProfile.setStartRingVolume(progress);
 
-                    setVolumeIcon();
+                        setVolumeIcon();
+
                 }
 
                 @Override
@@ -486,23 +496,24 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress,
                                               boolean fromUser) {
-                    if (progress == 0)
-                        //If this was changed from the radio buttons, we may have it set to vibrate
-                        if(!fromUser) {
-                            if(mProfile.getEndVolumeType() == VOLUME_OFF)
+
+                        if (progress == 0)
+                            //If this was changed from the radio buttons, we may have it set to vibrate
+                            if (!fromUser) {
+                                if (mProfile.getEndVolumeType() == VOLUME_OFF)
+                                    ((RadioButton) mEndVolumeRadioGroup.getChildAt(VOLUME_OFF)).setChecked(true);
+                                else if (mProfile.getEndVolumeType() == VOLUME_VIBRATE)
+                                    ((RadioButton) mEndVolumeRadioGroup.getChildAt(VOLUME_VIBRATE)).setChecked(true);
+                            } else {
                                 ((RadioButton) mEndVolumeRadioGroup.getChildAt(VOLUME_OFF)).setChecked(true);
-                            else if(mProfile.getEndVolumeType() == VOLUME_VIBRATE)
-                                ((RadioButton) mEndVolumeRadioGroup.getChildAt(VOLUME_VIBRATE)).setChecked(true);
-                        } else {
-                            ((RadioButton) mEndVolumeRadioGroup.getChildAt(VOLUME_OFF)).setChecked(true);
-                        }
-                    else
-                        ((RadioButton) mEndVolumeRadioGroup.getChildAt(VOLUME_RING)).setChecked(true);
+                            }
+                        else
+                            ((RadioButton) mEndVolumeRadioGroup.getChildAt(VOLUME_RING)).setChecked(true);
 
-                    Util.setRingVolumeText(mEndRingVolumeTextView, progress, Util.getMaxRingVolume(getActivity().getApplicationContext()));
-                    mProfile.setEndRingVolume(progress);
+                        Util.setRingVolumeText(mEndRingVolumeTextView, progress, Util.getMaxRingVolume(getActivity().getApplicationContext()));
+                        mProfile.setEndRingVolume(progress);
 
-                    setVolumeIcon();
+                        setVolumeIcon();
                 }
 
                 @Override
@@ -1067,19 +1078,12 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
      */
     private void setVolumeControls() {
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         if(mProfile.isUseStartDefault()) {
 
+            int ringType = Util.getDefaultStartVolumeType(getContext());
+            int ringVolume = Util.getDefaultStartRingVolume(getContext());
 
-            String strRingType = prefs.getString(getString(R.string.pref_default_start_volume_type_setting_key),
-                    getString(R.string.pref_default_ring_type_key_vibrate));
-            Log.e(TAG,"setVolmeControls() set start volume defaults with ring type " + strRingType);
-            int ringType = Util.getIntVolumeType(getContext(), strRingType);
-            Log.e(TAG, "ring type=" + ringType);
-            int ringVolume = prefs.getInt(getString(R.string.pref_default_start_ring_volume_setting_key),
-                    Integer.parseInt(getString(R.string.pref_default_ring_volume_default)));
-            Log.e(TAG, "setVolumeControls(): got start pref ring volume = " + ringVolume);
             //Set start controls from defaults
             ((RadioButton) mStartVolumeRadioGroup.getChildAt(ringType)).setChecked(true);
             Util.setSeekBarPosition(mStartRingSeekBar, mStartRingVolumeTextView, ringVolume, Util.getMaxRingVolume(getActivity().getApplicationContext()));
@@ -1087,7 +1091,6 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
         }
         else {
             //Used start/enter settings stored in profile
-            Log.e(TAG,"setVolumeControls() Start volume from db = " + mProfile.getStartRingVolume());
             ((RadioButton) mStartVolumeRadioGroup.getChildAt(mProfile.getStartVolumeType())).setChecked(true);
             Util.setSeekBarPosition(mStartRingSeekBar, mStartRingVolumeTextView, mProfile.getStartRingVolume(), Util.getMaxRingVolume(getActivity().getApplicationContext()));
 
@@ -1095,12 +1098,8 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
 
         if(mProfile.isUseEndDefault()) {
 
-            String strRingType = prefs.getString(getString(R.string.pref_default_end_volume_type_setting_key),
-                    getString(R.string.pref_default_ring_type_key_ring));
-       //     Log.e(TAG,"setVolmeControls() set end volume defaults with ring type " + strRingType);
-            int ringType = Util.getIntVolumeType(getContext(), strRingType);
-            int ringVolume = prefs.getInt(getString(R.string.pref_default_end_ring_volume_setting_key),
-                    Integer.parseInt(getString(R.string.pref_default_ring_volume_default)));
+            int ringType = Util.getDefaultEndVolumeType(getContext());
+            int ringVolume = Util.getDefaultEndRingVolume(getContext());
 
             //Set start controls from defaults
             ((RadioButton) mEndVolumeRadioGroup.getChildAt(ringType)).setChecked(true);

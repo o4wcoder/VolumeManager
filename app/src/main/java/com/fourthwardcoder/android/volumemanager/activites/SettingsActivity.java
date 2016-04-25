@@ -53,7 +53,6 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         mEndSeekBarPreference = (SeekbarPreference) findPreference(getString(R.string.pref_default_end_ring_volume_setting_key));
 
 
-
     }
 
     /**

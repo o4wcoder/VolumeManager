@@ -113,7 +113,7 @@
     <string name="pref_default_start_volume_type_setting_key" translatable="false">default_start_volume_type</string>
     <string name="pref_default_end_volume_type_setting_key" translatable="false">default_end_volume_type</string>
 
-    <string name="pref_default_ring_volume_setting">Ring Volume Setting</string>
+    <string name="pref_default_ring_volume_setting">Ring Volume</string>
     <string name="pref_default_start_ring_volume_setting_key">default_start_ring_volume</string>
     <string name="pref_default_end_ring_volume_setting_key">default_end_ring_volume</string>
     <string name="pref_default_ring_volume_default">3</string>
@@ -157,6 +157,12 @@
     <string name="cont_desc_map_decrease_geofence_button">decrease geofence radius</string>
     <string name="cont_desc_widget_currently_set_to">currently under</string>
     <string name="cont_desc_widget_default">Volume Manager not currently under a profiles volume control</string>
+    <string name="cont_desc_default_start_check_box">Use default start volume control settings</string>
+    <string name="cont_desc_default_end_check_box">Use default end volume control settings</string>
+    <string name="cont_desc_default_start_volume_type">Start volume type </string>
+    <string name="cont_desc_default_end_volume_type">End volume type </string>
+    <string name="cont_desc_default_start_ring_volume">Start ring volume</string>
+    <string name="cont_desc_default_end_ring_volume">End ring volume</string>
 
     <!-- Permissions -->
     <string name="permission_fine_location_granted">Fine location permission granted</string>

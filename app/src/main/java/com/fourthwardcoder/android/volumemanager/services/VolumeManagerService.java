@@ -83,11 +83,8 @@ public class VolumeManagerService extends IntentService implements Constants {
                 if (isStartAlarm) {
                     //Use settings default if it's set
                     if(profile.isUseStartDefault()) {
-                        String strRingType = prefs.getString(getString(R.string.pref_default_start_volume_type_setting_key),
-                                getString(R.string.pref_default_ring_type_key_ring));
-                        ringType = Util.getIntVolumeType(getApplicationContext(),strRingType);
-                        ringVolume = prefs.getInt(getString(R.string.pref_default_start_ring_volume_setting_key),
-                                Integer.parseInt(getString(R.string.pref_default_ring_volume_default)));
+                        ringType = Util.getDefaultStartVolumeType(getApplicationContext());
+                        ringVolume = Util.getDefaultStartRingVolume(getApplicationContext());
                     }
                     else {
                         //Use user modified settings
@@ -100,11 +97,8 @@ public class VolumeManagerService extends IntentService implements Constants {
                 } else {
                     //Use settings default if it's set
                     if(profile.isUseEndDefault()) {
-                        String strRingType = prefs.getString(getString(R.string.pref_default_end_volume_type_setting_key),
-                                getString(R.string.pref_default_ring_type_key_ring));
-                        ringType = Util.getIntVolumeType(getApplicationContext(),strRingType);
-                        ringVolume = prefs.getInt(getString(R.string.pref_default_end_ring_volume_setting_key),
-                                Integer.parseInt(getString(R.string.pref_default_ring_volume_default)));
+                        ringType = Util.getDefaultEndVolumeType(getApplicationContext());
+                        ringVolume = Util.getDefaultEndRingVolume(getApplicationContext());
                     }
                     else {
                         //Use user modified settings

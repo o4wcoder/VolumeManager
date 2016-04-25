@@ -29,7 +29,7 @@
             android:key="@string/pref_default_start_volume_type_setting_key"
             android:defaultValue="@string/pref_default_ring_type_key_vibrate"
             android:entryValues="@array/pref_default_ring_type_keys"
-            android:entries="@array/pref_default_ring_types"/>
+            android:entries="@array/pref_default_ring_types" />
 
         <com.fourthwardcoder.android.volumemanager.helpers.SeekbarPreference
             android:key="@string/pref_default_start_ring_volume_setting_key"

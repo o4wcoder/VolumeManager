@@ -19,11 +19,13 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.media.AudioManager;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.Html;
@@ -133,7 +135,7 @@ public class Util implements Constants {
     }
 
     /**
-     * Converts shared perference string into
+     * Converts shared perference string into integer 
      * @param str shared pref string
      * @return integer of the volume type
      */
@@ -149,6 +151,64 @@ public class Util implements Constants {
             return -1;
     }
 
+    /**
+     * Get the Default start volume type from Shared Preferences
+     *
+     * @param context context of calling activity
+     * @return integer volume type
+     */
+    public static int getDefaultStartVolumeType(Context context) {
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String strRingType = prefs.getString(context.getString(R.string.pref_default_start_volume_type_setting_key),
+                context.getString(R.string.pref_default_ring_type_key_vibrate));
+
+        int ringType = getIntVolumeType(context, strRingType);
+
+        return ringType;
+    }
+
+    /**
+     * Get the Default end volume type from Shared Preference
+     *
+     * @param context context of calling activity
+     * @return integer volume type
+     */
+    public static int getDefaultEndVolumeType(Context context) {
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String strRingType = prefs.getString(context.getString(R.string.pref_default_end_volume_type_setting_key),
+                context.getString(R.string.pref_default_ring_type_key_vibrate));
+
+        int ringType = getIntVolumeType(context, strRingType);
+
+        return ringType;
+    }
+
+    /**
+     * Get the Default start ring volume from Shared Preference
+     *
+     * @param context of calling activity
+     * @return integer start ring volume
+     */
+    public static int getDefaultStartRingVolume(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        return prefs.getInt(context.getString(R.string.pref_default_start_ring_volume_setting_key),
+                Integer.parseInt(context.getString(R.string.pref_default_ring_volume_default)));
+    }
+
+    /**
+     * Get the Default End ring volume from Shared Preference
+     * @param context context of calling activity
+     * @return integer end ring volume
+     */
+    public static int getDefaultEndRingVolume(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        return prefs.getInt(context.getString(R.string.pref_default_end_ring_volume_setting_key),
+                Integer.parseInt(context.getString(R.string.pref_default_ring_volume_default)));
+    }
     /**
      * Set the text on ring volume level
      *
