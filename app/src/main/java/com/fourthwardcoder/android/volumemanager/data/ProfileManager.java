@@ -144,18 +144,22 @@ public class ProfileManager implements Constants {
                 null);
 
         if (cursor != null) {
-
+            Log.e(TAG,"getLocationProfileList() with cursor count = " + cursor.getCount());
             ArrayList<Profile> profileList = new ArrayList<>(cursor.getCount());
 
-            cursor.moveToFirst();
-            while (cursor.moveToNext()) {
-                Profile profile = new Profile(cursor);
-                //Pull Location Object out of DB and store in profile.
-                profile.setLocation(getLocation(context, profile.getLocationKey()));
-                profileList.add(profile);
+            if(cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                do {
+
+                    Profile profile = new Profile(cursor);
+                    //Pull Location Object out of DB and store in profile.
+                    profile.setLocation(getLocation(context, profile.getLocationKey()));
+                    profileList.add(profile);
+                } while (cursor.moveToNext());
             }
             return profileList;
         } else {
+            Log.e(TAG,"getLocationProfileList(): null cursor! No Location profiles!!");
             return null;
         }
 
@@ -304,7 +308,7 @@ public class ProfileManager implements Constants {
         );
 
         locationId = ContentUris.parseId(insertedUri);
-        Log.e(TAG, "Inserted location at " + locationId);
+        Log.e(TAG, "addLocation(): Inserted location at " + locationId);
         return locationId;
     }
 

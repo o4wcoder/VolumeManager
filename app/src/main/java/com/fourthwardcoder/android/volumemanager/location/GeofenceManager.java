@@ -151,12 +151,13 @@ public class GeofenceManager {
         //Get all location profiles
         //ArrayList<LocationProfile> locationProfileList = ProfileJSONManager.get(context).getLocationProfiles();
         ArrayList<Profile> profileList = ProfileManager.getLocationProfileList(context);
-
+        Log.e(TAG,"populateGeofenceList(): Inside with number of profiles = " + profileList.size());
         for (int i = 0; i < profileList.size(); i++) {
 
             Profile profile = profileList.get(i);
+            Log.e(TAG,"populateGeofenceList(): with profile = " + profile.getTitle() + " profile enable = " + profile.isEnabled());
             if (profile.isEnabled()) {
-                Log.e(TAG, "Create geofence with profile " + profile.toString());
+                Log.e(TAG, "populateGeofenceList(): Add Geofence to list with title = " + profile.getTitle());
                 Geofence fence = createGeofence(profile);
 
                 //Add geofence to the list
@@ -193,7 +194,7 @@ public class GeofenceManager {
      */
     private GeofencingRequest getGeofencingRequest() {
 
-        Log.e(TAG, "Number of geofences in list is " + geofenceList.size());
+        Log.e(TAG, "getGeofenceingRequest(): Number of geofences in list is " + geofenceList.size());
 
         GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
 
@@ -225,7 +226,7 @@ public class GeofenceManager {
      */
     public void startGeofences(ResultCallback<Status> callingActivity) {
 
-        Log.i(TAG, "adding geofences");
+        Log.i(TAG, "startGeofences() Inside");
 
         if (!mGoogleApiClient.isConnected()) {
             //Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
