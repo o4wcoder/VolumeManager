@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- main activity dimens -->
+    <dimen name="fab_new_profile_margin">16dp</dimen>
+
     <!-- location map dimens -->
     <dimen name="location_map_places_top_margin">32dp</dimen>
     <dimen name="location_fab_layout_margin">2dp</dimen>

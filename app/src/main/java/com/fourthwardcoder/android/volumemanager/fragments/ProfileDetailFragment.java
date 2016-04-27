@@ -500,9 +500,18 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
                         if (progress == 0)
                             //If this was changed from the radio buttons, we may have it set to vibrate
                             if (!fromUser) {
-                                if (mProfile.getEndVolumeType() == VOLUME_OFF)
+
+                                int volumeType;
+
+                                //See if we need to get volume type from defaults or profile
+                                if(mProfile.isUseEndDefault())
+                                    volumeType = Util.getDefaultStartVolumeType(getContext()) ;
+                                else
+                                    volumeType = mProfile.getEndVolumeType();
+
+                                if (volumeType == VOLUME_OFF)
                                     ((RadioButton) mEndVolumeRadioGroup.getChildAt(VOLUME_OFF)).setChecked(true);
-                                else if (mProfile.getEndVolumeType() == VOLUME_VIBRATE)
+                                else if (volumeType == VOLUME_VIBRATE)
                                     ((RadioButton) mEndVolumeRadioGroup.getChildAt(VOLUME_VIBRATE)).setChecked(true);
                             } else {
                                 ((RadioButton) mEndVolumeRadioGroup.getChildAt(VOLUME_OFF)).setChecked(true);
@@ -627,6 +636,16 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
                 mGoogleApiClient.disconnect();
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+
+        super.onResume();
+        Log.e(TAG, "onResume()");
+        //Check that the controls have changed from the Settings menu
+        setVolumeControls();
+        setVolumeIcon();
     }
 
     @Override
@@ -905,11 +924,17 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
         int volumeIconRes = 0;
         int volumeType;
         //Set Start Volume Icon
-        volumeIconRes = getVolumeIconResource(mProfile.getStartVolumeType());
+        if(mProfile.isUseStartDefault())
+            volumeIconRes = getVolumeIconResource(Util.getDefaultStartVolumeType(getContext()));
+        else
+            volumeIconRes = getVolumeIconResource(mProfile.getStartVolumeType());
         mStartVolumeImageView.setImageResource(volumeIconRes);
 
         //Set End Volume Icon
-        volumeIconRes = getVolumeIconResource(mProfile.getEndVolumeType());
+        if(mProfile.isUseEndDefault())
+            volumeIconRes = getVolumeIconResource(Util.getDefaultEndVolumeType(getContext()));
+        else
+            volumeIconRes = getVolumeIconResource(mProfile.getEndVolumeType());
         mEndVolumeImageView.setImageResource(volumeIconRes);
 
     }

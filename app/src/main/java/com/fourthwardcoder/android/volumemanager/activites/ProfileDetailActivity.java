@@ -1,9 +1,12 @@
 package com.fourthwardcoder.android.volumemanager.activites;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.fourthwardcoder.android.volumemanager.R;
 import com.fourthwardcoder.android.volumemanager.fragments.ProfileDetailFragment;
@@ -63,6 +66,29 @@ public class ProfileDetailActivity extends AppCompatActivity implements Constant
                 supportPostponeEnterTransition();
             }
 
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        //Inflate menu for main activity toolbar
+        getMenuInflater().inflate(R.menu.settings_menu, menu);
+        return true;
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //Get menu option by it's ID
+        switch (item.getItemId()) {
+
+            case R.id.menu_item_settings:
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                startActivity(settingsIntent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }
