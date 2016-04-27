@@ -4,8 +4,7 @@
     android:duration="250"
     android:transitionOrdering="together">
 
-
-    <fade xmlns:android="http://schemas.android.com/apk/res/android">
+    <fade>
         <targets>
             <target android:excludeId="@android:id/statusBarBackground"/>
             <target android:excludeId="@android:id/navigationBarBackground"/>

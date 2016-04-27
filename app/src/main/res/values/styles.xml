@@ -11,7 +11,9 @@
     <style name="AppTheme.Main" parent="@style/AppTheme"></style>
 
     <style name="AppTheme.Details" parent="@style/AppTheme"></style>
+
     <style name="AppTheme.LocationMap" parent="@style/AppTheme"></style>
+
     <style name="AppTheme.Settings" parent="@style/AppTheme"></style>
 
     <!-- ActionBar styles -->
@@ -36,7 +38,7 @@
     <style name="OverflowButton" parent="@android:style/Widget.Holo.Light.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_action_overflow</item>
     </style>
-        
+
     <style name="DayButton">
         <item name="android:layout_width">@dimen/day_button_size</item>
         <item name="android:layout_height">@dimen/day_button_size</item>
@@ -80,19 +82,23 @@
         <item name="pressedTranslationZ">@dimen/location_fab_translation_z</item>
     </style>
 
+    <!-- Profile Title Styles -->
     <style name="ProfileTitleTextStyle" parent="Base.TextAppearance.AppCompat.Title">
         <item name="android:alpha">@string/primary_text_alpha_dark</item>
         <item name="android:layout_width">@dimen/detail_title_width</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="ProfileSubheadingTextStyle" parent="Base.TextAppearance.AppCompat.Body1">
-        <item name="android:alpha">@string/secondary_text_alpha_dark</item>
-    </style>
 
     <style name="ProfileTitleTextStyleDisabled" parent="Base.TextAppearance.AppCompat.Title">
         <item name="android:alpha">@string/hint_disabled_text_alpha_dark</item>
     </style>
+
+    <!-- Profile Subtitle Styles -->
+    <style name="ProfileSubheadingTextStyle" parent="Base.TextAppearance.AppCompat.Body1">
+        <item name="android:alpha">@string/secondary_text_alpha_dark</item>
+    </style>
+
 
     <style name="ProfileSubheadingTextStyleDisabled" parent="Base.TextAppearance.AppCompat.Body1">
         <item name="android:alpha">@string/hint_disabled_text_alpha_dark</item>

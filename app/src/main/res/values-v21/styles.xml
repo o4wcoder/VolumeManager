@@ -21,5 +21,7 @@
         </item>
         <item name="android:windowReturnTransition">@transition/profile_details_transition_exit
         </item>
+        <item name="android:windowSharedElementEnterTransition">@transition/title_transition</item>
+        <item name="android:windowSharedElementReturnTransition">@transition/title_transition</item>
     </style>
 </resources>
