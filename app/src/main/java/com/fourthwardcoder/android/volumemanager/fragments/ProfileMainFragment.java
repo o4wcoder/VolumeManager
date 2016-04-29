@@ -501,14 +501,14 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
         //updateGeofences();
         if (mGoogleApiClient.isConnected()) {
 
-         //   if(enabled) {
+            if(enabled) {
                 //Restart geofences now that it's been enabled
                 mGeofenceManager.startGeofences(this);
-         //   }
-         //   else {
+            }
+            else {
                 //Remove geofence now that it's been disabled
-        //        mGeofenceManager.removeGeofence(this,requestId);
-        //    }
+                mGeofenceManager.removeGeofence(this,requestId);
+            }
 //
             //Just updating Geofence, not deleting the profile
             mIsDeleteGeofence = false;

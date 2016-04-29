@@ -334,7 +334,7 @@ public class Util implements Constants {
 
         AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
-        Log.e(TAG, "Max stream audio is " + audioManager.getStreamMaxVolume(AudioManager.STREAM_RING));
+        //Log.e(TAG, "Max stream audio is " + audioManager.getStreamMaxVolume(AudioManager.STREAM_RING));
 
         if (ringType == VOLUME_OFF)
             audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);

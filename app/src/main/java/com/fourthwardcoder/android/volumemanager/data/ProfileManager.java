@@ -144,14 +144,15 @@ public class ProfileManager implements Constants {
                 null);
 
         if (cursor != null) {
-            Log.e(TAG,"getLocationProfileList() with cursor count = " + cursor.getCount());
-            ArrayList<Profile> profileList = new ArrayList<>(cursor.getCount());
 
+            ArrayList<Profile> profileList = new ArrayList<>(cursor.getCount());
+            Log.e(TAG,"getLocationProfileList(): Number of location profiles = " + cursor.getCount());
             if(cursor.getCount() > 0) {
                 cursor.moveToFirst();
                 do {
 
                     Profile profile = new Profile(cursor);
+                    Log.e(TAG,"getLocationProfileList(): Got profile " + profile.getTitle());
                     //Pull Location Object out of DB and store in profile.
                     profile.setLocation(getLocation(context, profile.getLocationKey()));
                     profileList.add(profile);
@@ -159,12 +160,35 @@ public class ProfileManager implements Constants {
             }
             return profileList;
         } else {
-            Log.e(TAG,"getLocationProfileList(): null cursor! No Location profiles!!");
             return null;
         }
 
     }
 
+    public static Profile getCurrentActiveProfile(Context context) {
+
+        String selection = ProfileContract.ProfileEntry.COLUMN_IN_ALARM + "=?";
+        String[] selectionArgs = new String[1];
+        selectionArgs[0] = String.valueOf(1);
+
+        Cursor cursor = context.getContentResolver().query(ProfileContract.ProfileEntry.CONTENT_URI,
+                null,
+                selection,
+                selectionArgs,
+                null);
+
+        if(cursor != null) {
+
+            if(cursor.getCount() > 0) {
+                cursor.moveToFirst();
+
+                //return profile that is active
+                return new Profile(cursor);
+            }
+        }
+
+        return null;
+    }
     /**
      * Update and existing profile in the database
      *
@@ -287,6 +311,7 @@ public class ProfileManager implements Constants {
 
         return ProfileContract.ProfileEntry.COLUMN_LOC_KEY + " IS NOT NULL";
     }
+
 
     /**
      * Add location to database

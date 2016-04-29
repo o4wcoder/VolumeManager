@@ -25,12 +25,14 @@ public class ProfileStatusWidgetProvider extends AppWidgetProvider implements Co
     private static final String TAG = ProfileStatusWidgetProvider.class.getSimpleName();
 
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        Log.e(TAG,"onUpdate() start ProfileStatusIntentService");
         context.startService(new Intent(context, ProfileStatusIntentService.class));
     }
 
     @Override
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager,
                                           int appWidgetId, Bundle newOptions) {
+        Log.e(TAG,"onAppWidgetPptionsChanged() Start ProfileStatusIntentService");
         context.startService(new Intent(context, ProfileStatusIntentService.class));
     }
 
@@ -39,7 +41,7 @@ public class ProfileStatusWidgetProvider extends AppWidgetProvider implements Co
         super.onReceive(context, intent);
 
         if (intent.getAction().equals(ACTION_ALARM_UPDATED)) {
-
+            Log.e(TAG,"onRecieve() Start ProfileStatusIntentService with profile data");
             //Send Intent with it's extra's to the widget's Intent Service
             context.startService(new Intent(context, ProfileStatusIntentService.class).putExtras(intent.getExtras()));
         }

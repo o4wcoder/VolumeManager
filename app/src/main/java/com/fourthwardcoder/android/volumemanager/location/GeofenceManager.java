@@ -46,8 +46,8 @@ public class GeofenceManager {
     /***********************************************************/
     private Context context;
     private GoogleApiClient mGoogleApiClient;
-    private PendingIntent geofencePendingIntent;
-    private ArrayList<Geofence> geofenceList;
+    private PendingIntent mGeofencePendingIntent;
+    private ArrayList<Geofence> mGeofenceList;
 
     public GeofenceManager(Context context, GoogleApiClient mGoogleApiClient) {
 
@@ -55,10 +55,11 @@ public class GeofenceManager {
         this.mGoogleApiClient = mGoogleApiClient;
 
         //init pending intent for add/removing geofences.
-        geofencePendingIntent = null;
+        mGeofencePendingIntent = null;
 
         //create empty list for storing all other location geofence's
-        geofenceList = new ArrayList<Geofence>();
+        mGeofenceList = new ArrayList<Geofence>();
+        Log.e(TAG,"GeofenceManager constructor: size of geofence list = " + mGeofenceList.size());
 
     }
 
@@ -148,8 +149,10 @@ public class GeofenceManager {
      */
     private void populateGeofenceList() {
 
+        //Clean out geofence list and repopulate
+      //  mGeofenceList.clear();
+
         //Get all location profiles
-        //ArrayList<LocationProfile> locationProfileList = ProfileJSONManager.get(context).getLocationProfiles();
         ArrayList<Profile> profileList = ProfileManager.getLocationProfileList(context);
         Log.e(TAG,"populateGeofenceList(): Inside with number of profiles = " + profileList.size());
         for (int i = 0; i < profileList.size(); i++) {
@@ -177,8 +180,8 @@ public class GeofenceManager {
      */
     private PendingIntent getGeofencePendingIntent() {
         // Reuse the PendingIntent if we already have it.
-        if (geofencePendingIntent != null) {
-            return geofencePendingIntent;
+        if (mGeofencePendingIntent != null) {
+            return mGeofencePendingIntent;
         }
 
         Intent intent = new Intent("com.fourthwardcoder.android.volumemanager.ACTION_RECEIVER_GEOFENCE");
@@ -194,7 +197,7 @@ public class GeofenceManager {
      */
     private GeofencingRequest getGeofencingRequest() {
 
-        Log.e(TAG, "getGeofenceingRequest(): Number of geofences in list is " + geofenceList.size());
+        Log.e(TAG, "getGeofenceingRequest(): Number of geofences in list is " + mGeofenceList.size());
 
         GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
 
@@ -204,7 +207,7 @@ public class GeofenceManager {
         builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
 
         // Add the geofences to be monitored by geofencing service.
-        builder.addGeofences(geofenceList);
+        builder.addGeofences(mGeofenceList);
 
 
         // Return a GeofencingRequest.
@@ -217,7 +220,8 @@ public class GeofenceManager {
      * @param fence
      */
     public void addGeofence(Geofence fence) {
-        this.geofenceList.add(fence);
+        Log.e(TAG,"addGeofence(): Inside");
+        this.mGeofenceList.add(fence);
     }
 
     /**
@@ -226,7 +230,7 @@ public class GeofenceManager {
      */
     public void startGeofences(ResultCallback<Status> callingActivity) {
 
-        Log.i(TAG, "startGeofences() Inside");
+        Log.e(TAG, "startGeofences() Inside");
 
         if (!mGoogleApiClient.isConnected()) {
             //Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
@@ -236,7 +240,9 @@ public class GeofenceManager {
         try {
 
             //Load up all geofences
+            Log.e(TAG,"startGeofences(): Number of geofences in geofence list before populateGeofenceList() = " + mGeofenceList.size());
             populateGeofenceList();
+            Log.e(TAG,"startGeofences(): Number of geofences in geofence list after populateGeofenceList() = " + mGeofenceList.size());
 
             LocationServices.GeofencingApi.addGeofences(
                     mGoogleApiClient,
@@ -264,8 +270,8 @@ public class GeofenceManager {
     public void saveGeofence(ResultCallback<Status> callingActivity, Profile profile) {
 
         //Create geofence for location profile
-        Geofence fence = createGeofence(profile);
-        addGeofence(fence);
+      //  Geofence fence = createGeofence(profile);
+       // addGeofence(fence);
 
         startGeofences(callingActivity);
     }

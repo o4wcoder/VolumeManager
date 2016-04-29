@@ -969,10 +969,6 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
                 //Updating existing location
                 ProfileManager.updateLocation(getActivity(), mProfile.getLocation(), mProfile.getLocationKey());
             }
-            //Set flag for geofence result
-            mIsSaveGeofence = true;
-            //Create/Update the Geofence
-            mGeofenceManager.saveGeofence(this, mProfile);
 
         }
 
@@ -985,6 +981,14 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
         if (mProfileType == TIME_PROFILE_LIST) {
             //Set Volume Control Alarms
             VolumeManagerService.setServiceAlarm(getActivity(), mProfile, true);
+        }
+
+        //Now that the profile and location objects are saved to the database, save geofence
+        if(mProfileType == LOCATION_PROFILE_LIST) {
+            //Set flag for geofence result
+            mIsSaveGeofence = true;
+            //Create/Update the Geofence
+            mGeofenceManager.saveGeofence(this, mProfile);
         }
     }
 
