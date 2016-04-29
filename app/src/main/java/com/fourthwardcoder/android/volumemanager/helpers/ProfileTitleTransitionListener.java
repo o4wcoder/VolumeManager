@@ -5,17 +5,18 @@ import android.os.Build;
 import android.transition.Transition;
 
 /**
- * Image Transition Listener
+ * Profile Title Transition Listener
  * <p>
- * Stuff function used to detect shared transitions states in the fragments. These functions are
- * overriden where they are needed.
+ * Stub class used to detect shared transitions states in the fragments. These functions are
+ * overriden where they are needed. In this case this is used for for the Shared Element
+ * transition of the Profile Title.
  * <p>
  * Created 3/10/2016
  *
  * @author Chris Hare
  */
 @TargetApi(Build.VERSION_CODES.KITKAT)
-public class ImageTransitionListener implements Transition.TransitionListener {
+public class ProfileTitleTransitionListener implements Transition.TransitionListener {
     @Override
     public void onTransitionStart(Transition transition) {
     }

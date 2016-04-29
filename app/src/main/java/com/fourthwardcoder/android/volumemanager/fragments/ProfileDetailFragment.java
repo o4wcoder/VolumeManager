@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
-import android.animation.ArgbEvaluator;
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -18,9 +16,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.v4.animation.ValueAnimatorCompat;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
@@ -52,7 +48,6 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-import com.fourthwardcoder.android.volumemanager.Manifest;
 import com.fourthwardcoder.android.volumemanager.R;
 //import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
 import com.fourthwardcoder.android.volumemanager.activites.LocationMapActivity;
@@ -60,7 +55,7 @@ import com.fourthwardcoder.android.volumemanager.activites.ProfileDetailActivity
 import com.fourthwardcoder.android.volumemanager.activites.SettingsActivity;
 import com.fourthwardcoder.android.volumemanager.adapters.LocationProfileListAdapter;
 import com.fourthwardcoder.android.volumemanager.data.ProfileManager;
-import com.fourthwardcoder.android.volumemanager.helpers.ImageTransitionListener;
+import com.fourthwardcoder.android.volumemanager.helpers.ProfileTitleTransitionListener;
 import com.fourthwardcoder.android.volumemanager.helpers.Util;
 import com.fourthwardcoder.android.volumemanager.interfaces.Constants;
 import com.fourthwardcoder.android.volumemanager.location.GeofenceManager;
@@ -332,14 +327,14 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
                 }
             }
 
+            //Check for profile title enter shared transition
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-                getActivity().getWindow().getSharedElementEnterTransition().addListener(new ImageTransitionListener() {
+                getActivity().getWindow().getSharedElementEnterTransition().addListener(new ProfileTitleTransitionListener() {
                     @Override
                     public void onTransitionEnd(Transition transition) {
 
-                        // view.setBackgroundColor(getResources().getColor(R.color.sound_control_panel_background));
-                        //Fade in days of week row
+                        //End of transition, fade in days of week row
                         daysRow.animate().setDuration(BUTTON_FADE_DURATION).alpha(1f);
                     }
 
