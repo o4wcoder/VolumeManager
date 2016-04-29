@@ -154,11 +154,17 @@ public class VolumeManagerService extends IntentService implements Constants {
         if (isStartAlarm) {
             strTitle = "Start Alarm: " + profile.getTitle();
             id = 1;
-            iconRes = getVolumeIconResource(profile.getStartVolumeType());
+            if(profile.isUseStartDefault())
+                iconRes = getVolumeIconResource(Util.getDefaultStartVolumeType(getApplicationContext()));
+            else
+                iconRes = getVolumeIconResource(profile.getStartVolumeType());
         } else {
             strTitle = "End Alarm: " + profile.getTitle();
             id = 2;
-            iconRes = getVolumeIconResource(profile.getEndVolumeType());
+            if(profile.isUseEndDefault())
+                iconRes = getVolumeIconResource(Util.getDefaultEndVolumeType(getApplicationContext()));
+            else
+                iconRes = getVolumeIconResource(profile.getEndVolumeType());
         }
 
         //Get large icon for Notification
