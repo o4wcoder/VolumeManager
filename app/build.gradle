@@ -27,6 +27,15 @@ android {
 
     }
 
+    signingConfigs {
+        release {
+            storeFile file("volumemanager.jks")
+            storePassword 'Vorlon37'
+            keyAlias "VolumeManagerKey"
+            keyPassword 'Vorlon37';
+        }
+    }
+
     lintOptions {
         checkReleaseBuilds false
         // Or, if you prefer, you can continue to check for errors in release builds,
@@ -44,6 +53,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             resValue "string", "MAPS_API_KEY", MAPS_API_KEY
             resValue "string", "PLACES_API_KEY", PLACES_API_KEY
+            signingConfig signingConfigs.release
         }
     }
 }
@@ -60,5 +70,4 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }
-
 }
