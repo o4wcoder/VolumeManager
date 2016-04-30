@@ -507,6 +507,7 @@ public class ProfileMainFragment extends Fragment implements LoaderManager.Loade
             }
             else {
                 //Remove geofence now that it's been disabled
+
                 mGeofenceManager.removeGeofence(this,requestId);
             }
 //

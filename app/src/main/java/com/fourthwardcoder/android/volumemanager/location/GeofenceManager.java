@@ -59,7 +59,6 @@ public class GeofenceManager {
 
         //create empty list for storing all other location geofence's
         mGeofenceList = new ArrayList<Geofence>();
-        Log.e(TAG,"GeofenceManager constructor: size of geofence list = " + mGeofenceList.size());
 
     }
 
@@ -154,13 +153,13 @@ public class GeofenceManager {
 
         //Get all location profiles
         ArrayList<Profile> profileList = ProfileManager.getLocationProfileList(context);
-        Log.e(TAG,"populateGeofenceList(): Inside with number of profiles = " + profileList.size());
+      //  Log.e(TAG,"populateGeofenceList(): Inside with number of profiles = " + profileList.size());
         for (int i = 0; i < profileList.size(); i++) {
 
             Profile profile = profileList.get(i);
-            Log.e(TAG,"populateGeofenceList(): with profile = " + profile.getTitle() + " profile enable = " + profile.isEnabled());
+          //  Log.e(TAG,"populateGeofenceList(): with profile = " + profile.getTitle() + " profile enable = " + profile.isEnabled());
             if (profile.isEnabled()) {
-                Log.e(TAG, "populateGeofenceList(): Add Geofence to list with title = " + profile.getTitle());
+              //  Log.e(TAG, "populateGeofenceList(): Add Geofence to list with title = " + profile.getTitle());
                 Geofence fence = createGeofence(profile);
 
                 //Add geofence to the list
