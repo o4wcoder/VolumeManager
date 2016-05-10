@@ -34,7 +34,7 @@ public class StartupReceiver extends BroadcastReceiver implements Constants, Con
 	/*********************************************************/
 	/*                    Constants                          */
 	/*********************************************************/
-	private final static String TAG = "StartupReceiver";
+	private final static String TAG = StartupReceiver.class.getSimpleName();
 	
 	/*********************************************************/
 	/*                    Local Data                         */
@@ -44,12 +44,13 @@ public class StartupReceiver extends BroadcastReceiver implements Constants, Con
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Log.d(TAG,"Receiver broadcast intent: " + intent.getAction());
+		Log.i(TAG,"onReceive(): Receiver broadcast intent: " + intent.getAction());
 
 		this.context = context;
 		//Get list of profiles
 		//ArrayList<Profile> profileList = ProfileJSONManager.get(context).getProfiles();
         ArrayList<Profile> profileList = ProfileManager.getProfileList(context);
+
 
 		for(int i = 0; i < profileList.size(); i++){
 
@@ -57,13 +58,16 @@ public class StartupReceiver extends BroadcastReceiver implements Constants, Con
 			if(profileList.get(i).isEnabled())
 				VolumeManagerService.setServiceAlarm(context, profileList.get(i), true);
 		}
-			
+
+
 		//Build Google API Client
 		mGoogleApiClient = new GoogleApiClient.Builder(context)
 		.addConnectionCallbacks(this)
 		.addOnConnectionFailedListener(this)
 		.addApi(LocationServices.API)
 		.build();
+
+		mGoogleApiClient.connect();
 			
 		
 	}
@@ -71,14 +75,15 @@ public class StartupReceiver extends BroadcastReceiver implements Constants, Con
 	@Override
 	public void onConnectionFailed(ConnectionResult arg0) {
 		// TODO Auto-generated method stub
+		Log.e(TAG,"onConnectionFailed(): " + arg0.getErrorMessage());
 		
 	}
 
 	@Override
 	public void onConnected(Bundle arg0) {
-		
+
 		GeofenceManager geofenceManager = new GeofenceManager(context,mGoogleApiClient);
-		
+
 		//Start up all enabled geofences
 		geofenceManager.startGeofences(this);
 	}
@@ -86,7 +91,7 @@ public class StartupReceiver extends BroadcastReceiver implements Constants, Con
 	@Override
 	public void onConnectionSuspended(int arg0) {
 		// TODO Auto-generated method stub
-		
+		Log.e(TAG,"onConnectionSuspended() "+ arg0);
 	}
 
 	@Override
