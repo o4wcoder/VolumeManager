@@ -303,7 +303,7 @@ public class LocationMapActivity extends AppCompatActivity
 		map.animateCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(),
 				16));
 
-
+        Log.e(TAG,"Place = " + place.getName() + " location = " + place.getLatLng().toString());
 		mProfile.setTitle(String.valueOf(place.getName()));
 		updateLocation(place.getLatLng());
 	}
