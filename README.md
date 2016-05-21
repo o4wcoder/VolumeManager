@@ -9,7 +9,7 @@ Set up a repeating start and stop times, when the volume automatically changes o
 <b>Set Volume by Location</b><br>
 Set up a repeating volume control based on location. Select a location from a map at your current location or search for a Place. Once selected, create a radius (Geofence in meters) around the location. When the user enters the location the volume will adjust to the settings provided. For example, if a volume contol was set up around a user's church, the volume could turn off when they are are at that location, then turn back on when leaving.<br>
 
-<a href="http://s70.photobucket.com/user/chare37/media/VM_location_profie_list_zpsqctt6ctv.png.html" target="_blank"><img src="http://i70.photobucket.com/albums/i102/chare37/VM_location_profie_list_zpsqctt6ctv.png" border="0" alt=" photo VM_location_profie_list_zpsqctt6ctv.png"/></a>
+<a href="http://s70.photobucket.com/user/chare37/media/734a507f-96e2-435b-85b9-f19844c3879f_zpswosbrbus.png.html" target="_blank"><img src="http://i70.photobucket.com/albums/i102/chare37/734a507f-96e2-435b-85b9-f19844c3879f_zpswosbrbus.png" border="0" alt=" photo 734a507f-96e2-435b-85b9-f19844c3879f_zpswosbrbus.png"/></a>
 
 # Status
 Version 1.0. Currently on Google Play Store <br>
