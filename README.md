@@ -18,7 +18,7 @@ Set up a repeating volume control based on location. Select a location from a ma
 <a href="http://s70.photobucket.com/user/chare37/media/dfc084fc-d0b7-4867-a8c8-a199beaa10fd_zpsn1ltxdjp.png.html" target="_blank"><img src="http://i70.photobucket.com/albums/i102/chare37/dfc084fc-d0b7-4867-a8c8-a199beaa10fd_zpsn1ltxdjp.png" border="0" alt=" photo dfc084fc-d0b7-4867-a8c8-a199beaa10fd_zpsn1ltxdjp.png"/></a>
 <a href="http://s70.photobucket.com/user/chare37/media/a3b3886e-3ebf-4075-9d19-b7c086177498_zps0dezphpa.png.html" target="_blank"><img src="http://i70.photobucket.com/albums/i102/chare37/a3b3886e-3ebf-4075-9d19-b7c086177498_zps0dezphpa.png" border="0" alt=" photo a3b3886e-3ebf-4075-9d19-b7c086177498_zps0dezphpa.png"/></a>
 <br>
-<b>Table Images
+<b>Tablet Images
 <br>
 <a href="http://s70.photobucket.com/user/chare37/media/65483c04-86d9-42f2-a7a4-f9e4256178b4_zpswvnjl2cg.png.html" target="_blank"><img src="http://i70.photobucket.com/albums/i102/chare37/65483c04-86d9-42f2-a7a4-f9e4256178b4_zpswvnjl2cg.png" border="0" alt=" photo 65483c04-86d9-42f2-a7a4-f9e4256178b4_zpswvnjl2cg.png"/></a>
 # Status
