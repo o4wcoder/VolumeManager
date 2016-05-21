@@ -9,7 +9,7 @@ Set up a repeating start and stop times, when the volume automatically changes o
 <b>Set Volume by Location</b><br>
 Set up a repeating volume control based on location. Select a location from a map at your current location or search for a Place. Once selected, create a radius (Geofence in meters) around the location. When the user enters the location the volume will adjust to the settings provided. For example, if a volume contol was set up around a user's church, the volume could turn off when they are are at that location, then turn back on when leaving.<br>
 
-<b>Phone Images
+<b>Phone Images</b>
 <br>
 <a href="http://s70.photobucket.com/user/chare37/media/991eaeee-5076-4025-9298-6c71392644d0_zpsvoxzknj7.png.html" target="_blank"><img src="http://i70.photobucket.com/albums/i102/chare37/991eaeee-5076-4025-9298-6c71392644d0_zpsvoxzknj7.png" border="0" alt=" photo 991eaeee-5076-4025-9298-6c71392644d0_zpsvoxzknj7.png"/></a>
 <a href="http://s70.photobucket.com/user/chare37/media/b7f6ab7c-b278-43d2-9f7f-cd5d8c6682d1_zpsxrswt4s0.png.html" target="_blank"><img src="http://i70.photobucket.com/albums/i102/chare37/b7f6ab7c-b278-43d2-9f7f-cd5d8c6682d1_zpsxrswt4s0.png" border="0" alt=" photo b7f6ab7c-b278-43d2-9f7f-cd5d8c6682d1_zpsxrswt4s0.png"/></a>
@@ -18,7 +18,7 @@ Set up a repeating volume control based on location. Select a location from a ma
 <a href="http://s70.photobucket.com/user/chare37/media/dfc084fc-d0b7-4867-a8c8-a199beaa10fd_zpsn1ltxdjp.png.html" target="_blank"><img src="http://i70.photobucket.com/albums/i102/chare37/dfc084fc-d0b7-4867-a8c8-a199beaa10fd_zpsn1ltxdjp.png" border="0" alt=" photo dfc084fc-d0b7-4867-a8c8-a199beaa10fd_zpsn1ltxdjp.png"/></a>
 <a href="http://s70.photobucket.com/user/chare37/media/a3b3886e-3ebf-4075-9d19-b7c086177498_zps0dezphpa.png.html" target="_blank"><img src="http://i70.photobucket.com/albums/i102/chare37/a3b3886e-3ebf-4075-9d19-b7c086177498_zps0dezphpa.png" border="0" alt=" photo a3b3886e-3ebf-4075-9d19-b7c086177498_zps0dezphpa.png"/></a>
 <br>
-<b>Tablet Images
+<b>Tablet Images</b>
 <br>
 <a href="http://s70.photobucket.com/user/chare37/media/65483c04-86d9-42f2-a7a4-f9e4256178b4_zpswvnjl2cg.png.html" target="_blank"><img src="http://i70.photobucket.com/albums/i102/chare37/65483c04-86d9-42f2-a7a4-f9e4256178b4_zpswvnjl2cg.png" border="0" alt=" photo 65483c04-86d9-42f2-a7a4-f9e4256178b4_zpswvnjl2cg.png"/></a>
 # Status
