@@ -9,8 +9,11 @@ Set up a repeating start and stop times, when the volume automatically changes o
 <b>Set Volume by Location</b><br>
 Set up a repeating volume control based on location. Select a location from a map at your current location or search for a Place. Once selected, create a radius (Geofence in meters) around the location. When the user enters the location the volume will adjust to the settings provided. For example, if a volume contol was set up around a user's church, the volume could turn off when they are are at that location, then turn back on when leaving.<br>
 
-<a href="http://s70.photobucket.com/user/chare37/media/734a507f-96e2-435b-85b9-f19844c3879f_zpswosbrbus.png.html" target="_blank"><img src="http://i70.photobucket.com/albums/i102/chare37/734a507f-96e2-435b-85b9-f19844c3879f_zpswosbrbus.png" border="0" alt=" photo 734a507f-96e2-435b-85b9-f19844c3879f_zpswosbrbus.png"/></a>
 <a href="http://s70.photobucket.com/user/chare37/media/991eaeee-5076-4025-9298-6c71392644d0_zpsvoxzknj7.png.html" target="_blank"><img src="http://i70.photobucket.com/albums/i102/chare37/991eaeee-5076-4025-9298-6c71392644d0_zpsvoxzknj7.png" border="0" alt=" photo 991eaeee-5076-4025-9298-6c71392644d0_zpsvoxzknj7.png"/></a>
+<a href="http://s70.photobucket.com/user/chare37/media/b7f6ab7c-b278-43d2-9f7f-cd5d8c6682d1_zpsxrswt4s0.png.html" target="_blank"><img src="http://i70.photobucket.com/albums/i102/chare37/b7f6ab7c-b278-43d2-9f7f-cd5d8c6682d1_zpsxrswt4s0.png" border="0" alt=" photo b7f6ab7c-b278-43d2-9f7f-cd5d8c6682d1_zpsxrswt4s0.png"/></a>
+<a href="http://s70.photobucket.com/user/chare37/media/734a507f-96e2-435b-85b9-f19844c3879f_zpswosbrbus.png.html" target="_blank"><img src="http://i70.photobucket.com/albums/i102/chare37/734a507f-96e2-435b-85b9-f19844c3879f_zpswosbrbus.png" border="0" alt=" photo 734a507f-96e2-435b-85b9-f19844c3879f_zpswosbrbus.png"/></a>
+<a href="http://s70.photobucket.com/user/chare37/media/f87dd405-f240-4782-918a-961bdc6f145c_zpsai1nupbu.png.html" target="_blank"><img src="http://i70.photobucket.com/albums/i102/chare37/f87dd405-f240-4782-918a-961bdc6f145c_zpsai1nupbu.png" border="0" alt=" photo f87dd405-f240-4782-918a-961bdc6f145c_zpsai1nupbu.png"/></a>
+
 # Status
 Version 1.0. Currently on Google Play Store <br>
 <a href="https://play.google.com/store/apps/details?id=com.fourthwardcoder.android.volumemanager">Fourth Ward Modile - Volume Manager</a>
