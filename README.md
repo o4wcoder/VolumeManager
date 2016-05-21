@@ -1,4 +1,5 @@
-# VolumeManager
+# VolumeManager - Udacity Android Developer Nanodegree Project #8 (Final Capstone Project)
+
 Android App to Control Phone Volume
 
 This App lets you have the ability to automate your phones volume settings between off, vibrate of ring modes. There are two ways to create volume controls.
