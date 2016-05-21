@@ -1,6 +1,6 @@
 # VolumeManager
 
-<b><a href="https://www.udacity.com/course/android-developer-nanodegree--nd801>Udacity Android Developer Nanodegree</a> Project #8 (Final Capstone Project) </b>
+<b><a href="https://www.udacity.com/course/android-developer-nanodegree--nd801">Udacity Android Developer Nanodegree</a> Project #8 (Final Capstone Project) </b>
 
 This Android App lets you have the ability to automate your phones volume settings between off, vibrate of ring modes. There are two ways to create volume controls.
 
