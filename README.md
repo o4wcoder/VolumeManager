@@ -10,15 +10,8 @@ Set up a repeating start and stop times, when the volume automatically changes o
 Set up a repeating volume control based on location. Select a location from a map at your current location or search for a Place. Once selected, create a radius (Geofence in meters) around the location. When the user enters the location the volume will adjust to the settings provided. For example, if a volume contol was set up around a user's church, the volume could turn off when they are are at that location, then turn back on when leaving.<br>
 
 # Status
-Not currently on the GooglePlay Store
-
-Getting complete overhaul in Material Design
-
-Expected Update to GooglPlay Store: March 2016
+Version 1.0. Currently on Google Play Store
+<a href="https://play.google.com/store/apps/details?id=com.fourthwardcoder.android.volumemanager">Fourth Ward Modile - Volume Manager</a>
 
 # Contributing<br>
-* Fork it!
-* Create your feature branch: git checkout -b my-new-feature
-* Commit your changes: git commit -am 'Add some feature'
-* Push to the branch: git push origin my-new-feature
-* Submit a pull request :D
+* No contributions to this project
