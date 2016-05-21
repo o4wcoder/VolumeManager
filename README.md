@@ -22,7 +22,7 @@ Set up a repeating volume control based on location. Select a location from a ma
 <br>
 <a href="http://s70.photobucket.com/user/chare37/media/65483c04-86d9-42f2-a7a4-f9e4256178b4_zpswvnjl2cg.png.html" target="_blank"><img src="http://i70.photobucket.com/albums/i102/chare37/65483c04-86d9-42f2-a7a4-f9e4256178b4_zpswvnjl2cg.png" border="0" alt=" photo 65483c04-86d9-42f2-a7a4-f9e4256178b4_zpswvnjl2cg.png"/></a>
 # Status
-Version 1.0. Currently on Google Play Store <br>
+Version 1.0. Currently available on Google Play Store <br>
 <a href="https://play.google.com/store/apps/details?id=com.fourthwardcoder.android.volumemanager">Fourth Ward Modile - Volume Manager</a>
 
 # Versions
@@ -32,6 +32,7 @@ Version 1.0. Currently on Google Play Store <br>
 * Location
 * Maps
 * Places
+* Geofence
 
 # Contributing<br>
 * No contributions to this project
