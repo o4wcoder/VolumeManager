@@ -980,7 +980,10 @@ public class ProfileDetailFragment extends Fragment implements LocationProfileLi
 
         if (mProfileType == TIME_PROFILE_LIST) {
             //Set Volume Control Alarms
-            VolumeManagerService.setServiceAlarm(getActivity(), mProfile, true);
+            //!!! Must get context from "getApplicationContext() and not from getActivity as the intent
+            //that is sent to the alarm manager will be lost when the activity is destroyed and the
+            //app is no longer in use. Need this to keep running in the background
+            VolumeManagerService.setServiceAlarm(getActivity().getApplicationContext(), mProfile, true);
         }
 
         //Now that the profile and location objects are saved to the database, save geofence
